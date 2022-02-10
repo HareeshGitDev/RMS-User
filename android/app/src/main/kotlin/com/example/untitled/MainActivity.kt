@@ -1,4 +1,4 @@
-package com.example.untitled
+package com.rms.rentmystayuserflutter
 
 import io.flutter.embedding.android.FlutterActivity
 

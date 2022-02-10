@@ -1,4 +1,4 @@
-name: untitled
+name: RentMyStay_user
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -36,6 +36,11 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_neumorphic: ^3.2.0
   curved_navigation_bar: ^1.0.2
+  firebase_database: any
+  firebase_core: any
+  carousel_slider: any
+  flutter_riverpod: any
+
 
 
 dev_dependencies:

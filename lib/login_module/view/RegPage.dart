@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/home_module/home_screen.dart';
-import 'package:untitled/main.dart';
+
+import 'package:RentMyStay_user/home_module/home_screen.dart';
+
+
 import '../../utils/color.dart';
 import '../viewModel/btn_widget.dart';
 import '../viewModel/herder_container.dart';

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>172037116875-q4huk45khcfats0iup9ren2819kc4tv0.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.172037116875-q4huk45khcfats0iup9ren2819kc4tv0</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>172037116875-ga0mlrefv8ruu28j67cho92imqh9nkpt.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDGkESH1SDCqVrTdpV8frb5y_o18ZnCAAU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>172037116875</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.rms.rentmystayuserflutter</string>
+	<key>PROJECT_ID</key>
+	<string>rentmystay-new-1539065190327</string>
+	<key>STORAGE_BUCKET</key>
+	<string>rentmystay-new-1539065190327.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:172037116875:ios:742a1cb9248d4eb634dc4e</string>
+	<key>DATABASE_URL</key>
+	<string>https://rentmystay-new-1539065190327.firebaseio.com</string>
+</dict>
+</plist>

@@ -3,8 +3,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import '../../utils/color.dart';
 
 class HeaderContainer extends StatelessWidget {
-  var text = "Welcone Back";
-
+  var text = "Welcome Back";
   HeaderContainer(this.text);
 
 
@@ -33,7 +32,7 @@ class HeaderContainer extends StatelessWidget {
             style: TextStyle(color: Colors.white,fontSize: 20),
           )),
           Center(
-            child: Image.asset("assets/images/logormsblue.png"),
+            child: Image.asset("assets/images/transparent_logo_rms.png"),
             
           ),
         ],
