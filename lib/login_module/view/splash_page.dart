@@ -33,7 +33,7 @@ class _SplashPageState extends State<SplashPage> {
               begin: Alignment.topCenter),
         ),
         child: Center(
-          child: Image.asset("assets/images/logormsblue.png"),
+          child: Image.asset("assets/images/transparent_logo_rms.png"),
           widthFactor: 100,
           heightFactor: 100,
         ),
