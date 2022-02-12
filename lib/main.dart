@@ -1,7 +1,8 @@
 import 'dart:io' show Platform;
+import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 
 
 
@@ -26,13 +27,11 @@ void main() async{
           databaseURL: 'https://rentmystay-new-1539065190327.firebaseio.com'
       )
   );
-  var app;
-  runApp(ProviderScope(child: MyApp(app: app)));
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  FirebaseApp ?app;
-  MyApp({this.app});
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +43,8 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: SplashPage(),
+
+      onGenerateRoute: NavigationService.generateRoute,
     );
   }
 }

@@ -39,7 +39,10 @@ dependencies:
   firebase_database: any
   firebase_core: any
   carousel_slider: any
-  flutter_riverpod: any
+  http: ^0.13.3
+  provider: ^5.0.0
+  fluttertoast: ^8.0.8
+  shared_preferences: ^2.0.6
 
 
 

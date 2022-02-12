@@ -1,5 +1,7 @@
 import 'dart:async';
-
+import 'package:provider/provider.dart';
+import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
+import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/color.dart';
@@ -13,11 +15,18 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
-    // TODO: implement initState
+    initMethod();
     super.initState();
+  }
+
+  Future<void> initMethod() async {
     Timer(const Duration(milliseconds: 4000), () {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => LoginPage()));
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider(
+                create: (_) => LoginViewModel(), child: LoginPage()),
+          ));
     });
   }
 
@@ -27,8 +36,8 @@ class _SplashPageState extends State<SplashPage> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-             // colors: [orangeColors, orangeLightColors],
-              colors:[onecolor, secondcolor],
+              // colors: [orangeColors, orangeLightColors],
+              colors: [onecolor, secondcolor],
               end: Alignment.bottomCenter,
               begin: Alignment.topCenter),
         ),

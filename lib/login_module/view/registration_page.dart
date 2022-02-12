@@ -1,18 +1,19 @@
+import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:flutter/material.dart';
 
-import 'package:RentMyStay_user/home_module/home_screen.dart';
+import 'package:RentMyStay_user/home_module/home_page.dart';
 
 
 import '../../utils/color.dart';
-import '../viewModel/btn_widget.dart';
-import '../viewModel/herder_container.dart';
+import 'btn_widget.dart';
+import 'herder_container.dart';
 
-class RegPage extends StatefulWidget {
+class RegistrationPage extends StatefulWidget {
   @override
-  _RegPageState createState() => _RegPageState();
+  _RegistrationPageState createState() => _RegistrationPageState();
 }
 
-class _RegPageState extends State<RegPage> {
+class _RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,10 +39,9 @@ class _RegPageState extends State<RegPage> {
                           btnText: "REGISTER",
                           onClick: (){
                             //Navigator.pop(context);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => home_screen()));
+                            Navigator.pushNamed(
+                                context,AppRoutes.homePage
+                                );
                           },
                         ),
                       ),
