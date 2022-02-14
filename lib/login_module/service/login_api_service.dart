@@ -13,8 +13,8 @@ class LoginApiService {
   Future<LoginResponseModel?> fetchLoginDetails({required String email , required String password}) async {
     String url=AppUrls.loginUrl;
     final response = await _apiService.getApiCallWithQueryParams(endPoint: url,queryParams: {
-      'email':json.encode(email),
-      'password':json.encode(password),
+      'email':email,
+      'password':password,
     });
 
     return response;
