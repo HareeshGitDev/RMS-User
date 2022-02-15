@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
@@ -36,7 +37,7 @@ class _SplashPageState extends State<SplashPage> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-              colors: [onecolor, secondcolor],
+              colors: [CustomTheme.skyBlue.withAlpha(50), CustomTheme.skyBlue],
               end: Alignment.bottomCenter,
               begin: Alignment.topCenter),
         ),

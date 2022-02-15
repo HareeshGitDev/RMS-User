@@ -1,3 +1,4 @@
+import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import '../../utils/color.dart';
@@ -18,7 +19,7 @@ class HeaderContainer extends StatelessWidget {
       fit: BoxFit.fill,
       ),
           gradient: LinearGradient(
-              colors: [onecolor, secondcolor],
+              colors: [CustomTheme.skyBlue.withAlpha(50), CustomTheme.skyBlue],
               end: Alignment.bottomCenter,
               begin: Alignment.topCenter),
           borderRadius: BorderRadius.only(bottomLeft: Radius.circular(100))),
