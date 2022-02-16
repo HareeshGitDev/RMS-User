@@ -1,4 +1,4 @@
-import 'package:RentMyStay_user/home_module/home_page.dart';
+import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
 import 'package:RentMyStay_user/login_module/view/forgot_password_page.dart';
 import 'package:RentMyStay_user/login_module/view/login_page.dart';
 import 'package:RentMyStay_user/login_module/view/success_page.dart';
@@ -8,6 +8,7 @@ import 'package:RentMyStay_user/property_module/viewModel/property_viewModel.dar
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../home_module/view/home_page.dart';
 import '../../login_module/view/registration_page.dart';
 
 class NavigationService {
@@ -19,7 +20,10 @@ class NavigationService {
         );
       case AppRoutes.homePage:
         return MaterialPageRoute(
-          builder: (context) => HomePage(),
+          builder: (context) => ChangeNotifierProvider(
+            create: (_) => HomeViewModel(),
+            child: HomePage(),
+          ),
         );
       case AppRoutes.registrationPage:
         return MaterialPageRoute(
@@ -30,12 +34,11 @@ class NavigationService {
       case AppRoutes.forgotPassword:
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
-              create: (_) => LoginViewModel(),
-              child: ForgotPasswordPage(),
-            ));
+                  create: (_) => LoginViewModel(),
+                  child: ForgotPasswordPage(),
+                ));
       case AppRoutes.successPage:
-        return MaterialPageRoute(
-            builder: (context) => SuccessPage());
+        return MaterialPageRoute(builder: (context) => SuccessPage());
       case AppRoutes.propertyListingPage:
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(

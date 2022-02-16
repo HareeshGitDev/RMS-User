@@ -17,7 +17,7 @@ class LoginApiService {
       'password':password,
     });
 
-    return response;
+    return LoginResponseModel.fromJson(response);
   }
 
   Future<SignUpResponseModel?> signUpUser(

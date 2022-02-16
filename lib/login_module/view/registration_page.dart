@@ -256,7 +256,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                     color: myFavColor);
                                 Navigator.of(context)
                                     .pushNamed(AppRoutes.homePage);
-                              }
+                              }else{}
                             }
                           },
                           child: Center(child: Text("REGISTER")),
