@@ -21,4 +21,11 @@ class LoginViewModel extends ChangeNotifier {
         signUpRequestModel: signUpRequestModel);
     return response;
   }
+  Future<Map<String,dynamic>?> resetPassword(
+      {required String email}) async {
+
+    final Map<String,dynamic>? response = await _loginApiService.resetPassword(email: email);
+
+    return response;
+  }
 }

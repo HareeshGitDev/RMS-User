@@ -26,6 +26,16 @@ class LoginApiService {
     final response = await _apiService.postApiCall(
         endPoint: url, bodyParams: signUpRequestModel.toJson());
 
+    return SignUpResponseModel.fromJson(response);
+  }
+  Future<Map<String,dynamic>?> resetPassword(
+      {required String email}) async {
+    String url=AppUrls.forgotPasswordUrl;
+    final Map<String,dynamic>? response = await _apiService.getApiCallWithQueryParams(
+        endPoint: url,  queryParams: {
+          'email':email,
+    });
+
     return response;
   }
 }

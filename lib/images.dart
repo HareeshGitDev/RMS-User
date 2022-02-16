@@ -41,7 +41,7 @@ class Images {
   static String dialogIcon = 'assets/icons/albums_outline.png';
   static String loginIcon = 'assets/icons/login_outline.png';
   static String forgotPasswordIcon = 'assets/icons/forgot_password_outline.png';
-  static String resetPasswordIcon = 'assets/icons/reset_password_outline.png';
+
   static String subscriptionIcon = 'assets/icons/subscription_outline.png';
   static String profileIcon = 'assets/icons/profile_outline.png';
   static String splashIcon = 'assets/icons/splash_outline.png';
@@ -77,6 +77,8 @@ class Images {
       "assets/icons/paragraph_rtl_outline.png";
   static final String paragraphLTROutline =
       "assets/icons/paragraph_ltr_outline.png";
+  static const String resetPasswordIcon='assets/icons/reset_password.png';
+  static const String successfulIcon='assets/icons/Check.gif';
 
 
   ///--------------------------- Apps -------------------------------------///
@@ -107,6 +109,7 @@ class Images {
       'assets/images/apps/learning/icons/forgot_password.png';
   static String courseBanner =
       'assets/images/apps/learning/images/course_photo.png';
+
 
 
 

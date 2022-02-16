@@ -66,8 +66,7 @@ class RMSUserApiService {
     try {
       final response = await http.post(
         Uri.https(_baseURL, endPoint),
-        //headers: await getHeaders(),
-        body: jsonEncode(bodyParams),
+        body: bodyParams,
       );
       return await _response(response);
     } on SocketException {

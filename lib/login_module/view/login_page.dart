@@ -3,17 +3,21 @@ import 'dart:ui';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
+import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../../utils/color.dart';
+import '../../utils/constants/sp_constants.dart';
+import '../../utils/service/shared_prefrences_util.dart';
 import '../model/login_response_model.dart';
-import 'btn_widget.dart';
-import 'herder_container.dart';
+import '../model/signup_response_model.dart';
+import 'forgot_password_page.dart';
 import 'registration_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -24,6 +28,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   late LoginViewModel _loginViewModel;
   final _emailController = TextEditingController();
+  final _resetEmailController = TextEditingController();
   final _passwordController = TextEditingController();
   var _mainHeight;
   final GlobalKey<FormState> _formKey = GlobalKey();
@@ -77,12 +82,10 @@ class _LoginPageState extends State<LoginPage> {
               ),
               Expanded(
                 child: Container(
-
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius:
                           BorderRadius.vertical(top: Radius.circular(30))),
-                  
                   width: _mainWidth,
                   padding: EdgeInsets.only(left: 25, right: 25),
                   child: Column(
@@ -187,6 +190,8 @@ class _LoginPageState extends State<LoginPage> {
                                 if (response != null &&
                                     response.status?.toLowerCase() ==
                                         'success') {
+                                  await setSPValues(response: response);
+
                                   Navigator.of(context)
                                       .pushNamed(AppRoutes.homePage);
                                 }
@@ -201,9 +206,7 @@ class _LoginPageState extends State<LoginPage> {
                         height: 15,
                       ),
                       GestureDetector(
-
-                        onTap: () =>
-                            Navigator.of(context).pushNamed(AppRoutes.homePage),
+                        onTap: () => showForgotPasswordDialog(context: context),
                         child: Container(
                           color: Colors.white,
                           alignment: Alignment.centerLeft,
@@ -269,31 +272,13 @@ class _LoginPageState extends State<LoginPage> {
                                 onPressed: () async {},
                                 child: Container(
                                   width: double.infinity,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/icons/google-plus.svg',
-                                        width: 30,
-                                        height: 30,
-                                        color: Colors.white,
+                                  child: Center(
+                                    child: Text(
+                                      'SignIn',
+                                      style: TextStyle(
+                                        fontSize: 16,
                                       ),
-                                      SizedBox(
-                                        width: 15,
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 6.0),
-                                        child: Text(
-                                          'SignIn',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -358,5 +343,106 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Future<void> setSPValues({required LoginResponseModel response}) async {
+    SharedPreferenceUtil shared = SharedPreferenceUtil();
+    await shared.setString(
+        rms_registeredUserToken, response.appToken.toString());
+    await shared.setString(rms_profilePicUrl, response.pic.toString());
+    await shared.setString(rms_phoneNumber, response.contactNum.toString());
+    await shared.setString(rms_name, response.name.toString());
+    await shared.setString(rms_email, response.email.toString());
+    await shared.setString(rms_gmapKey, response.gmapKey.toString());
+  }
+
+  void showForgotPasswordDialog({required BuildContext context}) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            actionsAlignment: MainAxisAlignment.center,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            title: Text(
+              'Forgot Password ?',
+              style: TextStyle(
+                  color: CustomTheme.peach,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20),
+            ),
+            content: Container(
+              height: _mainHeight * 0.13,
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                children: [
+                  Text('Please Enter Email to get Password Reset Link !'),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Neumorphic(
+                    style: NeumorphicStyle(
+                        depth: -10,
+                        color: Colors.white,
+                        lightSource: LightSource.bottomLeft),
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value != null && value.length < 6) {
+                          return "Enter proper email";
+                        }
+                        return null;
+                      },
+                      keyboardType: TextInputType.emailAddress,
+                      controller: _resetEmailController,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Email',
+                        prefixIcon: Icon(Icons.email),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            elevation: 5,
+            actions: [
+              Container(
+                padding: EdgeInsets.only(bottom: 15),
+                width: _mainWidth * 0.4,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(CustomTheme.peach),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40)),
+                      )),
+                  onPressed: () async {
+                    RMSWidgets.showLoaderDialog(
+                        context: context, message: 'Please wait...');
+                    final Map<String, dynamic>? data = await _loginViewModel
+                        .resetPassword(email: _resetEmailController.text);
+                    Navigator.pop(context);
+                    if(data != null){
+                      if(data['status'].toString().toLowerCase()=='success'){
+                        RMSWidgets.getToast(message: data['message'].toString(), color: myFavColor);
+                        _resetEmailController.clear();
+                        Navigator.pop(context);
+                      } else{
+                        RMSWidgets.getToast(message: data['message'].toString(), color: CustomTheme.peach);
+                      }
+                    }
+                  },
+                  child: Text(
+                    'Recover',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
   }
 }
