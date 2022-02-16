@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class RMSWidgets{
+
   static void showLoaderDialog({required BuildContext context, required String message}) {
     AlertDialog alert = AlertDialog(
       content: Row(

@@ -1,8 +1,10 @@
 import 'dart:ui';
 
+import 'package:RentMyStay_user/login_module/model/signup_request_model.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
+import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +12,11 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import '../../utils/color.dart';
+import '../../utils/constants/sp_constants.dart';
+import '../../utils/service/shared_prefrences_util.dart';
 import '../model/login_response_model.dart';
-import 'btn_widget.dart';
-import 'herder_container.dart';
-import 'registration_page.dart';
+import '../model/signup_response_model.dart';
+
 
 class RegistrationPage extends StatefulWidget {
   @override
@@ -31,11 +34,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
   var _mainWidth;
   String typeValue = 'I am';
   String selectedCity = 'Select City';
-  String rmsWay = 'How do you Know RMS';
+  String sourceRMS = 'How do you Know RMS';
 
   @override
   void initState() {
-    //_loginViewModel = Provider.of<LoginViewModel>(context, listen: false);
+    _loginViewModel = Provider.of<LoginViewModel>(context, listen: false);
     super.initState();
   }
 
@@ -49,201 +52,222 @@ class _RegistrationPageState extends State<RegistrationPage> {
           color: CustomTheme.skyBlue,
           height: _mainHeight,
           width: _mainWidth,
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 25, right: 25),
-                child: SizedBox(
-                  height: _mainHeight * 0.3,
-                  child: Image.asset(
-                    'assets/images/transparent_logo_rms.png',
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 25, right: 25),
+                  child: SizedBox(
+                    height: _mainHeight * 0.26,
+                    child: Image.asset(
+                      'assets/images/transparent_logo_rms.png',
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                padding: EdgeInsets.only(bottom: 5),
-                margin: EdgeInsets.only(right: 20),
-                alignment: Alignment.centerRight,
-                child: AnimatedTextKit(
-                  animatedTexts: [
-                    ColorizeAnimatedText('You are Almost there!',
-                        textStyle:
-                        TextStyle(fontSize: 30, fontFamily: "Nunito"),
-                        colors: [
-                          Colors.white,
-                          CustomTheme.skyBlue,
-                        ]),
-                  ],
-                  isRepeatingAnimation: true,
-                  repeatForever: true,
+                Container(
+                  padding: EdgeInsets.only(bottom: 5),
+                  margin: EdgeInsets.only(right: 20),
+                  alignment: Alignment.centerRight,
+                  child: AnimatedTextKit(
+                    animatedTexts: [
+                      ColorizeAnimatedText('You are Almost there!',
+                          textStyle:
+                              TextStyle(fontSize: 30, fontFamily: "Nunito"),
+                          colors: [
+                            Colors.white,
+                            CustomTheme.skyBlue,
+                          ]),
+                    ],
+                    isRepeatingAnimation: true,
+                    repeatForever: true,
+                  ),
                 ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(30))),
-                height: _mainHeight * 0.7,
-                width: _mainWidth,
-                padding: EdgeInsets.only(left: 25, right: 25),
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: _textInput(
-                          hint: "Name",
-                          icon: Icons.person,
-                          controller: _nameController),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    _textInput(
-                        hint: "Email",
-                        icon: Icons.email,
-                        controller: _emailController),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    _textInput(
-                        hint: "Phone Number",
-                        icon: Icons.contact_page,
-                        controller: _phoneNumberController),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    _textInput(
-                        hint: "Password",
-                        icon: Icons.vpn_key,
-                        controller: _passwordController),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    _textInput(
-                        hint: "Apply Referal Code (Optional)",
-                        icon: Icons.ac_unit,
-                        controller: _referalController),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      height: 40,
-                      width: _mainWidth,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: 1.0),
-                        borderRadius: BorderRadius.circular(6),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(30))),
+                  height: _mainHeight * 0.7,
+                  width: _mainWidth,
+                  padding: EdgeInsets.only(left: 25, right: 25),
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 20,
                       ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          items: getTypeList
-                              .map((type) => DropdownMenuItem(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Text(type),
-                                    ),
-                                    value: type,
-                                  ))
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              typeValue = value.toString();
-                            });
-                          },
-                          value: typeValue,
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: _textInput(
+                            hint: "Name",
+                            icon: Icons.person,
+                            controller: _nameController),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      _textInput(
+                          hint: "Email",
+                          icon: Icons.email,
+                          controller: _emailController),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      _textInput(
+                          hint: "Phone Number",
+                          icon: Icons.contact_page,
+                          controller: _phoneNumberController),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      _textInput(
+                          hint: "Password",
+                          icon: Icons.vpn_key,
+                          controller: _passwordController),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      _textInput(
+                          hint: "Apply Referal Code (Optional)",
+                          icon: Icons.ac_unit,
+                          controller: _referalController),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        height: 40,
+                        width: _mainWidth,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey, width: 1.0),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            items: getTypeList
+                                .map((type) => DropdownMenuItem(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Text(type),
+                                      ),
+                                      value: type,
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                typeValue = value.toString();
+                              });
+                            },
+                            value: typeValue,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 5),
-                    Container(
-                      height: 40,
-                      width: _mainWidth,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: 1.0),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          items: getCityList
-                              .map((type) => DropdownMenuItem(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Text(type),
-                                    ),
-                                    value: type,
-                                  ))
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              selectedCity = value.toString();
-                            });
-                          },
-                          value: selectedCity,
+                      SizedBox(height: 10),
+                      Container(
+                        height: 40,
+                        width: _mainWidth,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey, width: 1.0),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            items: getCityList
+                                .map((type) => DropdownMenuItem(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Text(type),
+                                      ),
+                                      value: type,
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedCity = value.toString();
+                              });
+                            },
+                            value: selectedCity,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 5),
-                    Container(
-                      height: 40,
-                      width: _mainWidth,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: 1.0),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          items: getRMSList
-                              .map((type) => DropdownMenuItem(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Text(type),
-                                    ),
-                                    value: type,
-                                  ))
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              rmsWay = value.toString();
-                            });
-                          },
-                          value: rmsWay,
+                      SizedBox(height: 10),
+                      Container(
+                        height: 40,
+                        width: _mainWidth,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey, width: 1.0),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            items: getRMSList
+                                .map((type) => DropdownMenuItem(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Text(type),
+                                      ),
+                                      value: type,
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                sourceRMS = value.toString();
+                              });
+                            },
+                            value: sourceRMS,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      width: _mainWidth,
-                      height: 50,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                CustomTheme.skyBlue),
-                            shape:
-                                MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(40)),
-                            )),
-                        onPressed: () async {
-                          final LoginResponseModel? response =
-                              await _loginViewModel.getLoginDetails(
-                                  email: _emailController.text,
-                                  password: _passwordController.text);
-                          if (response != null && response.status == 'success') {
-                            Navigator.of(context).pushNamed(AppRoutes.homePage);
-                          }
-                        },
-                        child: Center(child: Text("REGISTER")),
+                      Spacer(),
+                      Container(
+                        width: _mainWidth,
+                        height: 50,
+                        margin: EdgeInsets.only(bottom: 15),
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  CustomTheme.skyBlue),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(40)),
+                              )),
+                          onPressed: () async {
+                            RMSWidgets.showLoaderDialog(
+                                context: context, message: 'Please wait...');
+                            final SignUpResponseModel? response =
+                                await _loginViewModel.signUpUser(
+                                    signUpRequestModel: SignUpRequestModel(
+                                        email: _emailController.text,
+                                        password: _passwordController.text,
+                                        phonenumber:
+                                            _phoneNumberController.text,
+                                        sourceRms: sourceRMS,
+                                        referal: _referalController.text,
+                                        iam: typeValue,
+                                        city: selectedCity,
+                                        fname: _nameController.text,
+                                        imei: '',
+                                        lname: '',
+                                        budget: ''));
+                            Navigator.of(context).pop();
+                            if (response != null) {
+                              if (response.status?.toLowerCase() == 'success') {
+                                RMSWidgets.getToast(
+                                    message: 'Successfully Created Account.',
+                                    color: myFavColor);
+                                Navigator.of(context)
+                                    .pushNamed(AppRoutes.homePage);
+                              }
+                            }
+                          },
+                          child: Center(child: Text("REGISTER")),
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                  ],
-                ),
-              )
-            ],
+
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -314,4 +338,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
         'Rental Portals',
         'Other Realestate',
       ];
+
+  Future<void> setSPValues({required LoginResponseModel response}) async {
+    SharedPreferenceUtil shared = SharedPreferenceUtil();
+    await shared.setString(
+        rms_registeredUserToken, response.appToken.toString());
+    await shared.setString(rms_profilePicUrl, response.pic ?? " ");
+    await shared.setString(rms_phoneNumber, response.contactNum.toString());
+    await shared.setString(rms_name, response.name.toString());
+    await shared.setString(rms_email, response.email.toString());
+    await shared.setString(rms_gmapKey, response.gmapKey.toString());
+  }
 }
