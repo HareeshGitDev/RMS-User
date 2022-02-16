@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:RentMyStay_user/extensions/extensions.dart';
+import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
+import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,10 +14,12 @@ import 'package:flutx/utils/spacing.dart';
 import 'package:flutx/widgets/button/button.dart';
 import 'package:flutx/widgets/container/container.dart';
 import 'package:flutx/widgets/text/text.dart';
-import '../images.dart';
-import '../theme/app_notifier.dart';
-import '../theme/app_theme.dart';
-import '../theme/theme_type.dart';
+import 'package:provider/provider.dart';
+import '../../images.dart';
+import '../../theme/app_notifier.dart';
+import '../../theme/app_theme.dart';
+import '../../theme/theme_type.dart';
+import '../model/City_SuggestionModel.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -28,6 +32,8 @@ class _HomePageState extends State<HomePage> {
   late ThemeData theme;
   late CustomTheme customTheme;
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  late HomeViewModel _homeViewModel;
+
 
   TextDirection textDirection = TextDirection.ltr;
   bool isDark = false;
@@ -36,8 +42,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    _homeViewModel=Provider.of<HomeViewModel>(context,listen: false);
     super.initState();
-
     isDark = AppTheme.themeType == ThemeType.dark;
     textDirection = AppTheme.textDirection;
     theme = AppTheme.theme;
@@ -145,88 +151,149 @@ class _HomePageState extends State<HomePage> {
         color: Colors.white,
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        child: Column(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(top: 10),
-                height: 110,
-               // color: CustomTheme.peach.withAlpha(40),
-                width: MediaQuery.of(context).size.width,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    var data = getCitySuggestionList()[index];
-                    return InkWell(
-                      onTap: () => data.callback(data.cityName),
-                      child: Container(
-                        margin: EdgeInsets.all(10),
-                        width: 70,
-                        height: 40,
-                        child: Column(
-                          children: [
-                            CircleAvatar(
-                                 backgroundImage: NetworkImage(data.imageUrl),
-                                  radius: 30,
-                                ),
-                            Text(data.cityName),
-                          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(top: 10),
+                  height: 110,
+                 // color: CustomTheme.peach.withAlpha(40),
+                  width: MediaQuery.of(context).size.width,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      var data = _homeViewModel.getCitySuggestionList()[index];
+                      return InkWell(
+                        onTap: () => data.callback(data.cityName),
+                        child: Container(
+                          margin: EdgeInsets.all(10),
+                          width: 70,
+                          height: 40,
+                          child: Column(
+                            children: [
+                              CircleAvatar(
+                                   backgroundImage: NetworkImage(data.imageUrl),
+                                    radius: 30,
+                                  ),
+                              Text(data.cityName),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  itemCount: getCitySuggestionList().length,
-                )),
-            Container(
-              margin: EdgeInsets.only(top: 10),
-              width: MediaQuery.of(context).size.width,
-              child: CarouselSlider(
-                items: [
-                  Container(
-                    margin: EdgeInsets.all(1),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
-                          image: NetworkImage(
-                              'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/WhatsApp%20Image%202022-02-14%20at%2012.01.04%20PM.jpeg?alt=media&token=6d78225a-59f7-4a7c-8bf3-e5d3f3c66bca'),
-                          fit: BoxFit.cover,
-                        )),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(1),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
-                          image: NetworkImage(
-                              "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/bannerhome.png?alt=media&token=b66dab51-8676-470a-b876-025c613c303a"),
-                          fit: BoxFit.cover,
-                        )),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(1),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
-                          image: NetworkImage(
-                              'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/WhatsApp%20Image%202022-02-14%20at%2012.01.05%20PM.jpeg?alt=media&token=153f6374-979f-46ad-aaf3-06f9ff1d0b20'),
-                          fit: BoxFit.cover,
-                        )),
-                  ),
-                ],
-                options: CarouselOptions(
-                    height: 180,
-                    enlargeCenterPage: true,
-                    autoPlay: true,
-                    aspectRatio: 16 / 9,
-                    autoPlayCurve: Curves.fastOutSlowIn,
-                    enableInfiniteScroll: true,
-                    viewportFraction: 0.8),
+                      );
+                    },
+                    itemCount: _homeViewModel.getCitySuggestionList().length,
+                  )),
+              Container(
+                margin: EdgeInsets.only(top: 10),
+                width: MediaQuery.of(context).size.width,
+                child: CarouselSlider(
+                  items: [
+                    Container(
+                      margin: EdgeInsets.all(1),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: NetworkImage(
+                                'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/WhatsApp%20Image%202022-02-14%20at%2012.01.04%20PM.jpeg?alt=media&token=6d78225a-59f7-4a7c-8bf3-e5d3f3c66bca'),
+                            fit: BoxFit.cover,
+                          )),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(1),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: NetworkImage(
+                                "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/bannerhome.png?alt=media&token=b66dab51-8676-470a-b876-025c613c303a"),
+                            fit: BoxFit.cover,
+                          )),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(1),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: NetworkImage(
+                                'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/WhatsApp%20Image%202022-02-14%20at%2012.01.05%20PM.jpeg?alt=media&token=153f6374-979f-46ad-aaf3-06f9ff1d0b20'),
+                            fit: BoxFit.cover,
+                          )),
+                    ),
+                  ],
+                  options: CarouselOptions(
+                      height: 180,
+                      enlargeCenterPage: true,
+                      autoPlay: true,
+                      aspectRatio: 16 / 9,
+                      autoPlayCurve: Curves.fastOutSlowIn,
+                      enableInfiniteScroll: true,
+                      viewportFraction: 0.8),
+                ),
               ),
-            )
-          ],
+              SizedBox(height: 15,),
+              Padding(
+                padding:EdgeInsets.only(left: 15),
+                child: Text("Popular",style: TextStyle(
+                  color: Colors.blueGrey,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  decoration: TextDecoration.underline,
+                ),),
+              ),
+              Container(
+                  padding: EdgeInsets.only(left: 10),
+                  height: 260,
+                  // color: CustomTheme.peach.withAlpha(40),
+                  width: MediaQuery.of(context).size.width,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      var data = _homeViewModel.getPopularPropertyModelList()[index];
+                      return InkWell(
+                        onTap: () => data.callback!(data.propertyType!),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)))
+                          ,elevation: 3,shadowColor: CustomTheme.skyBlue,margin: EdgeInsets.all(10),
+
+                          child: Container(
+                            //margin: EdgeInsets.all(10),
+                            width: 220,
+                            child: Column(
+                              children: [
+                                Container(
+                                height: 140,
+                              width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                        borderRadius:  BorderRadius.only(topLeft: Radius.circular(10),topRight:  Radius.circular(10)),
+                                        image: DecorationImage(image: AssetImage(data.imageUrl!),fit: BoxFit.cover
+                                        //NetworkImage(data.imageUrl!),fit: BoxFit.cover,
+                                        )
+                                    ),
+                                    ),
+                                Container( margin: EdgeInsets.only(left: 5,top: 5),
+                                    alignment: Alignment.topLeft,child: Text(data.propertyType!, style: TextStyle(fontSize: 18,fontWeight: FontWeight.w700),)),
+                                Container( margin: EdgeInsets.only(left: 5,top: 5),
+                                    alignment: Alignment.topLeft,child:
+                                    Text(data.propertyDesc!)),
+                                Container(margin: EdgeInsets.only(right: 10,),
+                                    alignment: Alignment.topRight,
+                                    child: Text(data.hint!,style: TextStyle(fontWeight:FontWeight.w700,color: CustomTheme.peach)
+                                    )
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    itemCount: _homeViewModel.getPopularPropertyModelList().length,
+                  )),
+            ],
+          ),
         ),
       ),
-      drawer:
-          _buildDrawer(), // This trailing comma makes auto-formatting nicer for build methods.
+      drawer: _buildDrawer(), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
@@ -530,56 +597,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  List<CitySuggestionModel> getCitySuggestionList() {
-    return [
-      CitySuggestionModel(
-          cityName: 'Bangalore',
-          imageUrl:
-          "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/newbangaloreimage.png?alt=media&token=b665228b-a72c-46f1-8683-0e0a0ce88d11",
-          callback: (String value) {}),
-      CitySuggestionModel(
-          cityName: 'BTM',
-          imageUrl:
-              "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/btm.png?alt=media&token=8a4a92fb-c0db-4c23-9c5b-e74166373827",
-          callback: (String value) {}),
-      CitySuggestionModel(
-          cityName: 'HSR',
-          imageUrl:
-              "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/hsr.png?alt=media&token=d64fedfc-e2b5-404a-b703-5816046a2d2f",
-          callback: log),
-      CitySuggestionModel(
-          cityName: 'Kundlahalli',
-          imageUrl:
-              "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/kundahalli.png?alt=media&token=73f33a3f-8219-4c28-8cd4-4f8cb2b14905",
-          callback: (String value) => doSomeWork(value)),
-      CitySuggestionModel(
-          cityName: 'Marathalli',
-          imageUrl:
-             "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/marathalli.png?alt=media&token=92c56d6f-6a73-4717-8a85-8a1530a95282",
-          callback: doSomeWork),
-      CitySuggestionModel(
-          cityName: 'Whitefield',
-          imageUrl:
-    "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/whitefield.png?alt=media&token=d5c56216-b5e8-4b6d-9fd3-d6675149fd45",
-          callback: (String value) => doSomeWork(value)),
-      CitySuggestionModel(
-          cityName: 'Old Airport',
-          imageUrl:"https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/old_airport_road.png?alt=media&token=3100968f-c852-4363-a805-597f8804c51c",
-          callback: (String value) => doSomeWork(value)),
-    ];
+
+
+
+
   }
 
-  void doSomeWork(String cityName) {
-    log(cityName);
-    //api call with cityName
-  }
-}
 
-class CitySuggestionModel {
-  String cityName;
-  String imageUrl;
-  Function(String) callback;
 
-  CitySuggestionModel(
-      {required this.cityName, required this.imageUrl, required this.callback});
-}
+

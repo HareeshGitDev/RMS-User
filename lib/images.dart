@@ -7,6 +7,10 @@ class Images {
   static String brandLogo_blue = 'assets/brand/logormsblue.png';
 
 
+//---------------------- estate ------------------------------------//
+  static String onebhk_img = 'assets/estate/onebhk_image.webp';
+  static String twobhk_img = 'assets/estate/twobhk_image.webp';
+  static String studio_img = 'assets/estate/stadioroomimg.webp';
 
 
   //------ Place Holder ------------------//
@@ -105,16 +109,8 @@ class Images {
       'assets/images/apps/learning/images/course_photo.png';
 
 
-  //---------------------- Food ------------------------------------//
 
-  static String foodBanner = 'assets/images/apps/food/images/food_banner.jpg';
-  static String masterCard = 'assets/images/brand/master_card.png';
-  static String foodProfile = 'assets/images/apps/food/images/profile.jpg';
-  static String foodSplash = 'assets/images/apps/food/images/splash.png';
-  static String foodOrderSuccess =
-      'assets/images/apps/food/images/order_success.png';
-  static String foodAuthentication = 'assets/images/apps/food/icons/food.png';
-  static String foodMap = 'assets/images/apps/food/images/map.png';
+
 
 
 }
