@@ -311,22 +311,27 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       Spacer(),
-                      Container(
-                        alignment: Alignment.bottomLeft,
-                        child: RichText(
-                          text: TextSpan(children: [
-                            TextSpan(
-                                text: "By Signing in, you are agree to our ",
-                                style: TextStyle(
-                                    color: Colors.black, fontFamily: "Nunito")),
-                            TextSpan(
-                                text: "Privacy Policy",
-                                style: TextStyle(
-                                    color: myFavColor,
-                                    fontStyle: FontStyle.italic,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: "Nunito")),
-                          ]),
+                      GestureDetector(
+                        onTap: () => Navigator.of(context)
+                            .pushNamed(AppRoutes.propertyListingPage),
+                        child: Container(
+                          color: Colors.white,
+                          alignment: Alignment.bottomLeft,
+                          child: RichText(
+                            text: TextSpan(children: [
+                              TextSpan(
+                                  text: "By Signing in, you are agree to our ",
+                                  style: TextStyle(
+                                      color: Colors.black, fontFamily: "Nunito")),
+                              TextSpan(
+                                  text: "Privacy Policy",
+                                  style: TextStyle(
+                                      color: myFavColor,
+                                      fontStyle: FontStyle.italic,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: "Nunito")),
+                            ]),
+                          ),
                         ),
                       ),
                     ],
