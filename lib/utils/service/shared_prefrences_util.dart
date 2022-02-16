@@ -4,50 +4,50 @@ import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferenceUtil {
-  getJson(String key) async {
-    final prefs = await SharedPreferences.getInstance();
-    return json.decode(prefs.getString(key).toString());
-  }
 
-  static Future<String?> getString(String key) async {
+
+  Future<String?> getString(String key) async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(key);
   }
-
-  static Future<bool?> setJson(String key, value) async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.setString(key, json.encode(value));
-  }
-
-  static Future<bool> setString(String key, String value) async {
+  Future<bool> setString(String key, String value) async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.setString(key, value);
   }
+  Future<bool> setBool(String key, bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.setBool(key, value);
+  }
+  Future<bool?> getBool(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(key);
+  }
 
-  static Future<String?> getToken() async {
+  Future<String?> getToken() async {
     String? registeredToken = await getString(rms_registeredUserToken);
-    if (registeredToken != null && registeredToken.length > 10) {
+    if (registeredToken != null && registeredToken.length > 4) {
       return registeredToken;
     }
+    return null;
   }
 
-  static Future<bool?> setStringWithKeyValue(String key, String value) async {
+  Future<bool?> setStringWithKeyValue(String key, String value) async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.setString(key, value);
   }
 
-  getAllKeys() async {
+  Future<Set<String>> getAllKeys() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getKeys();
   }
 
-  Future<bool?> removeKey(String input) async {
+  Future<bool?> removeKeyValuePair(String input) async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.remove(input);
   }
 
-  clearAll() async {
+  Future<bool> clearAll() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    await preferences.clear();
+    return await preferences.clear();
   }
 }
