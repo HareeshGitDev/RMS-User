@@ -1,7 +1,9 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
+import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,8 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import '../../utils/color.dart';
+import '../../utils/constants/sp_constants.dart';
+import '../../utils/service/shared_prefrences_util.dart';
 import '../model/login_response_model.dart';
 import 'btn_widget.dart';
 import 'herder_container.dart';
@@ -54,6 +58,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Container(
               decoration: BoxDecoration(
+
                   color: Colors.white,
                   borderRadius:
                       BorderRadius.vertical(top: Radius.circular(30))),
@@ -110,14 +115,28 @@ class _LoginPageState extends State<LoginPage> {
                                 borderRadius: BorderRadius.circular(40)),
                           )),
                       onPressed: () async {
+                        RMSWidgets.showLoaderDialog(context: context, message:'Logging In...');
                         final LoginResponseModel? response =
                             await _loginViewModel.getLoginDetails(
                                 email: _emailController.text,
                                 password: _passwordController.text);
+                        Navigator.of(context).pop();
                         if (response != null &&
                             response.status?.toLowerCase() == 'success') {
-                          Navigator.of(context).pushNamed(AppRoutes.homePage);
+                          SharedPreferenceUtil shared=SharedPreferenceUtil();
+                          bool setToken=await shared.setString(rms_registeredUserToken, response.appToken.toString());
+                          if(setToken) {
+                            SharedPreferenceUtil util=SharedPreferenceUtil();
+                            String? token=await util.getString(rms_registeredUserToken);
+                            if(token != null){
+                              log('Registered Token :: $token');
+                            }
+                            Navigator.of(context).pushNamed(AppRoutes.homePage);
+                          }else{
+                            log('Could not set Registered Token to SF');
+                          }
                         }
+
                       },
                       child: Center(child: Text("LOGIN")),
                     ),
@@ -251,22 +270,28 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(
                     height: 65,
                   ),
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: RichText(
-                      text: TextSpan(children: [
-                        TextSpan(
-                            text: "By Signing in, you are agree to our ",
-                            style: TextStyle(
-                                color: Colors.black, fontFamily: "Nunito")),
-                        TextSpan(
-                            text: "Privacy Policy",
-                            style: TextStyle(
-                                color: myFavColor,
-                                fontStyle: FontStyle.italic,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: "Nunito")),
-                      ]),
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, AppRoutes.propertyListingPage),
+                    child: Container(
+                      color: Colors.white,
+                      child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: RichText(
+                          text: TextSpan(children: [
+                            TextSpan(
+                                text: "By Signing in, you are agree to our ",
+                                style: TextStyle(
+                                    color: Colors.black, fontFamily: "Nunito")),
+                            TextSpan(
+                                text: "Privacy Policy",
+                                style: TextStyle(
+                                    color: myFavColor,
+                                    fontStyle: FontStyle.italic,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: "Nunito")),
+                          ]),
+                        ),
+                      ),
                     ),
                   ),
                 ],
