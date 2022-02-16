@@ -1,4 +1,3 @@
-import 'package:RentMyStay_user/home_module/home_page.dart';
 import 'package:RentMyStay_user/login_module/view/forgot_password_page.dart';
 import 'package:RentMyStay_user/login_module/view/login_page.dart';
 import 'package:RentMyStay_user/login_module/view/success_page.dart';
@@ -8,6 +7,7 @@ import 'package:RentMyStay_user/property_module/viewModel/property_viewModel.dar
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../home_module/view/home_page.dart';
 import '../../login_module/view/registration_page.dart';
 
 class NavigationService {
