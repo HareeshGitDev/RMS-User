@@ -10,17 +10,17 @@ class LoginViewModel extends ChangeNotifier {
   final LoginApiService _loginApiService = LoginApiService();
   String? name;
 
-  Future< LoginResponseModel?> getLoginDetails({required String email , required String password}) async {
-    final LoginResponseModel? response =
+  Future< LoginResponseModel> getLoginDetails({required String email , required String password}) async {
+    final LoginResponseModel response =
         await _loginApiService.fetchLoginDetails(email: email,password: password);
    return response;
    name='su';
    notifyListeners();
   }
 
-  Future<SignUpResponseModel?> signUpUser(
+  Future<SignUpResponseModel> signUpUser(
       {required SignUpRequestModel signUpRequestModel}) async {
-    final SignUpResponseModel? response = await _loginApiService.signUpUser(
+    final SignUpResponseModel response = await _loginApiService.signUpUser(
         signUpRequestModel: signUpRequestModel);
     return response;
   }

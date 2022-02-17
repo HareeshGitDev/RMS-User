@@ -18,7 +18,6 @@ import '../../utils/service/shared_prefrences_util.dart';
 import '../model/login_response_model.dart';
 import '../model/signup_response_model.dart';
 
-
 class RegistrationPage extends StatefulWidget {
   @override
   _RegistrationPageState createState() => _RegistrationPageState();
@@ -282,7 +281,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           else {
                             RMSWidgets.showLoaderDialog(
                                 context: context, message: 'Please wait...');
-                            final SignUpResponseModel? response =
+                            final SignUpResponseModel response =
                                 await _loginViewModel.signUpUser(
                                     signUpRequestModel: SignUpRequestModel(
                                         email: _emailController.text,
@@ -298,21 +297,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                         lname: '',
                                         budget: ''));
                             Navigator.of(context).pop();
-                            if (response != null) {
-                              if (response.status?.toLowerCase() == 'success') {
-                                RMSWidgets.getToast(
-                                    message: 'Successfully Created Account.',
-                                    color: myFavColor);
-                                Navigator.of(context)
-                                    .pushNamed(AppRoutes.homePage);
-                              }else{}
+
+                            if (response.status?.toLowerCase() == 'success') {
+                              RMSWidgets.getToast(
+                                  message:response.message.toString(),
+                                  color: myFavColor);
+                              Navigator.of(context)
+                                  .pushNamed(AppRoutes.homePage);
+                            } else {
+                              RMSWidgets.getToast(message: response.message.toString(), color: CustomTheme().colorError);
+
                             }
                           }
                           },
                           child: Center(child: Text("REGISTER")),
                         ),
                       ),
-
                     ],
                   ),
                 )
