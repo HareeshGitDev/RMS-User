@@ -19,7 +19,8 @@ import '../../images.dart';
 import '../../theme/app_notifier.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/theme_type.dart';
-import '../model/City_SuggestionModel.dart';
+import '../../utils/service/navigation_service.dart';
+
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -250,7 +251,7 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (context, index) {
                       var data = _homeViewModel.getPopularPropertyModelList()[index];
                       return InkWell(
-                        onTap: () => data.callback!(data.propertyType!),
+                        onTap: () => Navigator.of(context).pushNamed(AppRoutes.propertyListingPage,),
                         child: Card(
                           shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)))

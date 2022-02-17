@@ -1,3 +1,4 @@
+
 import 'dart:ui';
 
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
@@ -16,9 +17,7 @@ import '../../utils/color.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/shared_prefrences_util.dart';
 import '../model/login_response_model.dart';
-import '../model/signup_response_model.dart';
-import 'forgot_password_page.dart';
-import 'registration_page.dart';
+
 
 class LoginPage extends StatefulWidget {
   @override
@@ -169,6 +168,7 @@ class _LoginPageState extends State<LoginPage> {
                                     borderRadius: BorderRadius.circular(40)),
                               )),
                           onPressed: () async {
+                            FocusScope.of(context).requestFocus(FocusNode());
                             if (_formKey.currentState != null &&
                                 !_formKey.currentState!.validate()) {}
                             if (_emailController.text.isEmpty) {
@@ -183,17 +183,21 @@ class _LoginPageState extends State<LoginPage> {
                                     toastLength: Toast.LENGTH_SHORT,
                                     gravity: ToastGravity.CENTER);
                               } else {
-                                final LoginResponseModel? response =
+                                RMSWidgets.showLoaderDialog(context: context, message: 'Please wait...');
+                                final LoginResponseModel response =
                                     await _loginViewModel.getLoginDetails(
                                         email: _emailController.text,
                                         password: _passwordController.text);
-                                if (response != null &&
-                                    response.status?.toLowerCase() ==
+
+                                if (response.status?.toLowerCase() ==
                                         'success') {
                                   await setSPValues(response: response);
-
+                                  Navigator.pop(context);
                                   Navigator.of(context)
                                       .pushNamed(AppRoutes.homePage);
+                                }else{
+                                  RMSWidgets.getToast(message: 'Email not Registered or Invalid Password.', color: CustomTheme().colorError);
+                                  Navigator.pop(context);
                                 }
                               }
                               //

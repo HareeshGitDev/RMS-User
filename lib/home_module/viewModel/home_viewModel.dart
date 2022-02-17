@@ -4,7 +4,7 @@ import 'package:RentMyStay_user/home_module/model/popular_model.dart';
 import 'package:RentMyStay_user/images.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../model/City_SuggestionModel.dart';
+import '../model/City_suggestion_model.dart';
 
 class HomeViewModel extends ChangeNotifier {
 
@@ -14,7 +14,9 @@ class HomeViewModel extends ChangeNotifier {
           cityName: 'Bangalore',
           imageUrl:
           "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/newbangaloreimage.png?alt=media&token=b665228b-a72c-46f1-8683-0e0a0ce88d11",
-          callback: (String value) {}),
+          callback: (String value) {
+
+          }),
       CitySuggestionModel(
           cityName: 'BTM',
           imageUrl:

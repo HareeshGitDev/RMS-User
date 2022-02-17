@@ -28,7 +28,7 @@ class RMSWidgets{
     AlertDialog alert = AlertDialog(
       content: Row(
         children: [
-          CircularProgressIndicator(
+          const CircularProgressIndicator(
               valueColor:AlwaysStoppedAnimation<Color>(Color(0xff7AB02A))),
           SizedBox(width: 5,),
           Container(
