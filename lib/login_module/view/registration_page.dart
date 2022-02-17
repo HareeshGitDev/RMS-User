@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:RentMyStay_user/images.dart';
 import 'package:RentMyStay_user/login_module/model/signup_request_model.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:RentMyStay_user/theme/app_theme.dart';
@@ -9,7 +10,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../../utils/color.dart';
 import '../../utils/constants/sp_constants.dart';
@@ -59,8 +60,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   padding: const EdgeInsets.only(left: 25, right: 25),
                   child: SizedBox(
                     height: _mainHeight * 0.26,
-                    child: Image.asset(
-                      'assets/images/transparent_logo_rms.png',
+                    child: Image.asset(Images.brandLogo_Transparent,
                     ),
                   ),
                 ),
@@ -231,6 +231,55 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                     borderRadius: BorderRadius.circular(40)),
                               )),
                           onPressed: () async {
+                          if (_nameController.text.isEmpty) {
+                            Fluttertoast.showToast(
+                                msg: 'Please Enter Enter Your Name',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER);
+                          }
+                          else if(_emailController.text.isEmpty)
+                            {
+                              Fluttertoast.showToast(
+                              msg: 'Please Enter E-mail Address',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER);
+                            }
+                          else if(_phoneNumberController.text.isEmpty)
+                            {
+                              Fluttertoast.showToast(
+                                  msg: 'Please Enter Your Mobile Number',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER);
+                            }
+                          else if(_passwordController.text.isEmpty)
+                          {
+                            Fluttertoast.showToast(
+                                msg: 'Please Enter Your Password',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER);
+                          }
+                          else if(typeValue.isEmpty||typeValue=='I am')
+                          {
+                            Fluttertoast.showToast(
+                                msg: 'Please Select All Field',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER);
+                          }
+                          else if(selectedCity.isEmpty || selectedCity =='Select City')
+                          {
+                            Fluttertoast.showToast(
+                                msg: 'Please Select City',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER);
+                          }
+                          else if(sourceRMS.isEmpty || sourceRMS == 'How do you Know RMS')
+                          {
+                            Fluttertoast.showToast(
+                                msg: 'Please Select Source',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER);
+                          }
+                          else {
                             RMSWidgets.showLoaderDialog(
                                 context: context, message: 'Please wait...');
                             final SignUpResponseModel? response =
@@ -258,6 +307,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                     .pushNamed(AppRoutes.homePage);
                               }else{}
                             }
+                          }
                           },
                           child: Center(child: Text("REGISTER")),
                         ),

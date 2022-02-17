@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:RentMyStay_user/images.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
@@ -11,7 +12,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutx/utils/spacing.dart';
 import 'package:provider/provider.dart';
+import '../../Web_View_Container.dart';
 import '../../utils/color.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/shared_prefrences_util.dart';
@@ -26,6 +29,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TextEditingController mob_controller = TextEditingController();
+  final privacy_policy =
+      "https://www.rentmystay.com/info/privacy-policy/" + "123456";
+  late ThemeData theme;
   late LoginViewModel _loginViewModel;
   final _emailController = TextEditingController();
   final _resetEmailController = TextEditingController();
@@ -38,6 +45,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     _loginViewModel = Provider.of<LoginViewModel>(context, listen: false);
     super.initState();
+    theme = AppTheme.theme;
   }
 
   @override
@@ -45,300 +53,312 @@ class _LoginPageState extends State<LoginPage> {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: Container(
-          color: CustomTheme.skyBlue,
-          height: _mainHeight,
-          width: _mainWidth,
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 25, right: 25),
-                child: SizedBox(
-                  height: _mainHeight * 0.3,
-                  child: Image.asset(
-                    'assets/images/transparent_logo_rms.png',
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Container(
+            color: CustomTheme.skyBlue,
+            height: _mainHeight,
+            width: _mainWidth,
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 25, right: 25),
+                  child: SizedBox(
+                    height: _mainHeight * 0.3,
+                    child: Image.asset(
+                      'assets/images/transparent_logo_rms.png',
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                padding: EdgeInsets.only(bottom: 5),
-                margin: EdgeInsets.only(right: 20),
-                alignment: Alignment.centerRight,
-                child: AnimatedTextKit(
-                  animatedTexts: [
-                    ColorizeAnimatedText('Welcome Back !',
-                        textStyle:
-                            TextStyle(fontSize: 30, fontFamily: "Nunito"),
-                        colors: [
-                          Colors.white,
-                          CustomTheme.skyBlue,
-                        ]),
-                  ],
-                  isRepeatingAnimation: true,
-                  repeatForever: true,
+                Container(
+                  padding: EdgeInsets.only(bottom: 5),
+                  margin: EdgeInsets.only(right: 20),
+                  alignment: Alignment.centerRight,
+                  child: AnimatedTextKit(
+                    animatedTexts: [
+                      ColorizeAnimatedText('Welcome Back !',
+                          textStyle:
+                              TextStyle(fontSize: 30, fontFamily: "Nunito"),
+                          colors: [
+                            Colors.white,
+                            CustomTheme.skyBlue,
+                          ]),
+                    ],
+                    isRepeatingAnimation: true,
+                    repeatForever: true,
+                  ),
                 ),
-              ),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(30))),
-                  width: _mainWidth,
-                  padding: EdgeInsets.only(left: 25, right: 25),
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.only(top: 35),
-                        margin: EdgeInsets.only(top: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          color: Colors.white,
-                        ),
-                        child: Neumorphic(
-                          style: NeumorphicStyle(
-                            depth: -10,
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(30))),
+                    width: _mainWidth,
+                    padding: EdgeInsets.only(left: 25, right: 25),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          padding: const EdgeInsets.only(top: 35),
+                          margin: EdgeInsets.only(top: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
                             color: Colors.white,
                           ),
-                          child: TextFormField(
-                            validator: (value) {
-                              if (value != null && value.length < 6) {
-                                return "Enter proper email";
-                              }
-                              return null;
-                            },
-                            keyboardType: TextInputType.emailAddress,
-                            controller: _emailController,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Email',
-                              prefixIcon: Icon(Icons.email),
+                          child: Neumorphic(
+                            style: NeumorphicStyle(
+                              depth: -10,
+                              color: Colors.white,
                             ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(top: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          color: Colors.white,
-                        ),
-                        child: Neumorphic(
-                          style: NeumorphicStyle(
-                            depth: -10,
-                            color: Colors.white,
-                          ),
-                          child: TextFormField(
-                            validator: (value) {
-                              if (value != null && value.length < 6) {
-                                return " Too Short Password";
-                              }
-                              return null;
-                            },
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            controller: _passwordController,
-                            keyboardType: TextInputType.visiblePassword,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: "Password",
-                              prefixIcon: Icon(Icons.password),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 40,
-                      ),
-                      Container(
-                        width: _mainWidth,
-                        height: 50,
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  CustomTheme.skyBlue),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(40)),
-                              )),
-                          onPressed: () async {
-                            if (_formKey.currentState != null &&
-                                !_formKey.currentState!.validate()) {}
-                            if (_emailController.text.isEmpty) {
-                              Fluttertoast.showToast(
-                                  msg: 'Please Enter E-mail Address',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER);
-                            } else {
-                              if (_passwordController.text.isEmpty) {
-                                Fluttertoast.showToast(
-                                    msg: 'Please Enter Password',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.CENTER);
-                              } else {
-                                final LoginResponseModel? response =
-                                    await _loginViewModel.getLoginDetails(
-                                        email: _emailController.text,
-                                        password: _passwordController.text);
-                                if (response != null &&
-                                    response.status?.toLowerCase() ==
-                                        'success') {
-                                  await setSPValues(response: response);
-
-                                  Navigator.of(context)
-                                      .pushNamed(AppRoutes.homePage);
+                            child: TextFormField(
+                              validator: (value) {
+                                if (value != null && value.length < 6) {
+                                  return "Enter proper email";
                                 }
-                              }
-                              //
-                            }
-                          },
-                          child: Center(child: Text("LOGIN")),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      GestureDetector(
-                        onTap: () => showForgotPasswordDialog(context: context),
-                        child: Container(
-                          color: Colors.white,
-                          alignment: Alignment.centerLeft,
-                          child: Text('Forgot Password?'),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 40,
-                      ),
-                      Text(
-                        'Or Login With',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w400),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              width: _mainWidth * 0.4,
-                              height: 40,
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            CustomTheme.skyBlue),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(40)),
-                                    )),
-                                onPressed: () async {},
-                                child: Text(
-                                  'SignIn With OTP',
-                                  style: TextStyle(fontSize: 16),
-                                ),
+                                return null;
+                              },
+                              keyboardType: TextInputType.emailAddress,
+                              controller: _emailController,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Email',
+                                prefixIcon: Icon(Icons.email),
                               ),
                             ),
                           ),
-                          SizedBox(
-                            width: 20,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            color: Colors.white,
                           ),
-                          Expanded(
-                            child: Container(
-                              width: _mainWidth * 0.4,
-                              height: 40,
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            CustomTheme.skyBlue),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(40)),
-                                    )),
-                                onPressed: () async {},
-                                child: Container(
-                                  width: double.infinity,
-                                  child: Center(
-                                    child: Text(
-                                      'SignIn',
-                                      style: TextStyle(
-                                        fontSize: 16,
+                          child: Neumorphic(
+                            style: NeumorphicStyle(
+                              depth: -10,
+                              color: Colors.white,
+                            ),
+                            child: TextFormField(
+                              validator: (value) {
+                                if (value != null && value.length < 6) {
+                                  return " Too Short Password";
+                                }
+                                return null;
+                              },
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              controller: _passwordController,
+                              keyboardType: TextInputType.visiblePassword,
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: "Password",
+                                prefixIcon: Icon(Icons.vpn_key_rounded),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Container(
+                          width: _mainWidth,
+                          height: 50,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        CustomTheme.skyBlue),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(40)),
+                                )),
+                            onPressed: () async {
+                              if (_formKey.currentState != null &&
+                                  !_formKey.currentState!.validate()) {}
+                              if (_emailController.text.isEmpty) {
+                                Fluttertoast.showToast(
+                                    msg: 'Please Enter E-mail Address',
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER);
+                              } else {
+                                if (_passwordController.text.isEmpty) {
+                                  Fluttertoast.showToast(
+                                      msg: 'Please Enter Password',
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER);
+                                } else {
+                                  final LoginResponseModel? response =
+                                      await _loginViewModel.getLoginDetails(
+                                          email: _emailController.text,
+                                          password: _passwordController.text);
+                                  if (response != null &&
+                                      response.status?.toLowerCase() ==
+                                          'success') {
+                                    await setSPValues(response: response);
+                                    Navigator.of(context)
+                                        .pushNamed(AppRoutes.homePage);
+                                  }
+                                }
+                                //
+                              }
+                            },
+                            child: Center(child: Text("LOGIN")),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        GestureDetector(
+                          onTap: () =>
+                              showForgotPasswordDialog(context: context),
+                          child: Container(
+                            color: Colors.white,
+                            alignment: Alignment.centerLeft,
+                            child: Text('Forgot Password?'),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Text(
+                          'Or Login With',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w400),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                width: _mainWidth * 0.4,
+                                height: 40,
+                                child: ElevatedButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              CustomTheme.skyBlue),
+                                      shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(40)),
+                                      )),
+                                  onPressed: () async {
+                                    _showBottomSheet(context);
+                                    /*  Navigator.of(context)
+                                        .pushNamed(AppRoutes.mob_register_login);*/
+                                  },
+                                  child: Text(
+                                    'SignIn With OTP',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Expanded(
+                              child: Container(
+                                width: _mainWidth * 0.4,
+                                height: 40,
+                                child: ElevatedButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              CustomTheme.skyBlue),
+                                      shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(40)),
+                                      )),
+                                  onPressed: () async {},
+                                  child: Container(
+                                    width: double.infinity,
+                                    child: Center(
+                                      child: Text(
+                                        'SignIn',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      GestureDetector(
-                        onTap: () => Navigator.of(context)
-                            .pushNamed(AppRoutes.registrationPage),
-                        child: Container(
-                          color: Colors.white,
-                          child: RichText(
-                            text: TextSpan(children: [
-                              TextSpan(
-                                  text: "Don't have an account ? ",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "Nunito")),
-                              TextSpan(
-                                  text: "Register",
-                                  style: TextStyle(
-                                      color: orangeColors,
-                                      fontFamily: "Nunito")),
-                            ]),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        GestureDetector(
+                          onTap: () => Navigator.of(context)
+                              .pushNamed(AppRoutes.registrationPage),
+                          child: Container(
+                            color: Colors.white,
+                            child: RichText(
+                              text: TextSpan(children: [
+                                TextSpan(
+                                    text: "Don't have an account ? ",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: "Nunito")),
+                                TextSpan(
+                                    text: "Register",
+                                    style: TextStyle(
+                                        color: orangeColors,
+                                        fontFamily: "Nunito")),
+                              ]),
+                            ),
                           ),
                         ),
-                      ),
-                      Spacer(),
-                      GestureDetector(
-                        onTap: () => Navigator.of(context)
-                            .pushNamed(AppRoutes.propertyListingPage),
-                        child: Container(
-                          color: Colors.white,
-                          alignment: Alignment.bottomLeft,
-                          child: RichText(
-                            text: TextSpan(children: [
-                              TextSpan(
-                                  text: "By Signing in, you are agree to our ",
-                                  style: TextStyle(
-                                      color: Colors.black, fontFamily: "Nunito")),
-                              TextSpan(
-                                  text: "Privacy Policy",
-                                  style: TextStyle(
-                                      color: myFavColor,
-                                      fontStyle: FontStyle.italic,
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: "Nunito")),
-                            ]),
+                        Spacer(),
+                        GestureDetector(
+                          onTap: () =>
+                              /*Navigator.of(context)
+                              .pushNamed(AppRoutes.propertyListingPage),*/
+                              _handleURLButtonPress(
+                                  context, privacy_policy, 'Privacy Policy'),
+                          child: Container(
+                            color: Colors.white,
+                            alignment: Alignment.bottomLeft,
+                            child: RichText(
+                              text: TextSpan(children: [
+                                TextSpan(
+                                    text:
+                                        "By Signing in, you are agree to our ",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: "Nunito")),
+                                TextSpan(
+                                    text: "Privacy Policy",
+                                    style: TextStyle(
+                                        color: myFavColor,
+                                        fontStyle: FontStyle.italic,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: "Nunito")),
+                              ]),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -423,13 +443,18 @@ class _LoginPageState extends State<LoginPage> {
                     final Map<String, dynamic>? data = await _loginViewModel
                         .resetPassword(email: _resetEmailController.text);
                     Navigator.pop(context);
-                    if(data != null){
-                      if(data['status'].toString().toLowerCase()=='success'){
-                        RMSWidgets.getToast(message: data['message'].toString(), color: myFavColor);
+                    if (data != null) {
+                      if (data['status'].toString().toLowerCase() ==
+                          'success') {
+                        RMSWidgets.getToast(
+                            message: data['message'].toString(),
+                            color: myFavColor);
                         _resetEmailController.clear();
                         Navigator.pop(context);
-                      } else{
-                        RMSWidgets.getToast(message: data['message'].toString(), color: CustomTheme.peach);
+                      } else {
+                        RMSWidgets.getToast(
+                            message: data['message'].toString(),
+                            color: CustomTheme.peach);
                       }
                     }
                   },
@@ -445,4 +470,158 @@ class _LoginPageState extends State<LoginPage> {
           );
         });
   }
+
+  void _showBottomSheet(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext buildContext) {
+          return Container(
+            decoration: BoxDecoration(
+                color: theme.backgroundColor,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16))),
+            child: Padding(
+              padding: FxSpacing.fromLTRB(24, 24, 24, 36),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Container(
+                        width: 120,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          color: CustomTheme.skyBlue.withAlpha(20),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Image.asset(Images.mobSignIn),
+                      ),
+                      Text(
+                        'Registration or Login',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Add your phone number. we'll send you a verification code so we know you're real",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black38,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(28),
+                        decoration: BoxDecoration(
+                          color: CustomTheme.skyBlue.withAlpha(20),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              keyboardType: TextInputType.number,
+                              maxLength: 10,
+                              controller: mob_controller,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              decoration: InputDecoration(
+                                hintText: "Mobile Number",
+                                hintStyle:
+                                    TextStyle(color: Colors.blueGrey.shade200),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black12),
+                                    borderRadius: BorderRadius.circular(10)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black12),
+                                    borderRadius: BorderRadius.circular(10)),
+                                prefix: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 8),
+                                  child: Text(
+                                    '(+91)',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                suffixIcon: Icon(
+                                  Icons.check_circle,
+                                  color: Colors.green,
+                                  size: 28,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 18,
+                            ),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  if (mob_controller.text.isNotEmpty) {
+                                    Navigator.of(context).pushNamed(
+                                        AppRoutes.mob_register_login_otp,
+                                        arguments: {
+                                          'mobile': "+91" + mob_controller.text
+                                        });
+                                  }
+                                  else
+                                    {
+                                      RMSWidgets.getToast(message: "Please Enter valid Mobile Number", color:CustomTheme().colorError);
+                                    }
+                                },
+                                style: ButtonStyle(
+                                  foregroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.white),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          CustomTheme.skyBlue),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(24.0),
+                                    ),
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(14.0),
+                                  child: Text(
+                                    'Send',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+}
+
+void _handleURLButtonPress(BuildContext context, String url, String title) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => Web_View_Container(url, title)),
+  );
 }

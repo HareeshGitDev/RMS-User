@@ -33,7 +33,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               child: SizedBox(
                 height: _mainHeight * 0.3,
                 child: Image.asset(
-                  'assets/images/transparent_logo_rms.png',
+                  Images.brandLogo_Transparent,
                 ),
               ),
             ),

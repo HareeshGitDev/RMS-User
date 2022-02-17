@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../home_module/view/home_page.dart';
+import '../../login_module/view/mob_otp.dart';
+import '../../login_module/view/mob_register_login.dart';
 import '../../login_module/view/registration_page.dart';
 
 class NavigationService {
@@ -37,6 +39,14 @@ class NavigationService {
                   create: (_) => LoginViewModel(),
                   child: ForgotPasswordPage(),
                 ));
+
+      case AppRoutes.mob_register_login:
+        return MaterialPageRoute(builder: (context) => mob_register_login());
+      case AppRoutes.mob_register_login_otp:
+        final data = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+            builder: (context) => MobileOtpPage(number: data['mobile']));
+
       case AppRoutes.successPage:
         return MaterialPageRoute(builder: (context) => SuccessPage());
       case AppRoutes.propertyListingPage:
@@ -46,7 +56,6 @@ class NavigationService {
             child: PropertyListingPage(),
           ),
         );
-
       default:
         return MaterialPageRoute(
           builder: (context) => const Scaffold(
@@ -64,4 +73,6 @@ class AppRoutes {
   static const String propertyListingPage = 'propertyListingPage';
   static const String forgotPassword = 'forgotPassword';
   static const String successPage = 'successPage';
+  static const String mob_register_login = 'mob_register_login';
+  static const String mob_register_login_otp = 'mob_register_login_otp';
 }

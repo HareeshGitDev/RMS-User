@@ -543,7 +543,7 @@ class _HomePageState extends State<HomePage> {
                           child: Image(
                             height: 20,
                             width: 20,
-                            image: AssetImage(Images.documentationIcon),
+                            image: AssetImage(Images.wallet),
                             color: CustomTheme.skyBlue,
                           ),
                           color: CustomTheme.skyBlue.withAlpha(20),
@@ -551,7 +551,7 @@ class _HomePageState extends State<HomePage> {
                         FxSpacing.width(16),
                         Expanded(
                           child: FxText.b1(
-                            'documentation'.tr(),
+                            'FAQ'.tr(),
                           ),
                         ),
                       ],
@@ -573,7 +573,7 @@ class _HomePageState extends State<HomePage> {
                           child: Image(
                             height: 20,
                             width: 20,
-                            image: AssetImage(Images.changeLogIcon),
+                            image: AssetImage(Images.wallet),
                             color: CustomTheme.peach,
                           ),
                           color: CustomTheme.peach.withAlpha(20),

@@ -8,11 +8,14 @@ import '../model/signup_response_model.dart';
 class LoginViewModel extends ChangeNotifier {
 
   final LoginApiService _loginApiService = LoginApiService();
+  String? name;
 
   Future< LoginResponseModel?> getLoginDetails({required String email , required String password}) async {
     final LoginResponseModel? response =
         await _loginApiService.fetchLoginDetails(email: email,password: password);
    return response;
+   name='su';
+   notifyListeners();
   }
 
   Future<SignUpResponseModel?> signUpUser(
