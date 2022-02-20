@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:RentMyStay_user/images.dart';
+import 'package:RentMyStay_user/login_module/model/gmail_signin_request_model.dart';
 import 'package:RentMyStay_user/login_module/model/signup_request_model.dart';
+import 'package:RentMyStay_user/login_module/service/google_auth_service.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
@@ -11,19 +13,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import '../../utils/color.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/shared_prefrences_util.dart';
+import '../model/gmail_registration_request_model.dart';
 import '../model/login_response_model.dart';
 import '../model/signup_response_model.dart';
 
-class Registration_details_page extends StatefulWidget {
+class GmailRegistrationPage extends StatefulWidget {
+  GoogleSignInAccount googleData;
+
+  GmailRegistrationPage({Key? key, required this.googleData})
+      : super(key: key);
+
   @override
   _RegistrationPageState createState() => _RegistrationPageState();
 }
 
-class _RegistrationPageState extends State<Registration_details_page> {
+class _RegistrationPageState extends State<GmailRegistrationPage> {
   late LoginViewModel _loginViewModel;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -35,6 +44,7 @@ class _RegistrationPageState extends State<Registration_details_page> {
   String typeValue = 'I am';
   String selectedCity = 'Select City';
   String sourceRMS = 'How do you Know RMS';
+  bool fromOTP = false;
 
   @override
   void initState() {
@@ -47,7 +57,8 @@ class _RegistrationPageState extends State<Registration_details_page> {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: SingleChildScrollView(
+      body: GestureDetector(
+        onTap:()=> FocusScope.of(context).requestFocus(FocusNode()),
         child: Container(
           color: CustomTheme.skyBlue,
           height: _mainHeight,
@@ -58,8 +69,9 @@ class _RegistrationPageState extends State<Registration_details_page> {
                 Padding(
                   padding: const EdgeInsets.only(left: 25, right: 25),
                   child: SizedBox(
-                    height: _mainHeight * 0.26,
-                    child: Image.asset(Images.brandLogo_Transparent,
+                    height: _mainHeight * 0.3,
+                    child: Image.asset(
+                      Images.brandLogo_Transparent,
                     ),
                   ),
                 ),
@@ -71,7 +83,7 @@ class _RegistrationPageState extends State<Registration_details_page> {
                     animatedTexts: [
                       ColorizeAnimatedText('You are Almost there!',
                           textStyle:
-                          TextStyle(fontSize: 30, fontFamily: "Nunito"),
+                              TextStyle(fontSize: 30, fontFamily: "Nunito"),
                           colors: [
                             Colors.white,
                             CustomTheme.skyBlue,
@@ -85,29 +97,56 @@ class _RegistrationPageState extends State<Registration_details_page> {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(30))),
-                  height: _mainHeight * 0.7,
+                          BorderRadius.vertical(top: Radius.circular(30))),
+                  height: _mainHeight * 0.654,
                   width: _mainWidth,
                   padding: EdgeInsets.only(left: 25, right: 25),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: _textInput(
-                            hint: "Name",
-                            icon: Icons.person,
-                            controller: _nameController),
+
+                      Center(
+                        child: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              widget.googleData.photoUrl.toString(),
+                            ),
+                            maxRadius: 30),
                       ),
                       SizedBox(
-                        height: 5,
+                        height: 10,
                       ),
-                      _textInput(
-                          hint: "Email",
-                          icon: Icons.email,
-                          controller: _emailController),
+                      Center(
+                        child: Text('${widget.googleData.email}',style: TextStyle(
+                            color: Colors.black.withGreen(70),
+                            fontWeight: FontWeight.w700,
+                            fontSize: 22
+                        ),),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                          'Hello ${widget.googleData.displayName},Gmail Verification is done.Now Please enter few more mandatory details to complete your registration .',style: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16
+                      ),),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      Visibility(
+                        visible: fromOTP,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: _textInput(
+                              hint: "Name",
+                              icon: Icons.person,
+                              controller: _nameController),
+                        ),
+                      ),
                       SizedBox(
                         height: 5,
                       ),
@@ -115,20 +154,6 @@ class _RegistrationPageState extends State<Registration_details_page> {
                           hint: "Phone Number",
                           icon: Icons.contact_page,
                           controller: _phoneNumberController),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      _textInput(
-                          hint: "Password",
-                          icon: Icons.vpn_key,
-                          controller: _passwordController),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      _textInput(
-                          hint: "Apply Referal Code (Optional)",
-                          icon: Icons.ac_unit,
-                          controller: _referalController),
                       SizedBox(
                         height: 20,
                       ),
@@ -143,12 +168,12 @@ class _RegistrationPageState extends State<Registration_details_page> {
                           child: DropdownButton(
                             items: getTypeList
                                 .map((type) => DropdownMenuItem(
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Text(type),
-                              ),
-                              value: type,
-                            ))
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Text(type),
+                                      ),
+                                      value: type,
+                                    ))
                                 .toList(),
                             onChanged: (value) {
                               setState(() {
@@ -171,12 +196,12 @@ class _RegistrationPageState extends State<Registration_details_page> {
                           child: DropdownButton(
                             items: getCityList
                                 .map((type) => DropdownMenuItem(
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Text(type),
-                              ),
-                              value: type,
-                            ))
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Text(type),
+                                      ),
+                                      value: type,
+                                    ))
                                 .toList(),
                             onChanged: (value) {
                               setState(() {
@@ -199,12 +224,12 @@ class _RegistrationPageState extends State<Registration_details_page> {
                           child: DropdownButton(
                             items: getRMSList
                                 .map((type) => DropdownMenuItem(
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Text(type),
-                              ),
-                              value: type,
-                            ))
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Text(type),
+                                      ),
+                                      value: type,
+                                    ))
                                 .toList(),
                             onChanged: (value) {
                               setState(() {
@@ -216,6 +241,12 @@ class _RegistrationPageState extends State<Registration_details_page> {
                         ),
                       ),
                       Spacer(),
+                      GestureDetector(
+                          onTap: () async{
+                            await GoogleAuthService.logOut();
+                            Navigator.pop(context);
+                          },
+                          child: Container(child: Text('Click me'),height: 40,color: Colors.white,)),
                       Container(
                         width: _mainWidth,
                         height: 50,
@@ -230,83 +261,57 @@ class _RegistrationPageState extends State<Registration_details_page> {
                                     borderRadius: BorderRadius.circular(40)),
                               )),
                           onPressed: () async {
-                            if (_nameController.text.isEmpty) {
-                              Fluttertoast.showToast(
-                                  msg: 'Please Enter Enter Your Name',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER);
-                            }
-                            else if(_emailController.text.isEmpty)
-                            {
+
+                             /*if (_emailController.text.isEmpty) {
                               Fluttertoast.showToast(
                                   msg: 'Please Enter E-mail Address',
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.CENTER);
-                            }
-                            else if(_phoneNumberController.text.isEmpty)
-                            {
+                            } else*/ if (_phoneNumberController.text.isEmpty) {
                               Fluttertoast.showToast(
                                   msg: 'Please Enter Your Mobile Number',
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.CENTER);
-                            }
-                            else if(_passwordController.text.isEmpty)
-                            {
-                              Fluttertoast.showToast(
-                                  msg: 'Please Enter Your Password',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER);
-                            }
-                            else if(typeValue.isEmpty||typeValue=='I am')
-                            {
+                            } else if (typeValue.isEmpty || typeValue == 'I am') {
                               Fluttertoast.showToast(
                                   msg: 'Please Select All Field',
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.CENTER);
-                            }
-                            else if(selectedCity.isEmpty || selectedCity =='Select City')
-                            {
+                            } else if (selectedCity.isEmpty ||
+                                selectedCity == 'Select City') {
                               Fluttertoast.showToast(
                                   msg: 'Please Select City',
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.CENTER);
-                            }
-                            else if(sourceRMS.isEmpty || sourceRMS == 'How do you Know RMS')
-                            {
+                            } else if (sourceRMS.isEmpty ||
+                                sourceRMS == 'How do you Know RMS') {
                               Fluttertoast.showToast(
                                   msg: 'Please Select Source',
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.CENTER);
-                            }
-                            else {
+                            } else {
                               RMSWidgets.showLoaderDialog(
                                   context: context, message: 'Please wait...');
-                              final SignUpResponseModel response =
-                              await _loginViewModel.signUpUser(
-                                  signUpRequestModel: SignUpRequestModel(
-                                      email: _emailController.text,
-                                      password: _passwordController.text,
-                                      phonenumber:
-                                      _phoneNumberController.text,
-                                      sourceRms: sourceRMS,
-                                      referal: _referalController.text,
-                                      iam: typeValue,
-                                      city: selectedCity,
-                                      fname: _nameController.text,
-                                      imei: '',
-                                      lname: '',
-                                      budget: ''));
+                              SharedPreferenceUtil shared=SharedPreferenceUtil();
+                              final int response =
+                                  await _loginViewModel.detailsValidationAfterGmail(model:GmailRegistrationRequestModel(
+                                    city: selectedCity,
+                                    iam: typeValue,
+                                    mobileNo: _phoneNumberController.text,
+                                    sourceRms: sourceRMS,
+                                    appToken: await shared.getString(rms_registeredUserToken),
+
+                                  ) );
                               Navigator.of(context).pop();
 
-                              if (response.status?.toLowerCase() == 'success') {
-                                RMSWidgets.getToast(
-                                    message:response.message.toString(),
-                                    color: myFavColor);
+                              if (response ==200) {
+                                await setSPValues();
                                 Navigator.of(context)
                                     .pushNamed(AppRoutes.homePage);
                               } else {
-                                RMSWidgets.getToast(message: response.message.toString(), color: CustomTheme().colorError);
-
+                                RMSWidgets.getToast(
+                                    message: 'Something went wrong...',
+                                    color: CustomTheme().colorError);
                               }
                             }
                           },
@@ -326,8 +331,8 @@ class _RegistrationPageState extends State<Registration_details_page> {
 
   Widget _textInput(
       {required TextEditingController controller,
-        required String hint,
-        required IconData icon}) {
+      required String hint,
+      required IconData icon}) {
     return Container(
       margin: EdgeInsets.only(top: 10),
       decoration: BoxDecoration(
@@ -352,51 +357,51 @@ class _RegistrationPageState extends State<Registration_details_page> {
   }
 
   List<String> get getTypeList => [
-    'I am',
-    'Tenants',
-    'Owner',
-  ];
+        'I am',
+        'Tenants',
+        'Owner',
+      ];
 
   List<String> get getCityList => [
-    'Select City',
-    'Bangalore',
-    'Chennai',
-    'Pune',
-    'Hyderabad',
-    'Goa',
-    'Coorg',
-    'Kodikanal',
-    'New Delhi',
-    'Jaipur',
-    'Ahmedabad',
-    'Noida',
-    'Gurugram',
-    'Dehradun',
-    'Kochi',
-    'Vishakhapatan',
-    'Mysore',
-    'Others',
-  ];
+        'Select City',
+        'Bangalore',
+        'Chennai',
+        'Pune',
+        'Hyderabad',
+        'Goa',
+        'Coorg',
+        'Kodikanal',
+        'New Delhi',
+        'Jaipur',
+        'Ahmedabad',
+        'Noida',
+        'Gurugram',
+        'Dehradun',
+        'Kochi',
+        'Vishakhapatan',
+        'Mysore',
+        'Others',
+      ];
 
   List<String> get getRMSList => [
-    'How do you Know RMS',
-    'Search Engine',
-    'Social Media',
-    'Online Ads',
-    'Referred By Friend',
-    'PlayStore',
-    'Rental Portals',
-    'Other Realestate',
-  ];
+        'How do you Know RMS',
+        'Search Engine',
+        'Social Media',
+        'Online Ads',
+        'Referred By Friend',
+        'PlayStore',
+        'Rental Portals',
+        'Other Realestate',
+      ];
 
-  Future<void> setSPValues({required LoginResponseModel response}) async {
+  Future<void> setSPValues() async {
     SharedPreferenceUtil shared = SharedPreferenceUtil();
     await shared.setString(
-        rms_registeredUserToken, response.appToken.toString());
-    await shared.setString(rms_profilePicUrl, response.pic ?? " ");
-    await shared.setString(rms_phoneNumber, response.contactNum.toString());
-    await shared.setString(rms_name, response.name.toString());
-    await shared.setString(rms_email, response.email.toString());
-    await shared.setString(rms_gmapKey, response.gmapKey.toString());
+        rms_registeredUserToken,(await shared.getString(rms_registeredUserToken)).toString());
+    await shared.setString(rms_profilePicUrl, widget.googleData.photoUrl.toString());
+    await shared.setString(rms_phoneNumber, _phoneNumberController.text);
+    await shared.setString(rms_name, widget.googleData.displayName.toString());
+    await shared.setString(rms_email, widget.googleData.email);
+    await shared.setString(rms_gmapKey, (await shared.getString(rms_gmapKey)).toString());
   }
 }

@@ -49,6 +49,7 @@ dependencies:
   shared_preferences: ^2.0.6
   webview_flutter: ^3.0.0
   pinput: ^1.2.2
+  google_sign_in: ^5.2.4
 
   # Base Dependencies
   google_fonts: ^2.0.0

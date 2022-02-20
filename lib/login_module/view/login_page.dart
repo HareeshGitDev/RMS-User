@@ -1,6 +1,8 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:RentMyStay_user/images.dart';
+import 'package:RentMyStay_user/login_module/service/google_auth_service.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
@@ -18,8 +20,8 @@ import '../../Web_View_Container.dart';
 import '../../utils/color.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/shared_prefrences_util.dart';
+import '../model/gmail_signin_request_model.dart';
 import '../model/login_response_model.dart';
-
 
 class LoginPage extends StatefulWidget {
   @override
@@ -192,11 +194,13 @@ class _LoginPageState extends State<LoginPage> {
                                       toastLength: Toast.LENGTH_SHORT,
                                       gravity: ToastGravity.CENTER);
                                 } else {
-                                  RMSWidgets.showLoaderDialog(context: context, message: 'Please wait...');
+                                  RMSWidgets.showLoaderDialog(
+                                      context: context,
+                                      message: 'Please wait...');
                                   final LoginResponseModel response =
-                                  await _loginViewModel.getLoginDetails(
-                                      email: _emailController.text,
-                                      password: _passwordController.text);
+                                      await _loginViewModel.getLoginDetails(
+                                          email: _emailController.text,
+                                          password: _passwordController.text);
 
                                   if (response.status?.toLowerCase() ==
                                       'success') {
@@ -204,14 +208,16 @@ class _LoginPageState extends State<LoginPage> {
                                     Navigator.pop(context);
                                     Navigator.of(context)
                                         .pushNamed(AppRoutes.homePage);
-                                  }else{
-                                    RMSWidgets.getToast(message: 'Email not Registered or Invalid Password.', color: CustomTheme().colorError);
+                                  } else {
+                                    RMSWidgets.getToast(
+                                        message:
+                                            'Email not Registered or Invalid Password.',
+                                        color: CustomTheme().colorError);
                                     Navigator.pop(context);
                                   }
                                 }
                                 //
                               }
-
                             },
                             child: Center(child: Text("LOGIN")),
                           ),
@@ -288,12 +294,41 @@ class _LoginPageState extends State<LoginPage> {
                                             borderRadius:
                                                 BorderRadius.circular(40)),
                                       )),
-                                  onPressed: () async {},
+                                  onPressed: () async {
+                                    RMSWidgets.showLoaderDialog(
+                                        context: context,
+                                        message: 'Please wait...');
+                                    final data =
+                                        await GoogleAuthService.loginIn();
+
+                                    if (data != null) {
+                                      log('Gmail Data :: ${data.toString()}  ');
+                                      final response=await _loginViewModel.registerUserAfterGmail(model: GmailSignInRequestModel(
+                                        name: data.displayName,
+                                        email: data.email,
+                                        id: data.id,
+                                        picture: data.photoUrl,
+                                      ));
+
+                                      Navigator.of(context).pop();
+                                      if(response.status?.toLowerCase()=='success'){
+                                        SharedPreferenceUtil shared=SharedPreferenceUtil();
+                                        await shared.setString(rms_registeredUserToken, response.appToken.toString());
+                                        await shared.setString(rms_gmapKey, response.gmapKey.toString());
+                                        Navigator.of(context).pushNamed(
+                                            AppRoutes.register_details_page,arguments: data);
+                                      }
+
+                                    }else{
+                                      log('Gmail SignIn Failed');
+                                      Navigator.of(context).pop();
+                                    }
+                                  },
                                   child: Container(
                                     width: double.infinity,
                                     child: Center(
                                       child: Text(
-                                        'SignIn',
+                                        'SignIn With Gmail',
                                         style: TextStyle(
                                           fontSize: 16,
                                         ),
@@ -576,17 +611,19 @@ class _LoginPageState extends State<LoginPage> {
                               width: double.infinity,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  if (mob_controller.text.isNotEmpty && mob_controller.text.length==10) {
+                                  if (mob_controller.text.isNotEmpty &&
+                                      mob_controller.text.length == 10) {
                                     Navigator.of(context).pushNamed(
                                         AppRoutes.mob_register_login_otp,
                                         arguments: {
                                           'mobile': "+91" + mob_controller.text
                                         });
+                                  } else {
+                                    RMSWidgets.getToast(
+                                        message:
+                                            "Please Enter valid Mobile Number",
+                                        color: CustomTheme().colorError);
                                   }
-                                  else
-                                    {
-                                      RMSWidgets.getToast(message: "Please Enter valid Mobile Number", color:CustomTheme().colorError);
-                                    }
                                 },
                                 style: ButtonStyle(
                                   foregroundColor:

@@ -1,3 +1,6 @@
+import 'package:RentMyStay_user/login_module/model/gmail_registration_request_model.dart';
+import 'package:RentMyStay_user/login_module/model/gmail_signin_request_model.dart';
+import 'package:RentMyStay_user/login_module/model/gmail_signin_response_model.dart';
 import 'package:RentMyStay_user/login_module/model/login_response_model.dart';
 import 'package:RentMyStay_user/login_module/model/signup_request_model.dart';
 import 'package:RentMyStay_user/login_module/service/login_api_service.dart';
@@ -8,14 +11,13 @@ import '../model/signup_response_model.dart';
 class LoginViewModel extends ChangeNotifier {
 
   final LoginApiService _loginApiService = LoginApiService();
-  String? name;
+
 
   Future< LoginResponseModel> getLoginDetails({required String email , required String password}) async {
     final LoginResponseModel response =
         await _loginApiService.fetchLoginDetails(email: email,password: password);
    return response;
-   name='su';
-   notifyListeners();
+
   }
 
   Future<SignUpResponseModel> signUpUser(
@@ -29,6 +31,17 @@ class LoginViewModel extends ChangeNotifier {
 
     final Map<String,dynamic>? response = await _loginApiService.resetPassword(email: email);
 
+    return response;
+  }
+
+  Future<GmailSignInResponseModel> registerUserAfterGmail(
+      {required GmailSignInRequestModel model}) async {
+    final response = await _loginApiService.registerAfterGmail(model: model);
+    return response;
+  }
+  Future<int> detailsValidationAfterGmail(
+      {required GmailRegistrationRequestModel model}) async {
+    final response = await _loginApiService.detailsValidationAfterGmail(model: model);
     return response;
   }
 }

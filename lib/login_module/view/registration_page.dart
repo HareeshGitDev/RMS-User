@@ -299,6 +299,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             Navigator.of(context).pop();
 
                             if (response.status?.toLowerCase() == 'success') {
+                              await setSPValues(response: response);
                               RMSWidgets.getToast(
                                   message:response.message.toString(),
                                   color: myFavColor);
@@ -389,13 +390,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
         'Other Realestate',
       ];
 
-  Future<void> setSPValues({required LoginResponseModel response}) async {
+  Future<void> setSPValues({required SignUpResponseModel response}) async {
     SharedPreferenceUtil shared = SharedPreferenceUtil();
     await shared.setString(
         rms_registeredUserToken, response.appToken.toString());
-    await shared.setString(rms_profilePicUrl, response.pic ?? " ");
-    await shared.setString(rms_phoneNumber, response.contactNum.toString());
-    await shared.setString(rms_name, response.name.toString());
+    await shared.setString(rms_profilePicUrl," ");
+    await shared.setString(rms_phoneNumber, _phoneNumberController.text);
+    await shared.setString(rms_name, _nameController.text);
     await shared.setString(rms_email, response.email.toString());
     await shared.setString(rms_gmapKey, response.gmapKey.toString());
   }
