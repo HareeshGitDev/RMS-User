@@ -11,6 +11,11 @@ class Images {
   static String onebhk_img = 'assets/estate/onebhk_image.webp';
   static String twobhk_img = 'assets/estate/twobhk_image.webp';
   static String studio_img = 'assets/estate/stadioroomimg.webp';
+  static String img1 = 'assets/estate/estate2.jpg';
+  static String img2 = 'assets/estate/estate3.jpg';
+  static String img3 = 'assets/estate/estate4.jpg';
+  static String img4 = 'assets/estate/estate4.jpg';
+  static String img5 = 'assets/estate/estate5.jgp';
 
 
   //------ Place Holder ------------------//

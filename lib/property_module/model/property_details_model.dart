@@ -150,7 +150,7 @@ class Data {
   String? rmsRent;
   String? orgRmsRent;
   String? rmsDeposit;
-  String? monthlyRent;
+  dynamic monthlyRent;
   String? orgMonthRent;
   String? weeklyRent;
   String? rent;
@@ -333,7 +333,7 @@ class Data {
 class PropPics {
   String? propId;
   String? picLink;
-  String? defaultPic;
+  dynamic defaultPic;
 
   PropPics({this.propId, this.picLink, this.defaultPic});
 

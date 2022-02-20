@@ -1,6 +1,7 @@
 import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
 
 import 'package:RentMyStay_user/login_module/view/login_page.dart';
+import 'package:RentMyStay_user/login_module/view/registration_details_page.dart';
 import 'package:RentMyStay_user/login_module/view/success_page.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:RentMyStay_user/property_module/view/property_listing_page.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../home_module/view/home_page.dart';
+import '../../login_module/view/forgot_password_page.dart';
 import '../../login_module/view/mob_otp.dart';
 import '../../login_module/view/mob_register_login.dart';
 import '../../login_module/view/registration_page.dart';
@@ -46,7 +48,12 @@ class NavigationService {
         final data = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
             builder: (context) => MobileOtpPage(number: data['mobile']));
-
+      case AppRoutes.register_details_page:
+        return MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider(
+              create: (_) => LoginViewModel(),
+              child: Registration_details_page(),
+            ));
       case AppRoutes.successPage:
         return MaterialPageRoute(builder: (context) => SuccessPage());
       case AppRoutes.propertyListingPage:
@@ -76,4 +83,5 @@ class AppRoutes {
   static const String successPage = 'successPage';
   static const String mob_register_login = 'mob_register_login';
   static const String mob_register_login_otp = 'mob_register_login_otp';
+  static const String register_details_page = 'register_details_page';
 }

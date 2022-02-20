@@ -48,6 +48,7 @@ dependencies:
   fluttertoast: ^8.0.8
   shared_preferences: ^2.0.6
   webview_flutter: ^3.0.0
+  pinput: ^1.2.2
 
   # Base Dependencies
   google_fonts: ^2.0.0

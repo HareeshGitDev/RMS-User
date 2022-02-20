@@ -487,7 +487,7 @@ class _LoginPageState extends State<LoginPage> {
                     topLeft: Radius.circular(16),
                     topRight: Radius.circular(16))),
             child: Padding(
-              padding: FxSpacing.fromLTRB(24, 24, 24, 36),
+              padding: FxSpacing.fromLTRB(24, 24, 24, 24),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -505,7 +505,7 @@ class _LoginPageState extends State<LoginPage> {
                       Text(
                         'Registration or Login',
                         style: TextStyle(
-                          fontSize: 22,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -522,10 +522,10 @@ class _LoginPageState extends State<LoginPage> {
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(
-                        height: 25,
+                        height: 20,
                       ),
                       Container(
-                        padding: EdgeInsets.all(28),
+                        padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           color: CustomTheme.skyBlue.withAlpha(20),
                           borderRadius: BorderRadius.circular(12),
@@ -537,7 +537,7 @@ class _LoginPageState extends State<LoginPage> {
                               maxLength: 10,
                               controller: mob_controller,
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                               decoration: InputDecoration(
@@ -557,7 +557,7 @@ class _LoginPageState extends State<LoginPage> {
                                   child: Text(
                                     '(+91)',
                                     style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -565,18 +565,18 @@ class _LoginPageState extends State<LoginPage> {
                                 suffixIcon: Icon(
                                   Icons.check_circle,
                                   color: Colors.green,
-                                  size: 28,
+                                  size: 22,
                                 ),
                               ),
                             ),
                             SizedBox(
-                              height: 18,
+                              height: 10,
                             ),
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  if (mob_controller.text.isNotEmpty) {
+                                  if (mob_controller.text.isNotEmpty && mob_controller.text.length==10) {
                                     Navigator.of(context).pushNamed(
                                         AppRoutes.mob_register_login_otp,
                                         arguments: {

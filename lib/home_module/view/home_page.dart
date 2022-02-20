@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
         bottom: PreferredSize(
           preferredSize: Size(
             20,
-            70,
+            60
           ),
           child: Container(
             margin: EdgeInsets.all(15),
@@ -101,16 +101,17 @@ class _HomePageState extends State<HomePage> {
         actions: [
           Container(
             child: Icon(Icons.notifications_none),
-            margin: EdgeInsets.only(right: 10),
+            margin: EdgeInsets.only(right: 15),
           ),
         ],
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Container(
-          padding: EdgeInsets.only(top: 10),
+          margin: EdgeInsets.only(top: 10),
           child: Image.asset(
+
             Images.brandLogo_Transparent,
-            height: 40,
+            height: 100,
           ),
         ),
       ),
@@ -148,149 +149,153 @@ class _HomePageState extends State<HomePage> {
         ],
         onTap: (index) {},
       ),
-      body: Container(
-        color: Colors.white,
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(top: 10),
-                  height: 110,
-                 // color: CustomTheme.peach.withAlpha(40),
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      var data = _homeViewModel.getCitySuggestionList()[index];
-                      return InkWell(
-                        onTap: () => data.callback(data.cityName),
-                        child: Container(
-                          margin: EdgeInsets.all(10),
-                          width: 70,
-                          height: 40,
-                          child: Column(
-                            children: [
-                              CircleAvatar(
-                                   backgroundImage: NetworkImage(data.imageUrl),
-                                    radius: 30,
-                                  ),
-                              Text(data.cityName),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                    itemCount: _homeViewModel.getCitySuggestionList().length,
-                  )),
-              Container(
-                margin: EdgeInsets.only(top: 10),
-                width: MediaQuery.of(context).size.width,
-                child: CarouselSlider(
-                  items: [
-                    Container(
-                      margin: EdgeInsets.all(1),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                                'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/WhatsApp%20Image%202022-02-14%20at%2012.01.04%20PM.jpeg?alt=media&token=6d78225a-59f7-4a7c-8bf3-e5d3f3c66bca'),
-                            fit: BoxFit.cover,
-                          )),
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(1),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                                "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/bannerhome.png?alt=media&token=b66dab51-8676-470a-b876-025c613c303a"),
-                            fit: BoxFit.cover,
-                          )),
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(1),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                                'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/WhatsApp%20Image%202022-02-14%20at%2012.01.05%20PM.jpeg?alt=media&token=153f6374-979f-46ad-aaf3-06f9ff1d0b20'),
-                            fit: BoxFit.cover,
-                          )),
-                    ),
-                  ],
-                  options: CarouselOptions(
-                      height: 180,
-                      enlargeCenterPage: true,
-                      autoPlay: true,
-                      aspectRatio: 16 / 9,
-                      autoPlayCurve: Curves.fastOutSlowIn,
-                      enableInfiniteScroll: true,
-                      viewportFraction: 0.8),
-                ),
-              ),
-              SizedBox(height: 15,),
-              Padding(
-                padding:EdgeInsets.only(left: 15),
-                child: Text("Popular",style: TextStyle(
-                  color: Colors.blueGrey,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  decoration: TextDecoration.underline,
-                ),),
-              ),
-              Container(
-                  padding: EdgeInsets.only(left: 10),
-                  height: 260,
-                  // color: CustomTheme.peach.withAlpha(40),
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      var data = _homeViewModel.getPopularPropertyModelList()[index];
-                      return InkWell(
-                        onTap: () => Navigator.of(context).pushNamed(AppRoutes.propertyListingPage,),
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)))
-                          ,elevation: 3,shadowColor: CustomTheme.skyBlue,margin: EdgeInsets.all(10),
-
+      body: SingleChildScrollView(
+        child: Container(
+          color: Colors.white,
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(top: 10),
+                    height: 110,
+                   // color: CustomTheme.peach.withAlpha(40),
+                    width: MediaQuery.of(context).size.width,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        var data = _homeViewModel.getCitySuggestionList()[index];
+                        return InkWell(
+                          onTap: () => data.callback(data.cityName),
                           child: Container(
-                            //margin: EdgeInsets.all(10),
-                            width: 220,
+                            margin: EdgeInsets.all(10),
+                            width: 70,
+                            height: 40,
                             child: Column(
                               children: [
-                                Container(
-                                height: 140,
-                              width: MediaQuery.of(context).size.width,
-                                  decoration: BoxDecoration(
-                                        borderRadius:  BorderRadius.only(topLeft: Radius.circular(10),topRight:  Radius.circular(10)),
-                                        image: DecorationImage(image: AssetImage(data.imageUrl!),fit: BoxFit.cover
-                                        //NetworkImage(data.imageUrl!),fit: BoxFit.cover,
-                                        )
+                                CircleAvatar(
+                                     backgroundImage: NetworkImage(data.imageUrl),
+                                      radius: 30,
                                     ),
-                                    ),
-                                Container( margin: EdgeInsets.only(left: 5,top: 5),
-                                    alignment: Alignment.topLeft,child: Text(data.propertyType!, style: TextStyle(fontSize: 18,fontWeight: FontWeight.w700),)),
-                                Container( margin: EdgeInsets.only(left: 5,top: 5),
-                                    alignment: Alignment.topLeft,child:
-                                    Text(data.propertyDesc!)),
-                                Container(margin: EdgeInsets.only(right: 10,),
-                                    alignment: Alignment.topRight,
-                                    child: Text(data.hint!,style: TextStyle(fontWeight:FontWeight.w700,color: CustomTheme.peach)
-                                    )
-                                ),
+                                Text(data.cityName),
                               ],
                             ),
                           ),
-                        ),
-                      );
-                    },
-                    itemCount: _homeViewModel.getPopularPropertyModelList().length,
-                  )),
-            ],
+                        );
+                      },
+                      itemCount: _homeViewModel.getCitySuggestionList().length,
+                    )),
+                Container(
+                  margin: EdgeInsets.only(top: 10),
+                  width: MediaQuery.of(context).size.width,
+                  child: CarouselSlider(
+                    items: [
+                      Container(
+                        margin: EdgeInsets.all(1),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                  'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/WhatsApp%20Image%202022-02-14%20at%2012.01.04%20PM.jpeg?alt=media&token=6d78225a-59f7-4a7c-8bf3-e5d3f3c66bca'),
+                              fit: BoxFit.cover,
+                            )),
+                      ),
+                      Container(
+                        margin: EdgeInsets.all(1),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                  "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/bannerhome.png?alt=media&token=b66dab51-8676-470a-b876-025c613c303a"),
+                              fit: BoxFit.cover,
+                            )),
+                      ),
+                      Container(
+                        margin: EdgeInsets.all(1),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                  'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/WhatsApp%20Image%202022-02-14%20at%2012.01.05%20PM.jpeg?alt=media&token=153f6374-979f-46ad-aaf3-06f9ff1d0b20'),
+                              fit: BoxFit.cover,
+                            )),
+                      ),
+                    ],
+                    options: CarouselOptions(
+                        height: 180,
+                        enlargeCenterPage: true,
+                        autoPlay: true,
+                        aspectRatio: 16 / 9,
+                        autoPlayCurve: Curves.fastOutSlowIn,
+                        enableInfiniteScroll: true,
+                        viewportFraction: 0.8),
+                  ),
+                ),
+                SizedBox(height: 15,),
+                Padding(
+                  padding:EdgeInsets.only(left: 15),
+                  child: Text("Popular",style: TextStyle(
+                    color: Colors.black45,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    //decoration: TextDecoration.underline,
+                  ),),
+                ),
+                Container(
+                    padding: EdgeInsets.only(left: 10),
+                    height: 260,
+                    // color: CustomTheme.peach.withAlpha(40),
+                    width: MediaQuery.of(context).size.width,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        var data = _homeViewModel.getPopularPropertyModelList()[index];
+                        return InkWell(
+                          onTap: () => Navigator.of(context).pushNamed(AppRoutes.propertyListingPage,),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)))
+                            ,elevation: 3,shadowColor: CustomTheme.skyBlue,margin: EdgeInsets.all(10),
+
+                            child: Container(
+                              //margin: EdgeInsets.all(10),
+                              width: 220,
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                    height: 140,
+                                width: MediaQuery.of(context).size.width,
+                                      decoration: BoxDecoration(
+                                            borderRadius:  BorderRadius.only(topLeft: Radius.circular(10),topRight:  Radius.circular(10)),
+                                            image: DecorationImage(image: AssetImage(data.imageUrl!),fit: BoxFit.cover
+                                            //NetworkImage(data.imageUrl!),fit: BoxFit.cover,
+                                            )
+                                        ),
+                                        ),
+                                  ),
+                                  Container( margin: EdgeInsets.only(left: 5,top: 5),
+                                      alignment: Alignment.topLeft,child: Text(data.propertyType!, style: TextStyle(fontSize: 18,fontWeight: FontWeight.w700))),
+                                  Container( margin: EdgeInsets.only(left: 5,top: 5),
+                                      alignment: Alignment.topLeft,child:
+                                      Text(data.propertyDesc!,style: TextStyle(color: Colors.black45) ,)),
+                                  Container(margin: EdgeInsets.only(right: 10,),
+                                      alignment: Alignment.topRight,
+                                      child: Text(data.hint!,style: TextStyle(fontWeight:FontWeight.w700,color: CustomTheme.peach)
+                                      )
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      itemCount: _homeViewModel.getPopularPropertyModelList().length,
+                    )),
+              ],
+            ),
           ),
         ),
       ),

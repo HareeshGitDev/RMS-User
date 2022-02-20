@@ -2,6 +2,8 @@ import 'package:RentMyStay_user/images.dart';
 import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
+import '../../utils/service/navigation_service.dart';
+
 class MobileOtpPage extends StatefulWidget {
   //const MobileOtpPage({Key? key}) : super(key: key);
   String number;
@@ -108,7 +110,10 @@ class _OtpState extends State<MobileOtpPage> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async{
+                          Navigator.of(context)
+                              .pushNamed(AppRoutes.register_details_page);
+                        },
                         style: ButtonStyle(
                           foregroundColor:
                               MaterialStateProperty.all<Color>(Colors.white),
