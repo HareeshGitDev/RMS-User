@@ -246,7 +246,8 @@ class _RegistrationPageState extends State<GmailRegistrationPage> {
                             await GoogleAuthService.logOut();
                             Navigator.pop(context);
                           },
-                          child: Container(child: Text('Click me'),height: 40,color: Colors.white,)),
+                          //child: Container(child: Text('Click me'),height: 40,color: Colors.white,)
+                      ),
                       Container(
                         width: _mainWidth,
                         height: 50,
