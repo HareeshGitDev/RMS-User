@@ -61,22 +61,12 @@ class HomeViewModel extends ChangeNotifier {
         callback: log,
       ),
       PopularPropertyModel(
-        //imageUrl:"https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/old_airport_road.png?alt=media&token=3100968f-c852-4363-a805-597f8804c51c",
-        imageUrl: Images.twobhk_img,
+       imageUrl: Images.twobhk_img,
       propertyDesc: 'BTM Layout, Hoodi, HSR Layout,\nKoramangala, Kudlu gate,\nKundanahali, Marathahalli',
           propertyType: '2 BHK',
           hint: 'More',
         callback: log,),
-      /*
-      PopularPropertyModel(imageUrl:"https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/old_airport_road.png?alt=media&token=3100968f-c852-4363-a805-597f8804c51c",
-          propertyDesc: 'BTM',
-          propertyType: 'Co-Live PG',
-          hint: 'More',
-        callback: log,),
-
-       */
       PopularPropertyModel(
-        //imageUrl:"https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/old_airport_road.png?alt=media&token=3100968f-c852-4363-a805-597f8804c51c",
         imageUrl: Images.studio_img,
         propertyDesc: 'BTM Layout, Hoodi, HSR Layout,\nKoramangala, Kudlu gate,\nKundanahali, Marathahalli',
           propertyType: 'Studio',
