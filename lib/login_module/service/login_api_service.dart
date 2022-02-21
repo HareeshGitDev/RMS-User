@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:RentMyStay_user/login_module/model/gmail_registration_request_model.dart';
+import 'package:RentMyStay_user/login_module/model/gmail_signin_request_model.dart';
+import 'package:RentMyStay_user/login_module/model/gmail_signin_response_model.dart';
 import 'package:RentMyStay_user/login_module/model/login_response_model.dart';
 import 'package:RentMyStay_user/login_module/model/signup_request_model.dart';
 import 'package:RentMyStay_user/login_module/model/signup_response_model.dart';
@@ -50,5 +53,29 @@ class LoginApiService {
     });
 
     return response;
+  }
+
+  Future<GmailSignInResponseModel> registerAfterGmail(
+      {required GmailSignInRequestModel model}) async {
+    String url = AppUrls.signInWithGoogleUrl;
+    final response = await _apiService.postApiCall(
+        endPoint: url, bodyParams: model.toJson());
+    final data = response as Map<String, dynamic>;
+
+    if (data['status'].toString().toLowerCase() == 'success') {
+      return GmailSignInResponseModel.fromJson(data);
+    } else {
+      return GmailSignInResponseModel(
+          status: 'failure', message: data['message'].toString());
+    }
+  }
+  Future<int> detailsValidationAfterGmail(
+      {required GmailRegistrationRequestModel model}) async {
+    String url = AppUrls.registrationWithGoogleUrl;
+    final response = await _apiService.postApiCall(
+        endPoint: url, bodyParams: model.toJson());
+    final data = response as Map<String, dynamic>;
+
+    return data['status'].toString().toLowerCase() == 'success' ?200:404;
   }
 }

@@ -42,6 +42,7 @@ class RMSUserApiService {
     return null;
   }
   Future<dynamic> getApiCallWithQueryParams({required String endPoint,required Map<String,dynamic> queryParams}) async {
+   log('URL :: $_baseURL/$endPoint ---- QueryParams :: ${queryParams.toString()}');
     try {
       final response = await http.get(
         Uri.https(_baseURL, endPoint,queryParams),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,10 +9,12 @@ class SharedPreferenceUtil {
 
   Future<String?> getString(String key) async {
     final prefs = await SharedPreferences.getInstance();
+    log('ShHHH :: ${prefs.getString(key)}');
     return prefs.getString(key);
   }
   Future<bool> setString(String key, String value) async {
     final prefs = await SharedPreferences.getInstance();
+    log('$key $value');
     return prefs.setString(key, value);
   }
   Future<bool> setBool(String key, bool value) async {
