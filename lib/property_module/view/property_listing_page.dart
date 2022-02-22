@@ -41,6 +41,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
       if(value.propertyDetailsModel.data != null){
         return Scaffold(
           appBar: _getAppBar(context: context),
+
           body: Container(
             color: Colors.white,
             height: _mainHeight,
@@ -56,7 +57,6 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                         onTap: ()=>index % 2==0?log(index.toString()):(){},
 
                         child: Container(
-
                           height: 400,
                           child: Card(
                             color:index % 2==0? Colors.white:Colors.grey.shade500,
@@ -107,9 +107,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                       ],
                                     ),
                                     Container(
-                                      child:
-                                      TextButton.icon(
-
+                                      child: TextButton.icon(
                                         onPressed: () {},
                                         style: ButtonStyle(
                                           backgroundColor:
@@ -142,11 +140,11 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                             TextSpan(
                                                 text: 'Rs 1000',
                                                 style: TextStyle(
-                                                    color: Colors.grey, fontFamily: "Nunito",decoration: TextDecoration.lineThrough)),
+                                                    color: Colors.grey, fontFamily: "HKGrotest-Light",decoration: TextDecoration.lineThrough)),
                                             TextSpan(
                                                 text: '  Rs 750',
                                                 style: TextStyle(
-                                                    color: myFavColor, fontFamily: "Nunito",fontSize: 16)),
+                                                    color: myFavColor, fontFamily: "HKGrotest-Light",fontSize: 16)),
                                           ]),
                                         ),
                                       ),
@@ -163,12 +161,12 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                             TextSpan(
                                                 text: 'Rs 1000',
                                                 style: TextStyle(
-                                                    color: Colors.grey, fontFamily: "Nunito",decoration: TextDecoration.lineThrough,fontSize: 14)),
+                                                    color: Colors.grey, fontFamily: "HKGrotest-Light",decoration: TextDecoration.lineThrough,fontSize: 14)),
 
                                             TextSpan(
                                                 text: '  Rs 750',
                                                 style: TextStyle(
-                                                    color: myFavColor, fontFamily: "Nunito",fontSize: 16)),
+                                                    color: myFavColor, fontFamily: "HKGrotest-Light",fontSize: 16)),
                                           ]),
                                         ),
 
@@ -239,6 +237,10 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
   AppBar _getAppBar({required BuildContext context}) {
     return AppBar(
       leading:BackButton(color: Colors.white,),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(15),
+              bottomRight: Radius.circular(15))),
       titleSpacing: 0,backgroundColor: CustomTheme.skyBlue,
       title: Padding(
         padding: EdgeInsets.only(right: 10),

@@ -71,7 +71,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     animatedTexts: [
                       ColorizeAnimatedText('You are Almost there!',
                           textStyle:
-                              TextStyle(fontSize: 30, fontFamily: "Nunito"),
+                              TextStyle(fontSize: 25, fontFamily: "HKGrotest-Light"),
                           colors: [
                             Colors.white,
                             CustomTheme.skyBlue,
@@ -86,7 +86,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       color: Colors.white,
                       borderRadius:
                           BorderRadius.vertical(top: Radius.circular(30))),
-                  height: _mainHeight * 0.7,
+                  height: _mainHeight * 0.75,
                   width: _mainWidth,
                   padding: EdgeInsets.only(left: 25, right: 25),
                   child: Column(
@@ -98,7 +98,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         padding: const EdgeInsets.only(top: 10),
                         child: _textInput(
                             hint: "Name",
-                            icon: Icons.person,
+                            icon: Icons.person_outline,
                             controller: _nameController),
                       ),
                       SizedBox(
@@ -106,28 +106,29 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ),
                       _textInput(
                           hint: "Email",
-                          icon: Icons.email,
+                          icon: Icons.email_outlined,
+
                           controller: _emailController),
                       SizedBox(
                         height: 5,
                       ),
                       _textInput(
                           hint: "Phone Number",
-                          icon: Icons.contact_page,
+                          icon: Icons.phone_android_outlined,
                           controller: _phoneNumberController),
                       SizedBox(
                         height: 5,
                       ),
                       _textInput(
                           hint: "Password",
-                          icon: Icons.vpn_key,
+                          icon: Icons.vpn_key_outlined,
                           controller: _passwordController),
                       SizedBox(
                         height: 5,
                       ),
                       _textInput(
                           hint: "Apply Referal Code (Optional)",
-                          icon: Icons.ac_unit,
+                          icon: Icons.ac_unit_outlined,
                           controller: _referalController),
                       SizedBox(
                         height: 20,
@@ -346,6 +347,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
             border: InputBorder.none,
             hintText: hint,
             prefixIcon: Icon(icon),
+
+
           ),
         ),
       ),

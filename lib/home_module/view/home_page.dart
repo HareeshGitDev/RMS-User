@@ -181,8 +181,8 @@ log('called');
                         return InkWell(
                           onTap: () => data.callback(data.cityName),
                           child: Container(
-                            margin: EdgeInsets.all(10),
-                            width: 70,
+                            margin: EdgeInsets.all(5),
+                            width: 75,
                             height: 40,
                             child: Column(
                               children: [
@@ -190,7 +190,7 @@ log('called');
                                   backgroundImage: NetworkImage(data.imageUrl),
                                   radius: 30,
                                 ),
-                                Text(data.cityName),
+                                Text(data.cityName,style: TextStyle(fontSize: 14)),
                               ],
                             ),
                           ),
@@ -253,7 +253,7 @@ log('called');
                     "Popular",
                     style: TextStyle(
                       color: Colors.black45,
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.w700,
                       //decoration: TextDecoration.underline,
                     ),
@@ -305,8 +305,9 @@ log('called');
                                       alignment: Alignment.topLeft,
                                       child: Text(data.propertyType!,
                                           style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w700))),
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                        ))),
                                   Container(
                                       margin: EdgeInsets.only(left: 5, top: 5),
                                       alignment: Alignment.topLeft,
@@ -422,7 +423,7 @@ log('called');
                                       paddingAll: 12,
                                       borderRadiusAll: 4,
                                       child: Icon(
-                                        Icons.person,
+                                        Icons.person_outline,
                                         color: CustomTheme.skyBlue,
                                         size: 20,
                                       ),
@@ -461,7 +462,7 @@ log('called');
                                       paddingAll: 12,
                                       borderRadiusAll: 4,
                                       child: Icon(
-                                        Icons.house_rounded,
+                                        Icons.house_outlined,
                                         color: CustomTheme.skyBlue,
                                         size: 20,
                                       ),
@@ -500,7 +501,7 @@ log('called');
                                       paddingAll: 12,
                                       borderRadiusAll: 4,
                                       child: Icon(
-                                        Icons.favorite,
+                                        Icons.favorite_outline,
                                         color: CustomTheme.skyBlue,
                                         size: 20,
                                       ),

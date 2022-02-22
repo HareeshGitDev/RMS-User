@@ -130,6 +130,12 @@ flutter:
         - asset: fonts/Nunito-SemiBold.ttf
         - asset: fonts/Nunito-SemiBoldItalic.ttf
         - asset: fonts/Nunito-Medium.ttf
+    - family: hk-grotest
+      fonts:
+        - asset: fonts/HkGrotesk-light.otf
+        - asset: fonts/HkGrotesk-SemiBold.otf
+        - asset: fonts/HkGrotesk-Medium.otf
+
 
   #   - family: Trajan Pro
   #     fonts:
