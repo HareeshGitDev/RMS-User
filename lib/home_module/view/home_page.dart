@@ -356,7 +356,7 @@ log('called');
           if(snapshot.hasData){
             return FxContainer.none(
               margin: FxSpacing.fromLTRB(
-                  16, FxSpacing.safeAreaTop(context) + 16, 16, 16),
+                  0, FxSpacing.safeAreaTop(context) +0, 16, 0),
               borderRadiusAll: 4,
               clipBehavior: Clip.antiAliasWithSaveLayer,
               color: theme.scaffoldBackgroundColor,

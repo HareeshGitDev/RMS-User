@@ -267,7 +267,8 @@ class _RegistrationPageState extends State<GmailRegistrationPage> {
                                   msg: 'Please Enter E-mail Address',
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.CENTER);
-                            } else*/ if (_phoneNumberController.text.isEmpty) {
+                            } else*/
+                            if (_phoneNumberController.text.isEmpty) {
                               Fluttertoast.showToast(
                                   msg: 'Please Enter Your Mobile Number',
                                   toastLength: Toast.LENGTH_SHORT,

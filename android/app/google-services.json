@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "172037116875-p6ks2ee7df1fvb99nmjkf0a1j0vvst5a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rms.rentmystayuserflutter",
+            "certificate_hash": "ae23e8bb8b7b3864970ab4f76c36294224303188"
+          }
+        },
+        {
           "client_id": "172037116875-3bn8tqnn3q79jn30606c1uktckh397gs.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -30,6 +38,13 @@
             {
               "client_id": "172037116875-3bn8tqnn3q79jn30606c1uktckh397gs.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "172037116875-q4huk45khcfats0iup9ren2819kc4tv0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rms.rentmystayuserflutter"
+              }
             }
           ]
         }
@@ -75,6 +90,13 @@
             {
               "client_id": "172037116875-3bn8tqnn3q79jn30606c1uktckh397gs.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "172037116875-q4huk45khcfats0iup9ren2819kc4tv0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rms.rentmystayuserflutter"
+              }
             }
           ]
         }

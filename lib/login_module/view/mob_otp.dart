@@ -1,8 +1,10 @@
+import 'dart:developer';
+
 import 'package:RentMyStay_user/images.dart';
+import 'package:RentMyStay_user/login_module/service/google_auth_service.dart';
 import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-
-import '../../utils/service/navigation_service.dart';
+import 'package:pin_code_text_field/pin_code_text_field.dart';
 
 class MobileOtpPage extends StatefulWidget {
   //const MobileOtpPage({Key? key}) : super(key: key);
@@ -13,6 +15,8 @@ class MobileOtpPage extends StatefulWidget {
 }
 
 class _OtpState extends State<MobileOtpPage> {
+  final _pinCodeController=TextEditingController();
+
   @override
   Widget build(BuildContext context) {
 
@@ -85,57 +89,49 @@ class _OtpState extends State<MobileOtpPage> {
               SizedBox(
                 height: 28,
               ),
-              Container(
-                padding: EdgeInsets.all(28),
-                decoration: BoxDecoration(
-                  color: CustomTheme.skyBlue.withAlpha(20),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _textFieldOTP(first: true, last: false),
-                        _textFieldOTP(first: false, last: false),
-                        _textFieldOTP(first: false, last: false),
-                        _textFieldOTP(first: false, last: false),
-                        _textFieldOTP(first: false, last: false),
-                        _textFieldOTP(first: false, last: true),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 22,
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () async{
-                          Navigator.of(context)
-                              .pushNamed(AppRoutes.register_details_page);
-                        },
-                        style: ButtonStyle(
-                          foregroundColor:
-                              MaterialStateProperty.all<Color>(Colors.white),
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(CustomTheme.skyBlue),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24.0),
-                            ),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(14.0),
-                          child: Text(
-                            'Verify',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
+              PinCodeTextField(
+                maxLength: 6,
+                keyboardType: TextInputType.number,
+                hideCharacter: false,
+                defaultBorderColor: Color(0xff999999),
+                pinBoxWidth: 45,
+                pinBoxHeight: 45,
+                pinBoxBorderWidth: 1,
+                pinBoxRadius: 10,
+                highlightAnimationBeginColor: Colors.grey,
+                highlightAnimationEndColor: Colors.white12,
+                controller: _pinCodeController,
+                onTextChanged: (data){
+                  log(data.toString());
+                },
+
+
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async{
+                   // GoogleAuthService.loginWithOTP(verificationId: verificationId, smsCode: _pinCodeController.text, context: context) ;
+                  },
+                  style: ButtonStyle(
+                    foregroundColor:
+                    MaterialStateProperty.all<Color>(Colors.white),
+                    backgroundColor:
+                    MaterialStateProperty.all<Color>(CustomTheme.skyBlue),
+                    shape:
+                    MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24.0),
                       ),
-                    )
-                  ],
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(14.0),
+                    child: Text(
+                      'Verify',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
                 ),
               ),
               SizedBox(

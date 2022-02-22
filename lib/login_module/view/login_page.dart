@@ -610,7 +610,7 @@ class _LoginPageState extends State<LoginPage> {
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
-                                onPressed: () {
+                                onPressed: () async{
                                   if (mob_controller.text.isNotEmpty &&
                                       mob_controller.text.length == 10) {
                                     Navigator.of(context).pushNamed(
