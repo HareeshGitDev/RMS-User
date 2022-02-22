@@ -83,7 +83,7 @@ class _RegistrationPageState extends State<GmailRegistrationPage> {
                     animatedTexts: [
                       ColorizeAnimatedText('You are Almost there!',
                           textStyle:
-                              TextStyle(fontSize: 30, fontFamily: "Nunito"),
+                              TextStyle(fontSize: 30, fontFamily: "HKGrotest-Light"),
                           colors: [
                             Colors.white,
                             CustomTheme.skyBlue,
@@ -101,7 +101,8 @@ class _RegistrationPageState extends State<GmailRegistrationPage> {
                   height: _mainHeight * 0.654,
                   width: _mainWidth,
                   padding: EdgeInsets.only(left: 25, right: 25),
-                  child: Column(
+                  child:
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       SizedBox(
@@ -241,13 +242,13 @@ class _RegistrationPageState extends State<GmailRegistrationPage> {
                         ),
                       ),
                       Spacer(),
-                      GestureDetector(
+                     /* GestureDetector(
                           onTap: () async{
                             await GoogleAuthService.logOut();
                             Navigator.pop(context);
                           },
-                          //child: Container(child: Text('Click me'),height: 40,color: Colors.white,)
-                      ),
+                          child: Container(child: Text('Click me'),height: 40,color: Colors.white,)
+                      ),*/
                       Container(
                         width: _mainWidth,
                         height: 50,

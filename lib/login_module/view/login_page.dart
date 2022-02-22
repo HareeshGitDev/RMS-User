@@ -79,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                     animatedTexts: [
                       ColorizeAnimatedText('Welcome Back !',
                           textStyle:
-                              TextStyle(fontSize: 30, fontFamily: "Nunito"),
+                              TextStyle(fontSize: 25, fontFamily: "HKGrotest-Light"),
                           colors: [
                             Colors.white,
                             CustomTheme.skyBlue,
@@ -123,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Email',
-                                prefixIcon: Icon(Icons.email),
+                                prefixIcon: Icon(Icons.email_outlined),
                               ),
                             ),
                           ),
@@ -157,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: "Password",
-                                prefixIcon: Icon(Icons.vpn_key_rounded),
+                                prefixIcon: Icon(Icons.vpn_key_outlined),
                               ),
                             ),
                           ),
@@ -238,9 +238,9 @@ class _LoginPageState extends State<LoginPage> {
                           height: 40,
                         ),
                         Text(
-                          'Or Login With',
+                          'Or',
                           style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w400),
+                              fontSize: 18, fontWeight: FontWeight.w400),
                         ),
                         SizedBox(
                           height: 20,
@@ -271,7 +271,7 @@ class _LoginPageState extends State<LoginPage> {
                                   },
                                   child: Text(
                                     'SignIn With OTP',
-                                    style: TextStyle(fontSize: 16),
+                                    style: TextStyle(fontSize: 14),
                                   ),
                                 ),
                               ),
@@ -330,7 +330,7 @@ class _LoginPageState extends State<LoginPage> {
                                       child: Text(
                                         'SignIn With Gmail',
                                         style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 14,
                                         ),
                                       ),
                                     ),
@@ -354,12 +354,12 @@ class _LoginPageState extends State<LoginPage> {
                                     text: "Don't have an account ? ",
                                     style: TextStyle(
                                         color: Colors.black,
-                                        fontFamily: "Nunito")),
+                                        fontFamily: "HKGrotest-Light")),
                                 TextSpan(
                                     text: "Register",
                                     style: TextStyle(
                                         color: orangeColors,
-                                        fontFamily: "Nunito")),
+                                        fontFamily: "HKGrotest-Light")),
                               ]),
                             ),
                           ),
@@ -367,12 +367,11 @@ class _LoginPageState extends State<LoginPage> {
                         Spacer(),
                         GestureDetector(
                           onTap: () =>
-                              /*Navigator.of(context)
-                              .pushNamed(AppRoutes.propertyListingPage),*/
                               _handleURLButtonPress(
                                   context, privacy_policy, 'Privacy Policy'),
                           child: Container(
                             color: Colors.white,
+                            margin: EdgeInsets.only(bottom: 10),
                             alignment: Alignment.bottomLeft,
                             child: RichText(
                               text: TextSpan(children: [
@@ -381,22 +380,24 @@ class _LoginPageState extends State<LoginPage> {
                                         "By Signing in, you are agree to our ",
                                     style: TextStyle(
                                         color: Colors.black,
-                                        fontFamily: "Nunito")),
+                                        fontFamily: "HKGRotesk-Light")),
                                 TextSpan(
                                     text: "Privacy Policy",
                                     style: TextStyle(
-                                        color: myFavColor,
+                                        color: Colors.black,
                                         fontStyle: FontStyle.italic,
                                         fontWeight: FontWeight.w600,
-                                        fontFamily: "Nunito")),
-                              ]),
+                                        fontFamily: "HKGRotesk-Light",)
+                                ),
+                              ]
+                              ),
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -438,7 +439,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   Text('Please Enter Email to get Password Reset Link !'),
                   SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
                   Neumorphic(
                     style: NeumorphicStyle(
@@ -457,7 +458,7 @@ class _LoginPageState extends State<LoginPage> {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Email',
-                        prefixIcon: Icon(Icons.email),
+                        prefixIcon: Icon(Icons.email_outlined),
                       ),
                     ),
                   ),
@@ -467,7 +468,7 @@ class _LoginPageState extends State<LoginPage> {
             elevation: 5,
             actions: [
               Container(
-                padding: EdgeInsets.only(bottom: 15),
+                padding: EdgeInsets.only(bottom: 10),
                 width: _mainWidth * 0.4,
                 child: ElevatedButton(
                   style: ButtonStyle(
@@ -501,7 +502,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Text(
                     'Recover',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                     ),
                   ),
                 ),
