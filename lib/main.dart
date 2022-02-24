@@ -40,8 +40,9 @@ class MyApp extends StatelessWidget {
       title: 'RentMyStay ',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        fontFamily:'Nunito'
+        fontFamily:'HKGrotest'
       ),
       home: SplashPage(),
 

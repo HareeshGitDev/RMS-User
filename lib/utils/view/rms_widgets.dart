@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class RMSWidgets{
-
+  late BuildContext context;
   static void showLoaderDialog({required BuildContext context, required String message}) {
     AlertDialog alert = AlertDialog(
       content: Row(
@@ -56,4 +56,16 @@ class RMSWidgets{
     );
 
   }
-}
+  static void showSnackbar({required BuildContext context,required String message , required Color color})
+  {
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          duration: const Duration(milliseconds: 1500),
+          backgroundColor: color,
+
+        ),
+      );
+    }
+  }

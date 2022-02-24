@@ -157,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: "Password",
-                                prefixIcon: Icon(Icons.vpn_key_outlined),
+                                prefixIcon: Icon(Icons.lock_outline),
                               ),
                             ),
                           ),
@@ -189,10 +189,9 @@ class _LoginPageState extends State<LoginPage> {
                                     gravity: ToastGravity.CENTER);
                               } else {
                                 if (_passwordController.text.isEmpty) {
-                                  Fluttertoast.showToast(
-                                      msg: 'Please Enter Password',
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.CENTER);
+                                  RMSWidgets.getToast(
+                                      message: 'Please Enter Password',
+                                      color: CustomTheme().colorError);
                                 } else {
                                   RMSWidgets.showLoaderDialog(
                                       context: context,
@@ -209,7 +208,8 @@ class _LoginPageState extends State<LoginPage> {
                                     Navigator.of(context)
                                         .pushNamed(AppRoutes.homePage);
                                   } else {
-                                    RMSWidgets.getToast(
+                                    RMSWidgets.showSnackbar(
+                                      context: context,
                                         message:
                                             'Email not Registered or Invalid Password.',
                                         color: CustomTheme().colorError);

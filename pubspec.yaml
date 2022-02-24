@@ -123,13 +123,6 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Nunito
-      fonts:
-        - asset: fonts/Nunito-Regular.ttf
-        - asset: fonts/Nunito-Bold.ttf
-        - asset: fonts/Nunito-SemiBold.ttf
-        - asset: fonts/Nunito-SemiBoldItalic.ttf
-        - asset: fonts/Nunito-Medium.ttf
     - family: hk-grotest
       fonts:
         - asset: fonts/HkGrotesk-light.otf
