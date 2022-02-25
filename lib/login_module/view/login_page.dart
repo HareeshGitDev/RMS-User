@@ -615,7 +615,7 @@ class _LoginPageState extends State<LoginPage> {
                                   if (mob_controller.text.isNotEmpty &&
                                       mob_controller.text.length == 10) {
                                     Navigator.of(context).pushNamed(
-                                        AppRoutes.mob_register_login_otp,
+                                        AppRoutes.firebaseRegistrationPage,
                                         arguments: {
                                           'mobile': "+91" + mob_controller.text
                                         });
