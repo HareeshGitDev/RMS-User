@@ -21,7 +21,9 @@ import '../../utils/color.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/shared_prefrences_util.dart';
 import '../model/gmail_signin_request_model.dart';
+import '../model/gmail_signin_response_model.dart';
 import '../model/login_response_model.dart';
+import '../model/signup_response_model.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -79,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                     animatedTexts: [
                       ColorizeAnimatedText('Welcome Back !',
                           textStyle:
-                              TextStyle(fontSize: 25, fontFamily: "HKGrotest-Light"),
+                          TextStyle(fontSize: 25, fontFamily: "HKGrotest-Light"),
                           colors: [
                             Colors.white,
                             CustomTheme.skyBlue,
@@ -94,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(30))),
+                        BorderRadius.vertical(top: Radius.circular(30))),
                     width: _mainWidth,
                     padding: EdgeInsets.only(left: 25, right: 25),
                     child: Column(
@@ -150,14 +152,14 @@ class _LoginPageState extends State<LoginPage> {
                                 return null;
                               },
                               autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
+                              AutovalidateMode.onUserInteraction,
                               controller: _passwordController,
                               keyboardType: TextInputType.visiblePassword,
                               obscureText: true,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: "Password",
-                                prefixIcon: Icon(Icons.vpn_key_outlined),
+                                prefixIcon: Icon(Icons.lock_outline),
                               ),
                             ),
                           ),
@@ -171,8 +173,8 @@ class _LoginPageState extends State<LoginPage> {
                           child: ElevatedButton(
                             style: ButtonStyle(
                                 backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        CustomTheme.skyBlue),
+                                MaterialStateProperty.all<Color>(
+                                    CustomTheme.skyBlue),
                                 shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
@@ -189,29 +191,29 @@ class _LoginPageState extends State<LoginPage> {
                                     gravity: ToastGravity.CENTER);
                               } else {
                                 if (_passwordController.text.isEmpty) {
-                                  Fluttertoast.showToast(
-                                      msg: 'Please Enter Password',
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.CENTER);
+                                  RMSWidgets.getToast(
+                                      message: 'Please Enter Password',
+                                      color: CustomTheme().colorError);
                                 } else {
                                   RMSWidgets.showLoaderDialog(
                                       context: context,
                                       message: 'Please wait...');
                                   final LoginResponseModel response =
-                                      await _loginViewModel.getLoginDetails(
-                                          email: _emailController.text,
-                                          password: _passwordController.text);
+                                  await _loginViewModel.getLoginDetails(
+                                      email: _emailController.text,
+                                      password: _passwordController.text);
 
                                   if (response.status?.toLowerCase() ==
                                       'success') {
                                     await setSPValues(response: response);
                                     Navigator.pop(context);
                                     Navigator.of(context)
-                                        .pushNamed(AppRoutes.homePage);
+                                        .pushNamedAndRemoveUntil(AppRoutes.homePage,(route) => false,);
                                   } else {
-                                    RMSWidgets.getToast(
+                                    RMSWidgets.showSnackbar(
+                                        context: context,
                                         message:
-                                            'Email not Registered or Invalid Password.',
+                                        'Email not Registered or Invalid Password.',
                                         color: CustomTheme().colorError);
                                     Navigator.pop(context);
                                   }
@@ -256,13 +258,13 @@ class _LoginPageState extends State<LoginPage> {
                                 child: ElevatedButton(
                                   style: ButtonStyle(
                                       backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              CustomTheme.skyBlue),
+                                      MaterialStateProperty.all<Color>(
+                                          CustomTheme.skyBlue),
                                       shape: MaterialStateProperty.all<
                                           RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(40)),
+                                            BorderRadius.circular(40)),
                                       )),
                                   onPressed: () async {
                                     _showBottomSheet(context);
@@ -286,24 +288,24 @@ class _LoginPageState extends State<LoginPage> {
                                 child: ElevatedButton(
                                   style: ButtonStyle(
                                       backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              CustomTheme.skyBlue),
+                                      MaterialStateProperty.all<Color>(
+                                          CustomTheme.skyBlue),
                                       shape: MaterialStateProperty.all<
                                           RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(40)),
+                                            BorderRadius.circular(40)),
                                       )),
                                   onPressed: () async {
                                     RMSWidgets.showLoaderDialog(
                                         context: context,
                                         message: 'Please wait...');
                                     final data =
-                                        await GoogleAuthService.loginIn();
+                                    await GoogleAuthService.loginIn();
 
                                     if (data != null) {
                                       log('Gmail Data :: ${data.toString()}  ');
-                                      final response=await _loginViewModel.registerUserAfterGmail(model: GmailSignInRequestModel(
+                                      final LoginResponseModel response=await _loginViewModel.registerUserAfterGmail(model: GmailSignInRequestModel(
                                         name: data.displayName,
                                         email: data.email,
                                         id: data.id,
@@ -312,11 +314,22 @@ class _LoginPageState extends State<LoginPage> {
 
                                       Navigator.of(context).pop();
                                       if(response.status?.toLowerCase()=='success'){
-                                        SharedPreferenceUtil shared=SharedPreferenceUtil();
-                                        await shared.setString(rms_registeredUserToken, response.appToken.toString());
-                                        await shared.setString(rms_gmapKey, response.gmapKey.toString());
-                                        Navigator.of(context).pushNamed(
-                                            AppRoutes.firebaseRegistrationPage,arguments: data);
+
+                                        if(  response.contactNum == null &&  response.contactNum!.isEmpty){
+                                          SharedPreferenceUtil shared=SharedPreferenceUtil();
+                                          await shared.setString(rms_registeredUserToken, response.appToken.toString());
+                                          await shared.setString(rms_gmapKey, response.gmapKey.toString());
+                                          Navigator.of(context).pushNamed(
+                                              AppRoutes.firebaseRegistrationPage,arguments: {
+                                            'gmailData':data,
+                                            'from':'Gmail',
+                                          });
+                                        }else{
+                                          await setSPValues(response: response);
+                                          Navigator.of(context).pushNamed(
+                                              AppRoutes.homePage);
+                                        }
+
                                       }
 
                                     }else{
@@ -377,17 +390,17 @@ class _LoginPageState extends State<LoginPage> {
                               text: TextSpan(children: [
                                 TextSpan(
                                     text:
-                                        "By Signing in, you are agree to our ",
+                                    "By Signing in, you are agree to our ",
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontFamily: "HKGRotesk-Light")),
                                 TextSpan(
                                     text: "Privacy Policy",
                                     style: TextStyle(
-                                        color: Colors.black,
-                                        fontStyle: FontStyle.italic,
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: "HKGRotesk-Light",)
+                                      color: Colors.black,
+                                      fontStyle: FontStyle.italic,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: "HKGRotesk-Light",)
                                 ),
                               ]
                               ),
@@ -424,7 +437,7 @@ class _LoginPageState extends State<LoginPage> {
           return AlertDialog(
             actionsAlignment: MainAxisAlignment.center,
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             title: Text(
               'Forgot Password ?',
               style: TextStyle(
@@ -473,7 +486,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(CustomTheme.peach),
+                      MaterialStateProperty.all<Color>(CustomTheme.peach),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(40)),
@@ -579,14 +592,14 @@ class _LoginPageState extends State<LoginPage> {
                               decoration: InputDecoration(
                                 hintText: "Mobile Number",
                                 hintStyle:
-                                    TextStyle(color: Colors.blueGrey.shade200),
+                                TextStyle(color: Colors.blueGrey.shade200),
                                 enabledBorder: OutlineInputBorder(
                                     borderSide:
-                                        BorderSide(color: Colors.black12),
+                                    BorderSide(color: Colors.black12),
                                     borderRadius: BorderRadius.circular(10)),
                                 focusedBorder: OutlineInputBorder(
                                     borderSide:
-                                        BorderSide(color: Colors.black12),
+                                    BorderSide(color: Colors.black12),
                                     borderRadius: BorderRadius.circular(10)),
                                 prefix: Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 8),
@@ -615,24 +628,24 @@ class _LoginPageState extends State<LoginPage> {
                                   if (mob_controller.text.isNotEmpty &&
                                       mob_controller.text.length == 10) {
                                     Navigator.of(context).pushNamed(
-                                        AppRoutes.firebaseRegistrationPage,
+                                        AppRoutes.otpVerifyPage,
                                         arguments: {
-                                          'mobile': "+91" + mob_controller.text
+                                          'mobile':  mob_controller.text
                                         });
                                   } else {
                                     RMSWidgets.getToast(
                                         message:
-                                            "Please Enter valid Mobile Number",
+                                        "Please Enter valid Mobile Number",
                                         color: CustomTheme().colorError);
                                   }
                                 },
                                 style: ButtonStyle(
                                   foregroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Colors.white),
+                                  MaterialStateProperty.all<Color>(
+                                      Colors.white),
                                   backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          CustomTheme.skyBlue),
+                                  MaterialStateProperty.all<Color>(
+                                      CustomTheme.skyBlue),
                                   shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
