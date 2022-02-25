@@ -21,9 +21,7 @@ import '../../utils/color.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/shared_prefrences_util.dart';
 import '../model/gmail_signin_request_model.dart';
-import '../model/gmail_signin_response_model.dart';
 import '../model/login_response_model.dart';
-import '../model/signup_response_model.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -159,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: "Password",
-                                prefixIcon: Icon(Icons.lock_outline),
+                                prefixIcon: Icon(Icons.vpn_key_outlined),
                               ),
                             ),
                           ),
@@ -191,9 +189,10 @@ class _LoginPageState extends State<LoginPage> {
                                     gravity: ToastGravity.CENTER);
                               } else {
                                 if (_passwordController.text.isEmpty) {
-                                  RMSWidgets.getToast(
-                                      message: 'Please Enter Password',
-                                      color: CustomTheme().colorError);
+                                  Fluttertoast.showToast(
+                                      msg: 'Please Enter Password',
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER);
                                 } else {
                                   RMSWidgets.showLoaderDialog(
                                       context: context,
@@ -208,10 +207,9 @@ class _LoginPageState extends State<LoginPage> {
                                     await setSPValues(response: response);
                                     Navigator.pop(context);
                                     Navigator.of(context)
-                                        .pushNamedAndRemoveUntil(AppRoutes.homePage,(route) => false,);
+                                        .pushNamed(AppRoutes.homePage);
                                   } else {
-                                    RMSWidgets.showSnackbar(
-                                      context: context,
+                                    RMSWidgets.getToast(
                                         message:
                                             'Email not Registered or Invalid Password.',
                                         color: CustomTheme().colorError);
@@ -305,7 +303,7 @@ class _LoginPageState extends State<LoginPage> {
 
                                     if (data != null) {
                                       log('Gmail Data :: ${data.toString()}  ');
-                                      final LoginResponseModel response=await _loginViewModel.registerUserAfterGmail(model: GmailSignInRequestModel(
+                                      final response=await _loginViewModel.registerUserAfterGmail(model: GmailSignInRequestModel(
                                         name: data.displayName,
                                         email: data.email,
                                         id: data.id,
@@ -314,22 +312,11 @@ class _LoginPageState extends State<LoginPage> {
 
                                       Navigator.of(context).pop();
                                       if(response.status?.toLowerCase()=='success'){
-
-                                        if(  response.contactNum == null &&  response.contactNum!.isEmpty){
-                                          SharedPreferenceUtil shared=SharedPreferenceUtil();
-                                          await shared.setString(rms_registeredUserToken, response.appToken.toString());
-                                          await shared.setString(rms_gmapKey, response.gmapKey.toString());
-                                          Navigator.of(context).pushNamed(
-                                              AppRoutes.firebaseRegistrationPage,arguments: {
-                                            'gmailData':data,
-                                            'from':'Gmail',
-                                          });
-                                        }else{
-                                          await setSPValues(response: response);
-                                          Navigator.of(context).pushNamed(
-                                              AppRoutes.homePage);
-                                        }
-
+                                        SharedPreferenceUtil shared=SharedPreferenceUtil();
+                                        await shared.setString(rms_registeredUserToken, response.appToken.toString());
+                                        await shared.setString(rms_gmapKey, response.gmapKey.toString());
+                                        Navigator.of(context).pushNamed(
+                                            AppRoutes.firebaseRegistrationPage,arguments: data);
                                       }
 
                                     }else{
@@ -627,10 +614,10 @@ class _LoginPageState extends State<LoginPage> {
                                 onPressed: () async{
                                   if (mob_controller.text.isNotEmpty &&
                                       mob_controller.text.length == 10) {
-                                   Navigator.of(context).pushNamed(
-                                        AppRoutes.otpVerifyPage,
+                                    Navigator.of(context).pushNamed(
+                                        AppRoutes.mob_register_login_otp,
                                         arguments: {
-                                          'mobile':  mob_controller.text
+                                          'mobile': "+91" + mob_controller.text
                                         });
                                   } else {
                                     RMSWidgets.getToast(
