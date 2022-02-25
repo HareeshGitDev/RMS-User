@@ -2,6 +2,7 @@ import 'package:RentMyStay_user/login_module/model/gmail_registration_request_mo
 import 'package:RentMyStay_user/login_module/model/gmail_signin_request_model.dart';
 import 'package:RentMyStay_user/login_module/model/gmail_signin_response_model.dart';
 import 'package:RentMyStay_user/login_module/model/login_response_model.dart';
+import 'package:RentMyStay_user/login_module/model/otp_registration_otp_model.dart';
 import 'package:RentMyStay_user/login_module/model/signup_request_model.dart';
 import 'package:RentMyStay_user/login_module/service/login_api_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,7 +24,7 @@ class LoginViewModel extends ChangeNotifier {
   Future<SignUpResponseModel> signUpUser(
       {required SignUpRequestModel signUpRequestModel}) async {
     final SignUpResponseModel response = await _loginApiService.signUpUser(
-        signUpRequestModel: signUpRequestModel);
+        model: signUpRequestModel, );
     return response;
   }
   Future<Map<String,dynamic>?> resetPassword(
@@ -34,7 +35,7 @@ class LoginViewModel extends ChangeNotifier {
     return response;
   }
 
-  Future<GmailSignInResponseModel> registerUserAfterGmail(
+  Future<LoginResponseModel> registerUserAfterGmail(
       {required GmailSignInRequestModel model}) async {
     final response = await _loginApiService.registerAfterGmail(model: model);
     return response;
@@ -42,6 +43,16 @@ class LoginViewModel extends ChangeNotifier {
   Future<int> detailsValidationAfterGmail(
       {required GmailRegistrationRequestModel model}) async {
     final response = await _loginApiService.detailsValidationAfterGmail(model: model);
+    return response;
+  }
+
+  Future<OtpRegistrationResponseModel> verifyOTP({required String mobileNumber,required String uid}) async {
+    final response = await _loginApiService.verifyOTP(mobileNumber: mobileNumber, uid: uid);
+    return response;
+  }
+  Future<SignUpResponseModel> detailsValidationAfterOTP(
+      {required SignUpRequestModel model}) async {
+    final response = await _loginApiService.detailsValidationAfterOTP(model: model);
     return response;
   }
 }

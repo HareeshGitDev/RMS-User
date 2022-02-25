@@ -50,6 +50,7 @@ dependencies:
   webview_flutter: ^3.0.0
   pinput: ^1.2.2
   google_sign_in: ^5.2.4
+  cloud_firestore:
 
   # Base Dependencies
   google_fonts: ^2.0.0

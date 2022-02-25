@@ -21,7 +21,9 @@ import '../../utils/color.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/shared_prefrences_util.dart';
 import '../model/gmail_signin_request_model.dart';
+import '../model/gmail_signin_response_model.dart';
 import '../model/login_response_model.dart';
+import '../model/signup_response_model.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -206,7 +208,7 @@ class _LoginPageState extends State<LoginPage> {
                                     await setSPValues(response: response);
                                     Navigator.pop(context);
                                     Navigator.of(context)
-                                        .pushNamed(AppRoutes.homePage);
+                                        .pushNamedAndRemoveUntil(AppRoutes.homePage,(route) => false,);
                                   } else {
                                     RMSWidgets.showSnackbar(
                                       context: context,
@@ -303,7 +305,7 @@ class _LoginPageState extends State<LoginPage> {
 
                                     if (data != null) {
                                       log('Gmail Data :: ${data.toString()}  ');
-                                      final response=await _loginViewModel.registerUserAfterGmail(model: GmailSignInRequestModel(
+                                      final LoginResponseModel response=await _loginViewModel.registerUserAfterGmail(model: GmailSignInRequestModel(
                                         name: data.displayName,
                                         email: data.email,
                                         id: data.id,
@@ -312,11 +314,22 @@ class _LoginPageState extends State<LoginPage> {
 
                                       Navigator.of(context).pop();
                                       if(response.status?.toLowerCase()=='success'){
-                                        SharedPreferenceUtil shared=SharedPreferenceUtil();
-                                        await shared.setString(rms_registeredUserToken, response.appToken.toString());
-                                        await shared.setString(rms_gmapKey, response.gmapKey.toString());
-                                        Navigator.of(context).pushNamed(
-                                            AppRoutes.register_details_page,arguments: data);
+
+                                        if(  response.contactNum == null &&  response.contactNum!.isEmpty){
+                                          SharedPreferenceUtil shared=SharedPreferenceUtil();
+                                          await shared.setString(rms_registeredUserToken, response.appToken.toString());
+                                          await shared.setString(rms_gmapKey, response.gmapKey.toString());
+                                          Navigator.of(context).pushNamed(
+                                              AppRoutes.firebaseRegistrationPage,arguments: {
+                                            'gmailData':data,
+                                            'from':'Gmail',
+                                          });
+                                        }else{
+                                          await setSPValues(response: response);
+                                          Navigator.of(context).pushNamed(
+                                              AppRoutes.homePage);
+                                        }
+
                                       }
 
                                     }else{
@@ -614,10 +627,10 @@ class _LoginPageState extends State<LoginPage> {
                                 onPressed: () async{
                                   if (mob_controller.text.isNotEmpty &&
                                       mob_controller.text.length == 10) {
-                                    Navigator.of(context).pushNamed(
-                                        AppRoutes.mob_register_login_otp,
+                                   Navigator.of(context).pushNamed(
+                                        AppRoutes.otpVerifyPage,
                                         arguments: {
-                                          'mobile': "+91" + mob_controller.text
+                                          'mobile':  mob_controller.text
                                         });
                                   } else {
                                     RMSWidgets.getToast(

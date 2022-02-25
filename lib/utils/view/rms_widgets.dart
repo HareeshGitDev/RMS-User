@@ -20,7 +20,7 @@ class RMSWidgets{
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        return WillPopScope(child: alert, onWillPop: ()async=>false);
+        return alert;//WillPopScope(child: alert, onWillPop: ()async=>false);
       },
     );
   }

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:RentMyStay_user/images.dart';
@@ -22,20 +23,24 @@ import '../model/gmail_registration_request_model.dart';
 import '../model/login_response_model.dart';
 import '../model/signup_response_model.dart';
 
-class GmailRegistrationPage extends StatefulWidget {
-  GoogleSignInAccount googleData;
+class FirebaseRegistrationPage extends StatefulWidget {
+  GoogleSignInAccount? googleData;
+  String from;
+  String? uid;
+  String? mobile;
 
-  GmailRegistrationPage({Key? key, required this.googleData})
+  FirebaseRegistrationPage(
+      {Key? key, this.googleData, required this.from,this.uid,this.mobile})
       : super(key: key);
 
   @override
   _RegistrationPageState createState() => _RegistrationPageState();
 }
 
-class _RegistrationPageState extends State<GmailRegistrationPage> {
+class _RegistrationPageState extends State<FirebaseRegistrationPage> {
   late LoginViewModel _loginViewModel;
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+
   final _nameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
   final _referalController = TextEditingController();
@@ -44,7 +49,7 @@ class _RegistrationPageState extends State<GmailRegistrationPage> {
   String typeValue = 'I am';
   String selectedCity = 'Select City';
   String sourceRMS = 'How do you Know RMS';
-  bool fromOTP = false;
+
 
   @override
   void initState() {
@@ -58,7 +63,7 @@ class _RegistrationPageState extends State<GmailRegistrationPage> {
     _mainWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: GestureDetector(
-        onTap:()=> FocusScope.of(context).requestFocus(FocusNode()),
+        onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         child: Container(
           color: CustomTheme.skyBlue,
           height: _mainHeight,
@@ -82,8 +87,8 @@ class _RegistrationPageState extends State<GmailRegistrationPage> {
                   child: AnimatedTextKit(
                     animatedTexts: [
                       ColorizeAnimatedText('You are Almost there!',
-                          textStyle:
-                              TextStyle(fontSize: 30, fontFamily: "HKGrotest-Light"),
+                          textStyle: TextStyle(
+                              fontSize: 30, fontFamily: "HKGrotest-Light"),
                           colors: [
                             Colors.white,
                             CustomTheme.skyBlue,
@@ -101,45 +106,62 @@ class _RegistrationPageState extends State<GmailRegistrationPage> {
                   height: _mainHeight * 0.654,
                   width: _mainWidth,
                   padding: EdgeInsets.only(left: 25, right: 25),
-                  child:
-                  Column(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 10,
-                      ),
 
-                      Center(
-                        child: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                              widget.googleData.photoUrl.toString(),
-                            ),
-                            maxRadius: 30),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Center(
-                        child: Text('${widget.googleData.email}',style: TextStyle(
-                            color: Colors.black.withGreen(70),
-                            fontWeight: FontWeight.w700,
-                            fontSize: 22
-                        ),),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                          'Hello ${widget.googleData.displayName},Gmail Verification is done.Now Please enter few more mandatory details to complete your registration .',style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16
-                      ),),
-                      SizedBox(
-                        height: 40,
+
+                    children: <Widget>[
+                      Visibility(
+                        visible: widget.from == 'Gmail',
+                        child: Container(
+
+                          height: _mainHeight*0.2,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Center(
+                                child: CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                      widget.googleData?.photoUrl??" ",
+                                    ),
+                                    maxRadius: 30),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Center(
+                                child: Text(
+                                  '${widget.googleData?.email}',
+                                  style: TextStyle(
+                                      color: Colors.black.withGreen(70),
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 22),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'Hello ${widget.googleData?.displayName},Gmail Verification is done.Now Please enter few more mandatory details to complete your registration .',
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                       Visibility(
-                        visible: fromOTP,
+                        visible: widget.from == 'OTP',
+                        child: SizedBox(
+                          height: 40,
+                        ),
+                      ),
+                      Visibility(
+                        visible: widget.from == 'OTP',
                         child: Padding(
                           padding: const EdgeInsets.only(top: 10),
                           child: _textInput(
@@ -151,10 +173,51 @@ class _RegistrationPageState extends State<GmailRegistrationPage> {
                       SizedBox(
                         height: 5,
                       ),
-                      _textInput(
-                          hint: "Phone Number",
-                          icon: Icons.contact_page,
-                          controller: _phoneNumberController),
+                      Visibility(
+                        visible: widget.from == 'Gmail',
+                        child: _textInput(
+                            hint: "Phone Number",
+                            icon: Icons.contact_page,
+                            controller: _phoneNumberController),
+                      ),
+                      Visibility(
+                        visible: widget.from == 'Gmail',
+                        child: SizedBox(
+                          height: 10,
+                        ),
+                      ),
+                      Visibility(
+                        visible: widget.from == 'OTP',
+                        child: Container(
+                          padding: const EdgeInsets.only(top: 0),
+                          margin: EdgeInsets.only(top: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            color: Colors.white,
+                          ),
+                          child: Neumorphic(
+                            style: NeumorphicStyle(
+                              depth: -10,
+                              color: Colors.white,
+                            ),
+                            child: TextFormField(
+                              validator: (value) {
+                                if (value != null && value.length < 6) {
+                                  return "Enter proper email";
+                                }
+                                return null;
+                              },
+                              keyboardType: TextInputType.emailAddress,
+                              controller: _emailController,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Email',
+                                prefixIcon: Icon(Icons.email_outlined),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                       SizedBox(
                         height: 20,
                       ),
@@ -242,7 +305,7 @@ class _RegistrationPageState extends State<GmailRegistrationPage> {
                         ),
                       ),
                       Spacer(),
-                     /* GestureDetector(
+                      /* GestureDetector(
                           onTap: () async{
                             await GoogleAuthService.logOut();
                             Navigator.pop(context);
@@ -263,59 +326,10 @@ class _RegistrationPageState extends State<GmailRegistrationPage> {
                                     borderRadius: BorderRadius.circular(40)),
                               )),
                           onPressed: () async {
-
-                             /*if (_emailController.text.isEmpty) {
-                              Fluttertoast.showToast(
-                                  msg: 'Please Enter E-mail Address',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER);
-                            } else*/
-                            if (_phoneNumberController.text.isEmpty) {
-                              Fluttertoast.showToast(
-                                  msg: 'Please Enter Your Mobile Number',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER);
-                            } else if (typeValue.isEmpty || typeValue == 'I am') {
-                              Fluttertoast.showToast(
-                                  msg: 'Please Select All Field',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER);
-                            } else if (selectedCity.isEmpty ||
-                                selectedCity == 'Select City') {
-                              Fluttertoast.showToast(
-                                  msg: 'Please Select City',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER);
-                            } else if (sourceRMS.isEmpty ||
-                                sourceRMS == 'How do you Know RMS') {
-                              Fluttertoast.showToast(
-                                  msg: 'Please Select Source',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER);
-                            } else {
-                              RMSWidgets.showLoaderDialog(
-                                  context: context, message: 'Please wait...');
-                              SharedPreferenceUtil shared=SharedPreferenceUtil();
-                              final int response =
-                                  await _loginViewModel.detailsValidationAfterGmail(model:GmailRegistrationRequestModel(
-                                    city: selectedCity,
-                                    iam: typeValue,
-                                    mobileNo: _phoneNumberController.text,
-                                    sourceRms: sourceRMS,
-                                    appToken: await shared.getString(rms_registeredUserToken),
-
-                                  ) );
-                              Navigator.of(context).pop();
-
-                              if (response ==200) {
-                                await setSPValues();
-                                Navigator.of(context)
-                                    .pushNamed(AppRoutes.homePage);
-                              } else {
-                                RMSWidgets.getToast(
-                                    message: 'Something went wrong...',
-                                    color: CustomTheme().colorError);
-                              }
+                            if (widget.from == 'Gmail') {
+                              await calledFromGmailPage();
+                            } else if (widget.from == 'OTP') {
+                              await calledFromOTPPage();
                             }
                           },
                           child: Center(child: Text("REGISTER")),
@@ -399,12 +413,124 @@ class _RegistrationPageState extends State<GmailRegistrationPage> {
 
   Future<void> setSPValues() async {
     SharedPreferenceUtil shared = SharedPreferenceUtil();
+    await shared.setString(rms_registeredUserToken,
+        (await shared.getString(rms_registeredUserToken)).toString());
     await shared.setString(
-        rms_registeredUserToken,(await shared.getString(rms_registeredUserToken)).toString());
-    await shared.setString(rms_profilePicUrl, widget.googleData.photoUrl.toString());
+        rms_profilePicUrl, widget.googleData?.photoUrl ?? " ");
     await shared.setString(rms_phoneNumber, _phoneNumberController.text);
-    await shared.setString(rms_name, widget.googleData.displayName.toString());
-    await shared.setString(rms_email, widget.googleData.email);
-    await shared.setString(rms_gmapKey, (await shared.getString(rms_gmapKey)).toString());
+    await shared.setString(rms_name, widget.googleData?.displayName ?? " ");
+    await shared.setString(rms_email, widget.googleData?.email ?? " ");
+    await shared.setString(
+        rms_gmapKey, (await shared.getString(rms_gmapKey)).toString());
+  }
+  Future<void> setSPValuesForOTP({required SignUpResponseModel response}) async {
+    SharedPreferenceUtil shared = SharedPreferenceUtil();
+    await shared.setString(
+        rms_registeredUserToken, response.appToken.toString());
+    await shared.setString(rms_profilePicUrl,response.pic.toString());
+    await shared.setString(rms_phoneNumber, response.contactNum.toString());
+    await shared.setString(rms_name, response.name.toString());
+    await shared.setString(rms_email, response.email.toString());
+    await shared.setString(rms_gmapKey, response.gmapKey.toString());
+  }
+
+  Future<void> calledFromGmailPage() async {
+    if (_phoneNumberController.text.isEmpty) {
+      Fluttertoast.showToast(
+          msg: 'Please Enter Your Mobile Number',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER);
+    } else if (typeValue.isEmpty || typeValue == 'I am') {
+      Fluttertoast.showToast(
+          msg: 'Please Select All Field',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER);
+    } else if (selectedCity.isEmpty || selectedCity == 'Select City') {
+      Fluttertoast.showToast(
+          msg: 'Please Select City',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER);
+    } else if (sourceRMS.isEmpty || sourceRMS == 'How do you Know RMS') {
+      Fluttertoast.showToast(
+          msg: 'Please Select Source',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER);
+    } else {
+      RMSWidgets.showLoaderDialog(context: context, message: 'Please wait...');
+      SharedPreferenceUtil shared = SharedPreferenceUtil();
+      final int response = await _loginViewModel.detailsValidationAfterGmail(
+          model: GmailRegistrationRequestModel(
+        city: selectedCity,
+        iam: typeValue,
+        mobileNo: _phoneNumberController.text,
+        sourceRms: sourceRMS,
+        appToken: await shared.getString(rms_registeredUserToken),
+      ));
+      Navigator.of(context).pop();
+
+      if (response == 200) {
+        await setSPValues();
+        Navigator.of(context).pushNamed(AppRoutes.homePage);
+      } else {
+        RMSWidgets.getToast(
+            message: 'Something went wrong...',
+            color: CustomTheme().colorError);
+      }
+    }
+  }
+
+  Future<void> calledFromOTPPage() async {
+    if (_emailController.text.isEmpty) {
+      Fluttertoast.showToast(
+          msg: 'Please Enter E-mail Address',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER);
+    } else if (_nameController.text.isEmpty) {
+      Fluttertoast.showToast(
+          msg: 'Please Enter Your Name',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER);
+    } else if (typeValue.isEmpty || typeValue == 'I am') {
+      Fluttertoast.showToast(
+          msg: 'Please Select For Type',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER);
+    } else if (selectedCity.isEmpty || selectedCity == 'Select City') {
+      Fluttertoast.showToast(
+          msg: 'Please Select City',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER);
+    } else if (sourceRMS.isEmpty || sourceRMS == 'How do you Know RMS') {
+      Fluttertoast.showToast(
+          msg: 'Please Select Source',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER);
+    } else {
+      RMSWidgets.showLoaderDialog(context: context, message: 'Please wait...');
+
+      log(widget.mobile.toString());
+      log(widget.uid.toString());
+      final response = await _loginViewModel.detailsValidationAfterOTP(
+          model: SignUpRequestModel(
+        sourceRms: sourceRMS,
+        iam: typeValue,
+        city: selectedCity,
+        email: _emailController.text,
+        fname: _nameController.text,
+        phonenumber: widget.mobile,
+        uid:widget.uid,
+
+      ));
+      Navigator.of(context).pop();
+
+      if (response.status?.toLowerCase()=='success') {
+        await setSPValuesForOTP(response: response);
+        Navigator.of(context).pushNamed(AppRoutes.homePage);
+      } else {
+        RMSWidgets.getToast(
+            message: 'Something went wrong...',
+            color: CustomTheme().colorError);
+      }
+    }
   }
 }

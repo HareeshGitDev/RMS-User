@@ -231,6 +231,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                     borderRadius: BorderRadius.circular(40)),
                               )),
                           onPressed: () async {
+
                           if (_nameController.text.isEmpty) {
                             Fluttertoast.showToast(
                                 msg: 'Please Enter Enter Your Name',
@@ -397,9 +398,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
     SharedPreferenceUtil shared = SharedPreferenceUtil();
     await shared.setString(
         rms_registeredUserToken, response.appToken.toString());
-    await shared.setString(rms_profilePicUrl," ");
-    await shared.setString(rms_phoneNumber, _phoneNumberController.text);
-    await shared.setString(rms_name, _nameController.text);
+    await shared.setString(rms_profilePicUrl,response.pic.toString());
+    await shared.setString(rms_phoneNumber, response.contactNum.toString());
+    await shared.setString(rms_name, response.name.toString());
     await shared.setString(rms_email, response.email.toString());
     await shared.setString(rms_gmapKey, response.gmapKey.toString());
   }

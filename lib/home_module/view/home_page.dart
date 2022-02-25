@@ -6,6 +6,7 @@ import 'package:RentMyStay_user/login_module/service/google_auth_service.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
+import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
@@ -525,8 +526,18 @@ log('called');
                               FxSpacing.height(20),
                               InkWell(
                                 onTap: ()async {
-                                await GoogleAuthService.logOut();
-                                Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.loginPage, (route) => false);
+                                 RMSWidgets.showLoaderDialog(context: context, message: 'Logging out...');
+                                  SharedPreferenceUtil shared=SharedPreferenceUtil();
+                                  await GoogleAuthService.logOut();
+                                await GoogleAuthService.logoutFromFirebase();
+                                bool deletedAllValues=await shared.clearAll();
+                                Navigator.of(context).pop();
+                                if(deletedAllValues){
+                                  Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.loginPage, (route) => false);
+
+                                }else{
+                                  log('NOT ABLE TO DELETE VALUES FROM SP');
+                                }
                         },
 
 

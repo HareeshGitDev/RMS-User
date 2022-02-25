@@ -1,7 +1,7 @@
 import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
 
 import 'package:RentMyStay_user/login_module/view/login_page.dart';
-import 'package:RentMyStay_user/login_module/view/gmail_registration_page.dart';
+import 'package:RentMyStay_user/login_module/view/firebase_registration_page.dart';
 import 'package:RentMyStay_user/login_module/view/success_page.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:RentMyStay_user/property_module/view/property_listing_page.dart';
@@ -12,8 +12,7 @@ import 'package:provider/provider.dart';
 
 import '../../home_module/view/home_page.dart';
 import '../../login_module/view/forgot_password_page.dart';
-import '../../login_module/view/mob_otp.dart';
-import '../../login_module/view/mob_register_login.dart';
+import '../../login_module/view/mobile_otp_page.dart';
 import '../../login_module/view/registration_page.dart';
 
 class NavigationService {
@@ -22,9 +21,9 @@ class NavigationService {
       case AppRoutes.loginPage:
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
-              create: (_) => LoginViewModel(),
-              child: LoginPage(),
-            ));
+                  create: (_) => LoginViewModel(),
+                  child: LoginPage(),
+                ));
 
       case AppRoutes.homePage:
         return MaterialPageRoute(
@@ -48,20 +47,22 @@ class NavigationService {
                   child: ForgotPasswordPage(),
                 ));
 
-      case AppRoutes.mob_register_login:
-        return MaterialPageRoute(builder: (context) => mob_register_login());
-
-      case AppRoutes.mob_register_login_otp:
+      case AppRoutes.otpVerifyPage:
         final data = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(
-            builder: (context) => MobileOtpPage(number: data['mobile']));
-
-      case AppRoutes.register_details_page:
-        final GoogleSignInAccount data=settings.arguments as GoogleSignInAccount;
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
                   create: (_) => LoginViewModel(),
-                  child: GmailRegistrationPage(googleData: data),
+                  child: MobileOtpPage(number: data['mobile']),
+                ));
+
+      case AppRoutes.firebaseRegistrationPage:
+        final  data =
+            settings.arguments as Map<String,dynamic>;
+
+        return MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider(
+                  create: (_) => LoginViewModel(),
+                  child: FirebaseRegistrationPage(googleData: data['gmailData'],from: data['from'],uid: data['uid'],mobile:data['mobile'] ),
                 ));
 
       case AppRoutes.successPage:
@@ -92,7 +93,7 @@ class AppRoutes {
   static const String propertyListingPage = 'propertyListingPage';
   static const String forgotPassword = 'forgotPassword';
   static const String successPage = 'successPage';
-  static const String mob_register_login = 'mob_register_login';
-  static const String mob_register_login_otp = 'mob_register_login_otp';
-  static const String register_details_page = 'register_details_page';
+  static const String otpVerifyPage = 'otpVerifyPage';
+  static const String firebaseRegistrationPage = 'firebaseRegistrationPage';
+
 }

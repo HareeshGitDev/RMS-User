@@ -2,12 +2,7 @@ import 'dart:io' show Platform;
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
-
-
-
 import 'login_module/view/splash_page.dart';
-
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   final FirebaseApp firebaseApp= await Firebase.initializeApp(
