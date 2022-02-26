@@ -165,7 +165,7 @@ class Data {
   String? rentSort;
   String? offerStatus;
   String? distance;
-  Null? available;
+  String? available;
   String? avl;
   String? encdPropId;
   String? propUrl;
@@ -173,6 +173,7 @@ class Data {
   List<PropPics>? propPics;
   String? salesNumber;
   int? wishlist;
+  String? unitType;
 
   Data(
       {this.propId,
@@ -220,6 +221,7 @@ class Data {
         this.encdUserId,
         this.propPics,
         this.salesNumber,
+        this.unitType,
         this.wishlist});
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -274,6 +276,7 @@ class Data {
     }
     salesNumber = json['sales_number'];
     wishlist = json['wishlist'];
+    unitType = json['unit_type'];
   }
 
   Map<String, dynamic> toJson() {
@@ -326,6 +329,7 @@ class Data {
     }
     data['sales_number'] = this.salesNumber;
     data['wishlist'] = this.wishlist;
+      data['unit_type']=unitType;
     return data;
   }
 }

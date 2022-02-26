@@ -23,6 +23,7 @@ import '../../images.dart';
 import '../../theme/app_notifier.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/theme_type.dart';
+import '../../utils/constants/enum_consts.dart';
 import '../../utils/service/navigation_service.dart';
 
 class HomePage extends StatefulWidget {
@@ -55,14 +56,14 @@ class _HomePageState extends State<HomePage> {
 
   Future<Map<String, String>> getSharedPreferencesValues() async {
     SharedPreferenceUtil sharedPreferenceUtil = SharedPreferenceUtil();
-log('called');
+
     return {
       'email': (await sharedPreferenceUtil.getString(rms_email)).toString(),
       'name': (await sharedPreferenceUtil.getString(rms_name)).toString(),
       'phone':
-          (await sharedPreferenceUtil.getString(rms_phoneNumber)).toString(),
+      (await sharedPreferenceUtil.getString(rms_phoneNumber)).toString(),
       'pic':
-          (await sharedPreferenceUtil.getString(rms_profilePicUrl)).toString(),
+      (await sharedPreferenceUtil.getString(rms_profilePicUrl)).toString(),
     };
   }
 
@@ -163,8 +164,14 @@ log('called');
       body: SingleChildScrollView(
         child: Container(
           color: Colors.white,
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,14 +180,22 @@ log('called');
                     padding: EdgeInsets.only(top: 10),
                     height: 110,
                     // color: CustomTheme.peach.withAlpha(40),
-                    width: MediaQuery.of(context).size.width,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
-                        var data =
-                            _homeViewModel.getCitySuggestionList()[index];
+                        var data = _homeViewModel.getCitySuggestionList(
+                            context: context)[index];
                         return InkWell(
-                          onTap: () => data.callback(data.cityName),
+                          onTap: () =>
+                              Navigator.of(context).pushNamed(
+                                  AppRoutes.propertyListingPage, arguments: {
+                                'location': data.value,
+                                'property':Property.FromLocation,
+                              }),
                           child: Container(
                             margin: EdgeInsets.all(5),
                             width: 75,
@@ -191,17 +206,23 @@ log('called');
                                   backgroundImage: NetworkImage(data.imageUrl),
                                   radius: 30,
                                 ),
-                                Text(data.cityName,style: TextStyle(fontSize: 14)),
+                                Text(data.cityName,
+                                    style: TextStyle(fontSize: 14)),
                               ],
                             ),
                           ),
                         );
                       },
-                      itemCount: _homeViewModel.getCitySuggestionList().length,
+                      itemCount: _homeViewModel
+                          .getCitySuggestionList(context: context)
+                          .length,
                     )),
                 Container(
                   margin: EdgeInsets.only(top: 10),
-                  width: MediaQuery.of(context).size.width,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
                   child: CarouselSlider(
                     items: [
                       Container(
@@ -264,20 +285,28 @@ log('called');
                     padding: EdgeInsets.only(left: 10),
                     height: 260,
                     // color: CustomTheme.peach.withAlpha(40),
-                    width: MediaQuery.of(context).size.width,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
                         var data =
-                            _homeViewModel.getPopularPropertyModelList()[index];
+                        _homeViewModel.getPopularPropertyModelList()[index];
                         return InkWell(
-                          onTap: () => Navigator.of(context).pushNamed(
-                            AppRoutes.propertyListingPage,
-                          ),
+                          onTap: () =>
+                           Navigator.of(context).pushNamed(
+                            AppRoutes.propertyListingPage, arguments: {
+                          'location': 'Bengaluru-Karnataka-India',
+                           'propertyType':data.propertyType,
+                           'property':Property.FromBHK,
+
+                        }),
                           child: Card(
                             shape: RoundedRectangleBorder(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
+                                BorderRadius.all(Radius.circular(10))),
                             elevation: 3,
                             shadowColor: CustomTheme.skyBlue,
                             margin: EdgeInsets.all(10),
@@ -289,7 +318,10 @@ log('called');
                                   Expanded(
                                     child: Container(
                                       height: 140,
-                                      width: MediaQuery.of(context).size.width,
+                                      width: MediaQuery
+                                          .of(context)
+                                          .size
+                                          .width,
                                       decoration: BoxDecoration(
                                           borderRadius: BorderRadius.only(
                                               topLeft: Radius.circular(10),
@@ -297,8 +329,8 @@ log('called');
                                           image: DecorationImage(
                                               image: AssetImage(data.imageUrl!),
                                               fit: BoxFit.cover
-                                              //NetworkImage(data.imageUrl!),fit: BoxFit.cover,
-                                              )),
+                                            //NetworkImage(data.imageUrl!),fit: BoxFit.cover,
+                                          )),
                                     ),
                                   ),
                                   Container(
@@ -306,9 +338,9 @@ log('called');
                                       alignment: Alignment.topLeft,
                                       child: Text(data.propertyType!,
                                           style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                        ))),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ))),
                                   Container(
                                       margin: EdgeInsets.only(left: 5, top: 5),
                                       alignment: Alignment.topLeft,
@@ -332,7 +364,9 @@ log('called');
                         );
                       },
                       itemCount:
-                          _homeViewModel.getPopularPropertyModelList().length,
+                      _homeViewModel
+                          .getPopularPropertyModelList()
+                          .length,
                     )),
               ],
             ),
@@ -340,25 +374,25 @@ log('called');
         ),
       ),
       drawer:
-          _buildDrawer(), // This trailing comma makes auto-formatting nicer for build methods.
+      _buildDrawer(), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
   Widget _buildDrawer() {
     return FutureBuilder(
       builder: (context, AsyncSnapshot<Map<String, String>> snapshot) {
-        if(snapshot.hasError){
-          return Center(child: Text('Hii'),);
-        }
-        else if(snapshot.connectionState==ConnectionState.waiting){
+        if (snapshot.hasError) {
+          return Center(
+            child: Text('Hii'),
+          );
+        } else if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
-        }
-        else if(snapshot.connectionState==ConnectionState.done){
+        } else if (snapshot.connectionState == ConnectionState.done) {
           log('done');
-          if(snapshot.hasData){
+          if (snapshot.hasData) {
             return FxContainer.none(
               margin: FxSpacing.fromLTRB(
-                  0, FxSpacing.safeAreaTop(context) +0, 16, 0),
+                  0, FxSpacing.safeAreaTop(context) + 0, 16, 0),
               borderRadiusAll: 4,
               clipBehavior: Clip.antiAliasWithSaveLayer,
               color: theme.scaffoldBackgroundColor,
@@ -370,18 +404,24 @@ log('called');
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Container(
-                          padding:
-                          FxSpacing.only(left: 20, bottom: 24, top: 24, right: 20),
+                          padding: FxSpacing.only(
+                              left: 20, bottom: 24, top: 24, right: 20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              CircleAvatar(backgroundImage: NetworkImage((snapshot.data!['pic']).toString(),),radius: 45,),
+                              CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                  (snapshot.data!['pic']).toString(),
+                                ),
+                                radius: 45,
+                              ),
                               FxSpacing.height(16),
                               FxContainer(
                                 padding: FxSpacing.fromLTRB(12, 4, 12, 4),
                                 borderRadiusAll: 4,
                                 color: theme.colorScheme.primary.withAlpha(40),
-                                child: FxText.caption((snapshot.data!['name']).toString(),
+                                child: FxText.caption(
+                                    (snapshot.data!['name']).toString(),
                                     color: theme.colorScheme.primary,
                                     fontWeight: 600,
                                     letterSpacing: 0.2),
@@ -391,7 +431,8 @@ log('called');
                                 padding: FxSpacing.fromLTRB(12, 4, 12, 4),
                                 borderRadiusAll: 4,
                                 color: theme.colorScheme.primary.withAlpha(40),
-                                child: FxText.caption((snapshot.data!['email']).toString(),
+                                child: FxText.caption(
+                                    (snapshot.data!['email']).toString(),
                                     color: theme.colorScheme.primary,
                                     fontWeight: 600,
                                     letterSpacing: 0.2),
@@ -525,22 +566,25 @@ log('called');
                               ),
                               FxSpacing.height(20),
                               InkWell(
-                                onTap: ()async {
-                                 RMSWidgets.showLoaderDialog(context: context, message: 'Logging out...');
-                                  SharedPreferenceUtil shared=SharedPreferenceUtil();
+                                onTap: () async {
+                                  RMSWidgets.showLoaderDialog(
+                                      context: context,
+                                      message: 'Logging out...');
+                                  SharedPreferenceUtil shared =
+                                  SharedPreferenceUtil();
                                   await GoogleAuthService.logOut();
-                                await GoogleAuthService.logoutFromFirebase();
-                                bool deletedAllValues=await shared.clearAll();
-                                Navigator.of(context).pop();
-                                if(deletedAllValues){
-                                  Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.loginPage, (route) => false);
-
-                                }else{
-                                  log('NOT ABLE TO DELETE VALUES FROM SP');
-                                }
-                        },
-
-
+                                  await GoogleAuthService.logoutFromFirebase();
+                                  bool deletedAllValues = await shared
+                                      .clearAll();
+                                  Navigator.of(context).pop();
+                                  if (deletedAllValues) {
+                                    Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                        AppRoutes.loginPage, (route) => false);
+                                  } else {
+                                    log('NOT ABLE TO DELETE VALUES FROM SP');
+                                  }
+                                },
                                 highlightColor: Colors.transparent,
                                 splashColor: Colors.transparent,
                                 child: Row(
@@ -660,12 +704,11 @@ log('called');
             );
           }
         }
-          return Container();
-
-
-
+        return Container();
       },
       future: getSharedPreferencesValues(),
     );
   }
+
+
 }

@@ -8,4 +8,6 @@ class AppUrls{
   static const String propertyListingUrl = "/m/home_page_search_link";
   static const String signInWithGoogleUrl = "/m/google_login";
   static const String registrationWithGoogleUrl = "/m/add_phone";
+  static const String addWishListPropertyUrl = "/m/add_wishlist_prop";
+  static const String fetchWishListPropertyUrl = "/m/wish_list_menu";
 }

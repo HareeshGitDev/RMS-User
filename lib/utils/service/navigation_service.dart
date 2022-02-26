@@ -69,10 +69,12 @@ class NavigationService {
         return MaterialPageRoute(builder: (context) => SuccessPage());
 
       case AppRoutes.propertyListingPage:
+        final data=settings.arguments as Map<String,dynamic>;
+
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
             create: (_) => PropertyViewModel(),
-            child: PropertyListingPage(),
+            child: PropertyListingPage(locationName: data['location'],propertyType: data['propertyType'],property:data['property'] ),
           ),
         );
 

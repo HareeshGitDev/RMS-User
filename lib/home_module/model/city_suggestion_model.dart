@@ -1,13 +1,8 @@
-import 'dart:developer';
-
 class CitySuggestionModel {
   String cityName;
   String imageUrl;
-  Function(String) callback;
+  String value;
 
   CitySuggestionModel(
-      {required this.cityName, required this.imageUrl, required this.callback});
-
-
-
+      {required this.cityName, required this.imageUrl,required this.value});
 }
