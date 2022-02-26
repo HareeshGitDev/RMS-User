@@ -5,6 +5,8 @@ import 'package:RentMyStay_user/login_module/view/login_page.dart';
 import 'package:RentMyStay_user/login_module/view/firebase_registration_page.dart';
 import 'package:RentMyStay_user/login_module/view/success_page.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
+import 'package:RentMyStay_user/property_details_module/view/property_details_page.dart';
+import 'package:RentMyStay_user/property_details_module/viewModel/property_details_viewModel.dart';
 import 'package:RentMyStay_user/property_module/view/property_listing_page.dart';
 import 'package:RentMyStay_user/property_module/view/wish_list_page.dart';
 import 'package:RentMyStay_user/property_module/viewModel/property_viewModel.dart';
@@ -90,6 +92,12 @@ class NavigationService {
             create: (_) => PropertyViewModel(),
             child: WishListPage()),
         );
+      case AppRoutes.propertyDetailsPage:
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+              create: (_) => PropertyDetailsViewModel(),
+              child: PropertyDetailsPage()),
+        );
 
       default:
         return MaterialPageRoute(
@@ -112,6 +120,7 @@ class AppRoutes {
   static const String otpVerifyPage = 'otpVerifyPage';
   static const String firebaseRegistrationPage = 'firebaseRegistrationPage';
   static const String wishListPage = 'wishListPage';
+  static const String propertyDetailsPage = 'propertyDetailsPage';
 
 
 }

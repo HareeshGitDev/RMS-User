@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:RentMyStay_user/property_module/model/property_details_model.dart';
+import 'package:RentMyStay_user/property_module/model/property_list_model.dart';
 import 'package:RentMyStay_user/property_module/model/wish_list_model.dart';
 import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
@@ -20,7 +20,7 @@ class PropertyApiService {
     return registeredToken;
   }
 
-  Future<PropertyDetailsModel> fetchPropertyDetailsList({
+  Future<PropertyListModel> fetchPropertyDetailsList({
     required String address,
     String? propertyType,
     String? lat,
@@ -54,9 +54,9 @@ class PropertyApiService {
     final data = response as Map<String, dynamic>;
 
     if (data['status'].toString().toLowerCase() == 'success') {
-      return PropertyDetailsModel.fromJson(data);
+      return PropertyListModel.fromJson(data);
     } else {
-      return PropertyDetailsModel(status: 'failure');
+      return PropertyListModel(status: 'failure');
     }
   }
 

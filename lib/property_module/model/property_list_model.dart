@@ -1,4 +1,4 @@
-class PropertyDetailsModel {
+class PropertyListModel {
   bool? success;
   String? pCount;
   ReturnAddress? returnAddress;
@@ -12,7 +12,7 @@ class PropertyDetailsModel {
   String? userProfilePic;
   String? status;
 
-  PropertyDetailsModel(
+  PropertyListModel(
       {this.success,
         this.pCount,
         this.returnAddress,
@@ -26,7 +26,7 @@ class PropertyDetailsModel {
         this.userProfilePic,
         this.status});
 
-  PropertyDetailsModel.fromJson(Map<String, dynamic> json) {
+  PropertyListModel.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     pCount = json['p_count'];
     returnAddress = json['return_address'] != null

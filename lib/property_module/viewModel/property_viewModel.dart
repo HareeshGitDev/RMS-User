@@ -5,11 +5,11 @@ import 'package:RentMyStay_user/property_module/service/property_api_service.dar
 import 'package:flutter/cupertino.dart';
 
 import '../../utils/constants/enum_consts.dart';
-import '../model/property_details_model.dart';
+import '../model/property_list_model.dart';
 
 class PropertyViewModel extends ChangeNotifier {
   final PropertyApiService _propertyApiService = PropertyApiService();
-  PropertyDetailsModel propertyDetailsModel = PropertyDetailsModel();
+  PropertyListModel propertyDetailsModel = PropertyListModel();
   WishListModel wishListModel=WishListModel();
 
   Future<void> getPropertyDetailsList({
@@ -17,7 +17,7 @@ class PropertyViewModel extends ChangeNotifier {
     String? propertyType,
     required Property property,
   }) async {
-    final PropertyDetailsModel data =
+    final PropertyListModel data =
         await _propertyApiService.fetchPropertyDetailsList(
             address: address, property: property, propertyType: propertyType);
 

@@ -5,6 +5,7 @@ import 'package:RentMyStay_user/property_module/viewModel/property_viewModel.dar
 import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/color.dart';
 import 'package:RentMyStay_user/utils/constants/enum_consts.dart';
+import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -75,12 +76,14 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                   ListView.separated(
                     itemBuilder: (context, index) {
                       return GestureDetector(
-                        child: Container(
+                        onTap: () => Navigator.of(context)
+                            .pushNamed(AppRoutes.propertyDetailsPage),
+                        child: SizedBox(
                           height: _mainHeight * 0.48,
                           child: Card(
                             elevation: 5,
                             shadowColor: CustomTheme.skyBlue,
-                            shape: RoundedRectangleBorder(
+                            shape: const RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10))),
                             child: Stack(
@@ -91,51 +94,49 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                     CarouselSlider(
                                       items: value.propertyDetailsModel
                                               .data![index].propPics
-                                              ?.map((e) => Container(
-                                                    child: CachedNetworkImage(
-                                                      imageUrl:
-                                                          e.picLink.toString(),
-                                                      imageBuilder: (context,
-                                                              imageProvider) =>
-                                                          Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.only(
-                                                                  topLeft: Radius
-                                                                      .circular(
-                                                                          10),
-                                                                  topRight: Radius
-                                                                      .circular(
-                                                                          10)),
-                                                          image:
-                                                              DecorationImage(
-                                                            image:
-                                                                imageProvider,
-                                                            fit: BoxFit.cover,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      placeholder: (context,
-                                                              url) =>
-                                                          Shimmer.fromColors(
-                                                              child: Container(
-                                                                height: 225,
-                                                                color:
-                                                                    Colors.grey,
-                                                              ),
-                                                              baseColor: Colors
-                                                                      .grey[200]
-                                                                  as Color,
-                                                              highlightColor:
-                                                                  Colors.grey[
-                                                                          350]
-                                                                      as Color),
-                                                      errorWidget: (context,
-                                                              url, error) =>
-                                                          Icon(Icons.error),
+                                              ?.map((e) => CachedNetworkImage(
+                                                imageUrl:
+                                                    e.picLink.toString(),
+                                                imageBuilder: (context,
+                                                        imageProvider) =>
+                                                    Container(
+                                                  decoration:
+                                                      BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                            topLeft: Radius
+                                                                .circular(
+                                                                    10),
+                                                            topRight: Radius
+                                                                .circular(
+                                                                    10)),
+                                                    image:
+                                                        DecorationImage(
+                                                      image:
+                                                          imageProvider,
+                                                      fit: BoxFit.cover,
                                                     ),
-                                                  ))
+                                                  ),
+                                                ),
+                                                placeholder: (context,
+                                                        url) =>
+                                                    Shimmer.fromColors(
+                                                        child: Container(
+                                                          height: 225,
+                                                          color:
+                                                              Colors.grey,
+                                                        ),
+                                                        baseColor: Colors
+                                                                .grey[200]
+                                                            as Color,
+                                                        highlightColor:
+                                                            Colors.grey[
+                                                                    350]
+                                                                as Color),
+                                                errorWidget: (context,
+                                                        url, error) =>
+                                                    Icon(Icons.error),
+                                              ))
                                               .toList() ??
                                           [],
                                       options: CarouselOptions(
@@ -204,13 +205,12 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                               "RMS Prop",
                                     ),
                                     Visibility(
-                                     visible: value.propertyDetailsModel.data![index]
-                                          .rmsProp !=
-                                          null &&
-                                          value.propertyDetailsModel.data![index]
-                                              .rmsProp ==
-                                              "RMS Prop"
-                                          ,
+                                      visible: value.propertyDetailsModel
+                                                  .data![index].rmsProp !=
+                                              null &&
+                                          value.propertyDetailsModel
+                                                  .data![index].rmsProp ==
+                                              "RMS Prop",
                                       child: Container(
                                         child: Text(
                                           'Multiple Units Available',
@@ -300,243 +300,240 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                       color: CustomTheme.skyBlue,
                                     ),
                                     Container(
-                                      height: 25,
-                                      margin: EdgeInsets.only(left: 15,right: 15),
-                                    //  color: Colors.blue,
-                                      child:Row(
-
-                                        children: [
-                                          Text('Rent Per Day'),
-                                          RichText(
-                                            text: TextSpan(children: [
-                                              TextSpan(
-                                                  text:
-                                                  'Rs ${value.propertyDetailsModel.data![index].orgRent ?? " "}',
-                                                  style: TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 12,
-                                                      fontFamily:
-                                                      "HKGrotest-Light",
-                                                      decoration: TextDecoration
-                                                          .lineThrough)),
-                                              TextSpan(
-                                                  text:
-                                                  ' Rs ${value.propertyDetailsModel.data![index].rent ?? " "}',
-                                                  style: TextStyle(
-                                                      color: myFavColor,
-                                                      fontFamily:
-                                                      "HKGrotest-Light",
-                                                      fontSize: 14)),
-                                            ]),
-                                          ),
-                                        ],mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      )
-                                    ),
+                                        height: 25,
+                                        margin: EdgeInsets.only(
+                                            left: 15, right: 15),
+                                        //  color: Colors.blue,
+                                        child: Row(
+                                          children: [
+                                            Text('Rent Per Day'),
+                                            RichText(
+                                              text: TextSpan(children: [
+                                                TextSpan(
+                                                    text:
+                                                        'Rs ${value.propertyDetailsModel.data![index].orgRent ?? " "}',
+                                                    style: TextStyle(
+                                                        color: Colors.grey,
+                                                        fontSize: 12,
+                                                        fontFamily:
+                                                            "HKGrotest-Light",
+                                                        decoration:
+                                                            TextDecoration
+                                                                .lineThrough)),
+                                                TextSpan(
+                                                    text:
+                                                        ' Rs ${value.propertyDetailsModel.data![index].rent ?? " "}',
+                                                    style: TextStyle(
+                                                        color: myFavColor,
+                                                        fontFamily:
+                                                            "HKGrotest-Light",
+                                                        fontSize: 14)),
+                                              ]),
+                                            ),
+                                          ],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                        )),
                                     Container(
                                         height: 25,
-                                        margin: EdgeInsets.only(left: 15,right: 15),
-                                      //  color: Colors.amber,
-                                        child:Row(
-
+                                        margin: EdgeInsets.only(
+                                            left: 15, right: 15),
+                                        //  color: Colors.amber,
+                                        child: Row(
                                           children: [
                                             Text('Rent (Stay < 3 Month)'),
                                             RichText(
                                               text: TextSpan(children: [
                                                 TextSpan(
                                                     text:
-                                                    'Rs ${value.propertyDetailsModel.data![index].orgMonthRent ?? " "}',
+                                                        'Rs ${value.propertyDetailsModel.data![index].orgMonthRent ?? " "}',
                                                     style: TextStyle(
                                                         color: Colors.grey,
                                                         fontFamily:
-                                                        "HKGrotest-Light",
-                                                        decoration: TextDecoration
-                                                            .lineThrough,
+                                                            "HKGrotest-Light",
+                                                        decoration:
+                                                            TextDecoration
+                                                                .lineThrough,
                                                         fontSize: 12)),
                                                 TextSpan(
                                                     text:
-                                                    ' Rs ${value.propertyDetailsModel.data![index].monthlyRent ?? " "}',
+                                                        ' Rs ${value.propertyDetailsModel.data![index].monthlyRent ?? " "}',
                                                     style: TextStyle(
                                                         color: myFavColor,
                                                         fontFamily:
-                                                        "HKGrotest-Light",
+                                                            "HKGrotest-Light",
                                                         fontSize: 14)),
                                               ]),
                                             ),
-                                          ],mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        )
-                                    ),
+                                          ],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                        )),
                                     Container(
                                         height: 25,
-                                        margin: EdgeInsets.only(left: 15,right: 15),
-                                     //   color: Colors.pink,
-                                        child:Row(
-
+                                        margin: EdgeInsets.only(
+                                            left: 15, right: 15),
+                                        //   color: Colors.pink,
+                                        child: Row(
                                           children: [
                                             Text('Rent (Stay > 3 Month)'),
                                             RichText(
                                               text: TextSpan(children: [
                                                 TextSpan(
                                                     text:
-                                                    'Rs ${value.propertyDetailsModel.data![index].orgRmsRent ?? " "}',
+                                                        'Rs ${value.propertyDetailsModel.data![index].orgRmsRent ?? " "}',
                                                     style: TextStyle(
                                                         color: Colors.grey,
                                                         fontFamily:
-                                                        "HKGrotest-Light",
+                                                            "HKGrotest-Light",
                                                         fontSize: 12,
-                                                        decoration: TextDecoration
-                                                            .lineThrough)),
+                                                        decoration:
+                                                            TextDecoration
+                                                                .lineThrough)),
                                                 TextSpan(
                                                     text:
-                                                    ' Rs ${value.propertyDetailsModel.data![index].rmsRent ?? " "}',
+                                                        ' Rs ${value.propertyDetailsModel.data![index].rmsRent ?? " "}',
                                                     style: TextStyle(
                                                         color: myFavColor,
                                                         fontFamily:
-                                                        "HKGrotest-Light",
+                                                            "HKGrotest-Light",
                                                         fontSize: 14)),
                                               ]),
                                             ),
-                                          ],mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        )
-                                    ),
-
+                                          ],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                        )),
                                   ],
                                 ),
-                                 Container(
-                                        height: 40,
-                                        width: _mainWidth,
-                                        padding: EdgeInsets.all(5),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Visibility(
-                                             visible: value.propertyDetailsModel.data![index]
-                                                  .rmsProp !=
-                                                  null &&
-                                                  value.propertyDetailsModel.data![index]
-                                                      .rmsProp ==
-                                                      "RMS Prop"
-                                                  ,
-                                              child: Container(
-                                                color: myFavColor,
-                                                child: Row(children: [
-                                                  CircleAvatar(
-                                                      radius: 10,
-                                                      backgroundColor: myFavColor
-                                                          .withAlpha(40),
-                                                      child: Icon(
-                                                        Icons.check,
-                                                        size: 15,
-                                                        color: Colors.white,
-                                                      )),
-                                                  Container(
-                                                      color: myFavColor
-                                                          .withAlpha(95),
-                                                      child: Text(
-                                                        'Managed by RMS',
-                                                        style: TextStyle(
-                                                            fontStyle:
-                                                                FontStyle.italic,
-                                                            color: Colors.white,
-                                                            fontSize: 16),
-                                                      )),
-                                                ]),
-                                              ),
-                                            ),
-                                            Spacer(),
-                                            value
-                                                        .propertyDetailsModel
-                                                        .data![index]
-                                                        .wishlist ==
-                                                    0
-                                                ? GestureDetector(
-                                                    onTap: () async {
-                                                      if (value
-                                                              .propertyDetailsModel
-                                                              .data![index]
-                                                              .propId !=
-                                                          null) {
-                                                        String response = await _propertyViewModel
-                                                            .addToWishlist(
-                                                                propertyId: value
-                                                                        .propertyDetailsModel
-                                                                        .data![
-                                                                            index]
-                                                                        .propId ??
-                                                                    " ");
-                                                        if (response ==
-                                                            'Successfully added') {
-                                                          setState(() {
-                                                            value
-                                                                .propertyDetailsModel
-                                                                .data![index]
-                                                                .wishlist = 1;
-                                                          });
-                                                          RMSWidgets.showSnackbar(
-                                                              context: context,
-                                                              message: response,
-                                                              color: CustomTheme
-                                                                  .skyBlue);
-                                                        }
-                                                      }
-                                                    },
-                                                    child: const CircleAvatar(
-                                                      radius: 15,
-                                                      backgroundColor:
-                                                          Colors.white60,
-                                                      child: Icon(
-                                                        Icons
-                                                            .favorite_outline_rounded,
-                                                        color: Colors.red,
-                                                        size: 20,
-                                                      ),
-                                                    ),
-                                                  )
-                                                : GestureDetector(
-                                                    onTap: () async {
-                                                      if (value
-                                                              .propertyDetailsModel
-                                                              .data![index]
-                                                              .propId !=
-                                                          null) {
-                                                        String response = await _propertyViewModel
-                                                            .addToWishlist(
-                                                                propertyId: value
-                                                                        .propertyDetailsModel
-                                                                        .data![
-                                                                            index]
-                                                                        .propId ??
-                                                                    " ");
-                                                        if (response ==
-                                                            'Successfully removed') {
-                                                          setState(() {
-                                                            value
-                                                                .propertyDetailsModel
-                                                                .data![index]
-                                                                .wishlist = 0;
-                                                          });
-                                                          RMSWidgets.showSnackbar(
-                                                              context: context,
-                                                              message: response,
-                                                              color: CustomTheme()
-                                                                  .colorError);
-                                                        }
-                                                      }
-                                                    },
-                                                    child: const CircleAvatar(
-                                                      radius: 15,
-                                                      backgroundColor:
-                                                          Colors.white60,
-                                                      child: Icon(
-                                                        Icons.favorite,
-                                                        color: Colors.red,
-                                                        size: 20,
-                                                      ),
-                                                    ),
-                                                  ),
-                                          ],
+                                Container(
+                                  height: 40,
+                                  width: _mainWidth,
+                                  padding: EdgeInsets.all(5),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Visibility(
+                                        visible: value.propertyDetailsModel
+                                                    .data![index].rmsProp !=
+                                                null &&
+                                            value.propertyDetailsModel
+                                                    .data![index].rmsProp ==
+                                                "RMS Prop",
+                                        child: Container(
+                                          color: myFavColor,
+                                          child: Row(children: [
+                                            CircleAvatar(
+                                                radius: 10,
+                                                backgroundColor:
+                                                    myFavColor.withAlpha(40),
+                                                child: Icon(
+                                                  Icons.check,
+                                                  size: 15,
+                                                  color: Colors.white,
+                                                )),
+                                            Container(
+                                                color: myFavColor.withAlpha(95),
+                                                child: Text(
+                                                  'Managed by RMS',
+                                                  style: TextStyle(
+                                                      fontStyle:
+                                                          FontStyle.italic,
+                                                      color: Colors.white,
+                                                      fontSize: 16),
+                                                )),
+                                          ]),
                                         ),
                                       ),
+                                      Spacer(),
+                                      value.propertyDetailsModel.data![index]
+                                                  .wishlist ==
+                                              0
+                                          ? GestureDetector(
+                                              onTap: () async {
+                                                if (value.propertyDetailsModel
+                                                        .data![index].propId !=
+                                                    null) {
+                                                  String response =
+                                                      await _propertyViewModel
+                                                          .addToWishlist(
+                                                              propertyId: value
+                                                                      .propertyDetailsModel
+                                                                      .data![
+                                                                          index]
+                                                                      .propId ??
+                                                                  " ");
+                                                  if (response ==
+                                                      'Successfully added') {
+                                                    setState(() {
+                                                      value
+                                                          .propertyDetailsModel
+                                                          .data![index]
+                                                          .wishlist = 1;
+                                                    });
+                                                    RMSWidgets.showSnackbar(
+                                                        context: context,
+                                                        message: response,
+                                                        color: CustomTheme
+                                                            .skyBlue);
+                                                  }
+                                                }
+                                              },
+                                              child: const CircleAvatar(
+                                                radius: 15,
+                                                backgroundColor: Colors.white60,
+                                                child: Icon(
+                                                  Icons
+                                                      .favorite_outline_rounded,
+                                                  color: Colors.red,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                            )
+                                          : GestureDetector(
+                                              onTap: () async {
+                                                if (value.propertyDetailsModel
+                                                        .data![index].propId !=
+                                                    null) {
+                                                  String response =
+                                                      await _propertyViewModel
+                                                          .addToWishlist(
+                                                              propertyId: value
+                                                                      .propertyDetailsModel
+                                                                      .data![
+                                                                          index]
+                                                                      .propId ??
+                                                                  " ");
+                                                  if (response ==
+                                                      'Successfully removed') {
+                                                    setState(() {
+                                                      value
+                                                          .propertyDetailsModel
+                                                          .data![index]
+                                                          .wishlist = 0;
+                                                    });
+                                                    RMSWidgets.showSnackbar(
+                                                        context: context,
+                                                        message: response,
+                                                        color: CustomTheme()
+                                                            .colorError);
+                                                  }
+                                                }
+                                              },
+                                              child: const CircleAvatar(
+                                                radius: 15,
+                                                backgroundColor: Colors.white60,
+                                                child: Icon(
+                                                  Icons.favorite,
+                                                  color: Colors.red,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                            ),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
