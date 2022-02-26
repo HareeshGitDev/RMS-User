@@ -61,9 +61,9 @@ class _HomePageState extends State<HomePage> {
       'email': (await sharedPreferenceUtil.getString(rms_email)).toString(),
       'name': (await sharedPreferenceUtil.getString(rms_name)).toString(),
       'phone':
-      (await sharedPreferenceUtil.getString(rms_phoneNumber)).toString(),
+          (await sharedPreferenceUtil.getString(rms_phoneNumber)).toString(),
       'pic':
-      (await sharedPreferenceUtil.getString(rms_profilePicUrl)).toString(),
+          (await sharedPreferenceUtil.getString(rms_profilePicUrl)).toString(),
     };
   }
 
@@ -161,220 +161,288 @@ class _HomePageState extends State<HomePage> {
         ],
         onTap: (index) {},
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          color: Colors.white,
-          height: MediaQuery
-              .of(context)
-              .size
-              .height,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                    padding: EdgeInsets.only(top: 10),
-                    height: 110,
-                    // color: CustomTheme.peach.withAlpha(40),
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        var data = _homeViewModel.getCitySuggestionList(
-                            context: context)[index];
-                        return InkWell(
-                          onTap: () =>
-                              Navigator.of(context).pushNamed(
-                                  AppRoutes.propertyListingPage, arguments: {
-                                'location': data.value,
-                                'property':Property.FromLocation,
-                              }),
+      body: Container(
+        color: Colors.white,
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                  padding: EdgeInsets.only(top: 10),
+                  height: 110,
+                  // color: CustomTheme.peach.withAlpha(40),
+                  width: MediaQuery.of(context).size.width,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      var data = _homeViewModel.getCitySuggestionList(
+                          context: context)[index];
+                      return InkWell(
+                        onTap: () => Navigator.of(context).pushNamed(
+                            AppRoutes.propertyListingPage,
+                            arguments: {
+                              'location': data.value,
+                              'property': Property.FromLocation,
+                            }),
+                        child: Container(
+                          margin: EdgeInsets.all(5),
+                          width: 75,
+                          height: 40,
+                          child: Column(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: NetworkImage(data.imageUrl),
+                                radius: 30,
+                              ),
+                              Text(data.cityName,
+                                  style: TextStyle(fontSize: 14)),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    itemCount: _homeViewModel
+                        .getCitySuggestionList(context: context)
+                        .length,
+                  )),
+              Container(
+                margin: EdgeInsets.only(top: 10),
+                width: MediaQuery.of(context).size.width,
+                child: CarouselSlider(
+                  items: [
+                    Container(
+                      margin: EdgeInsets.all(1),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: NetworkImage(
+                                'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/WhatsApp%20Image%202022-02-14%20at%2012.01.04%20PM.jpeg?alt=media&token=6d78225a-59f7-4a7c-8bf3-e5d3f3c66bca'),
+                            fit: BoxFit.cover,
+                          )),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(1),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: NetworkImage(
+                                "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/bannerhome.png?alt=media&token=b66dab51-8676-470a-b876-025c613c303a"),
+                            fit: BoxFit.cover,
+                          )),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(1),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: NetworkImage(
+                                'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/WhatsApp%20Image%202022-02-14%20at%2012.01.05%20PM.jpeg?alt=media&token=153f6374-979f-46ad-aaf3-06f9ff1d0b20'),
+                            fit: BoxFit.cover,
+                          )),
+                    ),
+                  ],
+                  options: CarouselOptions(
+                      height: 180,
+                      enlargeCenterPage: true,
+                      autoPlay: true,
+                      aspectRatio: 16 / 9,
+                      autoPlayCurve: Curves.fastOutSlowIn,
+                      enableInfiniteScroll: true,
+                      viewportFraction: 0.8),
+                ),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 15),
+                child: Text(
+                  "Popular",
+                  style: TextStyle(
+                    color: Colors.black45,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    //decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+              Container(
+                  padding: EdgeInsets.only(left: 10),
+                  height: 260,
+                  // color: CustomTheme.peach.withAlpha(40),
+                  width: MediaQuery.of(context).size.width,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      var data =
+                          _homeViewModel.getPopularPropertyModelList()[index];
+                      return InkWell(
+                        onTap: () => Navigator.of(context).pushNamed(
+                            AppRoutes.propertyListingPage,
+                            arguments: {
+                              'location': 'Bengaluru-Karnataka-India',
+                              'propertyType': data.propertyType,
+                              'property': Property.FromBHK,
+                            }),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          elevation: 3,
+                          shadowColor: CustomTheme.skyBlue,
+                          margin: EdgeInsets.all(10),
                           child: Container(
-                            margin: EdgeInsets.all(5),
-                            width: 75,
-                            height: 40,
+                            //margin: EdgeInsets.all(10),
+                            width: 220,
                             child: Column(
                               children: [
-                                CircleAvatar(
-                                  backgroundImage: NetworkImage(data.imageUrl),
-                                  radius: 30,
+                                Expanded(
+                                  child: Container(
+                                    height: 140,
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)),
+                                        image: DecorationImage(
+                                            image: AssetImage(data.imageUrl!),
+                                            fit: BoxFit.cover
+                                            //NetworkImage(data.imageUrl!),fit: BoxFit.cover,
+                                            )),
+                                  ),
                                 ),
-                                Text(data.cityName,
-                                    style: TextStyle(fontSize: 14)),
+                                Container(
+                                    margin: EdgeInsets.only(left: 5, top: 5),
+                                    alignment: Alignment.topLeft,
+                                    child: Text(data.propertyType!,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ))),
+                                Container(
+                                    margin: EdgeInsets.only(left: 5, top: 5),
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      data.propertyDesc!,
+                                      style: TextStyle(color: Colors.black45),
+                                    )),
+                                Container(
+                                    margin: EdgeInsets.only(
+                                      right: 10,
+                                    ),
+                                    alignment: Alignment.topRight,
+                                    child: Text(data.hint!,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            color: CustomTheme.peach))),
                               ],
                             ),
                           ),
-                        );
-                      },
-                      itemCount: _homeViewModel
-                          .getCitySuggestionList(context: context)
-                          .length,
-                    )),
-                Container(
-                  margin: EdgeInsets.only(top: 10),
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
-                  child: CarouselSlider(
-                    items: [
-                      Container(
-                        margin: EdgeInsets.all(1),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                  'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/WhatsApp%20Image%202022-02-14%20at%2012.01.04%20PM.jpeg?alt=media&token=6d78225a-59f7-4a7c-8bf3-e5d3f3c66bca'),
-                              fit: BoxFit.cover,
-                            )),
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(1),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                  "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/bannerhome.png?alt=media&token=b66dab51-8676-470a-b876-025c613c303a"),
-                              fit: BoxFit.cover,
-                            )),
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(1),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                  'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/WhatsApp%20Image%202022-02-14%20at%2012.01.05%20PM.jpeg?alt=media&token=153f6374-979f-46ad-aaf3-06f9ff1d0b20'),
-                              fit: BoxFit.cover,
-                            )),
-                      ),
-                    ],
-                    options: CarouselOptions(
-                        height: 180,
-                        enlargeCenterPage: true,
-                        autoPlay: true,
-                        aspectRatio: 16 / 9,
-                        autoPlayCurve: Curves.fastOutSlowIn,
-                        enableInfiniteScroll: true,
-                        viewportFraction: 0.8),
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 15),
-                  child: Text(
-                    "Popular",
-                    style: TextStyle(
-                      color: Colors.black45,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      //decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
-                Container(
-                    padding: EdgeInsets.only(left: 10),
-                    height: 260,
-                    // color: CustomTheme.peach.withAlpha(40),
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        var data =
-                        _homeViewModel.getPopularPropertyModelList()[index];
-                        return InkWell(
-                          onTap: () =>
-                           Navigator.of(context).pushNamed(
-                            AppRoutes.propertyListingPage, arguments: {
-                          'location': 'Bengaluru-Karnataka-India',
-                           'propertyType':data.propertyType,
-                           'property':Property.FromBHK,
+                        ),
+                      );
+                    },
+                    itemCount:
+                        _homeViewModel.getPopularPropertyModelList().length,
+                  )),
+              Padding(
+                padding: EdgeInsets.only(left: 15, top: 10),
+                child: Text(
+                  "Refer & Earn",
+                  style: TextStyle(
+                    color: Colors.black45,
+                    fontSize: 18,
 
-                        }),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                            elevation: 3,
-                            shadowColor: CustomTheme.skyBlue,
-                            margin: EdgeInsets.all(10),
-                            child: Container(
-                              //margin: EdgeInsets.all(10),
-                              width: 220,
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      height: 140,
-                                      width: MediaQuery
-                                          .of(context)
-                                          .size
-                                          .width,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(10),
-                                              topRight: Radius.circular(10)),
-                                          image: DecorationImage(
-                                              image: AssetImage(data.imageUrl!),
-                                              fit: BoxFit.cover
-                                            //NetworkImage(data.imageUrl!),fit: BoxFit.cover,
-                                          )),
-                                    ),
-                                  ),
-                                  Container(
-                                      margin: EdgeInsets.only(left: 5, top: 5),
-                                      alignment: Alignment.topLeft,
-                                      child: Text(data.propertyType!,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                          ))),
-                                  Container(
-                                      margin: EdgeInsets.only(left: 5, top: 5),
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        data.propertyDesc!,
-                                        style: TextStyle(color: Colors.black45),
-                                      )),
-                                  Container(
-                                      margin: EdgeInsets.only(
-                                        right: 10,
-                                      ),
-                                      alignment: Alignment.topRight,
-                                      child: Text(data.hint!,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              color: CustomTheme.peach))),
-                                ],
+                    //decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+              Container(
+                  child: Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(left: 20, top: 15),
+                        child: Text(
+                          "Earn",
+                          style: TextStyle(
+                            color: CustomTheme.peach,
+                            fontSize: 28,
+
+                            //decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 15, top: 10),
+                        child: Row(
+                          children: [
+                            Text(
+                              "1000",
+                              style: TextStyle(
+                                color: CustomTheme.peach,
+                                fontSize: 40,
+
+                                //decoration: TextDecoration.underline,
                               ),
                             ),
+                            Text(
+                              "Rupees",
+                              style: TextStyle(
+                                color: CustomTheme.peach,
+                                fontSize: 16,
+
+                                //decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 15, top: 10),
+                        child: Text(
+                          "Share with your Friend",
+                          style: TextStyle(
+                            color: Colors.black45,
+                            fontSize: 18,
+
+                            //decoration: TextDecoration.underline,
                           ),
-                        );
-                      },
-                      itemCount:
-                      _homeViewModel
-                          .getPopularPropertyModelList()
-                          .length,
-                    )),
-              ],
-            ),
+                        ),
+                      ),
+                      Container(
+                        height: 30,
+                        margin: EdgeInsets.only(left: 15, top: 10),
+                        child: Neumorphic(
+                          style: NeumorphicStyle(
+                            color: CustomTheme.peach,
+                            shadowDarkColor: CustomTheme.skyBlue,
+                          ),
+                          child: TextButton(
+                            onPressed: () {},
+                            child: Text("Earn Now",
+                                style: TextStyle(color: Colors.black45)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                      margin: EdgeInsets.only(left: 10),
+                      width: 200,
+                      height: 200,
+                      child: Image.asset(Images.referIconHome))
+                ],
+              ))
+            ],
           ),
         ),
       ),
       drawer:
-      _buildDrawer(), // This trailing comma makes auto-formatting nicer for build methods.
+          _buildDrawer(), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
@@ -398,58 +466,58 @@ class _HomePageState extends State<HomePage> {
               color: theme.scaffoldBackgroundColor,
               child: Drawer(
                   child: Container(
-                    color: theme.scaffoldBackgroundColor,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Container(
-                          padding: FxSpacing.only(
-                              left: 20, bottom: 24, top: 24, right: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                  (snapshot.data!['pic']).toString(),
-                                ),
-                                radius: 45,
-                              ),
-                              FxSpacing.height(16),
-                              FxContainer(
-                                padding: FxSpacing.fromLTRB(12, 4, 12, 4),
-                                borderRadiusAll: 4,
-                                color: theme.colorScheme.primary.withAlpha(40),
-                                child: FxText.caption(
-                                    (snapshot.data!['name']).toString(),
-                                    color: theme.colorScheme.primary,
-                                    fontWeight: 600,
-                                    letterSpacing: 0.2),
-                              ),
-                              FxSpacing.height(10),
-                              FxContainer(
-                                padding: FxSpacing.fromLTRB(12, 4, 12, 4),
-                                borderRadiusAll: 4,
-                                color: theme.colorScheme.primary.withAlpha(40),
-                                child: FxText.caption(
-                                    (snapshot.data!['email']).toString(),
-                                    color: theme.colorScheme.primary,
-                                    fontWeight: 600,
-                                    letterSpacing: 0.2),
-                              ),
-                            ],
+                color: theme.scaffoldBackgroundColor,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      padding: FxSpacing.only(
+                          left: 20, bottom: 24, top: 24, right: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              (snapshot.data!['pic']).toString(),
+                            ),
+                            radius: 45,
                           ),
-                        ),
-                        Divider(
-                          thickness: 1,
-                        ),
-                        FxSpacing.height(15),
-                        Container(
-                          margin: FxSpacing.x(20),
-                          child: Column(
-                            children: [
-                              InkWell(
-                                /* onTap: () {
+                          FxSpacing.height(16),
+                          FxContainer(
+                            padding: FxSpacing.fromLTRB(12, 4, 12, 4),
+                            borderRadiusAll: 4,
+                            color: theme.colorScheme.primary.withAlpha(40),
+                            child: FxText.caption(
+                                (snapshot.data!['name']).toString(),
+                                color: theme.colorScheme.primary,
+                                fontWeight: 600,
+                                letterSpacing: 0.2),
+                          ),
+                          FxSpacing.height(10),
+                          FxContainer(
+                            padding: FxSpacing.fromLTRB(12, 4, 12, 4),
+                            borderRadiusAll: 4,
+                            color: theme.colorScheme.primary.withAlpha(40),
+                            child: FxText.caption(
+                                (snapshot.data!['email']).toString(),
+                                color: theme.colorScheme.primary,
+                                fontWeight: 600,
+                                letterSpacing: 0.2),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      thickness: 1,
+                    ),
+                    FxSpacing.height(15),
+                    Container(
+                      margin: FxSpacing.x(20),
+                      child: Column(
+                        children: [
+                          InkWell(
+                            /* onTap: () {
                           showDialog(
                               context: context,
                               builder: (BuildContext context) =>
@@ -457,38 +525,38 @@ class _HomePageState extends State<HomePage> {
                         },
 
                         */
-                                highlightColor: Colors.transparent,
-                                splashColor: Colors.transparent,
-                                child: Row(
-                                  children: [
-                                    FxContainer(
-                                      paddingAll: 12,
-                                      borderRadiusAll: 4,
-                                      child: Icon(
-                                        Icons.person_outline,
-                                        color: CustomTheme.skyBlue,
-                                        size: 20,
-                                      ),
-                                      color: CustomTheme.skyBlue.withAlpha(20),
-                                    ),
-                                    FxSpacing.width(16),
-                                    Expanded(
-                                      child: FxText.b1(
-                                        'Profile'.tr(),
-                                      ),
-                                    ),
-                                    FxSpacing.width(16),
-                                    Icon(
-                                      FeatherIcons.chevronRight,
-                                      size: 18,
-                                      color: theme.colorScheme.onBackground,
-                                    ).autoDirection(),
-                                  ],
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            child: Row(
+                              children: [
+                                FxContainer(
+                                  paddingAll: 12,
+                                  borderRadiusAll: 4,
+                                  child: Icon(
+                                    Icons.person_outline,
+                                    color: CustomTheme.skyBlue,
+                                    size: 20,
+                                  ),
+                                  color: CustomTheme.skyBlue.withAlpha(20),
                                 ),
-                              ),
-                              FxSpacing.height(20),
-                              InkWell(
-                                /* onTap: () {
+                                FxSpacing.width(16),
+                                Expanded(
+                                  child: FxText.b1(
+                                    'Profile'.tr(),
+                                  ),
+                                ),
+                                FxSpacing.width(16),
+                                Icon(
+                                  FeatherIcons.chevronRight,
+                                  size: 18,
+                                  color: theme.colorScheme.onBackground,
+                                ).autoDirection(),
+                              ],
+                            ),
+                          ),
+                          FxSpacing.height(20),
+                          InkWell(
+                            /* onTap: () {
                           showDialog(
                               context: context,
                               builder: (BuildContext context) =>
@@ -496,108 +564,147 @@ class _HomePageState extends State<HomePage> {
                         },
 
                         */
-                                highlightColor: Colors.transparent,
-                                splashColor: Colors.transparent,
-                                child: Row(
-                                  children: [
-                                    FxContainer(
-                                      paddingAll: 12,
-                                      borderRadiusAll: 4,
-                                      child: Icon(
-                                        Icons.house_outlined,
-                                        color: CustomTheme.skyBlue,
-                                        size: 20,
-                                      ),
-                                      color: CustomTheme.skyBlue.withAlpha(20),
-                                    ),
-                                    FxSpacing.width(16),
-                                    Expanded(
-                                      child: FxText.b1(
-                                        'My Stays'.tr(),
-                                      ),
-                                    ),
-                                    FxSpacing.width(16),
-                                    Icon(
-                                      FeatherIcons.chevronRight,
-                                      size: 18,
-                                      color: theme.colorScheme.onBackground,
-                                    ).autoDirection(),
-                                  ],
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            child: Row(
+                              children: [
+                                FxContainer(
+                                  paddingAll: 12,
+                                  borderRadiusAll: 4,
+                                  child: Icon(
+                                    Icons.house_outlined,
+                                    color: CustomTheme.skyBlue,
+                                    size: 20,
+                                  ),
+                                  color: CustomTheme.skyBlue.withAlpha(20),
                                 ),
-                              ),
-                              FxSpacing.height(20),
-                              InkWell(
-                                /* onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  SelectLanguageDialog());
-                        },
-
-                        */
-                                highlightColor: Colors.transparent,
-                                splashColor: Colors.transparent,
-                                child: Row(
-                                  children: [
-                                    FxContainer(
-                                      paddingAll: 12,
-                                      borderRadiusAll: 4,
-                                      child: Icon(
-                                        Icons.favorite_outline,
-                                        color: CustomTheme.skyBlue,
-                                        size: 20,
-                                      ),
-                                      color: CustomTheme.skyBlue.withAlpha(20),
-                                    ),
-                                    FxSpacing.width(16),
-                                    Expanded(
-                                      child: FxText.b1(
-                                        'My Wishlist'.tr(),
-                                      ),
-                                    ),
-                                    FxSpacing.width(16),
-                                    Icon(
-                                      FeatherIcons.chevronRight,
-                                      size: 18,
-                                      color: theme.colorScheme.onBackground,
-                                    ).autoDirection(),
-                                  ],
+                                FxSpacing.width(16),
+                                Expanded(
+                                  child: FxText.b1(
+                                    'My Stays'.tr(),
+                                  ),
                                 ),
-                              ),
-                              FxSpacing.height(20),
-                              InkWell(
-                                onTap: () async {
-                                  RMSWidgets.showLoaderDialog(
-                                      context: context,
-                                      message: 'Logging out...');
-                                  SharedPreferenceUtil shared =
+                                FxSpacing.width(16),
+                                Icon(
+                                  FeatherIcons.chevronRight,
+                                  size: 18,
+                                  color: theme.colorScheme.onBackground,
+                                ).autoDirection(),
+                              ],
+                            ),
+                          ),
+                          FxSpacing.height(20),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, AppRoutes.wishListPage);
+                            },
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            child: Row(
+                              children: [
+                                FxContainer(
+                                  paddingAll: 12,
+                                  borderRadiusAll: 4,
+                                  child: Icon(
+                                    Icons.favorite_outline,
+                                    color: CustomTheme.skyBlue,
+                                    size: 20,
+                                  ),
+                                  color: CustomTheme.skyBlue.withAlpha(20),
+                                ),
+                                FxSpacing.width(16),
+                                Expanded(
+                                  child: FxText.b1(
+                                    'My Wishlist'.tr(),
+                                  ),
+                                ),
+                                FxSpacing.width(16),
+                                Icon(
+                                  FeatherIcons.chevronRight,
+                                  size: 18,
+                                  color: theme.colorScheme.onBackground,
+                                ).autoDirection(),
+                              ],
+                            ),
+                          ),
+                          FxSpacing.height(20),
+                          InkWell(
+                            onTap: () async {
+                              RMSWidgets.showLoaderDialog(
+                                  context: context, message: 'Logging...');
+                              SharedPreferenceUtil shared =
                                   SharedPreferenceUtil();
-                                  await GoogleAuthService.logOut();
-                                  await GoogleAuthService.logoutFromFirebase();
-                                  bool deletedAllValues = await shared
-                                      .clearAll();
-                                  Navigator.of(context).pop();
-                                  if (deletedAllValues) {
-                                    Navigator.of(context)
-                                        .pushNamedAndRemoveUntil(
-                                        AppRoutes.loginPage, (route) => false);
-                                  } else {
-                                    log('NOT ABLE TO DELETE VALUES FROM SP');
-                                  }
-                                },
-                                highlightColor: Colors.transparent,
-                                splashColor: Colors.transparent,
-                                child: Row(
-                                  children: [
-                                    FxContainer(
-                                      paddingAll: 12,
-                                      borderRadiusAll: 4,
-                                      child: Icon(
-                                        Icons.logout_rounded,
-                                        color: CustomTheme.skyBlue,
-                                        size: 20,
-                                      ),
-                                      /* Image(
+                              Navigator.of(context).pop();
+                              if ((await shared.getToken()) != null &&
+                                  (await shared.getToken())!.isEmpty) {
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    AppRoutes.loginPage, (route) => false);
+                              } else {
+                                Navigator.of(context)
+                                    .pushNamed(AppRoutes.referAndEarn);
+                              }
+                            },
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            child: Row(
+                              children: [
+                                FxContainer(
+                                  paddingAll: 12,
+                                  borderRadiusAll: 4,
+                                  child: Icon(
+                                    Icons.record_voice_over_outlined,
+                                    color: CustomTheme.skyBlue,
+                                    size: 20,
+                                  ),
+                                  color: CustomTheme.skyBlue.withAlpha(20),
+                                ),
+                                FxSpacing.width(16),
+                                Expanded(
+                                  child: FxText.b1(
+                                    'Refer & Earn'.tr(),
+                                  ),
+                                ),
+                                FxSpacing.width(16),
+                                Icon(
+                                  FeatherIcons.chevronRight,
+                                  size: 18,
+                                  color: theme.colorScheme.onBackground,
+                                ).autoDirection(),
+                              ],
+                            ),
+                          ),
+                          FxSpacing.height(20),
+                          InkWell(
+                            onTap: () async {
+                              RMSWidgets.showLoaderDialog(
+                                  context: context, message: 'Logging out...');
+                              SharedPreferenceUtil shared =
+                                  SharedPreferenceUtil();
+                              await GoogleAuthService.logOut();
+                              await GoogleAuthService.logoutFromFirebase();
+                              bool deletedAllValues = await shared.clearAll();
+                              Navigator.of(context).pop();
+                              if (deletedAllValues) {
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    AppRoutes.loginPage, (route) => false);
+                              } else {
+                                log('NOT ABLE TO DELETE VALUES FROM SP');
+                              }
+                            },
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            child: Row(
+                              children: [
+                                FxContainer(
+                                  paddingAll: 12,
+                                  borderRadiusAll: 4,
+                                  child: Icon(
+                                    Icons.logout_rounded,
+                                    color: CustomTheme.skyBlue,
+                                    size: 20,
+                                  ),
+                                  /* Image(
                                   height: 20,
                                   width: 20,
                                   image: AssetImage(Images.languageOutline),
@@ -605,102 +712,102 @@ class _HomePageState extends State<HomePage> {
                                 ),
 
                                 */
-                                      color: CustomTheme.skyBlue.withAlpha(20),
-                                    ),
-                                    FxSpacing.width(16),
-                                    Expanded(
-                                      child: FxText.b1(
-                                        'Logout'.tr(),
-                                      ),
-                                    ),
-                                    FxSpacing.width(16),
-                                    Icon(
-                                      FeatherIcons.chevronRight,
-                                      size: 18,
-                                      color: theme.colorScheme.onBackground,
-                                    ).autoDirection(),
-                                  ],
+                                  color: CustomTheme.skyBlue.withAlpha(20),
                                 ),
-                              ),
-                            ],
+                                FxSpacing.width(16),
+                                Expanded(
+                                  child: FxText.b1(
+                                    'Logout'.tr(),
+                                  ),
+                                ),
+                                FxSpacing.width(16),
+                                Icon(
+                                  FeatherIcons.chevronRight,
+                                  size: 18,
+                                  color: theme.colorScheme.onBackground,
+                                ).autoDirection(),
+                              ],
+                            ),
                           ),
-                        ),
-                        FxSpacing.height(20),
-                        Divider(
-                          thickness: 1,
-                        ),
-                        FxSpacing.height(16),
-                        Container(
-                          margin: FxSpacing.x(20),
-                          child: Column(
-                            children: [
-                              InkWell(
-                                /*
+                        ],
+                      ),
+                    ),
+                    FxSpacing.height(20),
+                    Divider(
+                      thickness: 1,
+                    ),
+                    FxSpacing.height(16),
+                    Container(
+                      margin: FxSpacing.x(20),
+                      child: Column(
+                        children: [
+                          InkWell(
+                            /*
                         onTap: () {
                           launchDocumentation();
                         },
                         */
-                                highlightColor: Colors.transparent,
-                                splashColor: Colors.transparent,
-                                child: Row(
-                                  children: [
-                                    FxContainer(
-                                      paddingAll: 12,
-                                      borderRadiusAll: 4,
-                                      child: Image(
-                                        height: 20,
-                                        width: 20,
-                                        image: AssetImage(Images.wallet),
-                                        color: CustomTheme.skyBlue,
-                                      ),
-                                      color: CustomTheme.skyBlue.withAlpha(20),
-                                    ),
-                                    FxSpacing.width(16),
-                                    Expanded(
-                                      child: FxText.b1(
-                                        'FAQ'.tr(),
-                                      ),
-                                    ),
-                                  ],
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            child: Row(
+                              children: [
+                                FxContainer(
+                                  paddingAll: 12,
+                                  borderRadiusAll: 4,
+                                  child: Image(
+                                    height: 20,
+                                    width: 20,
+                                    image: AssetImage(Images.wallet),
+                                    color: CustomTheme.skyBlue,
+                                  ),
+                                  color: CustomTheme.skyBlue.withAlpha(20),
                                 ),
-                              ),
-                              FxSpacing.height(20),
-                              InkWell(
-                                /*
+                                FxSpacing.width(16),
+                                Expanded(
+                                  child: FxText.b1(
+                                    'FAQ'.tr(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          FxSpacing.height(20),
+                          InkWell(
+                            /*
                         onTap: () {
                           launchChangeLog();
                         },*/
-                                highlightColor: Colors.transparent,
-                                splashColor: Colors.transparent,
-                                child: Row(
-                                  children: [
-                                    FxContainer(
-                                      paddingAll: 12,
-                                      borderRadiusAll: 4,
-                                      child: Image(
-                                        height: 20,
-                                        width: 20,
-                                        image: AssetImage(Images.wallet),
-                                        color: CustomTheme.peach,
-                                      ),
-                                      color: CustomTheme.peach.withAlpha(20),
-                                    ),
-                                    FxSpacing.width(16),
-                                    Expanded(
-                                      child: FxText.b1(
-                                        'changelog'.tr(),
-                                      ),
-                                    ),
-                                  ],
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            child: Row(
+                              children: [
+                                FxContainer(
+                                  paddingAll: 12,
+                                  borderRadiusAll: 4,
+                                  child: Image(
+                                    height: 20,
+                                    width: 20,
+                                    image: AssetImage(Images.wallet),
+                                    color: CustomTheme.peach,
+                                  ),
+                                  color: CustomTheme.peach.withAlpha(20),
                                 ),
-                              ),
-                            ],
+                                FxSpacing.width(16),
+                                Expanded(
+                                  child: FxText.b1(
+                                    'changelog'.tr(),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        FxSpacing.height(20),
-                      ],
+                        ],
+                      ),
                     ),
-                  )),
+                    FxSpacing.height(20),
+                  ],
+                ),
+              )),
             );
           }
         }
@@ -709,6 +816,4 @@ class _HomePageState extends State<HomePage> {
       future: getSharedPreferencesValues(),
     );
   }
-
-
 }

@@ -24,7 +24,11 @@ class PropertyListingPage extends StatefulWidget {
   String? propertyType;
   Property property;
 
-  PropertyListingPage({Key? key, required this.locationName, this.propertyType,required this.property})
+  PropertyListingPage(
+      {Key? key,
+      required this.locationName,
+      this.propertyType,
+      required this.property})
       : super(key: key);
 
   @override
@@ -43,7 +47,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
     if (widget.property == Property.FromLocation) {
       _propertyViewModel.getPropertyDetailsList(
           address: widget.locationName, property: Property.FromLocation);
-    } else if(widget.property == Property.FromBHK) {
+    } else if (widget.property == Property.FromBHK) {
       _propertyViewModel.getPropertyDetailsList(
           address: widget.locationName,
           property: widget.property,
@@ -146,61 +150,79 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                     SizedBox(
                                       height: 5,
                                     ),
-                                    Container(
-                                      height: _mainHeight * 0.025,
-                                      padding:
-                                          EdgeInsets.only(left: 10, right: 10),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.home_work_outlined,
-                                            color: myFavColor,
-                                            size: 18,
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Expanded(
-                                            child: Text(
-                                              value
-                                                      .propertyDetailsModel
-                                                      .data![index]
-                                                      .buildingName ??
+                                    Visibility(
+                                      child: Container(
+                                        height: _mainHeight * 0.025,
+                                        padding: EdgeInsets.only(
+                                            left: 10, right: 10),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.home_work_outlined,
+                                              color: myFavColor,
+                                              size: 18,
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                value
+                                                        .propertyDetailsModel
+                                                        .data![index]
+                                                        .buildingName ??
+                                                    " ",
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                            ),
+                                            Text(
+                                              value.propertyDetailsModel
+                                                      .data![index].unitType ??
                                                   " ",
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                               style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w600),
+                                                fontSize: 14,
+                                              ),
                                             ),
-                                          ),
-                                          Text(
-                                            value.propertyDetailsModel
-                                                    .data![index].unitType ??
-                                                " ",
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ],
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                      ),
-                                    ),
-                                    Container(
-                                      child: Text(
-                                        'Multiple Units Available',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 14,
+                                          ],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                         ),
                                       ),
-                                      alignment: Alignment.centerRight,
-                                      padding: EdgeInsets.only(right: 10),
+                                      visible: value.propertyDetailsModel
+                                                  .data![index].rmsProp !=
+                                              null &&
+                                          value.propertyDetailsModel
+                                                  .data![index].rmsProp ==
+                                              "RMS Prop",
+                                    ),
+                                    Visibility(
+                                     visible: value.propertyDetailsModel.data![index]
+                                          .rmsProp !=
+                                          null &&
+                                          value.propertyDetailsModel.data![index]
+                                              .rmsProp ==
+                                              "RMS Prop"
+                                          ,
+                                      child: Container(
+                                        child: Text(
+                                          'Multiple Units Available',
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        alignment: Alignment.centerRight,
+                                        padding: EdgeInsets.only(right: 10),
+                                      ),
                                     ),
                                     SizedBox(
                                       height: 5,
@@ -376,13 +398,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                     ),
                                   ],
                                 ),
-                                value.propertyDetailsModel.data![index]
-                                                .rmsProp !=
-                                            null &&
-                                        value.propertyDetailsModel.data![index]
-                                                .rmsProp ==
-                                            "RMS Prop"
-                                    ? Container(
+                                 Container(
                                         height: 40,
                                         width: _mainWidth,
                                         padding: EdgeInsets.all(5),
@@ -390,81 +406,134 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Container(
-                                              color: myFavColor,
-                                              child: Row(children: [
-                                                CircleAvatar(
-                                                    radius: 10,
-                                                    backgroundColor: myFavColor
-                                                        .withAlpha(40),
-                                                    child: Icon(
-                                                      Icons.check,
-                                                      size: 15,
-                                                      color: Colors.white,
-                                                    )),
-                                                Container(
-                                                    color: myFavColor
-                                                        .withAlpha(95),
-                                                    child: Text(
-                                                      'Managed by RMS',
-                                                      style: TextStyle(
-                                                          fontStyle:
-                                                              FontStyle.italic,
-                                                          color: Colors.white,
-                                                          fontSize: 16),
-                                                    )),
-                                              ]),
+                                            Visibility(
+                                             visible: value.propertyDetailsModel.data![index]
+                                                  .rmsProp !=
+                                                  null &&
+                                                  value.propertyDetailsModel.data![index]
+                                                      .rmsProp ==
+                                                      "RMS Prop"
+                                                  ,
+                                              child: Container(
+                                                color: myFavColor,
+                                                child: Row(children: [
+                                                  CircleAvatar(
+                                                      radius: 10,
+                                                      backgroundColor: myFavColor
+                                                          .withAlpha(40),
+                                                      child: Icon(
+                                                        Icons.check,
+                                                        size: 15,
+                                                        color: Colors.white,
+                                                      )),
+                                                  Container(
+                                                      color: myFavColor
+                                                          .withAlpha(95),
+                                                      child: Text(
+                                                        'Managed by RMS',
+                                                        style: TextStyle(
+                                                            fontStyle:
+                                                                FontStyle.italic,
+                                                            color: Colors.white,
+                                                            fontSize: 16),
+                                                      )),
+                                                ]),
+                                              ),
                                             ),
                                             Spacer(),
-
-                                           value.propertyDetailsModel.data![index].wishlist == 0? GestureDetector(
-                                            onTap: ()async{
-                                              if(value.propertyDetailsModel.data![index].propId != null){
-                                                String response= await _propertyViewModel.addToWishlist(propertyId: value.propertyDetailsModel.data![index].propId ??" ");
-                                                if(response =='Successfully added'){
-                                                 setState(() {
-                                                   value.propertyDetailsModel.data![index].wishlist=1;
-                                                 });
-                                                 RMSWidgets.showSnackbar(context: context, message: response, color: CustomTheme.skyBlue);
-
-                                                }
-                                              }
-                                            },
-                                             child: const CircleAvatar(
-                                                radius: 15,
-                                                backgroundColor: Colors.white60,
-                                                child: Icon(
-                                                  Icons.favorite_outline_rounded,
-                                                  color: Colors.red,
-                                                  size: 20,
-                                                ),
-                                              ),
-                                           ):GestureDetector(
-                                             onTap: ()async{
-                                               if(value.propertyDetailsModel.data![index].propId != null){
-                                                 String response= await _propertyViewModel.addToWishlist(propertyId: value.propertyDetailsModel.data![index].propId ??" ");
-                                                 if(response =='Successfully removed'){
-                                                   setState(() {
-                                                     value.propertyDetailsModel.data![index].wishlist=0;
-                                                   });
-                                                   RMSWidgets.showSnackbar(context: context, message: response, color: CustomTheme().colorError);
-                                                 }
-                                               }
-                                             },
-                                              child: const CircleAvatar(
-                                               radius: 15,
-                                               backgroundColor: Colors.white60,
-                                               child: Icon(
-                                                 Icons.favorite,
-                                                 color: Colors.red,
-                                                 size: 20,
-                                               ),
-                                           ),
-                                            ),
+                                            value
+                                                        .propertyDetailsModel
+                                                        .data![index]
+                                                        .wishlist ==
+                                                    0
+                                                ? GestureDetector(
+                                                    onTap: () async {
+                                                      if (value
+                                                              .propertyDetailsModel
+                                                              .data![index]
+                                                              .propId !=
+                                                          null) {
+                                                        String response = await _propertyViewModel
+                                                            .addToWishlist(
+                                                                propertyId: value
+                                                                        .propertyDetailsModel
+                                                                        .data![
+                                                                            index]
+                                                                        .propId ??
+                                                                    " ");
+                                                        if (response ==
+                                                            'Successfully added') {
+                                                          setState(() {
+                                                            value
+                                                                .propertyDetailsModel
+                                                                .data![index]
+                                                                .wishlist = 1;
+                                                          });
+                                                          RMSWidgets.showSnackbar(
+                                                              context: context,
+                                                              message: response,
+                                                              color: CustomTheme
+                                                                  .skyBlue);
+                                                        }
+                                                      }
+                                                    },
+                                                    child: const CircleAvatar(
+                                                      radius: 15,
+                                                      backgroundColor:
+                                                          Colors.white60,
+                                                      child: Icon(
+                                                        Icons
+                                                            .favorite_outline_rounded,
+                                                        color: Colors.red,
+                                                        size: 20,
+                                                      ),
+                                                    ),
+                                                  )
+                                                : GestureDetector(
+                                                    onTap: () async {
+                                                      if (value
+                                                              .propertyDetailsModel
+                                                              .data![index]
+                                                              .propId !=
+                                                          null) {
+                                                        String response = await _propertyViewModel
+                                                            .addToWishlist(
+                                                                propertyId: value
+                                                                        .propertyDetailsModel
+                                                                        .data![
+                                                                            index]
+                                                                        .propId ??
+                                                                    " ");
+                                                        if (response ==
+                                                            'Successfully removed') {
+                                                          setState(() {
+                                                            value
+                                                                .propertyDetailsModel
+                                                                .data![index]
+                                                                .wishlist = 0;
+                                                          });
+                                                          RMSWidgets.showSnackbar(
+                                                              context: context,
+                                                              message: response,
+                                                              color: CustomTheme()
+                                                                  .colorError);
+                                                        }
+                                                      }
+                                                    },
+                                                    child: const CircleAvatar(
+                                                      radius: 15,
+                                                      backgroundColor:
+                                                          Colors.white60,
+                                                      child: Icon(
+                                                        Icons.favorite,
+                                                        color: Colors.red,
+                                                        size: 20,
+                                                      ),
+                                                    ),
+                                                  ),
                                           ],
                                         ),
-                                      )
-                                    : Container(),
+                                      ),
                               ],
                             ),
                           ),
@@ -501,60 +570,63 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
               bottomRight: Radius.circular(15))),
       titleSpacing: 0,
       backgroundColor: CustomTheme.skyBlue,
-      title:widget.property==Property.FromWishList?Container(
-        child: Text('My WishList'),
-      ): Padding(
-        padding: EdgeInsets.only(right: 10),
-        child: Container(
-          height: 40,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            color: Colors.white,
-          ),
-          child: Neumorphic(
-            style: NeumorphicStyle(
-              depth: -10,
-              color: Colors.white,
-            ),
-            child: TextFormField(
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Search by Area',
-                prefixIcon: Icon(Icons.search),
+      title: widget.property == Property.FromWishList
+          ? Container(
+              child: Text('My WishList'),
+            )
+          : Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  color: Colors.white,
+                ),
+                child: Neumorphic(
+                  style: NeumorphicStyle(
+                    depth: -10,
+                    color: Colors.white,
+                  ),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Search by Area',
+                      prefixIcon: Icon(Icons.search),
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 
   Widget _getFilterSortSetting({required BuildContext context}) {
-    return widget.property==Property.FromWishList?Container(
-
-    ):Positioned(
-      bottom: _mainHeight * 0.01,
-      left: _mainWidth * 0.3,
-      child: ElevatedButton(
-        onPressed: () {
-          log('Sort __ Filter');
-        },
-        child: Container(
-          width: _mainWidth * 0.3,
-          child: Row(
-            children: [
-              Icon(Icons.filter_alt_outlined),
-              SizedBox(
-                width: 15,
+    return widget.property == Property.FromWishList
+        ? Container()
+        : Positioned(
+            bottom: _mainHeight * 0.01,
+            left: _mainWidth * 0.3,
+            child: ElevatedButton(
+              onPressed: () {
+                log('Sort __ Filter');
+              },
+              child: Container(
+                width: _mainWidth * 0.3,
+                child: Row(
+                  children: [
+                    Icon(Icons.filter_alt_outlined),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      'Filter & Sort',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
               ),
-              Text(
-                'Filter & Sort',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
   }
 }

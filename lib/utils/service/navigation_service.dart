@@ -1,3 +1,4 @@
+import 'package:RentMyStay_user/home_module/view/refer_earn_page.dart';
 import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
 
 import 'package:RentMyStay_user/login_module/view/login_page.dart';
@@ -5,6 +6,7 @@ import 'package:RentMyStay_user/login_module/view/firebase_registration_page.dar
 import 'package:RentMyStay_user/login_module/view/success_page.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:RentMyStay_user/property_module/view/property_listing_page.dart';
+import 'package:RentMyStay_user/property_module/view/wish_list_page.dart';
 import 'package:RentMyStay_user/property_module/viewModel/property_viewModel.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -33,6 +35,11 @@ class NavigationService {
           ),
         );
 
+      case AppRoutes.referAndEarn:
+        return MaterialPageRoute(
+            builder: (context) =>ChangeNotifierProvider(
+              create: (_) => HomeViewModel(),
+            child: ReferAndEarn(),),);
       case AppRoutes.registrationPage:
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
@@ -77,6 +84,12 @@ class NavigationService {
             child: PropertyListingPage(locationName: data['location'],propertyType: data['propertyType'],property:data['property'] ),
           ),
         );
+      case AppRoutes.wishListPage:
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+            create: (_) => PropertyViewModel(),
+            child: WishListPage()),
+        );
 
       default:
         return MaterialPageRoute(
@@ -91,11 +104,14 @@ class NavigationService {
 class AppRoutes {
   static const String loginPage = 'loginPage';
   static const String homePage = 'homePage';
+  static const String referAndEarn = 'referAndEarnPage';
   static const String registrationPage = 'registrationPage';
   static const String propertyListingPage = 'propertyListingPage';
   static const String forgotPassword = 'forgotPassword';
   static const String successPage = 'successPage';
   static const String otpVerifyPage = 'otpVerifyPage';
   static const String firebaseRegistrationPage = 'firebaseRegistrationPage';
+  static const String wishListPage = 'wishListPage';
+
 
 }

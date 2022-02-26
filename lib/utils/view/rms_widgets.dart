@@ -1,3 +1,4 @@
+import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -9,10 +10,10 @@ class RMSWidgets{
       content: Row(
         children: [
           CircularProgressIndicator(
-              valueColor:AlwaysStoppedAnimation<Color>(Color(0xff7AB02A))),
+              valueColor:AlwaysStoppedAnimation<Color>(CustomTheme.skyBlue)),
           SizedBox(width: 5,),
           Container(
-              child: Text('$message...',style: TextStyle(fontFamily: 'Nunito'),)),
+              child: Text('$message...',style: TextStyle(fontFamily: 'HKGrotesk'),)),
         ],
       ),
     );

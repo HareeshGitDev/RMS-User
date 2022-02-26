@@ -45,23 +45,8 @@ class Images {
   static String advancedIcon = 'assets/icons/maps_pin_outline.png';
 
   static String settingIcon = 'assets/icons/setting_outline.png';
+  static String referIconHome = 'assets/icons/refer_icon_home.webp';
   static const String resetPasswordIcon='assets/icons/reset_password.png';
   static const String successfulIcon='assets/icons/Check.gif';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
