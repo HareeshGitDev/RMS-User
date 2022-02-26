@@ -56,7 +56,7 @@ class _WishListPageState extends State<WishListPage> {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     child: Container(
-                      height: _mainHeight * 0.5,
+                      height: _mainHeight * 0.48,
                       child: Card(
                         elevation: 5,
                         shadowColor: CustomTheme.skyBlue,
@@ -269,86 +269,103 @@ class _WishListPageState extends State<WishListPage> {
                                   color: CustomTheme.skyBlue,
                                 ),
                                 Container(
-                                  height: 30,
-                                  child: ListTile(
-                                    contentPadding: EdgeInsets.only(
-                                        left: 15, right: 15, top: 0, bottom: 0),
-                                    leading: Text('Rent Per Day'),
-                                    trailing: RichText(
-                                      text: TextSpan(children: [
-                                        TextSpan(
-                                            text:
+                                    height: 25,
+                                    margin: EdgeInsets.only(left: 15,right: 15),
+                                    //  color: Colors.blue,
+                                    child:Row(
+
+                                      children: [
+                                        Text('Rent Per Day'),
+                                        RichText(
+                                          text: TextSpan(children: [
+                                            TextSpan(
+                                                text:
                                                 'Rs ${value.wishListModel.data![index].orgRent ?? " "}',
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontFamily: "HKGrotest-Light",
-                                                decoration: TextDecoration
-                                                    .lineThrough)),
-                                        TextSpan(
-                                            text:
+                                                style: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 12,
+                                                    fontFamily:
+                                                    "HKGrotest-Light",
+                                                    decoration: TextDecoration
+                                                        .lineThrough)),
+                                            TextSpan(
+                                                text:
                                                 ' Rs ${value.wishListModel.data![index].rent ?? " "}',
-                                            style: TextStyle(
-                                                color: myFavColor,
-                                                fontFamily: "HKGrotest-Light",
-                                                fontSize: 16)),
-                                      ]),
-                                    ),
-                                  ),
+                                                style: TextStyle(
+                                                    color: myFavColor,
+                                                    fontFamily:
+                                                    "HKGrotest-Light",
+                                                    fontSize: 14)),
+                                          ]),
+                                        ),
+                                      ],mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    )
                                 ),
                                 Container(
-                                  height: 30,
-                                  child: ListTile(
-                                    contentPadding: EdgeInsets.only(
-                                        left: 15, right: 15, top: 0, bottom: 0),
-                                    leading: Text('Rent (Stay < 3 Month)'),
-                                    trailing: RichText(
-                                      text: TextSpan(children: [
-                                        TextSpan(
-                                            text:
+                                    height: 25,
+                                    margin: EdgeInsets.only(left: 15,right: 15),
+                                    //  color: Colors.amber,
+                                    child:Row(
+
+                                      children: [
+                                        Text('Rent (Stay < 3 Month)'),
+                                        RichText(
+                                          text: TextSpan(children: [
+                                            TextSpan(
+                                                text:
                                                 'Rs ${value.wishListModel.data![index].orgMonthRent ?? " "}',
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontFamily: "HKGrotest-Light",
-                                                decoration:
-                                                    TextDecoration.lineThrough,
-                                                fontSize: 14)),
-                                        TextSpan(
-                                            text:
+                                                style: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontFamily:
+                                                    "HKGrotest-Light",
+                                                    decoration: TextDecoration
+                                                        .lineThrough,
+                                                    fontSize: 12)),
+                                            TextSpan(
+                                                text:
                                                 ' Rs ${value.wishListModel.data![index].monthlyRent ?? " "}',
-                                            style: TextStyle(
-                                                color: myFavColor,
-                                                fontFamily: "HKGrotest-Light",
-                                                fontSize: 16)),
-                                      ]),
-                                    ),
-                                  ),
+                                                style: TextStyle(
+                                                    color: myFavColor,
+                                                    fontFamily:
+                                                    "HKGrotest-Light",
+                                                    fontSize: 14)),
+                                          ]),
+                                        ),
+                                      ],mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    )
                                 ),
                                 Container(
-                                  height: 30,
-                                  child: ListTile(
-                                    contentPadding: EdgeInsets.only(
-                                        left: 15, right: 15, top: 0, bottom: 0),
-                                    leading: Text('Rent (Stay > 3 Month)'),
-                                    trailing: RichText(
-                                      text: TextSpan(children: [
-                                        TextSpan(
-                                            text:
+                                    height: 25,
+                                    margin: EdgeInsets.only(left: 15,right: 15),
+                                    //   color: Colors.pink,
+                                    child:Row(
+
+                                      children: [
+                                        Text('Rent (Stay > 3 Month)'),
+                                        RichText(
+                                          text: TextSpan(children: [
+                                            TextSpan(
+                                                text:
                                                 'Rs ${value.wishListModel.data![index].orgRmsRent ?? " "}',
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontFamily: "HKGrotest-Light",
-                                                decoration: TextDecoration
-                                                    .lineThrough)),
-                                        TextSpan(
-                                            text:
+                                                style: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontFamily:
+                                                    "HKGrotest-Light",
+                                                    fontSize: 12,
+                                                    decoration: TextDecoration
+                                                        .lineThrough)),
+                                            TextSpan(
+                                                text:
                                                 ' Rs ${value.wishListModel.data![index].rmsRent ?? " "}',
-                                            style: TextStyle(
-                                                color: myFavColor,
-                                                fontFamily: "HKGrotest-Light",
-                                                fontSize: 16)),
-                                      ]),
-                                    ),
-                                  ),
+                                                style: TextStyle(
+                                                    color: myFavColor,
+                                                    fontFamily:
+                                                    "HKGrotest-Light",
+                                                    fontSize: 14)),
+                                          ]),
+                                        ),
+                                      ],mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    )
                                 ),
                               ],
                             ),
