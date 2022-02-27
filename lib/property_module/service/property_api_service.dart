@@ -20,7 +20,8 @@ class PropertyApiService {
     return registeredToken;
   }
 
-  Future<PropertyListModel> fetchPropertyDetailsList({
+  Future<PropertyListModel> fetchPropertyDetailsList(
+      {
     required String address,
     String? propertyType,
     String? lat,

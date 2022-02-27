@@ -11,7 +11,6 @@ class PropertyViewModel extends ChangeNotifier {
   final PropertyApiService _propertyApiService = PropertyApiService();
   PropertyListModel propertyDetailsModel = PropertyListModel();
   WishListModel wishListModel=WishListModel();
-
   Future<void> getPropertyDetailsList({
     required String address,
     String? propertyType,

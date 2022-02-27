@@ -5,6 +5,8 @@ class Images {
   static String brandLogo_home = 'assets/brand/rms_home.png';
   static String brandLogo_white = 'assets/brand/rmslogowhite.png';
   static String brandLogo_blue = 'assets/brand/logormsblue.png';
+  static String referEarn = 'assets/brand/refer&earn.jpg';
+  static String google = 'assets/brand/google.png';
 
 
 //---------------------- estate ------------------------------------//
@@ -48,5 +50,6 @@ class Images {
   static String referIconHome = 'assets/icons/refer_icon_home.webp';
   static const String resetPasswordIcon='assets/icons/reset_password.png';
   static const String successfulIcon='assets/icons/Check.gif';
+
 
 }

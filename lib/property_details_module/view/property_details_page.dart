@@ -134,7 +134,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.blueGrey.shade50,
+                      //  color: Colors.blueGrey.shade50,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       padding: EdgeInsets.all(5),
