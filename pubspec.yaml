@@ -53,6 +53,7 @@ dependencies:
   cloud_firestore:
   cached_network_image: ^3.2.0
   readmore: ^2.1.0
+  youtube_player_flutter: ^8.0.0
 
 
   # Base Dependencies
