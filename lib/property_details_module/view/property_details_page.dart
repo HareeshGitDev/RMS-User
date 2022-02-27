@@ -46,11 +46,9 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
               expandedHeight:  _mainHeight * 0.30,
               floating: true,
               backgroundColor: CustomTheme.skyBlue,
-              onStretchTrigger: ()async{
-                log('Started...');
-              },
+
              // pinned: true,
-              actions: [
+              actions: const [
                 CircleAvatar(
                     backgroundColor: Colors.grey,radius: 15,
                     child: Icon(Icons.favorite,color: Colors.red,)),
@@ -126,7 +124,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: const [
                     Text(
                       'Fully Furnished 1BHK With Balcony & Hall and many more things, Near SilkBoard FlyOver ',
                       overflow: TextOverflow.ellipsis,
@@ -158,70 +156,53 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                 thickness: 2,
               ),
               Container(
-                height: _mainHeight * 0.06,
+                height: _mainHeight * 0.04,
+
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.blueGrey.shade50,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding: EdgeInsets.all(5),
-                      child: Column(
-                        children: [
-                          Icon(Icons.person_outline_outlined),
-                          Text(
-                            '2 Guest',
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontFamily: fontFamily,
-                                color: Colors.grey.shade600,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ],
-                      ),
+                    Column(
+                      children: [
+                        const Icon(Icons.person_outline_outlined,size: 20,
+                          color: Colors.black38,),
+                        Text(
+                          '2 Guest',
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: fontFamily,
+                              color: Colors.grey.shade600,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ],
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        // color: Colors.blueGrey.shade50,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding: EdgeInsets.all(5),
-                      child: Column(
-                        children: [
-                          Icon(Icons.bed_rounded),
-                          Text(
-                            '1 BedRoom',
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontFamily: fontFamily,
-                                color: Colors.grey.shade600,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ],
-                      ),
+                    Column(
+                      children: [
+                        Icon(Icons.bed_rounded,size: 20,
+                          color: Colors.black38,),
+                        Text(
+                          '1 BedRoom',
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: fontFamily,
+                              color: Colors.grey.shade600,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ],
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        // color: Colors.blueGrey.shade50,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding: EdgeInsets.all(5),
-                      child: Column(
-                        children: [
-                          Icon(Icons.bathroom_outlined),
-                          Text(
-                            '1 BathRoom',
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontFamily: fontFamily,
-                                color: Colors.grey.shade600,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ],
-                      ),
+                    Column(
+                      children: [
+                        Icon(Icons.bathroom_outlined,size: 20,
+                          color: Colors.black38,),
+                        Text(
+                          '1 BathRoom',
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: fontFamily,
+                              color: Colors.grey.shade600,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ],
                     )
                   ],
                 ),
