@@ -208,9 +208,10 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                               color: Colors.blueGrey.shade100,
                               shadowDarkColor: Colors.blue,
                               depth: 5,
-                              lightSource: LightSource.topLeft),
+                              
+                              lightSource: LightSource.topLeft),padding: EdgeInsets.only(top: _mainHeight*0.005,bottom: _mainHeight*0.005,left: _mainWidth*0.025),
                           margin: EdgeInsets.only(
-                              left: _mainWidth * 0.6,
+                              left: _mainWidth * 0.65,
                             right: _mainWidth*0.015,
                              ),
                           child: ValueListenableBuilder(
@@ -245,6 +246,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         SizedBox(
                           height: _mainHeight * 0.01,
                         ),
+
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
