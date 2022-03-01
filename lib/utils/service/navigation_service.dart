@@ -18,6 +18,7 @@ import '../../home_module/view/home_page.dart';
 import '../../login_module/view/forgot_password_page.dart';
 import '../../login_module/view/mobile_otp_page.dart';
 import '../../login_module/view/registration_page.dart';
+import '../../profile_Module/view/profile_page.dart';
 
 class NavigationService {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -28,7 +29,6 @@ class NavigationService {
                   create: (_) => LoginViewModel(),
                   child: LoginPage(),
                 ));
-
       case AppRoutes.homePage:
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
@@ -67,7 +67,6 @@ class NavigationService {
       case AppRoutes.firebaseRegistrationPage:
         final  data =
             settings.arguments as Map<String,dynamic>;
-
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
                   create: (_) => LoginViewModel(),
@@ -76,6 +75,9 @@ class NavigationService {
 
       case AppRoutes.successPage:
         return MaterialPageRoute(builder: (context) => SuccessPage());
+
+      case AppRoutes.profilePage:
+        return MaterialPageRoute(builder: (context) =>Profile() );
 
       case AppRoutes.propertyListingPage:
         final data=settings.arguments as Map<String,dynamic>;
@@ -93,10 +95,12 @@ class NavigationService {
             child: WishListPage()),
         );
       case AppRoutes.propertyDetailsPage:
+        String propId=settings.arguments as String;
+
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
               create: (_) => PropertyDetailsViewModel(),
-              child: PropertyDetailsPage()),
+              child: PropertyDetailsPage(propId: propId,)),
         );
 
       default:
@@ -112,6 +116,7 @@ class NavigationService {
 class AppRoutes {
   static const String loginPage = 'loginPage';
   static const String homePage = 'homePage';
+  static const String profilePage = 'profile';
   static const String referAndEarn = 'referAndEarnPage';
   static const String registrationPage = 'registrationPage';
   static const String propertyListingPage = 'propertyListingPage';

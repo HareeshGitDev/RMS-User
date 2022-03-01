@@ -9,7 +9,7 @@ import '../model/property_list_model.dart';
 
 class PropertyViewModel extends ChangeNotifier {
   final PropertyApiService _propertyApiService = PropertyApiService();
-  PropertyListModel propertyDetailsModel = PropertyListModel();
+  PropertyListModel propertyListModel = PropertyListModel();
   WishListModel wishListModel=WishListModel();
   Future<void> getPropertyDetailsList({
     required String address,
@@ -20,8 +20,8 @@ class PropertyViewModel extends ChangeNotifier {
         await _propertyApiService.fetchPropertyDetailsList(
             address: address, property: property, propertyType: propertyType);
 
-    propertyDetailsModel = data;
-    log('ALL PROPERTIES :: ${propertyDetailsModel.data?.length}');
+    propertyListModel = data;
+    log('ALL PROPERTIES :: ${propertyListModel.data?.length}');
     notifyListeners();
   }
 

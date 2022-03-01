@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 class WishListModel {
   List<Data>? data;
   String? userProfilePic;

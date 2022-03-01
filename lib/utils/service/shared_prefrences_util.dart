@@ -9,7 +9,7 @@ class SharedPreferenceUtil {
 
   Future<String?> getString(String key) async {
     final prefs = await SharedPreferences.getInstance();
-    log('ShHHH :: ${prefs.getString(key)}');
+    log('From Shared Preferences :: ${prefs.getString(key)}');
     return prefs.getString(key);
   }
   Future<bool> setString(String key, String value) async {

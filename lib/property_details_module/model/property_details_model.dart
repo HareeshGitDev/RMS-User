@@ -5,11 +5,13 @@ class PropertyDetailsModel {
   Amenities? amenities;
   List<SimilarProp>? similarProp;
 
+
   PropertyDetailsModel(
       {this.shareLink,
         this.details,
         this.propOwner,
         this.amenities,
+
         this.similarProp});
 
   PropertyDetailsModel.fromJson(Map<String, dynamic> json) {
@@ -66,7 +68,7 @@ class Details {
   String? propTypeId;
   String? roomTypeId;
   String? deposit;
-  String? rent;
+  dynamic rent;
   String? orgRent;
   String? weeklyRent;
   String? monthlyRent;

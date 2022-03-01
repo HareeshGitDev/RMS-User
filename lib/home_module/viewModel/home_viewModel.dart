@@ -12,6 +12,7 @@ import '../service/home_api_service.dart';
 class HomeViewModel extends ChangeNotifier {
   final HomeApiService _homeApiService = HomeApiService();
   InviteModel inviteModel = InviteModel();
+  String name='Deepak';
 
   List<CitySuggestionModel> getCitySuggestionList(
       {required BuildContext context}) {

@@ -48,12 +48,15 @@ dependencies:
   fluttertoast: ^8.0.8
   shared_preferences: ^2.0.6
   webview_flutter: ^3.0.0
-  pinput: ^1.2.2
+
   google_sign_in: ^5.2.4
   cloud_firestore:
   cached_network_image: ^3.2.0
   readmore: ^2.1.0
   youtube_player_flutter: ^8.0.0
+  share_plus: ^3.1.0
+  html: ^0.15.0
+  flutter_html:
 
 
   # Base Dependencies

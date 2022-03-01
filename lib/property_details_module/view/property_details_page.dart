@@ -1,16 +1,30 @@
 import 'dart:developer';
 
+import 'package:RentMyStay_user/property_details_module/viewModel/property_details_viewModel.dart';
 import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/color.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:html/parser.dart' show HtmlParser, parse;
+
+import '../../utils/constants/app_consts.dart';
+import '../../utils/service/navigation_service.dart';
+import '../model/property_details_model.dart';
 
 class PropertyDetailsPage extends StatefulWidget {
-  const PropertyDetailsPage({Key? key}) : super(key: key);
+  String propId;
+
+  PropertyDetailsPage({Key? key, required this.propId}) : super(key: key);
 
   @override
   _PropertyDetailsPageState createState() => _PropertyDetailsPageState();
@@ -23,545 +37,743 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
   bool dailyFlag = true;
   bool monthlyFlag = false;
   bool moreThanThreeFlag = false;
+  ValueNotifier<bool> showPics = ValueNotifier(true);
 
-  final YoutubePlayerController _youTubeController = YoutubePlayerController(
-    initialVideoId: '8SgbcLtZaVY',
-    flags: const YoutubePlayerFlags(
-      autoPlay: false,
-      mute: true,
-      controlsVisibleAtStart: true,
-    ),
-  );
+  late YoutubePlayerController _youTubeController;
+  late PropertyDetailsViewModel _propertyDetailsViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _youTubeController = YoutubePlayerController(
+      initialVideoId: '8SgbcLtZaVY',
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+        controlsVisibleAtStart: true,
+      ),
+    );
+    _propertyDetailsViewModel =
+        Provider.of<PropertyDetailsViewModel>(context, listen: false);
+    _propertyDetailsViewModel.getPropertyDetails(propId: widget.propId);
+    log('Property Id :: ${widget.propId}');
+  }
 
   @override
   Widget build(BuildContext context) {
+    log('Called::');
     _mainWidth = MediaQuery.of(context).size.width;
     _mainHeight = MediaQuery.of(context).size.height;
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        body: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              expandedHeight:  _mainHeight * 0.30,
-              floating: true,
-              backgroundColor: CustomTheme.skyBlue,
+    return Consumer<PropertyDetailsViewModel>(
+      builder: (context, value, child) {
+        return SafeArea(
+          child: value.propertyDetailsModel != null
+              ? Scaffold(
+                  resizeToAvoidBottomInset: true,
+                  body: CustomScrollView(
+                    slivers: [
+                      SliverAppBar(
+                        expandedHeight: _mainHeight * 0.30,
+                        floating: true,
+                        backgroundColor: CustomTheme.skyBlue,
+                        // pinned: true,
+                        actions: const [
+                          CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 15,
+                              child: Icon(
+                                Icons.favorite_outline_rounded,
+                                color: Colors.black54,
+                              )),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 15,
+                              child: Icon(
+                                Icons.share_outlined,
+                                color: Colors.black54,
+                              )),
+                          SizedBox(
+                            width: 10,
+                          )
+                        ],
+                        flexibleSpace: FlexibleSpaceBar(
+                          background: ValueListenableBuilder(
+                            builder: (context, bool data, child) {
+                              return Visibility(
+                                visible: data,
+                                replacement: YoutubePlayerBuilder(onEnterFullScreen: () {
+                                  log('FullScreen');
+                                },
+                                  player: YoutubePlayer(
+                                    aspectRatio: 1.2,
+                                    controller: _youTubeController,
+                                    showVideoProgressIndicator: true,
 
-             // pinned: true,
-              actions: const [
-                CircleAvatar(
-                    backgroundColor: Colors.grey,radius: 15,
-                    child: Icon(Icons.favorite,color: Colors.red,)),
-                SizedBox(width: 5,),
-                CircleAvatar(
-                    backgroundColor: Colors.grey,radius: 15,
-                    child: Icon(Icons.share,color: Colors.red,)),
-                SizedBox(width: 10,)
-            ],
-              flexibleSpace: FlexibleSpaceBar(
-                background: Image.network(
-                  'https://media.istockphoto.com/photos/beautiful-luxury-home-exterior-at-twilight-picture-id1026205392?k=20&m=1026205392&s=612x612&w=0&h=lYFMV5cOuQQpddmwsE5QLBCyhgWQ1OI46i_dalro9OE=',
-                  height: _mainHeight * 0.30,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            SliverList(
-                delegate: SliverChildListDelegate([
-              SizedBox(
-                height: _mainHeight * 0.015,
-              ),
-              Container(
-                decoration: BoxDecoration(
 
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                margin: EdgeInsets.only(
-                  left: _mainWidth * 0.02,
-                  right: _mainWidth * 0.02,
-                ),
-                padding: EdgeInsets.only(
-                  left: _mainWidth * 0.02,
-                  right: _mainWidth * 0.02,
-                ),
-                child: RichText(
-                    text: TextSpan(
-                        text: 'Disclaimer : ',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 12,
-                            fontFamily: fontFamily,
-                            color: Colors.black),
-                        children: <TextSpan>[
-                      TextSpan(
-                        text:
-                            'A disclaimer is generally any statement intended to specify or delimit the scope of rights and obligations that may be exercised and enforced by parties in a legally recognized relationship.',
-                        style: TextStyle(
-                          color: Color(0xff56596A),
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: fontFamily,
+                                    topActions: const [
+                                      Text(
+                                        'Powered by RMS',
+                                        style: TextStyle(
+                                          fontFamily: fontFamily,
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                          fontStyle: FontStyle.italic,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ), builder: (BuildContext context , Widget player ) {
+                                    return player;
+                                },
+                                ),
+                                child: CarouselSlider(
+                                  items: value.propertyDetailsModel?.details !=
+                                              null &&
+                                          value.propertyDetailsModel?.details
+                                                  ?.pic !=
+                                              null
+                                      ? value.propertyDetailsModel?.details?.pic
+                                              ?.map((e) => CachedNetworkImage(
+                                                    imageUrl:
+                                                        e.picWp.toString(),
+                                                    imageBuilder: (context,
+                                                            imageProvider) =>
+                                                        Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                    .only(
+                                                                topLeft: Radius
+                                                                    .circular(
+                                                                        10),
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        10)),
+                                                        image: DecorationImage(
+                                                          image: imageProvider,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        Shimmer.fromColors(
+                                                            child: Container(
+                                                              height:
+                                                                  _mainHeight *
+                                                                      0.3,
+                                                              color:
+                                                                  Colors.grey,
+                                                            ),
+                                                            baseColor:
+                                                                Colors.grey[200]
+                                                                    as Color,
+                                                            highlightColor:
+                                                                Colors.grey[350]
+                                                                    as Color),
+                                                    errorWidget: (context, url,
+                                                            error) =>
+                                                        const Icon(Icons.error),
+                                                  ))
+                                              .toList() ??
+                                          []
+                                      : [Container()],
+                                  options: CarouselOptions(
+                                      height: _mainHeight * 0.3,
+                                      enlargeCenterPage: false,
+                                      autoPlayInterval:
+                                          const Duration(seconds: 3),
+                                      autoPlay: true,
+                                      aspectRatio: 16 / 9,
+                                      autoPlayCurve: Curves.decelerate,
+                                      enableInfiniteScroll: true,
+                                      viewportFraction: 1),
+                                ),
+                              );
+                            },
+                            valueListenable: showPics,
+                          ),
                         ),
                       ),
-                    ])),
-              ),
-              SizedBox(
-                height: _mainHeight * 0.015,
-              ),
-              Container(
-                height: _mainHeight * 0.04,
-                decoration: BoxDecoration(
-
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                margin: EdgeInsets.only(
-                  left: _mainWidth * 0.02,
-                  right: _mainWidth * 0.02,
-                ),
-                padding: EdgeInsets.only(
-                  left: _mainWidth * 0.02,
-                  right: _mainWidth * 0.02,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      'Fully Furnished 1BHK With Balcony & Hall and many more things, Near SilkBoard FlyOver ',
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: fontFamily,
-                      ),
-                    ),
-                    Text(
-                      'Building Name : SI Residency ',
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: fontFamily,
-                          color: Colors.black54),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: _mainHeight * 0.015,
-              ),
-              _getAmountView(context: context),
-              Divider(
-                thickness: 2,
-              ),
-              Container(
-                height: _mainHeight * 0.04,
-
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      children: [
-                        const Icon(Icons.person_outline_outlined,size: 20,
-                          color: Colors.black38,),
-                        Text(
-                          '2 Guest',
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontFamily: fontFamily,
-                              color: Colors.grey.shade600,
-                              fontWeight: FontWeight.w500),
+                      SliverList(
+                          delegate: SliverChildListDelegate.fixed([
+                        SizedBox(
+                          height: _mainHeight * 0.01,
                         ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Icon(Icons.bed_rounded,size: 20,
-                          color: Colors.black38,),
-                        Text(
-                          '1 BedRoom',
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontFamily: fontFamily,
-                              color: Colors.grey.shade600,
-                              fontWeight: FontWeight.w500),
+                        NeumorphicButton(
+                          style: NeumorphicStyle(
+                              color: Colors.blueGrey.shade100,
+                              shadowDarkColor: Colors.blue,
+                              depth: 5,
+                              lightSource: LightSource.topLeft),
+                          margin: EdgeInsets.only(
+                              left: _mainWidth * 0.6,
+                            right: _mainWidth*0.015,
+                             ),
+                          child: ValueListenableBuilder(
+                            builder: (context, value, child) {
+                              if (value == true) {
+                                return const Text(
+                                  'Switch To Video Tour',
+                                  style: TextStyle(
+                                      color: Colors.black87,
+                                      fontFamily: fontFamily,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500),
+                                );
+                              } else {
+                                return const Text(
+                                  'Switch To Photo Tour',
+                                  style: TextStyle(
+                                      color: Colors.black87,
+                                      fontFamily: fontFamily,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500),
+                                );
+                              }
+                            },
+                            valueListenable: showPics,
+                          ),
+                          onPressed: () {
+                            showPics.value = !showPics.value;
+                            _youTubeController.reset();
+                          },
                         ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Icon(Icons.bathroom_outlined,size: 20,
-                          color: Colors.black38,),
-                        Text(
-                          '1 BathRoom',
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontFamily: fontFamily,
-                              color: Colors.grey.shade600,
-                              fontWeight: FontWeight.w500),
+                        SizedBox(
+                          height: _mainHeight * 0.01,
                         ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: _mainHeight * 0.015,
-              ),
-              Container(
-                padding: EdgeInsets.only(
-                  left: _mainWidth * 0.04,
-                ),
-                child: Text(
-                  'Available Amenities',
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontFamily: fontFamily,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),
-              SizedBox(
-                height: _mainHeight * 0.01,
-              ),
-              _availableAmenitiesIconList(),
-              Container(
-                padding: EdgeInsets.only(
-                  left: _mainWidth * 0.04,
-                  top: _mainHeight * 0.01,
-                ),
-                child: Text(
-                  'View All Amenities',
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontFamily: fontFamily,
-                      color: Colors.orange,
-                      fontWeight: FontWeight.w700),
-                ),
-              ),
-              SizedBox(
-                height: _mainHeight * 0.015,
-              ),
-              Divider(
-                thickness: 2,
-              ),
-              Container(
-                // color: CustomTheme.peach,
-                padding: EdgeInsets.only(
-                  left: _mainWidth * 0.04,
-                  right: _mainWidth * 0.04,
-                ),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          margin: EdgeInsets.only(
+                            left: _mainWidth * 0.02,
+                            right: _mainWidth * 0.02,
+                          ),
+                          padding: EdgeInsets.only(
+                            left: _mainWidth * 0.02,
+                            right: _mainWidth * 0.02,
+                          ),
+                          child: RichText(
+                              text: const TextSpan(
+                                  text: 'Disclaimer : ',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 12,
+                                      fontFamily: fontFamily,
+                                      color: Colors.black),
+                                  children: <TextSpan>[
+                                TextSpan(
+                                  text:
+                                      'A disclaimer is generally any statement intended to specify or delimit the scope of rights and obligations that may be exercised and enforced by parties in a legally recognized relationship.',
+                                  style: TextStyle(
+                                    color: Color(0xff56596A),
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: fontFamily,
+                                  ),
+                                ),
+                              ])),
+                        ),
+                        SizedBox(
+                          height: _mainHeight * 0.015,
+                        ),
+                        Container(
+                          height: _mainHeight * 0.04,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          margin: EdgeInsets.only(
+                            left: _mainWidth * 0.02,
+                            right: _mainWidth * 0.02,
+                          ),
+                          padding: EdgeInsets.only(
+                            left: _mainWidth * 0.02,
+                            right: _mainWidth * 0.02,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                value.propertyDetailsModel?.details != null &&
+                                        value.propertyDetailsModel?.details
+                                                ?.title !=
+                                            null
+                                    ? (value.propertyDetailsModel?.details
+                                            ?.title)
+                                        .toString()
+                                    : ' ',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: fontFamily,
+                                ),
+                              ),
+                              Text(
+                                value.propertyDetailsModel?.details != null &&
+                                        value.propertyDetailsModel?.details
+                                                ?.bname !=
+                                            null
+                                    ? (value.propertyDetailsModel?.details
+                                            ?.bname)
+                                        .toString()
+                                    : ' ',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: fontFamily,
+                                    color: Colors.black54),
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: _mainHeight * 0.015,
+                        ),
+                        _getAmountView(
+                            context: context,
+                            model: value.propertyDetailsModel),
+                        const Divider(
+                          thickness: 2,
+                        ),
+                        SizedBox(
+                          height: _mainHeight * 0.04,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(
+                                children: [
+                                  const Icon(
+                                    Icons.person_outline_outlined,
+                                    size: 20,
+                                    color: Colors.black38,
+                                  ),
+                                  Text(
+                                    value.propertyDetailsModel?.details !=
+                                                null &&
+                                            value.propertyDetailsModel?.details
+                                                    ?.maxGuests !=
+                                                null
+                                        ? (value.propertyDetailsModel?.details
+                                                    ?.maxGuests)
+                                                .toString() +
+                                            ' Guest'
+                                        : ' ',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: fontFamily,
+                                        color: Colors.grey.shade600,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  const Icon(
+                                    Icons.bed_rounded,
+                                    size: 20,
+                                    color: Colors.black38,
+                                  ),
+                                  Text(
+                                    value.propertyDetailsModel?.details !=
+                                                null &&
+                                            value.propertyDetailsModel?.details
+                                                    ?.bedrooms !=
+                                                null
+                                        ? (value.propertyDetailsModel?.details
+                                                    ?.bedrooms)
+                                                .toString() +
+                                            ' BedRoom'
+                                        : ' ',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: fontFamily,
+                                        color: Colors.grey.shade600,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  const Icon(
+                                    Icons.bathroom_outlined,
+                                    size: 20,
+                                    color: Colors.black38,
+                                  ),
+                                  Text(
+                                    value.propertyDetailsModel?.details !=
+                                                null &&
+                                            value.propertyDetailsModel?.details
+                                                    ?.bathrooms !=
+                                                null
+                                        ? (value.propertyDetailsModel?.details
+                                                    ?.bathrooms)
+                                                .toString() +
+                                            ' BathRoom'
+                                        : ' ',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: fontFamily,
+                                        color: Colors.grey.shade600,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: _mainHeight * 0.015,
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(
+                            left: _mainWidth * 0.04,
+                          ),
+                          child: const Text(
+                            'Available Amenities',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontFamily: fontFamily,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        SizedBox(
+                          height: _mainHeight * 0.01,
+                        ),
+                        _availableAmenitiesIconList(),
+                        Container(
+                          padding: EdgeInsets.only(
+                            left: _mainWidth * 0.04,
+                            top: _mainHeight * 0.01,
+                          ),
+                          child: const Text(
+                            'View All Amenities',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontFamily: fontFamily,
+                                color: Colors.orange,
+                                fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        SizedBox(
+                          height: _mainHeight * 0.015,
+                        ),
+                        const Divider(
+                          thickness: 2,
+                        ),
+                        Container(
+                          // color: CustomTheme.peach,
+                          padding: EdgeInsets.only(
+                            left: _mainWidth * 0.04,
+                            right: _mainWidth * 0.04,
+                          ),
 
-                height: _mainHeight * 0.03,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        'Contact us',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                            fontFamily: fontFamily,
-                            color: Colors.black),
-                      ),
-                      Spacer(),
-                      Icon(Icons.call,
-                          color: myFavColor, size: _mainWidth * 0.06),
-                      SizedBox(
-                        width: _mainWidth * 0.05,
-                      ),
-                      Icon(
-                        Icons.message,
-                        color: myFavColor,
-                        size: _mainWidth * 0.06,
-                      )
-                    ]),
-              ),
-              Divider(
-                thickness: 2,
-              ),
-              Container(
-                // color: CustomTheme.peach,
-                padding: EdgeInsets.only(
-                  left: _mainWidth * 0.04,
-                  right: _mainWidth * 0.04,
-                ),
+                          height: _mainHeight * 0.03,
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                const Text(
+                                  'Contact us',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                      fontFamily: fontFamily,
+                                      color: Colors.black),
+                                ),
+                                Spacer(),
+                                Icon(Icons.call,
+                                    color: myFavColor, size: _mainWidth * 0.06),
+                                SizedBox(
+                                  width: _mainWidth * 0.05,
+                                ),
+                                Icon(
+                                  Icons.message,
+                                  color: myFavColor,
+                                  size: _mainWidth * 0.06,
+                                )
+                              ]),
+                        ),
+                        const Divider(
+                          thickness: 2,
+                        ),
+                        Container(
+                          // color: CustomTheme.peach,
+                          padding: EdgeInsets.only(
+                            left: _mainWidth * 0.04,
+                            right: _mainWidth * 0.04,
+                          ),
 
-                height: _mainHeight * 0.03,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Property Location',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                            fontFamily: fontFamily,
-                            color: Colors.black),
-                      ),
-                      Icon(Icons.map_rounded,
-                          color: myFavColor, size: _mainWidth * 0.06),
-                    ]),
-              ),
-              Divider(
-                thickness: 2,
-              ),
-              Container(
-                // color: CustomTheme.peach,
-                padding: EdgeInsets.only(
-                  left: _mainWidth * 0.04,
-                  right: _mainWidth * 0.04,
-                ),
+                          height: _mainHeight * 0.03,
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Property Location',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                      fontFamily: fontFamily,
+                                      color: Colors.black),
+                                ),
+                                Icon(Icons.map_rounded,
+                                    color: myFavColor, size: _mainWidth * 0.06),
+                              ]),
+                        ),
+                        const Divider(
+                          thickness: 2,
+                        ),
+                        Container(
+                          // color: CustomTheme.peach,
+                          padding: EdgeInsets.only(
+                            left: _mainWidth * 0.04,
+                            right: _mainWidth * 0.04,
+                          ),
 
-                height: _mainHeight * 0.03,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Select Date',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                            fontFamily: fontFamily,
-                            color: Colors.black),
-                      ),
-                      Icon(Icons.calendar_today,
-                          color: myFavColor, size: _mainWidth * 0.06),
-                    ]),
-              ),
-              Divider(
-                thickness: 2,
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: _mainWidth * 0.04,
-                  right: _mainWidth * 0.04,
+                          height: _mainHeight * 0.03,
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Select Date',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                      fontFamily: fontFamily,
+                                      color: Colors.black),
+                                ),
+                                Icon(Icons.calendar_today,
+                                    color: myFavColor, size: _mainWidth * 0.06),
+                              ]),
+                        ),
+                        const Divider(
+                          thickness: 2,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: _mainWidth * 0.04,
+                            right: _mainWidth * 0.04,
+                          ),
+                          child: const Text(
+                            'Details',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                                fontFamily: fontFamily,
+                                color: Colors.black),
+                          ),
+                        ),
+                        SizedBox(
+                          height: _mainHeight * 0.005,
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(
+                            left: _mainWidth * 0.04,
+                            right: _mainWidth * 0.04,
+                          ),
+                          child: Html(
+                              data: value.propertyDetailsModel?.details !=
+                                          null &&
+                                      value.propertyDetailsModel?.details
+                                              ?.description !=
+                                          null
+                                  ? (value.propertyDetailsModel?.details
+                                          ?.description)
+                                      .toString()
+                                  : ' ') /*ReadMoreText(
+                            value.propertyDetailsModel?.details != null &&
+                                value.propertyDetailsModel?.details
+                                    ?.description !=
+                                    null
+                                ? (value.propertyDetailsModel?.details
+                                ?.description)
+                                .toString()
+                                : ' '
+
+                          ,trimLines: 3,
+                            style: TextStyle(
+                                color: Colors.black54,
+                                fontFamily: fontFamily,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500),
+                            colorClickableText: Color(0xffe09c5f),
+                            trimMode: TrimMode.Line,
+                            trimCollapsedText: 'Show more',
+                            trimExpandedText: 'Show less',
+                            moreStyle: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: fontFamily,
+                                color: Color(0xff7ab02a)),
+                          )*/
+                          ,
+                        ),
+                        SizedBox(
+                          height: _mainHeight * 0.01,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: _mainWidth * 0.04,
+                            right: _mainWidth * 0.04,
+                          ),
+                          child: const Text(
+                            'House Rules',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                                fontFamily: fontFamily,
+                                color: Colors.black),
+                          ),
+                        ),
+                        SizedBox(
+                          height: _mainHeight * 0.005,
+                        ),
+                        Container(
+                            padding: EdgeInsets.only(
+                              left: _mainWidth * 0.04,
+                              right: _mainWidth * 0.04,
+                            ),
+                            child: Html(
+                                data: value.propertyDetailsModel?.details !=
+                                            null &&
+                                        value.propertyDetailsModel?.details
+                                                ?.things2note !=
+                                            null
+                                    ? (value.propertyDetailsModel?.details
+                                            ?.things2note)
+                                        .toString()
+                                    : ' ')
+                            /*const ReadMoreText(
+                            'In the Second Age of Middle-earth, the lords of Elves, Dwarves, and Men are given Rings of Power. Unbeknownst to them, the Dark Lord Sauron forges the One Ring in Mount Doom, instilling into it a great part of his power, in order to dominate the other Rings so he might conquer Middle-earth. A final alliance of Men and Elves battles Saurons forces in Mordor. Isildur of Gondor severs Saurons finger and the Ring with it, thereby vanquishing Sauron and returning him to spirit form. With Sauron first defeat, the Third Age of Middle-earth begins. The Rings influence corrupts Isildur, who takes it for himself and is later killed by Orcs. The Ring is lost in a river for 2,500 years until it is found by Gollum, who owns it for over four and a half centuries. The ring abandons Gollum and it is subsequently found by a hobbit named Bilbo Baggins, who is unaware of its history.',
+                            trimLines: 3,
+                            style: TextStyle(
+                                color: Colors.black54,
+                                fontFamily: fontFamily,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500),
+                            colorClickableText: Color(0xffe09c5f),
+                            trimMode: TrimMode.Line,
+                            trimCollapsedText: 'Show more',
+                            trimExpandedText: 'Show less',
+                            moreStyle: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: fontFamily,
+                                color: Color(0xff7ab02a)),
+                          ),*/
+                            ),
+                        SizedBox(
+                          height: _mainHeight * 0.01,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: _mainWidth * 0.04,
+                            right: _mainWidth * 0.04,
+                          ),
+                          child: const Text(
+                            'Five Reasons to Choose RentMyStay',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                                fontFamily: fontFamily,
+                                color: Colors.black),
+                          ),
+                        ),
+                        SizedBox(
+                          height: _mainHeight * 0.005,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: _mainWidth * 0.04,
+                            right: _mainWidth * 0.04,
+                          ),
+                          child: Text(
+                            getMoreText,
+                            style: const TextStyle(
+                                color: Colors.black54,
+                                fontFamily: fontFamily,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        const Divider(
+                          thickness: 2,
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(
+                            left: _mainWidth * 0.04,
+                            right: _mainWidth * 0.04,
+                          ),
+                          height: _mainHeight * 0.03,
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'FAQ',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                      fontFamily: fontFamily,
+                                      color: Colors.black),
+                                ),
+                                Text(
+                                  'Read',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                      fontFamily: fontFamily,
+                                      color: CustomTheme.skyBlue),
+                                ),
+                              ]),
+                        ),
+                        const Divider(
+                          thickness: 2,
+                        ),
+                        const Center(
+                          child: Text(
+                            'Similar Properties',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: fontFamily,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        SizedBox(
+                          height: _mainHeight * 0.005,
+                        ),
+                        _getSimilarProperties(context: context, model: value),
+                        SizedBox(
+                          height: _mainHeight * 0.02,
+                        ),
+                      ]))
+                    ],
+                  ))
+              : Scaffold(
+                  appBar: AppBar(
+                    backgroundColor: CustomTheme.skyBlue,
+                  ),
+                  body: Center(
+                    child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(CustomTheme.skyBlue)),
+                  ),
                 ),
-                child: Text(
-                  'Details',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20,
-                      fontFamily: fontFamily,
-                      color: Colors.black),
-                ),
-              ),
-              SizedBox(
-                height: _mainHeight * 0.005,
-              ),
-              Container(
-                padding: EdgeInsets.only(
-                  left: _mainWidth * 0.04,
-                  right: _mainWidth * 0.04,
-                ),
-                child: const ReadMoreText(
-                  'In the Second Age of Middle-earth, the lords of Elves, Dwarves, and Men are given Rings of Power. Unbeknownst to them, the Dark Lord Sauron forges the One Ring in Mount Doom, instilling into it a great part of his power, in order to dominate the other Rings so he might conquer Middle-earth. A final alliance of Men and Elves battles Saurons forces in Mordor. Isildur of Gondor severs Saurons finger and the Ring with it, thereby vanquishing Sauron and returning him to spirit form. With Sauron first defeat, the Third Age of Middle-earth begins. The Rings influence corrupts Isildur, who takes it for himself and is later killed by Orcs. The Ring is lost in a river for 2,500 years until it is found by Gollum, who owns it for over four and a half centuries. The ring abandons Gollum and it is subsequently found by a hobbit named Bilbo Baggins, who is unaware of its history.',
-                  trimLines: 3,
-                  style: TextStyle(
-                      color: Colors.black54,
-                      fontFamily: fontFamily,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500),
-                  colorClickableText: Color(0xffe09c5f),
-                  trimMode: TrimMode.Line,
-                  trimCollapsedText: 'Show more',
-                  trimExpandedText: 'Show less',
-                  moreStyle: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: fontFamily,
-                      color: Color(0xff7ab02a)),
-                ),
-              ),
-              SizedBox(
-                height: _mainHeight * 0.01,
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: _mainWidth * 0.04,
-                  right: _mainWidth * 0.04,
-                ),
-                child: Text(
-                  'House Rules',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20,
-                      fontFamily: fontFamily,
-                      color: Colors.black),
-                ),
-              ),
-              SizedBox(
-                height: _mainHeight * 0.005,
-              ),
-              Container(
-                padding: EdgeInsets.only(
-                  left: _mainWidth * 0.04,
-                  right: _mainWidth * 0.04,
-                ),
-                child: const ReadMoreText(
-                  'In the Second Age of Middle-earth, the lords of Elves, Dwarves, and Men are given Rings of Power. Unbeknownst to them, the Dark Lord Sauron forges the One Ring in Mount Doom, instilling into it a great part of his power, in order to dominate the other Rings so he might conquer Middle-earth. A final alliance of Men and Elves battles Saurons forces in Mordor. Isildur of Gondor severs Saurons finger and the Ring with it, thereby vanquishing Sauron and returning him to spirit form. With Sauron first defeat, the Third Age of Middle-earth begins. The Rings influence corrupts Isildur, who takes it for himself and is later killed by Orcs. The Ring is lost in a river for 2,500 years until it is found by Gollum, who owns it for over four and a half centuries. The ring abandons Gollum and it is subsequently found by a hobbit named Bilbo Baggins, who is unaware of its history.',
-                  trimLines: 3,
-                  style: TextStyle(
-                      color: Colors.black54,
-                      fontFamily: fontFamily,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500),
-                  colorClickableText: Color(0xffe09c5f),
-                  trimMode: TrimMode.Line,
-                  trimCollapsedText: 'Show more',
-                  trimExpandedText: 'Show less',
-                  moreStyle: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: fontFamily,
-                      color: Color(0xff7ab02a)),
-                ),
-              ),
-              SizedBox(
-                height: _mainHeight * 0.01,
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: _mainWidth * 0.04,
-                  right: _mainWidth * 0.04,
-                ),
-                child: Text(
-                  'Five Reasons to Choose RentMyStay',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20,
-                      fontFamily: fontFamily,
-                      color: Colors.black),
-                ),
-              ),
-              SizedBox(
-                height: _mainHeight * 0.005,
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: _mainWidth * 0.04,
-                  right: _mainWidth * 0.04,
-                ),
-                child: Text(
-                  getMoreText,
-                  style: const TextStyle(
-                      color: Colors.black54,
-                      fontFamily: fontFamily,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500),
-                ),
-              ),
-              Divider(
-                thickness: 2,
-              ),
-              Container(
-                padding: EdgeInsets.only(
-                  left: _mainWidth * 0.04,
-                  right: _mainWidth * 0.04,
-                ),
-                height: _mainHeight * 0.03,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'FAQ',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                            fontFamily: fontFamily,
-                            color: Colors.black),
-                      ),
-                      Text(
-                        'Read',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                            fontFamily: fontFamily,
-                            color: CustomTheme.skyBlue),
-                      ),
-                    ]),
-              ),
-              Divider(
-                thickness: 2,
-              ),
-              Center(
-                child: Text(
-                  'Video Tour',
-                  style: const TextStyle(
-                      color: Colors.black,
-                      fontFamily: fontFamily,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700),
-                ),
-              ),
-              Container(
-                height: _mainHeight * 0.22,
-                width: _mainWidth,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: Colors.amber,
-                ),
-                margin: EdgeInsets.only(
-                  left: _mainWidth * 0.04,
-                  right: _mainWidth * 0.04,
-                  top: _mainWidth * 0.01,
-                  bottom: _mainWidth * 0.01,
-                ),
-                child: YoutubePlayer(
-                  aspectRatio: 1.2,
-                  controller: _youTubeController,
-                  showVideoProgressIndicator: true,
-                  topActions: [
-                    Text(
-                      'Powered by RMS',
-                      style: TextStyle(
-                        fontFamily: fontFamily,
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Spacer(),
-                    IconButton(
-                        onPressed: () => _youTubeController.unMute(),
-                        icon: Icon(
-                          Icons.volume_off,
-                          color: Colors.white,
-                        ))
-                  ],
-                ),
-              ),
-              Divider(
-                thickness: 2,
-              ),
-              Center(
-                child: Text(
-                  'Similar Properties',
-                  style: const TextStyle(
-                      color: Colors.black,
-                      fontFamily: fontFamily,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700),
-                ),
-              ),
-              SizedBox(
-                height: _mainHeight * 0.005,
-              ),
-              _getSimilarProperties(context: context),
-              SizedBox(
-                height: _mainHeight * 0.02,
-              ),
-            ]))
-          ],
-        ),
-      ),
+        );
+      },
     );
   }
 
-  Widget _getAmountView({required BuildContext context}) {
+  Widget _getAmountView(
+      {required BuildContext context, PropertyDetailsModel? model}) {
     return Container(
         decoration: BoxDecoration(
           // color: Colors.amber,
@@ -576,7 +788,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            SizedBox(
               //color: Colors.deepOrange,
               height: _mainHeight * 0.05,
               child: Row(
@@ -599,12 +811,19 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                       height: _mainHeight * 0.04,
                       width: _mainWidth * 0.3,
                       decoration: BoxDecoration(
-                          color: dailyFlag ? myFavColor : Colors.black12,
-                          borderRadius: BorderRadius.only(
+                          color: dailyFlag ? myFavColor :  Colors.blueGrey.shade100,
+                          borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(50),
                             bottomLeft: Radius.circular(50),
                           )),
-                      child: Text('Daily'),
+                      child: const Text(
+                        'Daily',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: fontFamily,
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
                   InkWell(
@@ -623,8 +842,15 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                       alignment: Alignment.center,
                       height: _mainHeight * 0.04,
                       width: _mainWidth * 0.3,
-                      color: monthlyFlag ? myFavColor : Colors.black12,
-                      child: Text('Monthly'),
+                      color: monthlyFlag ? myFavColor :  Colors.blueGrey.shade100,
+                      child: const Text(
+                        'Monthly',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: fontFamily,
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
                   InkWell(
@@ -645,12 +871,19 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                       width: _mainWidth * 0.3,
                       decoration: BoxDecoration(
                           color:
-                              moreThanThreeFlag ? myFavColor : Colors.black12,
-                          borderRadius: BorderRadius.only(
+                              moreThanThreeFlag ? myFavColor : Colors.blueGrey.shade100,
+                          borderRadius: const BorderRadius.only(
                             topRight: Radius.circular(50),
                             bottomRight: Radius.circular(50),
                           )),
-                      child: Text('3+ Months'),
+                      child: const Text(
+                        '3+ Months',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: fontFamily,
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
                 ],
@@ -659,56 +892,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
             SizedBox(
               height: _mainHeight * 0.015,
             ),
-            Container(
-              // color: Colors.pink,
-              // height: _mainHeight * 0.02,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Rent',
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: fontFamily,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  Text(
-                    'Rs 20000/Month',
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: fontFamily,
-                        color: Colors.grey.shade600,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              //  color: Colors.blue,
-              // height: _mainHeight * 0.025,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Deposit',
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: fontFamily,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  Text(
-                    'Rs 20000',
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: fontFamily,
-                        color: Colors.grey.shade600,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ],
-              ),
-            ),
+            _getRentView(context: context, model: model),
             SizedBox(
               height: _mainHeight * 0.01,
             ),
@@ -720,7 +904,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                   color: Colors.grey.shade600,
                   fontWeight: FontWeight.w500),
             ),
-            Text(
+            const Text(
               'Cancellation Policy',
               style: TextStyle(
                   color: Colors.orange,
@@ -748,7 +932,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: [
+            children: const [
               Icon(
                 Icons.emoji_transportation,
                 size: 15,
@@ -784,7 +968,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
           ),
           Spacer(),
           Row(
-            children: [
+            children: const [
               Icon(
                 Icons.lightbulb,
                 size: 15,
@@ -820,7 +1004,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
           ),
           Spacer(),
           Row(
-            children: [
+            children: const [
               Icon(
                 Icons.wifi,
                 size: 15,
@@ -853,7 +1037,9 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
     """;
   }
 
-  Widget _getSimilarProperties({required BuildContext context}) {
+  Widget _getSimilarProperties(
+      {required BuildContext context,
+      required PropertyDetailsViewModel model}) {
     return Container(
       height: _mainHeight * 0.2,
       decoration: BoxDecoration(
@@ -866,101 +1052,247 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
       ),
       child: ListView.builder(
         itemBuilder: (context, index) {
-          return Card(
-            child: Container(
-                height: _mainHeight * 0.2,
-                width: _mainWidth * 0.4,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.topRight,
-                      height: _mainHeight * 0.13,
-                      width: _mainWidth * 0.4,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: NetworkImage(
-                              'https://events.wbcsd.org/virtual-meetings/wp-content/uploads/2021/07/Advancing-business-understanding-of-nature-positive.jpg',
-                            ),
-                            fit: BoxFit.fitHeight),
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(10),
-                          topLeft: Radius.circular(10),
-                        ),
-                      ),
-                      child: Icon(
-                        Icons.favorite,
-                        color: Colors.redAccent,
-                      ),
-                    ),
-
-                    /*CachedNetworkImage(
-                      imageUrl:
-                       'https://events.wbcsd.org/virtual-meetings/wp-content/uploads/2021/07/Advancing-business-understanding-of-nature-positive.jpg',
+          final data =
+              model.propertyDetailsModel?.similarProp![index] ?? SimilarProp();
+          return InkWell(
+            onTap: () => Navigator.of(context).pushNamed(
+                AppRoutes.propertyDetailsPage,
+                arguments: data.propId),
+            child: Card(
+              elevation: 5,
+              child: Container(
+                  height: _mainHeight * 0.2,
+                  width: _mainWidth * 0.4,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    children: [
+                      CachedNetworkImage(
+                        imageUrl: data.picThumbnail.toString(),
                         imageBuilder: (context, imageProvider) => Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10)),
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
+                          height: _mainHeight * 0.13,
+                          width: _mainWidth * 0.4,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(5),
+                                topRight: Radius.circular(5)),
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
+                        placeholder: (context, url) => Shimmer.fromColors(
+                            child: Container(
+                              height: _mainHeight * 0.1,
+                              color: Colors.grey,
+                            ),
+                            baseColor: Colors.grey[200] as Color,
+                            highlightColor: Colors.grey[350] as Color),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
                       ),
-                      placeholder: (context, url) => Shimmer.fromColors(
-                          child: Container(
-                            height: _mainHeight * 0.1,
-                            color: Colors.grey,
+                      Container(
+                        padding: EdgeInsets.only(
+                            left: _mainWidth * 0.01,
+                            right: _mainWidth * 0.01,
+                            top: _mainHeight * 0.005),
+                        child: Text(
+                          data.title ?? '',
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: fontFamily,
+                              color: Colors.grey.shade600,
+                              fontWeight: FontWeight.w500),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            padding: EdgeInsets.only(
+                                left: _mainWidth * 0.01,
+                                top: _mainHeight * 0.003),
+                            child: Text(
+                              data.buildingName != null
+                                  ? data.buildingName.toString()
+                                  : '',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.black87,
+                                fontFamily: fontFamily,
+                                fontWeight: FontWeight.w500,
+
+                                //fontStyle: FontStyle.italic,
+                              ),
+                            ),
                           ),
-                          baseColor: Colors.grey[200] as Color,
-                          highlightColor: Colors.grey[350] as Color),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
-                    ),*/
-                    Container(
-                      padding: EdgeInsets.only(left: _mainWidth * 0.01),
-                      color: Colors.black12,
-                      alignment: Alignment.center,
-                      child: AnimatedTextKit(
-                        animatedTexts: [
-                          ColorizeAnimatedText('Rs 10000',
-                              textStyle: TextStyle(
-                                  fontSize: 16,
-                                  fontFamily: fontFamily,
-                                  fontWeight: FontWeight.w600,
-                                  fontStyle: FontStyle.italic),
-                              colors: [myFavColor, Colors.black]),
+                          const Spacer(),
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            padding: EdgeInsets.only(
+                                right: _mainWidth * 0.01,
+                                top: _mainHeight * 0.003),
+                            child: Text(
+                              data.monthlyRent != null
+                                  ? rupee + '${data.monthlyRent}'
+                                  : '',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.black87,
+                                fontFamily: fontFamily,
+                                fontWeight: FontWeight.w600,
+
+                                //fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ),
                         ],
-                        pause: Duration(milliseconds: 1500),
-                        isRepeatingAnimation: true,
-                        repeatForever: true,
                       ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(
-                          left: _mainWidth * 0.01,
-                          right: _mainWidth * 0.01,
-                          top: _mainWidth * 0.01),
-                      child: Text(
-                        'Fully Furnished 1BHK with Balcony and Hall and terrace and many More Features Available',
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontFamily: fontFamily,
-                            color: Colors.grey.shade600,
-                            fontWeight: FontWeight.w500),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                )),
+                    ],
+                  )),
+            ),
           );
         },
-        itemCount: 6,
+        itemCount: model.propertyDetailsModel?.similarProp?.length ?? 0,
         scrollDirection: Axis.horizontal,
       ),
     );
+  }
+
+  Widget _getRentView(
+      {required BuildContext context, PropertyDetailsModel? model}) {
+    if (dailyFlag && (monthlyFlag == false && moreThanThreeFlag == false)) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            'Rent',
+            style: TextStyle(
+                fontSize: 14,
+                fontFamily: fontFamily,
+                color: Colors.black,
+                fontWeight: FontWeight.w500),
+          ),
+          Text(
+            model?.details != null && model?.details?.rent != null
+                ? '$rupee ${model?.details?.rent}'
+                : ' ',
+            style: TextStyle(
+                fontSize: 14,
+                fontFamily: fontFamily,
+                color: Colors.grey.shade600,
+                fontWeight: FontWeight.w500),
+          ),
+        ],
+      );
+    } else if (monthlyFlag &&
+        (dailyFlag == false && moreThanThreeFlag == false)) {
+      return Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Rent',
+                style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: fontFamily,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500),
+              ),
+              Text(
+                model?.details != null && model?.details?.monthlyRent != null
+                    ? '$rupee ${model?.details?.monthlyRent}'
+                    : ' ',
+                style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: fontFamily,
+                    color: Colors.grey.shade600,
+                    fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Deposit',
+                style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: fontFamily,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500),
+              ),
+              Text(
+                '$rupee 10000',
+                style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: fontFamily,
+                    color: Colors.grey.shade600,
+                    fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+        ],
+      );
+    } else {
+      return Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Rent',
+                style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: fontFamily,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500),
+              ),
+              Text(
+                model?.details != null && model?.details?.rmsRent != null
+                    ? '$rupee ${model?.details?.rmsRent}'
+                    : ' ',
+                style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: fontFamily,
+                    color: Colors.grey.shade600,
+                    fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+          Visibility(
+            visible: !dailyFlag,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Deposit',
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: fontFamily,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  model?.details != null && model?.details?.rmsDeposit != null
+                      ? '$rupee ${model?.details?.rmsDeposit}'
+                      : ' ',
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: fontFamily,
+                      color: Colors.grey.shade600,
+                      fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
   }
 }

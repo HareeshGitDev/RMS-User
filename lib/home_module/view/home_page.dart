@@ -422,7 +422,21 @@ class _HomePageState extends State<HomePage> {
                             shadowDarkColor: CustomTheme.skyBlue,
                           ),
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              RMSWidgets.showLoaderDialog(
+                                  context: context, message: 'Logging...');
+                              SharedPreferenceUtil shared =
+                              SharedPreferenceUtil();
+                              Navigator.of(context).pop();
+                              if ((await shared.getToken()) != null &&
+                              (await shared.getToken())!.isEmpty) {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                              AppRoutes.loginPage, (route) => false);
+                              } else {
+                              Navigator.of(context)
+                                  .pushNamed(AppRoutes.referAndEarn);
+                              }
+                            },
                             child: Text("Earn Now",
                                 style: TextStyle(color: Colors.black45)),
                           ),
@@ -517,14 +531,11 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         children: [
                           InkWell(
-                            /* onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  SelectLanguageDialog());
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,AppRoutes.profilePage,);
                         },
 
-                        */
                             highlightColor: Colors.transparent,
                             splashColor: Colors.transparent,
                             child: Row(

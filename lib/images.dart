@@ -7,6 +7,8 @@ class Images {
   static String brandLogo_blue = 'assets/brand/logormsblue.png';
   static String referEarn = 'assets/brand/refer&earn.jpg';
   static String google = 'assets/brand/google.png';
+  static String rupeeSilverIcon = 'assets/brand/rupeeSilverIcon.png';
+  static String rmscard_background = 'assets/brand/rmscard_background.jpg';
 
 
 //---------------------- estate ------------------------------------//
