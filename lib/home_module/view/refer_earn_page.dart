@@ -27,7 +27,7 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
   void initState() {
     _homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
     _homeViewModel.getInviteEarnDetails();
-    WidgetsBinding.instance!.addPostFrameCallback((_) => _showDialog());
+    //WidgetsBinding.instance!.addPostFrameCallback((_) => _showDialog());
     super.initState();
   }
 

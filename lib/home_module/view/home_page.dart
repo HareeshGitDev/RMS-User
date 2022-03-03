@@ -642,19 +642,8 @@ class _HomePageState extends State<HomePage> {
                           FxSpacing.height(20),
                           InkWell(
                             onTap: () async {
-                              RMSWidgets.showLoaderDialog(
-                                  context: context, message: 'Logging...');
-                              SharedPreferenceUtil shared =
-                                  SharedPreferenceUtil();
-                              Navigator.of(context).pop();
-                              if ((await shared.getToken()) != null &&
-                                  (await shared.getToken())!.isEmpty) {
-                                Navigator.of(context).pushNamedAndRemoveUntil(
-                                    AppRoutes.loginPage, (route) => false);
-                              } else {
-                                Navigator.of(context)
-                                    .pushNamed(AppRoutes.referAndEarn);
-                              }
+                              Navigator.of(context)
+                                  .pushNamed(AppRoutes.referAndEarn);
                             },
                             highlightColor: Colors.transparent,
                             splashColor: Colors.transparent,
