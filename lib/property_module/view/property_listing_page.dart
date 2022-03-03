@@ -341,9 +341,12 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                       color: CustomTheme.skyBlue,
                                       height: 1,
                                     ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
                                     Container(
-                                        // color: Colors.amber,
-                                        height: 25,
+                                         //color: Colors.amber,
+                                        height: 20,
                                         margin: EdgeInsets.only(
                                             left: 10, right: 10),
                                         //  color: Colors.blue,
@@ -404,7 +407,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                               MainAxisAlignment.spaceBetween,
                                         )),
                                     Container(
-                                        height: 25,
+                                      //color: Colors.amber,
+                                        height: 20,
                                         margin: EdgeInsets.only(
                                             left: 10, right: 10),
                                         //  color: Colors.amber,
@@ -468,7 +472,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                         )),
                                     Container(
                                         //   color: Colors.amber,
-                                        height: 25,
+                                        height: 20,
                                         margin: EdgeInsets.only(
                                             left: 10, right: 10),
                                         //   color: Colors.pink,
