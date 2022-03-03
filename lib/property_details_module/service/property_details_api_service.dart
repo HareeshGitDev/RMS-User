@@ -60,4 +60,11 @@ class PropertyDetailsApiService {
       return WishListModel(status: 'failure', data: []);
     }
   }
+
+  Future<String> scheduleSiteVisit({required Map<String, dynamic> data}) async {
+    String url = AppUrls.scheduleSiteVisitUrl;
+    final response =
+        await _apiService.postApiCall(endPoint: url, bodyParams: data);
+    return response['status'];
+  }
 }

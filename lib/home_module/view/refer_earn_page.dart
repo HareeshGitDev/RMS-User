@@ -262,7 +262,8 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                     ),
                   ),
                   Container(margin: EdgeInsets.only(top: 50), alignment: Alignment.center,
-                    child: GestureDetector(onTap: _showDialog,child: Text("Terms and Conditions",style: TextStyle(color: CustomTheme.skyBlue))),
+                    child: GestureDetector(onTap: _showDialog,
+                        child: Text("Terms and Conditions",style: TextStyle(color: CustomTheme.skyBlue))),
                    ),
                 ],
               )),
@@ -300,9 +301,6 @@ class TermsDialog extends StatefulWidget {
 
 class _TermsDialogState extends State<TermsDialog> {
   bool? isChecked = false;
-
-  late String text1, text2, text3, text4;
-
   @override
   void initState() {
     super.initState();

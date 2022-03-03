@@ -1,11 +1,14 @@
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:RentMyStay_user/property_details_module/view/site_visit_page.dart';
 import 'package:RentMyStay_user/property_details_module/viewModel/property_details_viewModel.dart';
 import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/color.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +17,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:html/parser.dart' show HtmlParser, parse;
 
@@ -39,20 +43,12 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
   bool moreThanThreeFlag = false;
   ValueNotifier<bool> showPics = ValueNotifier(true);
 
-  late YoutubePlayerController _youTubeController;
   late PropertyDetailsViewModel _propertyDetailsViewModel;
 
   @override
   void initState() {
     super.initState();
-    _youTubeController = YoutubePlayerController(
-      initialVideoId: '8SgbcLtZaVY',
-      flags: const YoutubePlayerFlags(
-        autoPlay: false,
-        mute: false,
-        controlsVisibleAtStart: true,
-      ),
-    );
+
     _propertyDetailsViewModel =
         Provider.of<PropertyDetailsViewModel>(context, listen: false);
     _propertyDetailsViewModel.getPropertyDetails(propId: widget.propId);
@@ -104,15 +100,14 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             builder: (context, bool data, child) {
                               return Visibility(
                                 visible: data,
-                                replacement: YoutubePlayerBuilder(onEnterFullScreen: () {
-                                  log('FullScreen');
-                                },
+                                replacement: YoutubePlayerBuilder(
+                                  onEnterFullScreen: () {
+                                    log('FullScreen');
+                                  },
                                   player: YoutubePlayer(
                                     aspectRatio: 1.2,
-                                    controller: _youTubeController,
+                                    controller: value.youTubeController,
                                     showVideoProgressIndicator: true,
-
-
                                     topActions: const [
                                       Text(
                                         'Powered by RMS',
@@ -125,9 +120,11 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                         ),
                                       ),
                                     ],
-                                  ), builder: (BuildContext context , Widget player ) {
+                                  ),
+                                  builder:
+                                      (BuildContext context, Widget player) {
                                     return player;
-                                },
+                                  },
                                 ),
                                 child: CarouselSlider(
                                   items: value.propertyDetailsModel?.details !=
@@ -196,6 +193,18 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             },
                             valueListenable: showPics,
                           ),
+                          titlePadding: EdgeInsets.all(0),
+                          title: IconButton(
+                            icon: Icon(
+                              Icons.play_circle_outline,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                            onPressed: () {
+                              showPics.value = !showPics.value;
+                              value.youTubeController.reset();
+                            },
+                          ),
                         ),
                       ),
                       SliverList(
@@ -203,17 +212,20 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         SizedBox(
                           height: _mainHeight * 0.01,
                         ),
-                        NeumorphicButton(
+                        /* NeumorphicButton(
                           style: NeumorphicStyle(
                               color: Colors.blueGrey.shade100,
                               shadowDarkColor: Colors.blue,
                               depth: 5,
-                              
-                              lightSource: LightSource.topLeft),padding: EdgeInsets.only(top: _mainHeight*0.005,bottom: _mainHeight*0.005,left: _mainWidth*0.025),
+                              lightSource: LightSource.topLeft),
+                          padding: EdgeInsets.only(
+                              top: _mainHeight * 0.005,
+                              bottom: _mainHeight * 0.005,
+                              left: _mainWidth * 0.025),
                           margin: EdgeInsets.only(
-                              left: _mainWidth * 0.65,
-                            right: _mainWidth*0.015,
-                             ),
+                            left: _mainWidth * 0.65,
+                            right: _mainWidth * 0.015,
+                          ),
                           child: ValueListenableBuilder(
                             builder: (context, value, child) {
                               if (value == true) {
@@ -242,11 +254,10 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             showPics.value = !showPics.value;
                             _youTubeController.reset();
                           },
-                        ),
+                        ),*/
                         SizedBox(
                           height: _mainHeight * 0.01,
                         ),
-
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
@@ -284,7 +295,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                           height: _mainHeight * 0.015,
                         ),
                         Container(
-                          height: _mainHeight * 0.04,
+                          // height: _mainHeight * 0.04,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
                           ),
@@ -345,92 +356,86 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         const Divider(
                           thickness: 2,
                         ),
-                        SizedBox(
-                          height: _mainHeight * 0.04,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                children: [
-                                  const Icon(
-                                    Icons.person_outline_outlined,
-                                    size: 20,
-                                    color: Colors.black38,
-                                  ),
-                                  Text(
-                                    value.propertyDetailsModel?.details !=
-                                                null &&
-                                            value.propertyDetailsModel?.details
-                                                    ?.maxGuests !=
-                                                null
-                                        ? (value.propertyDetailsModel?.details
-                                                    ?.maxGuests)
-                                                .toString() +
-                                            ' Guest'
-                                        : ' ',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontFamily: fontFamily,
-                                        color: Colors.grey.shade600,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  const Icon(
-                                    Icons.bed_rounded,
-                                    size: 20,
-                                    color: Colors.black38,
-                                  ),
-                                  Text(
-                                    value.propertyDetailsModel?.details !=
-                                                null &&
-                                            value.propertyDetailsModel?.details
-                                                    ?.bedrooms !=
-                                                null
-                                        ? (value.propertyDetailsModel?.details
-                                                    ?.bedrooms)
-                                                .toString() +
-                                            ' BedRoom'
-                                        : ' ',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontFamily: fontFamily,
-                                        color: Colors.grey.shade600,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  const Icon(
-                                    Icons.bathroom_outlined,
-                                    size: 20,
-                                    color: Colors.black38,
-                                  ),
-                                  Text(
-                                    value.propertyDetailsModel?.details !=
-                                                null &&
-                                            value.propertyDetailsModel?.details
-                                                    ?.bathrooms !=
-                                                null
-                                        ? (value.propertyDetailsModel?.details
-                                                    ?.bathrooms)
-                                                .toString() +
-                                            ' BathRoom'
-                                        : ' ',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontFamily: fontFamily,
-                                        color: Colors.grey.shade600,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              children: [
+                                const Icon(
+                                  Icons.person_outline_outlined,
+                                  size: 20,
+                                  color: Colors.black38,
+                                ),
+                                Text(
+                                  value.propertyDetailsModel?.details != null &&
+                                          value.propertyDetailsModel?.details
+                                                  ?.maxGuests !=
+                                              null
+                                      ? (value.propertyDetailsModel?.details
+                                                  ?.maxGuests)
+                                              .toString() +
+                                          ' Guest'
+                                      : ' ',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontFamily: fontFamily,
+                                      color: Colors.grey.shade600,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                const Icon(
+                                  Icons.bed_rounded,
+                                  size: 20,
+                                  color: Colors.black38,
+                                ),
+                                Text(
+                                  value.propertyDetailsModel?.details != null &&
+                                          value.propertyDetailsModel?.details
+                                                  ?.bedrooms !=
+                                              null
+                                      ? (value.propertyDetailsModel?.details
+                                                  ?.bedrooms)
+                                              .toString() +
+                                          ' BedRoom'
+                                      : ' ',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontFamily: fontFamily,
+                                      color: Colors.grey.shade600,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                const Icon(
+                                  Icons.bathroom_outlined,
+                                  size: 20,
+                                  color: Colors.black38,
+                                ),
+                                Text(
+                                  value.propertyDetailsModel?.details != null &&
+                                          value.propertyDetailsModel?.details
+                                                  ?.bathrooms !=
+                                              null
+                                      ? (value.propertyDetailsModel?.details
+                                                  ?.bathrooms)
+                                              .toString() +
+                                          ' BathRoom'
+                                      : ' ',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontFamily: fontFamily,
+                                      color: Colors.grey.shade600,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            )
+                          ],
                         ),
                         SizedBox(
                           height: _mainHeight * 0.015,
@@ -492,16 +497,45 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                       color: Colors.black),
                                 ),
                                 Spacer(),
-                                Icon(Icons.call,
-                                    color: myFavColor, size: _mainWidth * 0.06),
-                                SizedBox(
-                                  width: _mainWidth * 0.05,
+                                IconButton(
+                                  padding:
+                                      EdgeInsets.only(left: _mainWidth * 0.08),
+                                  icon: Icon(Icons.call,
+                                      color: CustomTheme.skyBlue,
+                                      size: _mainWidth * 0.06),
+                                  onPressed: () {
+                                    if (value.propertyDetailsModel != null &&
+                                        value.propertyDetailsModel?.details !=
+                                            null &&
+                                        value.propertyDetailsModel?.details
+                                                ?.salesNumber !=
+                                            null) {
+                                      launch(
+                                          'tel:${value.propertyDetailsModel?.details?.salesNumber}');
+                                    }
+                                  },
                                 ),
-                                Icon(
-                                  Icons.message,
-                                  color: myFavColor,
-                                  size: _mainWidth * 0.06,
-                                )
+                                SizedBox(
+                                  width: _mainWidth * 0.02,
+                                ),
+                                IconButton(
+                                  padding:
+                                      EdgeInsets.only(left: _mainWidth * 0.06),
+                                  icon: Icon(Icons.email_outlined,
+                                      color: CustomTheme.skyBlue,
+                                      size: _mainWidth * 0.06),
+                                  onPressed: () {
+                                    if (value.propertyDetailsModel != null &&
+                                        value.propertyDetailsModel?.details !=
+                                            null &&
+                                        value.propertyDetailsModel?.details
+                                                ?.salesNumber !=
+                                            null) {
+                                      launch(
+                                          'https://wa.me/${value.propertyDetailsModel?.details?.salesNumber}?text=${value.propertyDetailsModel?.shareLink ?? 'Hello'}');
+                                    }
+                                  },
+                                ),
                               ]),
                         ),
                         const Divider(
@@ -526,8 +560,42 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                       fontFamily: fontFamily,
                                       color: Colors.black),
                                 ),
-                                Icon(Icons.map_rounded,
-                                    color: myFavColor, size: _mainWidth * 0.06),
+                                IconButton(
+                                  padding:
+                                      EdgeInsets.only(left: _mainWidth * 0.06),
+                                  icon: Icon(Icons.map_rounded,
+                                      color: CustomTheme.skyBlue,
+                                      size: _mainWidth * 0.06),
+                                  onPressed: () async {
+                                    if ((value.propertyDetailsModel != null &&
+                                            value.propertyDetailsModel
+                                                    ?.details !=
+                                                null &&
+                                            value.propertyDetailsModel?.details?.glat !=
+                                                null) &&
+                                        (value.propertyDetailsModel != null &&
+                                            value.propertyDetailsModel
+                                                    ?.details !=
+                                                null &&
+                                            value.propertyDetailsModel?.details
+                                                    ?.glng !=
+                                                null)) {
+                                      String latitude = (value
+                                              .propertyDetailsModel
+                                              ?.details
+                                              ?.glat)
+                                          .toString();
+                                      String longitude = (value
+                                              .propertyDetailsModel
+                                              ?.details
+                                              ?.glng)
+                                          .toString();
+                                      await launchGoogleMaps(
+                                          latitude: latitude,
+                                          longitude: longitude);
+                                    }
+                                  },
+                                ),
                               ]),
                         ),
                         const Divider(
@@ -552,8 +620,17 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                       fontFamily: fontFamily,
                                       color: Colors.black),
                                 ),
-                                Icon(Icons.calendar_today,
-                                    color: myFavColor, size: _mainWidth * 0.06),
+                                Container(
+                                  child: GestureDetector(
+                                    onTap: () => _showDialog(
+                                        propId: value.propertyDetailsModel
+                                                ?.details?.propId ??
+                                            ' '),
+                                    child: Icon(Icons.calendar_today,
+                                        color: myFavColor,
+                                        size: _mainWidth * 0.06),
+                                  ),
+                                ),
                               ]),
                         ),
                         const Divider(
@@ -568,7 +645,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             'Details',
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
-                                fontSize: 20,
+                                fontSize: 16,
                                 fontFamily: fontFamily,
                                 color: Colors.black),
                           ),
@@ -582,15 +659,24 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             right: _mainWidth * 0.04,
                           ),
                           child: Html(
-                              data: value.propertyDetailsModel?.details !=
-                                          null &&
-                                      value.propertyDetailsModel?.details
-                                              ?.description !=
-                                          null
-                                  ? (value.propertyDetailsModel?.details
-                                          ?.description)
-                                      .toString()
-                                  : ' ') /*ReadMoreText(
+                            data: value.propertyDetailsModel?.details != null &&
+                                    value.propertyDetailsModel?.details
+                                            ?.description !=
+                                        null
+                                ? (value.propertyDetailsModel?.details
+                                        ?.description)
+                                    .toString()
+                                : ' ',
+                            style: {
+                              "body": Style(
+                                  fontSize: FontSize(12.0),
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black54,
+                                  wordSpacing: 0.5,
+                                  display: Display.INLINE,
+                                  fontFamily: fontFamily),
+                            },
+                          ) /*ReadMoreText(
                             value.propertyDetailsModel?.details != null &&
                                 value.propertyDetailsModel?.details
                                     ?.description !=
@@ -630,7 +716,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             'House Rules',
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
-                                fontSize: 20,
+                                fontSize: 16,
                                 fontFamily: fontFamily,
                                 color: Colors.black),
                           ),
@@ -644,15 +730,25 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                               right: _mainWidth * 0.04,
                             ),
                             child: Html(
-                                data: value.propertyDetailsModel?.details !=
-                                            null &&
-                                        value.propertyDetailsModel?.details
-                                                ?.things2note !=
-                                            null
-                                    ? (value.propertyDetailsModel?.details
-                                            ?.things2note)
-                                        .toString()
-                                    : ' ')
+                              data:
+                                  value.propertyDetailsModel?.details != null &&
+                                          value.propertyDetailsModel?.details
+                                                  ?.things2note !=
+                                              null
+                                      ? (value.propertyDetailsModel?.details
+                                              ?.things2note)
+                                          .toString()
+                                      : ' ',
+                              style: {
+                                "body": Style(
+                                    fontSize: FontSize(12.0),
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black54,
+                                    wordSpacing: 0.5,
+                                    display: Display.INLINE,
+                                    fontFamily: fontFamily),
+                              },
+                            )
                             /*const ReadMoreText(
                             'In the Second Age of Middle-earth, the lords of Elves, Dwarves, and Men are given Rings of Power. Unbeknownst to them, the Dark Lord Sauron forges the One Ring in Mount Doom, instilling into it a great part of his power, in order to dominate the other Rings so he might conquer Middle-earth. A final alliance of Men and Elves battles Saurons forces in Mordor. Isildur of Gondor severs Saurons finger and the Ring with it, thereby vanquishing Sauron and returning him to spirit form. With Sauron first defeat, the Third Age of Middle-earth begins. The Rings influence corrupts Isildur, who takes it for himself and is later killed by Orcs. The Ring is lost in a river for 2,500 years until it is found by Gollum, who owns it for over four and a half centuries. The ring abandons Gollum and it is subsequently found by a hobbit named Bilbo Baggins, who is unaware of its history.',
                             trimLines: 3,
@@ -684,7 +780,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             'Five Reasons to Choose RentMyStay',
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
-                                fontSize: 20,
+                                fontSize: 16,
                                 fontFamily: fontFamily,
                                 color: Colors.black),
                           ),
@@ -702,7 +798,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             style: const TextStyle(
                                 color: Colors.black54,
                                 fontFamily: fontFamily,
-                                fontSize: 14,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w500),
                           ),
                         ),
@@ -745,7 +841,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             style: TextStyle(
                                 color: Colors.black,
                                 fontFamily: fontFamily,
-                                fontSize: 20,
+                                fontSize: 16,
                                 fontWeight: FontWeight.w700),
                           ),
                         ),
@@ -758,7 +854,55 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         ),
                       ]))
                     ],
-                  ))
+                  ),
+                  bottomNavigationBar: Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width,
+                    padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                            width: 150,
+                            height: 40,
+                            child: ElevatedButton(
+                              onPressed: () => _showDialog(
+                                  propId: value.propertyDetailsModel?.details
+                                          ?.propId ??
+                                      ' '),
+                              child: Text('Site Visit'),
+                              style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          CustomTheme.skyBlue),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                  )),
+                            )),
+                        Container(
+                            width: 150,
+                            height: 40,
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              child: Text('Book Now'),
+                              style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          CustomTheme.skyBlue),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                  )),
+                            )),
+                      ],
+                    ),
+                  ),
+                )
               : Scaffold(
                   appBar: AppBar(
                     backgroundColor: CustomTheme.skyBlue,
@@ -813,17 +957,19 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                       height: _mainHeight * 0.04,
                       width: _mainWidth * 0.3,
                       decoration: BoxDecoration(
-                          color: dailyFlag ? myFavColor :  Colors.blueGrey.shade100,
+                          color: dailyFlag
+                              ? CustomTheme.skyBlue
+                              : Colors.blueGrey.shade100,
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(50),
                             bottomLeft: Radius.circular(50),
                           )),
-                      child: const Text(
+                      child: Text(
                         'Daily',
                         style: TextStyle(
                             fontSize: 14,
                             fontFamily: fontFamily,
-                            color: Colors.black87,
+                            color: dailyFlag ? Colors.white : Colors.black87,
                             fontWeight: FontWeight.w500),
                       ),
                     ),
@@ -844,13 +990,15 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                       alignment: Alignment.center,
                       height: _mainHeight * 0.04,
                       width: _mainWidth * 0.3,
-                      color: monthlyFlag ? myFavColor :  Colors.blueGrey.shade100,
-                      child: const Text(
+                      color: monthlyFlag
+                          ? CustomTheme.skyBlue
+                          : Colors.blueGrey.shade100,
+                      child: Text(
                         'Monthly',
                         style: TextStyle(
                             fontSize: 14,
                             fontFamily: fontFamily,
-                            color: Colors.black87,
+                            color: monthlyFlag ? Colors.white : Colors.black87,
                             fontWeight: FontWeight.w500),
                       ),
                     ),
@@ -872,18 +1020,21 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                       height: _mainHeight * 0.04,
                       width: _mainWidth * 0.3,
                       decoration: BoxDecoration(
-                          color:
-                              moreThanThreeFlag ? myFavColor : Colors.blueGrey.shade100,
+                          color: moreThanThreeFlag
+                              ? CustomTheme.skyBlue
+                              : Colors.blueGrey.shade100,
                           borderRadius: const BorderRadius.only(
                             topRight: Radius.circular(50),
                             bottomRight: Radius.circular(50),
                           )),
-                      child: const Text(
+                      child: Text(
                         '3+ Months',
                         style: TextStyle(
                             fontSize: 14,
                             fontFamily: fontFamily,
-                            color: Colors.black87,
+                            color: moreThanThreeFlag
+                                ? Colors.white
+                                : Colors.black87,
                             fontWeight: FontWeight.w500),
                       ),
                     ),
@@ -1295,6 +1446,34 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
           ),
         ],
       );
+    }
+  }
+
+  void _showDialog({required String propId}) async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => ChangeNotifierProvider(
+              create: (_) => PropertyDetailsViewModel(),
+              child: SiteVisitPage(propId: propId),
+            ));
+  }
+
+  Future<void> launchGoogleMaps(
+      {required String latitude, required String longitude}) async {
+    if (Platform.isAndroid) {
+      String url =
+          'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+      if (await canLaunch(url)) {
+        log('Google Map can be launched');
+        launch(url);
+      }
+    } else if (Platform.isIOS) {
+      //String url = 'comgooglemaps://?saddr=&daddr=$latitude,$longitude&directionsmode=driving';
+      String url = 'https://www.maps.apple.com/?q=$latitude,$longitude';
+      if (await canLaunch(url)) {
+        log('Apple Map can be launched');
+        launch(url);
+      }
     }
   }
 }

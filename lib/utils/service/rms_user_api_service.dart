@@ -66,6 +66,9 @@ class RMSUserApiService {
   Future<dynamic> postApiCall(
       {required String endPoint,
       required Map<String, dynamic> bodyParams}) async {
+    log('URL :: $_baseURL/$endPoint ---- Model :: ${bodyParams.toString()}');
+
+
     try {
       final response = await http.post(
         Uri.https(_baseURL, endPoint),
