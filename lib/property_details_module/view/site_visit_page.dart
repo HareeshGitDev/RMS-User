@@ -24,8 +24,12 @@ import '../../utils/service/shared_prefrences_util.dart';
 
 class SiteVisitPage extends StatefulWidget {
   final String propId;
+  final String name;
+  final String phoneNumber;
+  final String email;
 
-  SiteVisitPage({Key? key, required this.propId}) : super(key: key);
+
+  SiteVisitPage({Key? key, required this.propId,required this.name,required this.email,required this.phoneNumber}) : super(key: key);
 
   @override
   State<SiteVisitPage> createState() => SiteVisitPagestate();
@@ -34,6 +38,9 @@ class SiteVisitPage extends StatefulWidget {
 class SiteVisitPagestate extends State<SiteVisitPage> {
   @override
   void initState() {
+    _nameController.text=widget.name;
+    _phoneNumberController.text=widget.phoneNumber;
+    _emailController.text=widget.email;
     super.initState();
   }
 
@@ -100,6 +107,7 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                         onSelected: (bool selected) {
                           if (selected == true) {
                             setState(() {
+
                               _selected[0] = true;
                               _selected[1] = false;
                             });

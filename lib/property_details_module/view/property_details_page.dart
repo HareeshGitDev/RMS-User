@@ -5,6 +5,8 @@ import 'package:RentMyStay_user/property_details_module/view/site_visit_page.dar
 import 'package:RentMyStay_user/property_details_module/viewModel/property_details_viewModel.dart';
 import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/color.dart';
+import 'package:RentMyStay_user/utils/service/system_service.dart';
+import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -22,7 +24,9 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:html/parser.dart' show HtmlParser, parse;
 
 import '../../utils/constants/app_consts.dart';
+import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/navigation_service.dart';
+import '../../utils/service/shared_prefrences_util.dart';
 import '../model/property_details_model.dart';
 
 class PropertyDetailsPage extends StatefulWidget {
@@ -54,7 +58,13 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
     _propertyDetailsViewModel.getPropertyDetails(propId: widget.propId);
     log('Property Id :: ${widget.propId}');
   }
-
+@override
+  void dispose() {
+    // TODO: implement dispose
+    showPics.dispose();
+    _propertyDetailsViewModel.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     log('Called::');
@@ -590,7 +600,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                               ?.details
                                               ?.glng)
                                           .toString();
-                                      await launchGoogleMaps(
+                                      await SystemService.launchGoogleMaps(
                                           latitude: latitude,
                                           longitude: longitude);
                                     }
@@ -622,10 +632,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                 ),
                                 Container(
                                   child: GestureDetector(
-                                    onTap: () => _showDialog(
-                                        propId: value.propertyDetailsModel
-                                                ?.details?.propId ??
-                                            ' '),
+                                    onTap: () {},
                                     child: Icon(Icons.calendar_today,
                                         color: myFavColor,
                                         size: _mainWidth * 0.06),
@@ -866,10 +873,32 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             width: 150,
                             height: 40,
                             child: ElevatedButton(
-                              onPressed: () => _showDialog(
+                              onPressed: () async {
+                                RMSWidgets.showLoaderDialog(context: context, message: 'Loading...');
+                                SharedPreferenceUtil sharedPreferenceUtil =
+                                    SharedPreferenceUtil();
+                                var name = (await sharedPreferenceUtil
+                                            .getString(rms_name) ??
+                                        '')
+                                    .toString();
+                                var email = (await sharedPreferenceUtil
+                                            .getString(rms_email) ??
+                                        '')
+                                    .toString();
+                                var phone = (await sharedPreferenceUtil
+                                            .getString(rms_phoneNumber) ??
+                                        '')
+                                    .toString();
+                               Navigator.of(context).pop();
+                                _showDialog(
                                   propId: value.propertyDetailsModel?.details
                                           ?.propId ??
-                                      ' '),
+                                      ' ',
+                                  name: name,
+                                  phone: phone,
+                                  email: email,
+                                );
+                              },
                               child: Text('Site Visit'),
                               style: ButtonStyle(
                                   backgroundColor:
@@ -1449,31 +1478,19 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
     }
   }
 
-  void _showDialog({required String propId}) async {
+  void _showDialog(
+      {required String propId,
+      required String name,
+      required String phone,
+      required String email}) async {
     showDialog(
         context: context,
         builder: (BuildContext context) => ChangeNotifierProvider(
               create: (_) => PropertyDetailsViewModel(),
-              child: SiteVisitPage(propId: propId),
+              child: SiteVisitPage(
+                  propId: propId, email: email, phoneNumber: phone, name: name),
             ));
   }
 
-  Future<void> launchGoogleMaps(
-      {required String latitude, required String longitude}) async {
-    if (Platform.isAndroid) {
-      String url =
-          'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
-      if (await canLaunch(url)) {
-        log('Google Map can be launched');
-        launch(url);
-      }
-    } else if (Platform.isIOS) {
-      //String url = 'comgooglemaps://?saddr=&daddr=$latitude,$longitude&directionsmode=driving';
-      String url = 'https://www.maps.apple.com/?q=$latitude,$longitude';
-      if (await canLaunch(url)) {
-        log('Apple Map can be launched');
-        launch(url);
-      }
-    }
-  }
+
 }

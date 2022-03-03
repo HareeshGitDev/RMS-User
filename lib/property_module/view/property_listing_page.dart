@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
@@ -7,6 +8,7 @@ import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/color.dart';
 import 'package:RentMyStay_user/utils/constants/enum_consts.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
+import 'package:RentMyStay_user/utils/service/system_service.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -18,6 +20,7 @@ import 'package:flutx/flutx.dart';
 import 'package:flutx/widgets/star_rating/star_rating.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../home_module/model/invite_and_earn_model.dart';
 import '../../images.dart';
@@ -42,6 +45,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
   var _mainHeight;
   var _mainWidth;
   late PropertyViewModel _propertyViewModel;
+  static const String fontFamily = 'hk-grotest';
 
   @override
   void initState() {
@@ -83,7 +87,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                             arguments:
                                 value.propertyListModel.data![index].propId),
                         child: SizedBox(
-                          height: _mainHeight * 0.48,
+                          height: _mainHeight * 0.46,
                           child: Card(
                             elevation: 5,
                             shadowColor: CustomTheme.skyBlue,
@@ -154,6 +158,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                     Visibility(
                                       child: Container(
                                         height: _mainHeight * 0.025,
+                                        //color:Colors.amber,
+
                                         padding: EdgeInsets.only(
                                             left: 10, right: 10),
                                         child: Row(
@@ -176,10 +182,11 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                 overflow: TextOverflow.ellipsis,
                                                 maxLines: 1,
                                                 style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.black,
-                                                    fontWeight:
-                                                        FontWeight.w600),
+                                                  fontSize: 14,
+                                                  color: Colors.black87,
+                                                  fontFamily: fontFamily,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
                                               ),
                                             ),
                                             Text(
@@ -189,8 +196,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                               style: TextStyle(
-                                                fontSize: 14,
-                                              ),
+                                                  fontSize: 12,
+                                                  fontFamily: fontFamily,
+                                                  fontWeight: FontWeight.w700),
                                             ),
                                           ],
                                           mainAxisAlignment:
@@ -200,32 +208,32 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                       visible: value.propertyListModel
                                                   .data![index].rmsProp !=
                                               null &&
-                                          value.propertyListModel
-                                                  .data![index].rmsProp ==
+                                          value.propertyListModel.data![index]
+                                                  .rmsProp ==
                                               "RMS Prop",
                                     ),
                                     Visibility(
                                       visible: value.propertyListModel
                                                   .data![index].rmsProp !=
                                               null &&
-                                          value.propertyListModel
-                                                  .data![index].rmsProp ==
+                                          value.propertyListModel.data![index]
+                                                  .rmsProp ==
                                               "RMS Prop",
                                       child: Container(
                                         child: Text(
                                           'Multiple Units Available',
                                           style: TextStyle(
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 14,
-                                          ),
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 12,
+                                              fontFamily: fontFamily),
                                         ),
                                         alignment: Alignment.centerRight,
                                         padding: EdgeInsets.only(right: 10),
                                       ),
                                     ),
                                     SizedBox(
-                                      height: 5,
+                                      height: 0,
                                     ),
                                     Container(
                                       margin: EdgeInsets.only(left: 10),
@@ -237,12 +245,39 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                         style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 12,
+                                            fontFamily: fontFamily,
+                                            color: Colors.black,
                                             fontWeight: FontWeight.w600),
                                       ),
                                     ),
                                     GestureDetector(
-                                      onTap: () {},
+                                      onTap: () async {
+                                        if ((value.propertyListModel.data !=
+                                                    null &&
+                                                value.propertyListModel
+                                                        .data?[index].glat !=
+                                                    null) &&
+                                            (value.propertyListModel.data !=
+                                                    null &&
+                                                value.propertyListModel
+                                                        .data?[index].glng !=
+                                                    null)) {
+                                          var latitude = (value
+                                                  .propertyListModel
+                                                  .data?[index]
+                                                  .glat)
+                                              .toString();
+                                          var longitude = (value
+                                                  .propertyListModel
+                                                  .data?[index]
+                                                  .glng)
+                                              .toString();
+                                          await SystemService.launchGoogleMaps(
+                                              latitude: latitude,
+                                              longitude: longitude);
+                                        }
+                                      },
                                       child: Container(
                                         width: _mainWidth * 0.40,
                                         color: Colors.white,
@@ -263,6 +298,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                               width: 5,
                                             ),
                                             Container(
+                                              //    color: Colors.amber,
                                               width: _mainWidth * 0.30,
                                               child: Wrap(
                                                 children: [
@@ -286,7 +322,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                           color: Colors.black,
                                                           fontWeight:
                                                               FontWeight.w600,
-                                                          fontSize: 14),
+                                                          fontFamily:
+                                                              fontFamily,
+                                                          fontSize: 12),
                                                     ),
                                                   ),
                                                 ],
@@ -296,40 +334,71 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                         ),
                                       ),
                                     ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
                                     Divider(
                                       color: CustomTheme.skyBlue,
+                                      height: 1,
                                     ),
                                     Container(
+                                        // color: Colors.amber,
                                         height: 25,
                                         margin: EdgeInsets.only(
-                                            left: 15, right: 15),
+                                            left: 10, right: 10),
                                         //  color: Colors.blue,
                                         child: Row(
                                           children: [
-                                            Text('Rent Per Day'),
-                                            RichText(
-                                              text: TextSpan(children: [
-                                                TextSpan(
-                                                    text:
-                                                        'Rs ${value.propertyListModel.data![index].orgRent ?? " "}',
-                                                    style: TextStyle(
-                                                        color: Colors.grey,
-                                                        fontSize: 12,
-                                                        fontFamily:
-                                                            "HKGrotest-Light",
-                                                        decoration:
-                                                            TextDecoration
-                                                                .lineThrough)),
-                                                TextSpan(
-                                                    text:
-                                                        ' Rs ${value.propertyListModel.data![index].rent ?? " "}',
+                                            Text(
+                                              'Rent Per Day',
+                                              style: TextStyle(
+                                                fontFamily: fontFamily,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            value.propertyListModel.data![index]
+                                                        .orgRent ==
+                                                    value.propertyListModel
+                                                        .data![index].rent
+                                                ? Text(
+                                                    ' Rs ${value.propertyListModel.data![index].rent ?? " "}',
                                                     style: TextStyle(
                                                         color: myFavColor,
-                                                        fontFamily:
-                                                            "HKGrotest-Light",
-                                                        fontSize: 14)),
-                                              ]),
-                                            ),
+                                                        fontFamily: fontFamily,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 14))
+                                                : RichText(
+                                                    text: TextSpan(children: [
+                                                      TextSpan(
+                                                          text:
+                                                              'Rs ${value.propertyListModel.data![index].orgRent ?? " "}',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.grey,
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontFamily:
+                                                                  fontFamily,
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .lineThrough)),
+                                                      TextSpan(
+                                                          text:
+                                                              ' Rs ${value.propertyListModel.data![index].rent ?? " "}',
+                                                          style: TextStyle(
+                                                              color: myFavColor,
+                                                              fontFamily:
+                                                                  fontFamily,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontSize: 14)),
+                                                    ]),
+                                                  ),
                                           ],
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -337,69 +406,122 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                     Container(
                                         height: 25,
                                         margin: EdgeInsets.only(
-                                            left: 15, right: 15),
+                                            left: 10, right: 10),
                                         //  color: Colors.amber,
                                         child: Row(
                                           children: [
-                                            Text('Rent (Stay < 3 Month)'),
-                                            RichText(
-                                              text: TextSpan(children: [
-                                                TextSpan(
-                                                    text:
-                                                        'Rs ${value.propertyListModel.data![index].orgMonthRent ?? " "}',
-                                                    style: TextStyle(
-                                                        color: Colors.grey,
-                                                        fontFamily:
-                                                            "HKGrotest-Light",
-                                                        decoration:
-                                                            TextDecoration
-                                                                .lineThrough,
-                                                        fontSize: 12)),
-                                                TextSpan(
-                                                    text:
-                                                        ' Rs ${value.propertyListModel.data![index].monthlyRent ?? " "}',
+                                            Text(
+                                              'Rent (Stay < 3 Month)',
+                                              style: TextStyle(
+                                                fontFamily: fontFamily,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            value.propertyListModel.data![index]
+                                                        .orgMonthRent ==
+                                                    value
+                                                        .propertyListModel
+                                                        .data![index]
+                                                        .monthlyRent
+                                                ? Text(
+                                                    ' Rs ${value.propertyListModel.data![index].monthlyRent ?? " "}',
                                                     style: TextStyle(
                                                         color: myFavColor,
-                                                        fontFamily:
-                                                            "HKGrotest-Light",
-                                                        fontSize: 14)),
-                                              ]),
-                                            ),
+                                                        fontFamily: fontFamily,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 14))
+                                                : RichText(
+                                                    text: TextSpan(children: [
+                                                      TextSpan(
+                                                          text:
+                                                              'Rs ${value.propertyListModel.data![index].orgMonthRent ?? " "}',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.grey,
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontFamily:
+                                                                  fontFamily,
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .lineThrough)),
+                                                      TextSpan(
+                                                          text:
+                                                              ' Rs ${value.propertyListModel.data![index].monthlyRent ?? " "}',
+                                                          style: TextStyle(
+                                                              color: myFavColor,
+                                                              fontFamily:
+                                                                  fontFamily,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontSize: 14)),
+                                                    ]),
+                                                  ),
                                           ],
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                         )),
                                     Container(
+                                        //   color: Colors.amber,
                                         height: 25,
                                         margin: EdgeInsets.only(
-                                            left: 15, right: 15),
+                                            left: 10, right: 10),
                                         //   color: Colors.pink,
                                         child: Row(
                                           children: [
-                                            Text('Rent (Stay > 3 Month)'),
-                                            RichText(
-                                              text: TextSpan(children: [
-                                                TextSpan(
-                                                    text:
-                                                        'Rs ${value.propertyListModel.data![index].orgRmsRent ?? " "}',
-                                                    style: TextStyle(
-                                                        color: Colors.grey,
-                                                        fontFamily:
-                                                            "HKGrotest-Light",
-                                                        fontSize: 12,
-                                                        decoration:
-                                                            TextDecoration
-                                                                .lineThrough)),
-                                                TextSpan(
-                                                    text:
-                                                        ' Rs ${value.propertyListModel.data![index].rmsRent ?? " "}',
+                                            Text('Rent (Stay > 3 Month)',
+                                                style: TextStyle(
+                                                  fontFamily: fontFamily,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                )),
+                                            value.propertyListModel.data![index]
+                                                        .orgRmsRent ==
+                                                    value.propertyListModel
+                                                        .data![index].rmsRent
+                                                ? Text(
+                                                    ' Rs ${value.propertyListModel.data![index].rmsRent ?? " "}',
                                                     style: TextStyle(
                                                         color: myFavColor,
-                                                        fontFamily:
-                                                            "HKGrotest-Light",
-                                                        fontSize: 14)),
-                                              ]),
-                                            ),
+                                                        fontFamily: fontFamily,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 14))
+                                                : RichText(
+                                                    text: TextSpan(children: [
+                                                      TextSpan(
+                                                          text:
+                                                              'Rs ${value.propertyListModel.data![index].orgRmsRent ?? " "}',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.grey,
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontFamily:
+                                                                  fontFamily,
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .lineThrough)),
+                                                      TextSpan(
+                                                          text:
+                                                              ' Rs ${value.propertyListModel.data![index].rmsRent ?? " "}',
+                                                          style: TextStyle(
+                                                              color: myFavColor,
+                                                              fontFamily:
+                                                                  fontFamily,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontSize: 14)),
+                                                    ]),
+                                                  ),
                                           ],
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -418,8 +540,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                         visible: value.propertyListModel
                                                     .data![index].rmsProp !=
                                                 null &&
-                                            value.propertyListModel
-                                                    .data![index].rmsProp ==
+                                            value.propertyListModel.data![index]
+                                                    .rmsProp ==
                                                 "RMS Prop",
                                         child: Container(
                                           color: myFavColor,
@@ -441,6 +563,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                       fontStyle:
                                                           FontStyle.italic,
                                                       color: Colors.white,
+                                                      fontFamily: fontFamily,
                                                       fontSize: 16),
                                                 )),
                                           ]),
@@ -542,7 +665,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                     },
                     itemCount: value.propertyListModel.data?.length ?? 0,
                     separatorBuilder: (context, index) => const SizedBox(
-                      height: 15,
+                      height: 10,
                     ),
                   ),
                   _getFilterSortSetting(context: context),
