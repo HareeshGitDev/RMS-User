@@ -47,8 +47,7 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
   final _emailController = TextEditingController();
   final _nameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
-  final _dateController = TextEditingController();
-  final _timeController = TextEditingController();
+
 
   DateTime selectedDate = DateTime.now();
   String showDate = 'Select Date For Visit';

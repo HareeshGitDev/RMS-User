@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'package:RentMyStay_user/theme/app_theme.dart';
-import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 

@@ -5,6 +5,7 @@ import 'package:RentMyStay_user/login_module/view/login_page.dart';
 import 'package:RentMyStay_user/login_module/view/firebase_registration_page.dart';
 import 'package:RentMyStay_user/login_module/view/success_page.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
+import 'package:RentMyStay_user/property_details_module/model/property_details_util_model.dart';
 import 'package:RentMyStay_user/property_details_module/view/property_details_page.dart';
 import 'package:RentMyStay_user/property_details_module/viewModel/property_details_viewModel.dart';
 import 'package:RentMyStay_user/property_module/view/property_listing_page.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
+import '../../booking_module/view/booking_view_page.dart';
 import '../../home_module/view/home_page.dart';
 import '../../login_module/view/forgot_password_page.dart';
 import '../../login_module/view/mobile_otp_page.dart';
@@ -39,9 +41,11 @@ class NavigationService {
 
       case AppRoutes.referAndEarn:
         return MaterialPageRoute(
-            builder: (context) =>ChangeNotifierProvider(
-              create: (_) => HomeViewModel(),
-            child: ReferAndEarn(),),);
+          builder: (context) => ChangeNotifierProvider(
+            create: (_) => HomeViewModel(),
+            child: ReferAndEarn(),
+          ),
+        );
       case AppRoutes.registrationPage:
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
@@ -65,42 +69,58 @@ class NavigationService {
                 ));
 
       case AppRoutes.firebaseRegistrationPage:
-        final  data =
-            settings.arguments as Map<String,dynamic>;
+        final data = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
                   create: (_) => LoginViewModel(),
-                  child: FirebaseRegistrationPage(googleData: data['gmailData'],from: data['from'],uid: data['uid'],mobile:data['mobile'] ),
+                  child: FirebaseRegistrationPage(
+                      googleData: data['gmailData'],
+                      from: data['from'],
+                      uid: data['uid'],
+                      mobile: data['mobile']),
                 ));
 
       case AppRoutes.successPage:
         return MaterialPageRoute(builder: (context) => SuccessPage());
 
+      case AppRoutes.bookingPage:
+        final data = settings.arguments as PropertyDetailsUtilModel;
+        return MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider(
+                  create: (_) => PropertyDetailsViewModel(),
+                  child: BookingPage(
+                    propertyDetailsUtilModel: data,
+                  ),
+                ));
       case AppRoutes.profilePage:
-        return MaterialPageRoute(builder: (context) =>Profile() );
+        return MaterialPageRoute(builder: (context) => Profile());
 
       case AppRoutes.propertyListingPage:
-        final data=settings.arguments as Map<String,dynamic>;
+        final data = settings.arguments as Map<String, dynamic>;
 
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
             create: (_) => PropertyViewModel(),
-            child: PropertyListingPage(locationName: data['location'],propertyType: data['propertyType'],property:data['property'] ),
+            child: PropertyListingPage(
+                locationName: data['location'],
+                propertyType: data['propertyType'],
+                property: data['property']),
           ),
         );
       case AppRoutes.wishListPage:
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
-            create: (_) => PropertyViewModel(),
-            child: WishListPage()),
+              create: (_) => PropertyViewModel(), child: WishListPage()),
         );
       case AppRoutes.propertyDetailsPage:
-        String propId=settings.arguments as String;
+        String propId = settings.arguments as String;
 
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
               create: (_) => PropertyDetailsViewModel(),
-              child: PropertyDetailsPage(propId: propId,)),
+              child: PropertyDetailsPage(
+                propId: propId,
+              )),
         );
 
       default:
@@ -122,10 +142,9 @@ class AppRoutes {
   static const String propertyListingPage = 'propertyListingPage';
   static const String forgotPassword = 'forgotPassword';
   static const String successPage = 'successPage';
+  static const String bookingPage = 'bookingPage';
   static const String otpVerifyPage = 'otpVerifyPage';
   static const String firebaseRegistrationPage = 'firebaseRegistrationPage';
   static const String wishListPage = 'wishListPage';
   static const String propertyDetailsPage = 'propertyDetailsPage';
-
-
 }

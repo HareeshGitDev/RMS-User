@@ -28,6 +28,7 @@ import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/navigation_service.dart';
 import '../../utils/service/shared_prefrences_util.dart';
 import '../model/property_details_model.dart';
+import '../model/property_details_util_model.dart';
 
 class PropertyDetailsPage extends StatefulWidget {
   String propId;
@@ -58,13 +59,15 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
     _propertyDetailsViewModel.getPropertyDetails(propId: widget.propId);
     log('Property Id :: ${widget.propId}');
   }
-@override
+
+  @override
   void dispose() {
     // TODO: implement dispose
     showPics.dispose();
     _propertyDetailsViewModel.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     log('Called::');
@@ -306,6 +309,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         ),
                         Container(
                           // height: _mainHeight * 0.04,
+
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
                           ),
@@ -317,43 +321,100 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             left: _mainWidth * 0.02,
                             right: _mainWidth * 0.02,
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                value.propertyDetailsModel?.details != null &&
-                                        value.propertyDetailsModel?.details
-                                                ?.title !=
-                                            null
-                                    ? (value.propertyDetailsModel?.details
-                                            ?.title)
-                                        .toString()
-                                    : ' ',
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: fontFamily,
+                              Container(
+                                width: _mainWidth * 0.8,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      value.propertyDetailsModel?.details !=
+                                                  null &&
+                                              value.propertyDetailsModel
+                                                      ?.details?.title !=
+                                                  null
+                                          ? (value.propertyDetailsModel?.details
+                                                  ?.title)
+                                              .toString()
+                                          : ' ',
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: fontFamily,
+                                      ),
+                                    ),
+                                    Text(
+                                      value.propertyDetailsModel?.details !=
+                                                  null &&
+                                              value.propertyDetailsModel
+                                                      ?.details?.bname !=
+                                                  null
+                                          ? (value.propertyDetailsModel?.details
+                                                  ?.bname)
+                                              .toString()
+                                          : ' ',
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: fontFamily,
+                                          color: Colors.black54),
+                                    )
+                                  ],
                                 ),
                               ),
-                              Text(
-                                value.propertyDetailsModel?.details != null &&
-                                        value.propertyDetailsModel?.details
-                                                ?.bname !=
-                                            null
-                                    ? (value.propertyDetailsModel?.details
-                                            ?.bname)
-                                        .toString()
-                                    : ' ',
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: fontFamily,
-                                    color: Colors.black54),
-                              )
+                              GestureDetector(
+                                onTap: () async {
+                                  if ((value.propertyDetailsModel != null &&
+                                          value.propertyDetailsModel?.details !=
+                                              null &&
+                                          value.propertyDetailsModel?.details
+                                                  ?.glat !=
+                                              null) &&
+                                      (value.propertyDetailsModel != null &&
+                                          value.propertyDetailsModel?.details !=
+                                              null &&
+                                          value.propertyDetailsModel?.details
+                                                  ?.glng !=
+                                              null)) {
+                                    String latitude = (value
+                                            .propertyDetailsModel
+                                            ?.details
+                                            ?.glat)
+                                        .toString();
+                                    String longitude = (value
+                                            .propertyDetailsModel
+                                            ?.details
+                                            ?.glng)
+                                        .toString();
+                                    await SystemService.launchGoogleMaps(
+                                        latitude: latitude,
+                                        longitude: longitude);
+                                  }
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Icon(Icons.location_on_outlined,
+                                        color: myFavColor),
+                                    Text(
+                                      'Map',
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: fontFamily,
+                                          color: Colors.black54),
+                                    )
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -543,66 +604,6 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                             null) {
                                       launch(
                                           'https://wa.me/${value.propertyDetailsModel?.details?.salesNumber}?text=${value.propertyDetailsModel?.shareLink ?? 'Hello'}');
-                                    }
-                                  },
-                                ),
-                              ]),
-                        ),
-                        const Divider(
-                          thickness: 2,
-                        ),
-                        Container(
-                          // color: CustomTheme.peach,
-                          padding: EdgeInsets.only(
-                            left: _mainWidth * 0.04,
-                            right: _mainWidth * 0.04,
-                          ),
-
-                          height: _mainHeight * 0.03,
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Property Location',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14,
-                                      fontFamily: fontFamily,
-                                      color: Colors.black),
-                                ),
-                                IconButton(
-                                  padding:
-                                      EdgeInsets.only(left: _mainWidth * 0.06),
-                                  icon: Icon(Icons.map_rounded,
-                                      color: CustomTheme.skyBlue,
-                                      size: _mainWidth * 0.06),
-                                  onPressed: () async {
-                                    if ((value.propertyDetailsModel != null &&
-                                            value.propertyDetailsModel
-                                                    ?.details !=
-                                                null &&
-                                            value.propertyDetailsModel?.details?.glat !=
-                                                null) &&
-                                        (value.propertyDetailsModel != null &&
-                                            value.propertyDetailsModel
-                                                    ?.details !=
-                                                null &&
-                                            value.propertyDetailsModel?.details
-                                                    ?.glng !=
-                                                null)) {
-                                      String latitude = (value
-                                              .propertyDetailsModel
-                                              ?.details
-                                              ?.glat)
-                                          .toString();
-                                      String longitude = (value
-                                              .propertyDetailsModel
-                                              ?.details
-                                              ?.glng)
-                                          .toString();
-                                      await SystemService.launchGoogleMaps(
-                                          latitude: latitude,
-                                          longitude: longitude);
                                     }
                                   },
                                 ),
@@ -863,18 +864,19 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                     ],
                   ),
                   bottomNavigationBar: Container(
-                    height: 50,
+                    height: _mainHeight*0.06,
                     width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
+                    padding: EdgeInsets.only(left: _mainWidth*0.02, right: _mainWidth*0.02, bottom: _mainHeight*0.01),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Container(
-                            width: 150,
-                            height: 40,
+                        SizedBox(
+                            width: _mainWidth*0.4,
+                            height: _mainHeight*0.05,
                             child: ElevatedButton(
                               onPressed: () async {
-                                RMSWidgets.showLoaderDialog(context: context, message: 'Loading...');
+                                RMSWidgets.showLoaderDialog(
+                                    context: context, message: 'Loading...');
                                 SharedPreferenceUtil sharedPreferenceUtil =
                                     SharedPreferenceUtil();
                                 var name = (await sharedPreferenceUtil
@@ -889,7 +891,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                             .getString(rms_phoneNumber) ??
                                         '')
                                     .toString();
-                               Navigator.of(context).pop();
+                                Navigator.of(context).pop();
                                 _showDialog(
                                   propId: value.propertyDetailsModel?.details
                                           ?.propId ??
@@ -912,10 +914,68 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   )),
                             )),
                         Container(
-                            width: 150,
-                            height: 40,
+                            width: _mainWidth*0.4,
+                            height: _mainHeight*0.05,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () async {
+                                if (value.propertyDetailsModel == null ||
+                                    value.propertyDetailsModel?.details ==
+                                        null) {
+                                  return;
+                                }
+                                RMSWidgets.showLoaderDialog(
+                                    context: context, message: 'Loading...');
+                                SharedPreferenceUtil sharedPreferenceUtil =
+                                    SharedPreferenceUtil();
+                                var name = (await sharedPreferenceUtil
+                                            .getString(rms_name) ??
+                                        '')
+                                    .toString();
+                                var email = (await sharedPreferenceUtil
+                                            .getString(rms_email) ??
+                                        '')
+                                    .toString();
+                                var phone = (await sharedPreferenceUtil
+                                            .getString(rms_phoneNumber) ??
+                                        '')
+                                    .toString();
+                                var token =
+                                    (await sharedPreferenceUtil.getString(
+                                                rms_registeredUserToken) ??
+                                            '')
+                                        .toString();
+                                Navigator.of(context).pop();
+                                PropertyDetailsUtilModel model =
+                                    PropertyDetailsUtilModel(
+                                  name: name,
+                                  email: email,
+                                  mobile: phone,
+                                  token: token,
+                                  propId: int.parse((value.propertyDetailsModel
+                                          ?.details?.propId)
+                                      .toString()),
+                                  buildingName: (value
+                                          .propertyDetailsModel?.details?.bname)
+                                      .toString(),
+                                  title: (value
+                                          .propertyDetailsModel?.details?.title)
+                                      .toString(),
+                                  freeGuest: int.parse((value
+                                          .propertyDetailsModel
+                                          ?.details
+                                          ?.freeGuests)
+                                      .toString()),
+                                  maxGuest: int.parse((value
+                                          .propertyDetailsModel
+                                          ?.details
+                                          ?.maxGuests)
+                                      .toString()),
+                                );
+
+                                Navigator.pushNamed(
+                                    context, AppRoutes.bookingPage,
+                                    arguments: model);
+                              },
                               child: Text('Book Now'),
                               style: ButtonStyle(
                                   backgroundColor:
@@ -1491,6 +1551,4 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                   propId: propId, email: email, phoneNumber: phone, name: name),
             ));
   }
-
-
 }
