@@ -404,5 +404,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     await shared.setString(rms_name, response.name.toString());
     await shared.setString(rms_email, response.email.toString());
     await shared.setString(rms_gmapKey, response.gmapKey.toString());
+    await shared.setString(rms_gmapKey, response.id.toString());
+
   }
 }

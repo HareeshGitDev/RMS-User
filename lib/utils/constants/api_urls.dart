@@ -13,5 +13,7 @@ class AppUrls{
   static const String fetchWishListPropertyUrl = "/m/wish_list_menu";
   static const String propertyDetailsUrl = "/m/property_all_details2";
   static const String scheduleSiteVisitUrl = "/m/schedulevisit";
+  static const String bookingDetailsUrl = "/m/calculate_booking_cost";
+  static const String bookingCredentialsUrl = '/m/process_via_payumoney';
 
 }

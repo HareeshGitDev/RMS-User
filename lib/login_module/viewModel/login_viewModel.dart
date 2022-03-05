@@ -1,6 +1,5 @@
 import 'package:RentMyStay_user/login_module/model/gmail_registration_request_model.dart';
 import 'package:RentMyStay_user/login_module/model/gmail_signin_request_model.dart';
-import 'package:RentMyStay_user/login_module/model/gmail_signin_response_model.dart';
 import 'package:RentMyStay_user/login_module/model/login_response_model.dart';
 import 'package:RentMyStay_user/login_module/model/otp_registration_otp_model.dart';
 import 'package:RentMyStay_user/login_module/model/signup_request_model.dart';

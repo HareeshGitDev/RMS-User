@@ -75,6 +75,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
     _mainHeight = MediaQuery.of(context).size.height;
     return Consumer<PropertyDetailsViewModel>(
       builder: (context, value, child) {
+        //value.propertyDetailsModel.
         return SafeArea(
           child: value.propertyDetailsModel != null
               ? Scaffold(
@@ -86,7 +87,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         floating: true,
                         backgroundColor: CustomTheme.skyBlue,
                         // pinned: true,
-                        actions: const [
+                        actions:  [
                           CircleAvatar(
                               backgroundColor: Colors.white,
                               radius: 15,
@@ -97,13 +98,15 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                           SizedBox(
                             width: 15,
                           ),
-                          CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 15,
-                              child: Icon(
-                                Icons.share_outlined,
-                                color: Colors.black54,
-                              )),
+                           GestureDetector(
+                            child: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                radius: 15,
+                                child: Icon(
+                                  Icons.share_outlined,
+                                  color: Colors.black54,
+                                )),
+                          ),
                           SizedBox(
                             width: 10,
                           )
@@ -684,7 +687,8 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   display: Display.INLINE,
                                   fontFamily: fontFamily),
                             },
-                          ) /*ReadMoreText(
+                          )
+                          /*ReadMoreText(
                             value.propertyDetailsModel?.details != null &&
                                 value.propertyDetailsModel?.details
                                     ?.description !=

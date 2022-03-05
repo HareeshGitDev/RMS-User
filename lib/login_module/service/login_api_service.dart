@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:RentMyStay_user/login_module/model/gmail_registration_request_model.dart';
 import 'package:RentMyStay_user/login_module/model/gmail_signin_request_model.dart';
-import 'package:RentMyStay_user/login_module/model/gmail_signin_response_model.dart';
 import 'package:RentMyStay_user/login_module/model/login_response_model.dart';
 import 'package:RentMyStay_user/login_module/model/signup_request_model.dart';
 import 'package:RentMyStay_user/login_module/model/signup_response_model.dart';
@@ -114,7 +113,7 @@ class LoginApiService {
   Future<SignUpResponseModel> detailsValidationAfterOTP(
       {required SignUpRequestModel model}) async {
     String url = AppUrls.signUpUrl;
-    log(model.toJson().toString());
+
     final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
       "fname": model.fname,
       "email": model.email,

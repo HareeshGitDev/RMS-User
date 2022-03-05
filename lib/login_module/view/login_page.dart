@@ -21,7 +21,6 @@ import '../../utils/color.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/shared_prefrences_util.dart';
 import '../model/gmail_signin_request_model.dart';
-import '../model/gmail_signin_response_model.dart';
 import '../model/login_response_model.dart';
 import '../model/signup_response_model.dart';
 
@@ -319,12 +318,14 @@ class _LoginPageState extends State<LoginPage> {
                                           SharedPreferenceUtil shared=SharedPreferenceUtil();
                                           await shared.setString(rms_registeredUserToken, response.appToken.toString());
                                           await shared.setString(rms_gmapKey, response.gmapKey.toString());
+                                          await shared.setString(rms_userId, response.id.toString());
                                           Navigator.of(context).pushNamed(
                                               AppRoutes.firebaseRegistrationPage,arguments: {
                                             'gmailData':data,
                                             'from':'Gmail',
                                           });
                                         }else{
+                                          log("USER"+(response.id).toString());
                                           await setSPValues(response: response);
                                           Navigator.of(context).pushNamed(
                                               AppRoutes.homePage);
@@ -428,6 +429,7 @@ class _LoginPageState extends State<LoginPage> {
     await shared.setString(rms_name, response.name.toString());
     await shared.setString(rms_email, response.email.toString());
     await shared.setString(rms_gmapKey, response.gmapKey.toString());
+    await shared.setString(rms_userId, response.id.toString());
   }
 
   void showForgotPasswordDialog({required BuildContext context}) {

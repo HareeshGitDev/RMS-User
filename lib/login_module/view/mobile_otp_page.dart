@@ -288,5 +288,6 @@ class _OtpState extends State<MobileOtpPage> {
     await shared.setString(rms_name, response.name.toString());
     await shared.setString(rms_email, response.email.toString());
     await shared.setString(rms_gmapKey, response.gmapKey.toString());
+    await shared.setString(rms_userId, response.id.toString());
   }
 }

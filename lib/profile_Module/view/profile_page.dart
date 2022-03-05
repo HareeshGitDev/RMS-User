@@ -4,6 +4,7 @@ import 'package:flutx/utils/spacing.dart';
 import 'package:flutx/widgets/container/container.dart';
 import 'package:provider/provider.dart';
 
+import '../../Web_View_Container.dart';
 import '../../home_module/viewModel/home_viewModel.dart';
 import '../../theme/custom_theme.dart';
 
@@ -67,7 +68,7 @@ class _ProfileState extends State<Profile> {
                 image: DecorationImage(
                     fit: BoxFit.fill,
                     image: NetworkImage(
-                        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=334&q=80"))
+                        "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/rms_home.png?alt=media&token=77f8c180-2d7b-47f5-a0bb-d60bdb49d03b"))
                 // color: Colors.orange[100],
                 ),
           ),
@@ -164,7 +165,7 @@ class _ProfileState extends State<Profile> {
               height: 0.6,
               color: Colors.black87,
             ),
-            ListTile(
+            ListTile(//onTap: () => _handleURLButtonPress(context, , title),
               leading: Icon(
                 Icons.topic,
                 color: CustomTheme.peach,
@@ -237,6 +238,13 @@ class _ProfileState extends State<Profile> {
       backgroundColor: Colors.white,
       // centerTitle: true,
       title: Text('Profile', style: TextStyle(color: Colors.black45)),
+    );
+  }
+
+  void _handleURLButtonPress(BuildContext context, String url, String title) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Web_View_Container(url, title)),
     );
   }
 }

@@ -9,6 +9,7 @@ class SignUpResponseModel {
   String? pic;
   String? isAdmin;
   String? team;
+  String? id;
   String? gmapKey;
 
   SignUpResponseModel(
@@ -16,6 +17,7 @@ class SignUpResponseModel {
         this.message,
         this.appToken,
         this.username,
+        this.id,
         this.email,
         this.contactNum,
         this.name,
@@ -35,6 +37,7 @@ class SignUpResponseModel {
     pic = json['pic'];
     isAdmin = json['is_admin'];
     team = json['team'];
+    id = json['id'];
     gmapKey = json['gmap_key'];
   }
 
@@ -50,6 +53,7 @@ class SignUpResponseModel {
     data['pic'] = this.pic;
     data['is_admin'] = this.isAdmin;
     data['team'] = this.team;
+    data['id'] = this.id;
     data['gmap_key'] = this.gmapKey;
     return data;
   }
