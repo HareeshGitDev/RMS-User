@@ -491,11 +491,14 @@ class _BookingPageState extends State<BookingPage> {
     var options = {
       'key': model.data?.key,
       'amount':model.data?.amount,
-      'name': 'Rent My Stay',
-      'description': 'Testing Purpose',
+      'order_id':model.data?.orderId,
+      'image':model.data?.image,
+      'name': model.data?.name,
+      'description': model.data?.description,
       'retry': {'enabled': true, 'max_count': 1},
       'send_sms_hash': true,
-      'prefill': {'contact': model.data?.prefill?.contact, 'email': model.data?.prefill?.email},
+      'prefill': {'contact': model.data?.prefill?.contact,
+      'email': model.data?.prefill?.email},
       'external': {
         'wallets': ['paytm']
       }
