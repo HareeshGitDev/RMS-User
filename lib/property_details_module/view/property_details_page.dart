@@ -21,7 +21,7 @@ import 'package:readmore/readmore.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'package:html/parser.dart' show HtmlParser, parse;
+
 
 import '../../utils/constants/app_consts.dart';
 import '../../utils/constants/sp_constants.dart';
@@ -64,7 +64,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
   void dispose() {
     // TODO: implement dispose
     showPics.dispose();
-    _propertyDetailsViewModel.dispose();
+
     super.dispose();
   }
 
@@ -91,7 +91,10 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                           CircleAvatar(
                               backgroundColor: Colors.white,
                               radius: 15,
-                              child: Icon(
+                              child:value.propertyDetailsModel?.details != null && value.propertyDetailsModel?.details?.wishlist ==1? Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                              ):Icon(
                                 Icons.favorite_outline_rounded,
                                 color: Colors.black54,
                               )),
@@ -1331,7 +1334,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         ),
                         placeholder: (context, url) => Shimmer.fromColors(
                             child: Container(
-                              height: _mainHeight * 0.1,
+                              height: _mainHeight * 0.13,
                               color: Colors.grey,
                             ),
                             baseColor: Colors.grey[200] as Color,
@@ -1340,21 +1343,23 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             const Icon(Icons.error),
                       ),
                       Container(
-                        padding: EdgeInsets.only(
-                            left: _mainWidth * 0.01,
-                            right: _mainWidth * 0.01,
-                            top: _mainHeight * 0.005),
-                        child: Text(
-                          data.title ?? '',
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontFamily: fontFamily,
-                              color: Colors.grey.shade600,
-                              fontWeight: FontWeight.w500),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+
+                      padding: EdgeInsets.only(
+                          left: _mainWidth * 0.01,
+                          right: _mainWidth * 0.01,
+                          top: _mainHeight * 0.005),
+                      child: Text(
+                        data.title ?? '',
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontFamily: fontFamily,
+                            color: Colors.grey.shade600,
+                            fontWeight: FontWeight.w500),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
+                      ),
+
                       Row(
                         children: [
                           Container(

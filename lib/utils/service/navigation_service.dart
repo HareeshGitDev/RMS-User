@@ -20,7 +20,9 @@ import '../../home_module/view/home_page.dart';
 import '../../login_module/view/forgot_password_page.dart';
 import '../../login_module/view/mobile_otp_page.dart';
 import '../../login_module/view/registration_page.dart';
+import '../../profile_Module/view/Edit_profile.dart';
 import '../../profile_Module/view/profile_page.dart';
+import '../../profile_Module/viewmodel/profile_view_model.dart';
 
 class NavigationService {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -92,8 +94,16 @@ class NavigationService {
                     propertyDetailsUtilModel: data,
                   ),
                 ));
+
       case AppRoutes.profilePage:
-        return MaterialPageRoute(builder: (context) => Profile());
+        return MaterialPageRoute(builder:(context) => ChangeNotifierProvider(create: (_) => ProfileViewModel(),
+          child: Profile(
+          ),));
+       // return builder: (context) => Profile());
+
+      case AppRoutes.editprofilePage:
+        return MaterialPageRoute(builder: (context) => EditProfile());
+
 
       case AppRoutes.propertyListingPage:
         final data = settings.arguments as Map<String, dynamic>;
@@ -137,6 +147,7 @@ class AppRoutes {
   static const String loginPage = 'loginPage';
   static const String homePage = 'homePage';
   static const String profilePage = 'profile';
+  static const String editprofilePage = 'editprofile';
   static const String referAndEarn = 'referAndEarnPage';
   static const String registrationPage = 'registrationPage';
   static const String propertyListingPage = 'propertyListingPage';

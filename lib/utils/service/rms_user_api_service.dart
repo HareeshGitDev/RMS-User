@@ -135,6 +135,7 @@ class RMSUserApiService {
       case 200:
         if (response.body != null) {
           log('Response Data :::: ${jsonDecode(response.body)}');
+
           return json.decode(response.body);
         } else {
           return null;

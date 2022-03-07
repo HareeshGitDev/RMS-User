@@ -58,5 +58,11 @@ class PropertyDetailsViewModel extends ChangeNotifier {
   Future<BookingCredentialResponseModel> getBookingCredentials(
       {required BookingAmountRequestModel model}) async {
     return await _detailsApiService.fetchBookingCredentials(model: model);
+
+  }
+  Future<dynamic> submitPaymentResponse(
+      {required String paymentId,required String paymentSignature}) async {
+    return await _detailsApiService.submitPaymentResponse(paymentId: paymentId, paymentSignature: paymentSignature);
+
   }
 }

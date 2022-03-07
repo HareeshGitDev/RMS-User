@@ -15,5 +15,7 @@ class AppUrls{
   static const String scheduleSiteVisitUrl = "/m/schedulevisit";
   static const String bookingDetailsUrl = "/m/calculate_booking_cost";
   static const String bookingCredentialsUrl = '/m/process_via_payumoney';
+  static const String submitBookingResponseUrl='/m/razorpay_response/booking/bs/NDA2Mjc';
+  static const String profileUrl='/m/getprofile';
 
 }

@@ -9,7 +9,7 @@ class Web_View_Container extends StatefulWidget {
   createState() => _WebViewContainerState();
 }
 class _WebViewContainerState extends State<Web_View_Container> {
-  var _url;
+
   final _key = UniqueKey();
 
   @override
@@ -25,9 +25,14 @@ class _WebViewContainerState extends State<Web_View_Container> {
           children: [
             Expanded(
                 child: WebView(
+                  onWebViewCreated: (WebViewController controller) {
+
+                  },
                     key: _key,
                     javascriptMode: JavascriptMode.unrestricted,
-                    initialUrl: widget.url))
+                    initialUrl: widget.url,
+
+                ))
           ],
         ))
     ;

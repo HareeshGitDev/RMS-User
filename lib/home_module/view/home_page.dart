@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:RentMyStay_user/extensions/extensions.dart';
@@ -445,8 +446,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                   Container(
-                      margin: EdgeInsets.only(left: 10),
-                      width: 200,
+
                       height: 200,
                       child: Image.asset(Images.referIconHome))
                 ],
@@ -567,14 +567,12 @@ class _HomePageState extends State<HomePage> {
                           ),
                           FxSpacing.height(20),
                           InkWell(
-                            /* onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  SelectLanguageDialog());
+                             onTap: () {
+                               log('YYY ${base64Encode(utf8.encode("pay_J3v0h2l8U0PG8X"))}');
+                               log('XXX ${base64Encode(utf8.encode("0f40038d4d2c4959611e5f905c1f6a9601be0d6ad7136a3d60be7ef84dd1e43e"))}');
                         },
 
-                        */
+
                             highlightColor: Colors.transparent,
                             splashColor: Colors.transparent,
                             child: Row(

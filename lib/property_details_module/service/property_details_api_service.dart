@@ -97,7 +97,7 @@ class PropertyDetailsApiService {
     String url = AppUrls.bookingCredentialsUrl;
     final response = await _apiService
         .getApiCallWithQueryParams(endPoint: url, queryParams: {
-      'id': base64Encode(utf8.encode(model.propId.toString())),
+      'id': base64Encode(utf8.encode('8791')),
       'travel_from_date': model.fromDate,
       'travel_to_date': model.toDate,
       'num_guests': model.numOfGuests,
@@ -106,7 +106,7 @@ class PropertyDetailsApiService {
       "billing_tel": model.phone,
       "traveller_name": model.name,
       "contact_email": model.email,
-      "amount": model.depositAmount,
+      "amount": 1.toString(),
       "payment_gatway": model.paymentGateway,
     });
     final data = response as Map<String, dynamic>;
@@ -117,5 +117,24 @@ class PropertyDetailsApiService {
       return BookingCredentialResponseModel(
           status: 'failure');
     }
+  }
+  Future<dynamic> submitPaymentResponse(
+      {required String paymentId,required String paymentSignature}) async {
+    String url = AppUrls.submitBookingResponseUrl;
+    final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
+      'razorpay_payment_id': base64Encode(utf8.encode(paymentId)),
+      'razorpay_signature': base64Encode(utf8.encode(paymentSignature)),
+      'app_token': await _getRegisteredToken() ?? '',
+    });
+
+    //final data = response as Map<String, dynamic>;
+
+    /*if (data['status'].toString().toLowerCase() == 'success') {
+      return BookingAmountsResponseModel.fromJson(data);
+    } else {
+      return BookingAmountsResponseModel(
+          status: 'failure', message: data['message']);
+    }*/
+    return response;
   }
 }

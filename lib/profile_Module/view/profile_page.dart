@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutx/utils/spacing.dart';
@@ -7,74 +10,145 @@ import 'package:provider/provider.dart';
 import '../../Web_View_Container.dart';
 import '../../home_module/viewModel/home_viewModel.dart';
 import '../../theme/custom_theme.dart';
+import '../model/profile_model.dart';
+import '../viewmodel/profile_view_model.dart';
 
 class Profile extends StatefulWidget {
-  static const routeName = "/profile";
-
   @override
   _ProfileState createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
+  late ProfileViewModel _profileViewModel;
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _getAppBar(context: context),
-      backgroundColor: Colors.white,
-      body: SafeArea(
-          child: Column(
-        children: [
-          //for circle avtar image
-          _getHeader(),
-          SizedBox(
-            height: 10,
-          ),
-          _profileName("Shubham Kumar"),
-          SizedBox(
-            height: 14,
-          ),
-          _heading("Personal Details"),
-          SizedBox(
-            height: 6,
-          ),
-          _detailsCard(),
-          SizedBox(
-            height: 10,
-          ),
-          _heading("DashBoard"),
-          SizedBox(
-            height: 6,
-          ),
-          _settingsCard(),
-          Spacer(),
-          logoutButton()
-        ],
-      )),
-    );
+  void initState() {
+    super.initState();
+    _profileViewModel = Provider.of<ProfileViewModel>(context, listen: false);
+    _profileViewModel.getProfileDetails();
   }
 
-  Widget _getHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 20),
-          child: Container(
-            height: 100,
-            width: 100,
-            decoration: BoxDecoration(
-                //borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                    fit: BoxFit.fill,
-                    image: NetworkImage(
-                        "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/rms_home.png?alt=media&token=77f8c180-2d7b-47f5-a0bb-d60bdb49d03b"))
-                // color: Colors.orange[100],
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ProfileViewModel>(builder: (context, value, child) {
+      return Scaffold(
+        appBar: _getAppBar(context: context),
+        backgroundColor: Colors.white,
+        body: value.profileModel.result != null && value.profileModel.result!.isNotEmpty &&
+                value.profileModel.profileCompletion != null
+            ? Container(
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Container(
+                            height: 100,
+                            width: 100,
+                            decoration: BoxDecoration(
+                                //borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image:NetworkImage(value.profileModel
+                                            .result![0].picture.toString()))
+                                // color: Colors.orange[100],
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    _profileName(
+                        value.profileModel.result!.isNotEmpty && value.profileModel.result![0].firstname != null?value.profileModel.result![0].firstname.toString():"" ),
+                    SizedBox(
+                      height: 14,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width *
+                          0.80, //80% of width,
+                      child: Text(
+                        "Personal Details",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        elevation: 4,
+                        child: Column(
+                          children: [
+                            //row for each deatails
+                            ListTile(
+                              leading: Icon(
+                                Icons.email,
+                                color: CustomTheme.peach,
+                              ),
+                              title: Text(
+                                   value.profileModel.result!.isNotEmpty && value.profileModel.result![0].email != null ?
+                                   value.profileModel.result![0].email.toString():""),
+                            ),
+                            Divider(
+                              height: 0.6,
+                              color: Colors.black87,
+                            ),
+                            ListTile(
+                              leading: Icon(
+                                Icons.phone,
+                                color: CustomTheme.peach,
+                              ),
+                              title: Text(
+                                  value.profileModel.result![0].contactNo ??
+                                      ""),
+                            ),
+                            Divider(
+                              height: 0.6,
+                              color: Colors.black87,
+                            ),
+                            ListTile(
+                              leading: Icon(
+                                Icons.location_on_outlined,
+                                color: CustomTheme.peach,
+                              ),
+                              title: Text(value.profileModel.result![0]
+                                      .permanentAddress ??
+                                  " "),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width *
+                          0.80, //80% of width,
+                      child: Text(
+                        "DashBoard",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    _settingsCard(),
+                    Spacer(),
+                    logoutButton()
+                  ],
                 ),
-          ),
-        ),
-      ],
-    );
+              )
+            : Center(child:  CircularProgressIndicator(
+            valueColor:AlwaysStoppedAnimation<Color>(CustomTheme.skyBlue))),
+      );
+    });
   }
 
   Widget _profileName(String name) {
@@ -87,59 +161,6 @@ class _ProfileState extends State<Profile> {
             color: Colors.black45,
             fontSize: 20,
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _heading(String heading) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.80, //80% of width,
-      child: Text(
-        heading,
-        style: TextStyle(fontSize: 16),
-      ),
-    );
-  }
-
-  Widget _detailsCard() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Card(
-        elevation: 4,
-        child: Column(
-          children: [
-            //row for each deatails
-            ListTile(
-              leading: Icon(
-                Icons.email,
-                color: CustomTheme.peach,
-              ),
-              title: Text("Shubhamkumar@rentmystay.com"),
-            ),
-            Divider(
-              height: 0.6,
-              color: Colors.black87,
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.phone,
-                color: CustomTheme.peach,
-              ),
-              title: Text("8218402278"),
-            ),
-            Divider(
-              height: 0.6,
-              color: Colors.black87,
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.location_on_outlined,
-                color: CustomTheme.peach,
-              ),
-              title: Text("Maghar"),
-            )
-          ],
         ),
       ),
     );
@@ -165,7 +186,8 @@ class _ProfileState extends State<Profile> {
               height: 0.6,
               color: Colors.black87,
             ),
-            ListTile(//onTap: () => _handleURLButtonPress(context, , title),
+            ListTile(
+              //onTap: () => _handleURLButtonPress(context, , title),
               leading: Icon(
                 Icons.topic,
                 color: CustomTheme.peach,
@@ -222,6 +244,9 @@ class _ProfileState extends State<Profile> {
       ),
       actions: [
         GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, AppRoutes.editprofilePage);
+          },
           child: Container(
             child: Text(
               "EDIT",

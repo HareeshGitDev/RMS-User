@@ -3,15 +3,15 @@ class PropertyDetailsModel {
   Details? details;
   PropOwner? propOwner;
   Amenities? amenities;
+  AmenitiesNew? amenitiesNew;
   List<SimilarProp>? similarProp;
-
 
   PropertyDetailsModel(
       {this.shareLink,
         this.details,
         this.propOwner,
         this.amenities,
-
+        this.amenitiesNew,
         this.similarProp});
 
   PropertyDetailsModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +23,9 @@ class PropertyDetailsModel {
         : null;
     amenities = json['amenities'] != null
         ? new Amenities.fromJson(json['amenities'])
+        : null;
+    amenitiesNew = json['amenities_new'] != null
+        ? new AmenitiesNew.fromJson(json['amenities_new'])
         : null;
     if (json['similar_prop'] != null) {
       similarProp = <SimilarProp>[];
@@ -43,6 +46,9 @@ class PropertyDetailsModel {
     }
     if (this.amenities != null) {
       data['amenities'] = this.amenities!.toJson();
+    }
+    if (this.amenitiesNew != null) {
+      data['amenities_new'] = this.amenitiesNew!.toJson();
     }
     if (this.similarProp != null) {
       data['similar_prop'] = this.similarProp!.map((v) => v.toJson()).toList();
@@ -68,7 +74,7 @@ class Details {
   String? propTypeId;
   String? roomTypeId;
   String? deposit;
-  dynamic rent;
+  String? rent;
   String? orgRent;
   String? weeklyRent;
   String? monthlyRent;
@@ -84,7 +90,7 @@ class Details {
   String? cleanliness;
   String? location;
   String? overall;
-  String? advancePercentage;
+  Null? advancePercentage;
   String? offerStatus;
   String? offerPrice;
   String? bookable;
@@ -105,7 +111,7 @@ class Details {
   String? glat;
   String? glng;
   String? pageViews;
-  String? numBooking;
+  Null? numBooking;
   String? applyServiceCharges;
   String? active;
   String? videoLink;
@@ -120,6 +126,7 @@ class Details {
   String? rmsProp;
   String? bname;
   List<Pic>? pic;
+  int? wishlist;
   String? salesNumber;
   String? userPic;
 
@@ -192,6 +199,7 @@ class Details {
         this.rmsProp,
         this.bname,
         this.pic,
+        this.wishlist,
         this.salesNumber,
         this.userPic});
 
@@ -269,6 +277,7 @@ class Details {
         pic!.add(new Pic.fromJson(v));
       });
     }
+    wishlist = json['wishlist'];
     salesNumber = json['sales_number'];
     userPic = json['user_pic'];
   }
@@ -345,6 +354,7 @@ class Details {
     if (this.pic != null) {
       data['pic'] = this.pic!.map((v) => v.toJson()).toList();
     }
+    data['wishlist'] = this.wishlist;
     data['sales_number'] = this.salesNumber;
     data['user_pic'] = this.userPic;
     return data;
@@ -405,7 +415,7 @@ class Pic {
 }
 
 class PropOwner {
-  String? fullname;
+  Null? fullname;
   String? firstname;
   String? lastname;
   String? picture;
@@ -442,23 +452,159 @@ class PropOwner {
 }
 
 class Amenities {
-  String? security;
-  String? elevator;
   String? washingMachine;
+  String? geysers;
+  String? bikeParking;
+  String? elevator;
+  String? security;
 
-  Amenities({this.security, this.elevator, this.washingMachine});
+  Amenities(
+      {this.washingMachine,
+        this.geysers,
+        this.bikeParking,
+        this.elevator,
+        this.security});
 
   Amenities.fromJson(Map<String, dynamic> json) {
-    security = json['security'];
-    elevator = json['elevator'];
     washingMachine = json['washing_machine'];
+    geysers = json['geysers'];
+    bikeParking = json['bike_parking'];
+    elevator = json['elevator'];
+    security = json['security'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['security'] = this.security;
-    data['elevator'] = this.elevator;
     data['washing_machine'] = this.washingMachine;
+    data['geysers'] = this.geysers;
+    data['bike_parking'] = this.bikeParking;
+    data['elevator'] = this.elevator;
+    data['security'] = this.security;
+    return data;
+  }
+}
+
+class AmenitiesNew {
+  String? cableTv;
+  String? kitchen;
+  String? refrigerator;
+  String? centerTable;
+  String? washingMachine;
+  String? sofaDeewan;
+  String? cotMattress;
+  String? curtains;
+  String? bucketsMugs;
+  String? dustbin;
+  String? geysers;
+  String? bikeParking;
+  String? carParking;
+  String? airConditioning;
+  String? balcony;
+  String? elevator;
+  String? pool;
+  String? powerBackup;
+  String? security;
+  String? clubhouse;
+  String? essentials;
+  String? wifi;
+  String? heating;
+  String? breakfast;
+  String? stoveCylinder;
+  String? smoking;
+  String? foodService;
+  String? housekeeping;
+
+  AmenitiesNew(
+      {this.cableTv,
+        this.kitchen,
+        this.refrigerator,
+        this.centerTable,
+        this.washingMachine,
+        this.sofaDeewan,
+        this.cotMattress,
+        this.curtains,
+        this.bucketsMugs,
+        this.dustbin,
+        this.geysers,
+        this.bikeParking,
+        this.carParking,
+        this.airConditioning,
+        this.balcony,
+        this.elevator,
+        this.pool,
+        this.powerBackup,
+        this.security,
+        this.clubhouse,
+        this.essentials,
+        this.wifi,
+        this.heating,
+        this.breakfast,
+        this.stoveCylinder,
+        this.smoking,
+        this.foodService,
+        this.housekeeping});
+
+  AmenitiesNew.fromJson(Map<String, dynamic> json) {
+    cableTv = json['cable_tv'];
+    kitchen = json['kitchen'];
+    refrigerator = json['refrigerator'];
+    centerTable = json['center_table'];
+    washingMachine = json['washing_machine'];
+    sofaDeewan = json['sofa_deewan'];
+    cotMattress = json['cot_mattress'];
+    curtains = json['curtains'];
+    bucketsMugs = json['buckets_mugs'];
+    dustbin = json['dustbin'];
+    geysers = json['geysers'];
+    bikeParking = json['bike_parking'];
+    carParking = json['car_parking'];
+    airConditioning = json['air_conditioning'];
+    balcony = json['balcony'];
+    elevator = json['elevator'];
+    pool = json['pool'];
+    powerBackup = json['power_backup'];
+    security = json['security'];
+    clubhouse = json['clubhouse'];
+    essentials = json['essentials'];
+    wifi = json['wifi'];
+    heating = json['heating'];
+    breakfast = json['breakfast'];
+    stoveCylinder = json['stove_cylinder'];
+    smoking = json['smoking'];
+    foodService = json['food_service'];
+    housekeeping = json['housekeeping'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['cable_tv'] = this.cableTv;
+    data['kitchen'] = this.kitchen;
+    data['refrigerator'] = this.refrigerator;
+    data['center_table'] = this.centerTable;
+    data['washing_machine'] = this.washingMachine;
+    data['sofa_deewan'] = this.sofaDeewan;
+    data['cot_mattress'] = this.cotMattress;
+    data['curtains'] = this.curtains;
+    data['buckets_mugs'] = this.bucketsMugs;
+    data['dustbin'] = this.dustbin;
+    data['geysers'] = this.geysers;
+    data['bike_parking'] = this.bikeParking;
+    data['car_parking'] = this.carParking;
+    data['air_conditioning'] = this.airConditioning;
+    data['balcony'] = this.balcony;
+    data['elevator'] = this.elevator;
+    data['pool'] = this.pool;
+    data['power_backup'] = this.powerBackup;
+    data['security'] = this.security;
+    data['clubhouse'] = this.clubhouse;
+    data['essentials'] = this.essentials;
+    data['wifi'] = this.wifi;
+    data['heating'] = this.heating;
+    data['breakfast'] = this.breakfast;
+    data['stove_cylinder'] = this.stoveCylinder;
+    data['smoking'] = this.smoking;
+    data['food_service'] = this.foodService;
+    data['housekeeping'] = this.housekeeping;
     return data;
   }
 }
@@ -472,7 +618,7 @@ class SimilarProp {
   String? propType;
   String? unitType;
   String? newDetails;
-  String? neighbor;
+  Null? neighbor;
   String? area;
   String? city;
   String? roomType;

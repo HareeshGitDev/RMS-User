@@ -36,7 +36,8 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
 
-    return Consumer<HomeViewModel>(builder: (context, value, child) {
+    return Consumer<HomeViewModel>(builder: (context, value, child)
+    {
       return Scaffold(
         appBar: _getAppBar(context: context),
         body: SingleChildScrollView(

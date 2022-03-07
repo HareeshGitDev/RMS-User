@@ -253,45 +253,43 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                 height: 15,
               ),
               Container(
+                width: 100,
+                height: 40,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
+                  color: Colors.amber,
+
                   borderRadius: BorderRadius.all(Radius.circular(20)),
-                  color: Colors.white,
+
+
                 ),
-                child: Neumorphic(
-                  style: NeumorphicStyle(
-                    depth: -10,
-                    color: Colors.white,
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      items: getTimeList
-                          .map((type) => DropdownMenuItem(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text(type),
-                                ),
-                                value: type,
-                              ))
-                          .toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          typeValue = value.toString();
-                        });
-                      },
-                      value: typeValue,
-                    ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    icon: Container(),
+                    elevation: 10,
+                    menuMaxHeight: 300,
+
+
+                    items: getTimeList
+                        .map((type) => DropdownMenuItem(
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Text(type),
+                              ),
+                              value: type,
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        typeValue = value.toString();
+                      });
+                    },
+                    value: typeValue,
                   ),
                 ),
               ),
               SizedBox(
                 height: 10,
-              ),
-              Center(
-                child: Text(
-                  "Site visit time: 08:00 AM-08:00PM ",
-                  style: TextStyle(fontSize: 14, color: Colors.red),
-                ),
               ),
               Center(
                 child: Container(

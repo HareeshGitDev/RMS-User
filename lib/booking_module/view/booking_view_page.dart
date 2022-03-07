@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:ui';
 
+import 'package:RentMyStay_user/Web_View_Container.dart';
 import 'package:RentMyStay_user/property_details_module/model/booking_amount_request_model.dart';
 import 'package:RentMyStay_user/property_details_module/model/booking_amounts_response_model.dart';
 import 'package:RentMyStay_user/property_details_module/model/booking_credential_response_model.dart';
@@ -8,6 +9,7 @@ import 'package:RentMyStay_user/property_details_module/viewModel/property_detai
 import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/color.dart';
 import 'package:RentMyStay_user/utils/constants/app_consts.dart';
+import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -36,27 +38,30 @@ class BookingPage extends StatefulWidget {
 }
 
 class _BookingPageState extends State<BookingPage> {
+  late ThemeData theme;
   static const String fontFamily = 'hk-grotest';
   var _mainHeight;
   var _mainWidth;
   int _currentStep = 0;
+
   DateTime selectedDate = DateTime.now();
   String showDate = 'Select Date For Visit';
   String checkInDate = ddMMYYYYformatDate(DateTime.now());
   String checkOutDate =
       ddMMYYYYformatDate(DateTime.now().add(const Duration(days: 1)));
   final _emailController = TextEditingController();
+  final _coupanController = TextEditingController();
   final _nameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
   late PropertyDetailsViewModel _viewModel;
-   final Razorpay _razorpay=Razorpay();
-  //static const platform = MethodChannel("razorpay_flutter");
+  late Razorpay _razorpay;
+
+  BookingCredentialResponseModel? _credentialResponseModel;
 
   @override
   void initState() {
-
     super.initState();
-
+    _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
@@ -75,7 +80,9 @@ class _BookingPageState extends State<BookingPage> {
       fromDate: checkInDate,
       toDate: checkOutDate,
     ));
+    theme = AppTheme.theme;
   }
+
   @override
   void dispose() {
     _razorpay.clear();
@@ -90,6 +97,7 @@ class _BookingPageState extends State<BookingPage> {
     return Consumer<PropertyDetailsViewModel>(
       builder: (context, value, child) {
         return Scaffold(
+          backgroundColor: Colors.white,
           appBar: AppBar(
             title: Text(
               widget.propertyDetailsUtilModel.buildingName ?? '',
@@ -117,27 +125,85 @@ class _BookingPageState extends State<BookingPage> {
                         fontWeight: FontWeight.w500),
                   ),
                   Container(
-                    margin: EdgeInsets.all(10),
+                    margin: EdgeInsets.only(
+                      top: 10,
+                      bottom: 10,
+                    ),
                     child: Column(
                       children: [
-                        Text(
-                          widget.propertyDetailsUtilModel.title ?? '',
-                          style: const TextStyle(
-                            fontFamily: fontFamily,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: Text(
+                            widget.propertyDetailsUtilModel.title ?? '',
+                            style: const TextStyle(
+                              fontFamily: fontFamily,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
                         Container(
                           // color: Colors.amber,
                           // height: _mainHeight*0.55,
-                          margin: EdgeInsets.all(10),
+                          margin: EdgeInsets.only(top: 10, bottom: 10),
                           child: Stepper(
-                            /*controlsBuilder:
-                            (BuildContext context, ControlsDetails details) {
-                          return Container();
-                        },*/
+                            controlsBuilder: (context, details) {
+                              if (details.stepIndex == 5) {
+                                return Container();
+                              } else {
+                                return Container(
+                                  height: 40,
+                                  //  color: Colors.green,
+                                  margin: EdgeInsets.only(top: 5, bottom: 0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _currentStep += 1;
+                                          });
+                                        },
+                                        child: Text('Continue'),
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all<
+                                                    Color>(CustomTheme.skyBlue),
+                                            shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                            )),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          if (_currentStep <= 0) return;
+                                          setState(() {
+                                            _currentStep -= 1;
+                                          });
+                                        },
+                                        child: Text('Cancel'),
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all<
+                                                    Color>(CustomTheme.skyBlue),
+                                            shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                            )),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                            },
                             currentStep: _currentStep,
                             onStepContinue: () {
                               log('Continue Called');
@@ -171,7 +237,7 @@ class _BookingPageState extends State<BookingPage> {
                                       fontFamily: fontFamily,
                                       color: Colors.grey),
                                 ),
-                                state: StepState.editing,
+                                state: StepState.complete,
                                 content: _getSelectDateView(
                                     context: context,
                                     model: value.bookingAmountsResponseModel),
@@ -191,7 +257,6 @@ class _BookingPageState extends State<BookingPage> {
                                   decoration: BoxDecoration(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(20)),
-                                    color: Colors.amber,
                                   ),
                                   child: Neumorphic(
                                     style: NeumorphicStyle(
@@ -232,7 +297,6 @@ class _BookingPageState extends State<BookingPage> {
                                   decoration: BoxDecoration(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(20)),
-                                    color: Colors.amber,
                                   ),
                                   child: Neumorphic(
                                     style: NeumorphicStyle(
@@ -246,6 +310,7 @@ class _BookingPageState extends State<BookingPage> {
                                     }
                                     return null;
                                   },*/
+
                                       keyboardType: TextInputType.phone,
                                       controller: _phoneNumberController,
                                       style: TextStyle(fontFamily: fontFamily),
@@ -274,7 +339,6 @@ class _BookingPageState extends State<BookingPage> {
                                   decoration: BoxDecoration(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(20)),
-                                    color: Colors.amber,
                                   ),
                                   child: Neumorphic(
                                     style: NeumorphicStyle(
@@ -288,6 +352,7 @@ class _BookingPageState extends State<BookingPage> {
                                     }
                                     return null;
                                   },*/
+                                      enabled: false,
                                       keyboardType: TextInputType.emailAddress,
                                       controller: _emailController,
                                       style: TextStyle(fontFamily: fontFamily),
@@ -318,7 +383,7 @@ class _BookingPageState extends State<BookingPage> {
                               Step(
                                 isActive: true,
                                 title: const Text(
-                                  'Referral Code',
+                                  'Coupan Code',
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -326,34 +391,77 @@ class _BookingPageState extends State<BookingPage> {
                                       color: Colors.grey),
                                 ),
                                 state: StepState.editing,
-                                content: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
-                                    color: Colors.amber,
-                                  ),
-                                  child: Neumorphic(
-                                    style: NeumorphicStyle(
-                                      depth: -3,
-                                      color: Colors.white,
-                                    ),
-                                    child: TextFormField(
-                                      /*validator: (value) {
-                                    if (value != null && value.length < 6) {
-                                      return "Enter proper email";
-                                    }
-                                    return null;
-                                  },*/
-                                      keyboardType: TextInputType.emailAddress,
-                                      // controller: _emailController,
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        //hintText: 'Email',
-                                        prefixIcon: Icon(
-                                            Icons.monetization_on_outlined),
+                                content: Column(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20)),
+                                      ),
+                                      child: Neumorphic(
+                                        style: NeumorphicStyle(
+                                          depth: -3,
+                                          color: Colors.white,
+                                        ),
+                                        child: TextFormField(
+                                          controller: _coupanController,
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            hintText: 'Enter coupan code here',
+                                            prefixIcon: Icon(
+                                                Icons.monetization_on_outlined),
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        RMSWidgets.showLoaderDialog(
+                                            context: context,
+                                            message: 'Loading...');
+
+                                        await _viewModel.getBookingDetails(
+                                            model: BookingAmountRequestModel(
+                                          propId: (widget
+                                                  .propertyDetailsUtilModel
+                                                  .propId)
+                                              .toString(),
+                                          token: (widget
+                                                  .propertyDetailsUtilModel
+                                                  .token)
+                                              .toString(),
+                                          numOfGuests: (widget
+                                                  .propertyDetailsUtilModel
+                                                  .maxGuest)
+                                              .toString(),
+                                          couponCode: _coupanController.text,
+                                          fromDate: checkInDate,
+                                          toDate: checkOutDate,
+                                        ));
+                                        FocusScope.of(context)
+                                            .requestFocus(FocusNode());
+                                        Navigator.of(context).pop();
+
+                                        RMSWidgets.showSnackbar(
+                                            context: context,
+                                            message: (value
+                                                .bookingAmountsResponseModel
+                                                .message)!,
+                                            color: Colors.green);
+                                      },
+                                      child: Text('Apply'),
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  CustomTheme.skyBlue),
+                                          shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                          )),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
@@ -433,9 +541,11 @@ class _BookingPageState extends State<BookingPage> {
                         width: MediaQuery.of(context).size.width * 0.68,
                         child: ElevatedButton(
                           onPressed: () async {
-                            RMSWidgets.showLoaderDialog(context: context, message: 'Loading');
-                            BookingCredentialResponseModel response=await _viewModel.getBookingCredentials(
-                                model: BookingAmountRequestModel(
+                            RMSWidgets.showLoaderDialog(
+                                context: context, message: 'Loading');
+                            BookingCredentialResponseModel response =
+                                await _viewModel.getBookingCredentials(
+                                    model: BookingAmountRequestModel(
                               propId: (widget.propertyDetailsUtilModel.propId)
                                   .toString(),
                               token: (widget.propertyDetailsUtilModel.token)
@@ -449,15 +559,20 @@ class _BookingPageState extends State<BookingPage> {
                               email: _emailController.text,
                               name: _nameController.text,
                               phone: _phoneNumberController.text,
-                              depositAmount: value
-                                  .bookingAmountsResponseModel.amountPayable != null ?value
-                                      .bookingAmountsResponseModel.amountPayable.toString():'',
-
+                              depositAmount: value.bookingAmountsResponseModel
+                                          .amountPayable !=
+                                      null
+                                  ? value
+                                      .bookingAmountsResponseModel.amountPayable
+                                      .toString()
+                                  : '',
                             ));
 
                             Navigator.pop(context);
-                            await openCheckout(model: response);
-
+                            if (response.status?.toLowerCase() == 'success') {
+                              _credentialResponseModel = response;
+                              await openCheckout(model: response);
+                            }
                           },
                           child: Text(
                             'Proceed Booking',
@@ -487,18 +602,24 @@ class _BookingPageState extends State<BookingPage> {
     );
   }
 
-  Future<void> openCheckout({required BookingCredentialResponseModel model}) async {
+  Future<void> openCheckout(
+      {required BookingCredentialResponseModel model}) async {
     var options = {
       'key': model.data?.key,
-      'amount':model.data?.amount,
-      'order_id':model.data?.orderId,
-      'image':model.data?.image,
+      'amount': model.data?.amount,
+      'order_id': model.data?.orderId,
+      'image': model.data?.image,
       'name': model.data?.name,
       'description': model.data?.description,
       'retry': {'enabled': true, 'max_count': 1},
       'send_sms_hash': true,
-      'prefill': {'contact': model.data?.prefill?.contact,
-      'email': model.data?.prefill?.email},
+      "theme": {
+        "color": model.data?.theme?.color,
+      },
+      'prefill': {
+        'contact': model.data?.prefill?.contact,
+        'email': model.data?.prefill?.email
+      },
       'external': {
         'wallets': ['paytm']
       }
@@ -507,20 +628,33 @@ class _BookingPageState extends State<BookingPage> {
     try {
       _razorpay.open(options);
     } catch (e) {
-      log('Error :: '+e.toString());
+      log('Error :: ' + e.toString());
     }
   }
 
-  void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    Fluttertoast.showToast(
-        msg: "SUCCESS: " + response.paymentId!+ response.orderId!+ response.signature!,
-        toastLength: Toast.LENGTH_SHORT);
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    if (response.orderId != null &&
+        response.signature != null &&
+        response.paymentId != null) {
+      await _viewModel
+          .submitPaymentResponse(
+              paymentId: response.paymentId!,
+              paymentSignature: response.signature!)
+          .then((value) => Navigator.pushNamedAndRemoveUntil(
+              context, AppRoutes.homePage, (route) => false))
+          .catchError(
+        (error) {
+          log('Error :: ${error.toString()}');
+        },
+      );
+    }
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
-    Fluttertoast.showToast(
-        msg: "ERROR: " + response.code.toString() + " - " + response.message!,
-        toastLength: Toast.LENGTH_SHORT);
+    RMSWidgets.getToast(
+        message:
+            'Payment failure done:: ${response.code} --${response.message}',
+        color: Colors.red);
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
@@ -537,6 +671,50 @@ class _BookingPageState extends State<BookingPage> {
 
   static String ddMMYYYYformatDate(DateTime text) =>
       '${text.year}-${zeroMonth(text)}-${zeroDay(text)}';
+
+  static String showformatDate(String da) {
+    var a = da.split('-');
+    String month = '';
+    switch (a[1]) {
+      case '01':
+        month = "January";
+        break;
+      case '02':
+        month = "February";
+        break;
+      case '03':
+        month = "March";
+        break;
+      case '04':
+        month = "April";
+        break;
+      case '05':
+        month = "May";
+        break;
+      case '06':
+        month = "June";
+        break;
+      case '07':
+        month = "July";
+        break;
+      case '08':
+        month = "August";
+        break;
+      case '09':
+        month = "September";
+        break;
+      case '10':
+        month = "October";
+        break;
+      case '11':
+        month = "November";
+        break;
+      case '12':
+        month = "December";
+        break;
+    }
+    return '${a[2]} ${month}, ${a[0]}';
+  }
 
   Widget _getSelectDateView(
       {required BuildContext context,
@@ -575,21 +753,37 @@ class _BookingPageState extends State<BookingPage> {
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: Colors.blueGrey.shade100),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(5),
         ),
         padding: EdgeInsets.only(left: _mainWidth * 0.02, top: 10, bottom: 10),
-        height: _mainHeight * 0.21,
+        height: _mainHeight * 0.22,
         width: MediaQuery.of(context).size.width,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'CheckIn Date',
+            Container(
+              margin: EdgeInsets.only(right: 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      Text(showformatDate(checkInDate),
+                          style: TextStyle(fontSize: 16)),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text('CheckIn: 12:00PM',
+                          style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    ],
+                  ),
+                  Text(
+                    'Edit',
+                    style: TextStyle(color: CustomTheme.peach),
+                  ),
+                ],
+              ),
             ),
-            SizedBox(
-              height: 5,
-            ),
-            Text(checkInDate),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -617,17 +811,33 @@ class _BookingPageState extends State<BookingPage> {
                         )),
                   ],
                 ),
-                Container(
-                  padding: EdgeInsets.only(right: 30),
-                  child: Text('Tap to Change'),
-                ),
               ],
             ),
-            Text('CheckOut Date'),
-            SizedBox(
-              height: 5,
+            Container(
+              margin: EdgeInsets.only(right: 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      Text(showformatDate(checkOutDate),
+                          style: TextStyle(fontSize: 16)),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        'CheckOut: 11:00AM',
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    'Edit',
+                    style: TextStyle(color: CustomTheme.peach),
+                  ),
+                ],
+              ),
             ),
-            Text(checkOutDate),
           ],
         ),
       ),
@@ -744,6 +954,88 @@ class _BookingPageState extends State<BookingPage> {
           );
         });
   }
+
+  static String date1(DateTime tm) {
+    DateTime today = new DateTime.now();
+    Duration oneDay = new Duration(days: 1);
+    Duration twoDay = new Duration(days: 2);
+    Duration oneWeek = new Duration(days: 7);
+    String month = '';
+    String fordate = '';
+    switch (tm.month) {
+      case 1:
+        month = "january";
+        break;
+      case 2:
+        month = "february";
+        break;
+      case 3:
+        month = "march";
+        break;
+      case 4:
+        month = "april";
+        break;
+      case 5:
+        month = "may";
+        break;
+      case 6:
+        month = "june";
+        break;
+      case 7:
+        month = "july";
+        break;
+      case 8:
+        month = "august";
+        break;
+      case 9:
+        month = "september";
+        break;
+      case 10:
+        month = "october";
+        break;
+      case 11:
+        month = "november";
+        break;
+      case 12:
+        month = "december";
+        break;
+    }
+    Duration difference = today.difference(tm);
+    if (difference.compareTo(oneDay) < 1) {
+      fordate = "today";
+    } else if (difference.compareTo(twoDay) < 1) {
+      fordate = "yesterday";
+    } else if (difference.compareTo(oneWeek) < 1) {
+      switch (tm.weekday) {
+        case 1:
+          fordate = "monday";
+          break;
+        case 2:
+          fordate = "tuesday";
+          break;
+        case 3:
+          fordate = "wednesday";
+          break;
+        case 4:
+          fordate = "thursday";
+          break;
+        case 5:
+          fordate = "friday";
+          break;
+        case 6:
+          fordate = "saturday";
+          break;
+        case 7:
+          fordate = "sunday";
+          break;
+      }
+    } else if (tm.year == today.year) {
+      fordate = '${tm.day} $month';
+    } else {
+      fordate = '${tm.day} $month ${tm.year}';
+    }
+    return fordate;
+  }
 }
 
 class SelectDates extends StatelessWidget {
@@ -772,6 +1064,7 @@ class SelectDates extends StatelessWidget {
       padding: EdgeInsets.only(top: 20, left: 20, right: 20),
       child: SfDateRangePicker(
         enableMultiView: true,
+        enablePastDates: false,
         endRangeSelectionColor: CustomTheme.peach,
         startRangeSelectionColor: CustomTheme.peach,
         confirmText: 'SELECT',
@@ -792,8 +1085,8 @@ class SelectDates extends StatelessWidget {
         todayHighlightColor: myFavColor,
         selectionShape: DateRangePickerSelectionShape.rectangle,
         showActionButtons: true,
-        headerStyle: DateRangePickerHeaderStyle(
-            backgroundColor: CustomTheme.skyBlue),
+        headerStyle:
+            DateRangePickerHeaderStyle(backgroundColor: CustomTheme.skyBlue),
         navigationDirection: DateRangePickerNavigationDirection.vertical,
         selectionMode: DateRangePickerSelectionMode.range,
         monthViewSettings:

@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../images.dart';
+import '../../utils/service/navigation_service.dart';
 
 class WishListPage extends StatefulWidget {
   const WishListPage({Key? key}) : super(key: key);
@@ -55,6 +56,10 @@ class _WishListPageState extends State<WishListPage> {
               child: ListView.separated(
                 itemBuilder: (context, index) {
                   return GestureDetector(
+                    onTap: () => Navigator.of(context).pushNamed(
+                        AppRoutes.propertyDetailsPage,
+                        arguments:
+                        value.wishListModel.data![index].propId),
                     child: Container(
                       height: _mainHeight * 0.48,
                       child: Card(
