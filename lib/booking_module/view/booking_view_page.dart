@@ -651,10 +651,8 @@ class _BookingPageState extends State<BookingPage> {
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
-    RMSWidgets.getToast(
-        message:
-            'Payment failure done:: ${response.code} --${response.message}',
-        color: Colors.red);
+    Navigator.pushNamedAndRemoveUntil(
+        context, AppRoutes.homePage, (route) => false);
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
