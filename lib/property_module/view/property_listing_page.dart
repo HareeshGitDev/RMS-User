@@ -29,12 +29,16 @@ class PropertyListingPage extends StatefulWidget {
   String locationName;
   String? propertyType;
   Property property;
+  String? checkInDate;
+  String? checkOutDate;
 
   PropertyListingPage(
       {Key? key,
       required this.locationName,
       this.propertyType,
-      required this.property})
+      required this.property,
+      this.checkInDate,
+      this.checkOutDate})
       : super(key: key);
 
   @override
@@ -50,7 +54,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
   @override
   void initState() {
     _propertyViewModel = Provider.of<PropertyViewModel>(context, listen: false);
-
+   log('XXXXXXX  ${widget.property}');
     if (widget.property == Property.FromLocation) {
       _propertyViewModel.getPropertyDetailsList(
           address: widget.locationName, property: Property.FromLocation);
@@ -59,6 +63,12 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
           address: widget.locationName,
           property: widget.property,
           propertyType: widget.propertyType);
+    } else if (widget.property == Property.FromSearch) {
+      _propertyViewModel.getPropertyDetailsList(
+          address: widget.locationName,
+          property: Property.FromSearch,
+          toDate: widget.checkOutDate,
+          fromDate: widget.checkInDate);
     }
     super.initState();
   }
@@ -67,6 +77,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
+
     return Consumer<PropertyViewModel>(
       builder: (context, value, child) {
         if (value.propertyListModel.data != null) {
@@ -76,18 +87,19 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
               color: Colors.white,
               height: _mainHeight,
               width: _mainWidth,
-              padding: EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 0),
+              padding: EdgeInsets.only(left: 15, right: 10, top: 15, bottom: 0),
               child: Stack(
                 children: [
                   ListView.separated(
                     itemBuilder: (context, index) {
+                      var data = value.propertyListModel.data![index];
                       return GestureDetector(
                         onTap: () => Navigator.of(context).pushNamed(
                             AppRoutes.propertyDetailsPage,
                             arguments:
                                 value.propertyListModel.data![index].propId),
                         child: SizedBox(
-                          height: _mainHeight * 0.46,
+                          height: _mainHeight * 0.48,
                           child: Card(
                             elevation: 5,
                             shadowColor: CustomTheme.skyBlue,
@@ -100,8 +112,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     CarouselSlider(
-                                      items: value.propertyListModel
-                                              .data![index].propPics
+                                      items: data.propPics
                                               ?.map((e) => CachedNetworkImage(
                                                     imageUrl:
                                                         e.picLink.toString(),
@@ -174,11 +185,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                             ),
                                             Expanded(
                                               child: Text(
-                                                value
-                                                        .propertyListModel
-                                                        .data![index]
-                                                        .buildingName ??
-                                                    " ",
+                                                data.buildingName ?? " ",
                                                 overflow: TextOverflow.ellipsis,
                                                 maxLines: 1,
                                                 style: TextStyle(
@@ -190,9 +197,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                               ),
                                             ),
                                             Text(
-                                              value.propertyListModel
-                                                      .data![index].unitType ??
-                                                  " ",
+                                              data.unitType ?? " ",
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                               style: TextStyle(
@@ -205,20 +210,12 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                               MainAxisAlignment.spaceBetween,
                                         ),
                                       ),
-                                      visible: value.propertyListModel
-                                                  .data![index].rmsProp !=
-                                              null &&
-                                          value.propertyListModel.data![index]
-                                                  .rmsProp ==
-                                              "RMS Prop",
+                                      visible: data.rmsProp != null &&
+                                          data.rmsProp == "RMS Prop",
                                     ),
                                     Visibility(
-                                      visible: value.propertyListModel
-                                                  .data![index].rmsProp !=
-                                              null &&
-                                          value.propertyListModel.data![index]
-                                                  .rmsProp ==
-                                              "RMS Prop",
+                                      visible: data.rmsProp != null &&
+                                          data.rmsProp == "RMS Prop",
                                       child: Container(
                                         child: Text(
                                           'Multiple Units Available',
@@ -239,9 +236,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                       margin: EdgeInsets.only(left: 10),
                                       width: _mainWidth * 0.75,
                                       child: Text(
-                                        value.propertyListModel.data![index]
-                                                .title ??
-                                            " ",
+                                        data.title ?? " ",
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                         style: TextStyle(
@@ -253,26 +248,11 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                     ),
                                     GestureDetector(
                                       onTap: () async {
-                                        if ((value.propertyListModel.data !=
-                                                    null &&
-                                                value.propertyListModel
-                                                        .data?[index].glat !=
-                                                    null) &&
-                                            (value.propertyListModel.data !=
-                                                    null &&
-                                                value.propertyListModel
-                                                        .data?[index].glng !=
-                                                    null)) {
-                                          var latitude = (value
-                                                  .propertyListModel
-                                                  .data?[index]
-                                                  .glat)
-                                              .toString();
-                                          var longitude = (value
-                                                  .propertyListModel
-                                                  .data?[index]
-                                                  .glng)
-                                              .toString();
+                                        if ((data.glat != null) &&
+                                            (data.glng != null)) {
+                                          var latitude = (data.glat).toString();
+                                          var longitude =
+                                              (data.glng).toString();
                                           await SystemService.launchGoogleMaps(
                                               latitude: latitude,
                                               longitude: longitude);
@@ -306,14 +286,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                     padding:
                                                         EdgeInsets.only(top: 7),
                                                     child: Text(
-                                                      (value
-                                                                  .propertyListModel
-                                                                  .data![index]
-                                                                  .areas ??
-                                                              value
-                                                                  .propertyListModel
-                                                                  .data![index]
-                                                                  .city) ??
+                                                      (data.areas ??
+                                                              data.city) ??
                                                           " ",
                                                       maxLines: 1,
                                                       overflow:
@@ -345,7 +319,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                       height: 5,
                                     ),
                                     Container(
-                                         //color: Colors.amber,
+                                        //color: Colors.amber,
                                         height: 20,
                                         margin: EdgeInsets.only(
                                             left: 10, right: 10),
@@ -360,12 +334,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                 fontWeight: FontWeight.w500,
                                               ),
                                             ),
-                                            value.propertyListModel.data![index]
-                                                        .orgRent ==
-                                                    value.propertyListModel
-                                                        .data![index].rent
+                                            data.orgRent == data.rent
                                                 ? Text(
-                                                    ' Rs ${value.propertyListModel.data![index].rent ?? " "}',
+                                                    ' Rs ${data.rent ?? " "}',
                                                     style: TextStyle(
                                                         color: myFavColor,
                                                         fontFamily: fontFamily,
@@ -376,7 +347,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                     text: TextSpan(children: [
                                                       TextSpan(
                                                           text:
-                                                              'Rs ${value.propertyListModel.data![index].orgRent ?? " "}',
+                                                              'Rs ${data.orgRent ?? " "}',
                                                           style: TextStyle(
                                                               color:
                                                                   Colors.grey,
@@ -391,7 +362,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                                       .lineThrough)),
                                                       TextSpan(
                                                           text:
-                                                              ' Rs ${value.propertyListModel.data![index].rent ?? " "}',
+                                                              ' Rs ${data.rent ?? " "}',
                                                           style: TextStyle(
                                                               color: myFavColor,
                                                               fontFamily:
@@ -407,7 +378,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                               MainAxisAlignment.spaceBetween,
                                         )),
                                     Container(
-                                      //color: Colors.amber,
+                                        //color: Colors.amber,
                                         height: 20,
                                         margin: EdgeInsets.only(
                                             left: 10, right: 10),
@@ -422,14 +393,10 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                 fontWeight: FontWeight.w500,
                                               ),
                                             ),
-                                            value.propertyListModel.data![index]
-                                                        .orgMonthRent ==
-                                                    value
-                                                        .propertyListModel
-                                                        .data![index]
-                                                        .monthlyRent
+                                            data.orgMonthRent ==
+                                                    data.monthlyRent
                                                 ? Text(
-                                                    ' Rs ${value.propertyListModel.data![index].monthlyRent ?? " "}',
+                                                    ' Rs ${data.monthlyRent ?? " "}',
                                                     style: TextStyle(
                                                         color: myFavColor,
                                                         fontFamily: fontFamily,
@@ -440,7 +407,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                     text: TextSpan(children: [
                                                       TextSpan(
                                                           text:
-                                                              'Rs ${value.propertyListModel.data![index].orgMonthRent ?? " "}',
+                                                              'Rs ${data.orgMonthRent ?? " "}',
                                                           style: TextStyle(
                                                               color:
                                                                   Colors.grey,
@@ -455,7 +422,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                                       .lineThrough)),
                                                       TextSpan(
                                                           text:
-                                                              ' Rs ${value.propertyListModel.data![index].monthlyRent ?? " "}',
+                                                              ' Rs ${data.monthlyRent ?? " "}',
                                                           style: TextStyle(
                                                               color: myFavColor,
                                                               fontFamily:
@@ -484,12 +451,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w500,
                                                 )),
-                                            value.propertyListModel.data![index]
-                                                        .orgRmsRent ==
-                                                    value.propertyListModel
-                                                        .data![index].rmsRent
+                                            data.orgRmsRent == data.rmsRent
                                                 ? Text(
-                                                    ' Rs ${value.propertyListModel.data![index].rmsRent ?? " "}',
+                                                    ' Rs ${data.rmsRent ?? " "}',
                                                     style: TextStyle(
                                                         color: myFavColor,
                                                         fontFamily: fontFamily,
@@ -500,7 +464,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                     text: TextSpan(children: [
                                                       TextSpan(
                                                           text:
-                                                              'Rs ${value.propertyListModel.data![index].orgRmsRent ?? " "}',
+                                                              'Rs ${data.orgRmsRent ?? " "}',
                                                           style: TextStyle(
                                                               color:
                                                                   Colors.grey,
@@ -515,7 +479,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                                       .lineThrough)),
                                                       TextSpan(
                                                           text:
-                                                              ' Rs ${value.propertyListModel.data![index].rmsRent ?? " "}',
+                                                              ' Rs ${data.rmsRent ?? " "}',
                                                           style: TextStyle(
                                                               color: myFavColor,
                                                               fontFamily:
@@ -574,30 +538,20 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                         ),
                                       ),
                                       Spacer(),
-                                      value.propertyListModel.data![index]
-                                                  .wishlist ==
-                                              0
+                                      data.wishlist == 0
                                           ? GestureDetector(
                                               onTap: () async {
-                                                if (value.propertyListModel
-                                                        .data![index].propId !=
-                                                    null) {
+                                                if (data.propId != null) {
                                                   String response =
                                                       await _propertyViewModel
                                                           .addToWishlist(
-                                                              propertyId: value
-                                                                      .propertyListModel
-                                                                      .data![
-                                                                          index]
-                                                                      .propId ??
-                                                                  " ");
+                                                              propertyId:
+                                                                  data.propId ??
+                                                                      " ");
                                                   if (response ==
-                                                      'Successfully added') {
+                                                      'Successfully Added') {
                                                     setState(() {
-                                                      value
-                                                          .propertyListModel
-                                                          .data![index]
-                                                          .wishlist = 1;
+                                                      data.wishlist = 1;
                                                     });
                                                     RMSWidgets.showSnackbar(
                                                         context: context,
@@ -620,25 +574,17 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                             )
                                           : GestureDetector(
                                               onTap: () async {
-                                                if (value.propertyListModel
-                                                        .data![index].propId !=
-                                                    null) {
+                                                if (data.propId != null) {
                                                   String response =
                                                       await _propertyViewModel
                                                           .addToWishlist(
-                                                              propertyId: value
-                                                                      .propertyListModel
-                                                                      .data![
-                                                                          index]
-                                                                      .propId ??
-                                                                  " ");
+                                                              propertyId:
+                                                                  data.propId ??
+                                                                      " ");
                                                   if (response ==
                                                       'Successfully removed') {
                                                     setState(() {
-                                                      value
-                                                          .propertyListModel
-                                                          .data![index]
-                                                          .wishlist = 0;
+                                                      data.wishlist = 0;
                                                     });
                                                     RMSWidgets.showSnackbar(
                                                         context: context,
@@ -697,63 +643,56 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
               bottomRight: Radius.circular(15))),
       titleSpacing: 0,
       backgroundColor: CustomTheme.skyBlue,
-      title: widget.property == Property.FromWishList
-          ? Container(
-              child: Text('My WishList'),
-            )
-          : Padding(
-              padding: EdgeInsets.only(right: 10),
-              child: Container(
-                height: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  color: Colors.white,
-                ),
-                child: Neumorphic(
-                  style: NeumorphicStyle(
-                    depth: -10,
-                    color: Colors.white,
-                  ),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Search by Area',
-                      prefixIcon: Icon(Icons.search),
-                    ),
-                  ),
-                ),
+      title: Padding(
+        padding: EdgeInsets.only(right: 10),
+        child: Container(
+          height: 40,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+            color: Colors.white,
+          ),
+          child: Neumorphic(
+            style: NeumorphicStyle(
+              depth: -10,
+              color: Colors.white,
+            ),
+            child: TextFormField(
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Search by Area',
+                prefixIcon: Icon(Icons.search),
               ),
             ),
+          ),
+        ),
+      ),
     );
   }
 
   Widget _getFilterSortSetting({required BuildContext context}) {
-    return widget.property == Property.FromWishList
-        ? Container()
-        : Positioned(
-            bottom: _mainHeight * 0.01,
-            left: _mainWidth * 0.3,
-            child: ElevatedButton(
-              onPressed: () {
-                log('Sort __ Filter');
-              },
-              child: Container(
-                width: _mainWidth * 0.3,
-                child: Row(
-                  children: [
-                    Icon(Icons.filter_alt_outlined),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    Text(
-                      'Filter & Sort',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                ),
+    return Positioned(
+      bottom: _mainHeight * 0.01,
+      left: _mainWidth * 0.3,
+      child: ElevatedButton(
+        onPressed: () {
+          log('Sort __ Filter');
+        },
+        child: Container(
+          width: _mainWidth * 0.32,
+          child: Row(
+            children: [
+              Icon(Icons.filter_alt_outlined),
+              SizedBox(
+                width: 15,
               ),
-            ),
-          );
+              Text(
+                'Filter & Sort',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

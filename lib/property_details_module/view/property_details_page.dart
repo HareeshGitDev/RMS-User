@@ -18,11 +18,13 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 
+import '../../Web_View_Container.dart';
 import '../../utils/constants/app_consts.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/navigation_service.dart';
@@ -40,6 +42,7 @@ class PropertyDetailsPage extends StatefulWidget {
 }
 
 class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
+  String  cancellationPolicy = 'https://www.rentmystay.com/info/cancellation_policy/1';
   var _mainHeight;
   var _mainWidth;
   static const String fontFamily = 'hk-grotest';
@@ -101,7 +104,10 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                           SizedBox(
                             width: 15,
                           ),
-                           GestureDetector(
+                           GestureDetector( onTap: () async {
+                             await Share.share(
+                                 value.propertyDetailsModel!.shareLink ?? " ");
+                           },
                             child: CircleAvatar(
                                 backgroundColor: Colors.white,
                                 radius: 15,
@@ -1153,13 +1159,15 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                   color: Colors.grey.shade600,
                   fontWeight: FontWeight.w500),
             ),
-            const Text(
-              'Cancellation Policy',
-              style: TextStyle(
-                  color: Colors.orange,
-                  fontFamily: fontFamily,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700),
+            GestureDetector(onTap:() =>_handleURLButtonPress(context, cancellationPolicy, 'Cancellation Policy'),
+              child: const Text(
+                'Cancellation Policy',
+                style: TextStyle(
+                    color: Colors.orange,
+                    fontFamily: fontFamily,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700),
+              ),
             )
           ],
         ));
@@ -1559,5 +1567,11 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
               child: SiteVisitPage(
                   propId: propId, email: email, phoneNumber: phone, name: name),
             ));
+  }
+  void _handleURLButtonPress(BuildContext context, String url, String title) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Web_View_Container(url, title)),
+    );
   }
 }

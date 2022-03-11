@@ -33,7 +33,7 @@ class HomeViewModel extends ChangeNotifier {
         cityName: 'HSR',
         imageUrl:
         "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/hsr.png?alt=media&token=d64fedfc-e2b5-404a-b703-5816046a2d2f",
-        value: "hsr-layout-Bengaluru-Karnataka-India",
+        value: "Hsr-layout-Bengaluru-Karnataka-India",
       ),
       CitySuggestionModel(
         cityName: 'Kundlahalli',
@@ -97,4 +97,5 @@ class HomeViewModel extends ChangeNotifier {
     inviteModel=response;
     notifyListeners();
   }
+
 }

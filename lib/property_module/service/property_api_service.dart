@@ -20,16 +20,16 @@ class PropertyApiService {
     return registeredToken;
   }
 
-  Future<PropertyListModel> fetchPropertyDetailsList(
-      {
+  Future<PropertyListModel> fetchPropertyDetailsList({
     required String address,
     String? propertyType,
-    String? lat,
-    String? lang,
+    String? fromDate,
+    String? toDate,
     required Property property,
   }) async {
     String url = AppUrls.propertyListingUrl;
-
+    String searchUrl = AppUrls.searchPropertyUrl;
+  log('DDDD $property');
     Map<String, dynamic> queryParams = {
       'addr': address,
       'app_token': registeredToken ?? await _getRegisteredToken(),
@@ -44,14 +44,19 @@ class PropertyApiService {
         'addr': address,
         'app_token': registeredToken ?? await _getRegisteredToken(),
         'roomType': propertyType,
-        'lat': lat,
-        'long': lang,
       };
-      log('QUERY :: $queryParams');
+    } else if (property == Property.FromSearch) {
+      queryParams = {
+        'addr': address,
+        'app_token': registeredToken ?? await _getRegisteredToken(),
+        'fromd': fromDate,
+        'tod': toDate,
+      };
     }
 
     final response = await _apiService.getApiCallWithQueryParams(
-        endPoint: url, queryParams: queryParams);
+        endPoint: property == Property.FromSearch ? searchUrl : url,
+        queryParams: queryParams);
     final data = response as Map<String, dynamic>;
 
     if (data['status'].toString().toLowerCase() == 'success') {
@@ -80,12 +85,12 @@ class PropertyApiService {
       'app_token': await _getRegisteredToken(),
     });
 
-    final data = response as Map<String, dynamic> ;
+    final data = response as Map<String, dynamic>;
 
     if (data['status'].toString().toLowerCase() == 'success') {
       return WishListModel.fromJson(data);
     } else {
-      return WishListModel(status: 'failure',data: []);
+      return WishListModel(status: 'failure', data: []);
     }
   }
 }

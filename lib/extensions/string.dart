@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import '../localizations/translator.dart';
+
 
 
 extension StringUtil on String {
@@ -53,8 +53,4 @@ extension StringUtil on String {
 
 //------ App Localization Extension --------------------------//
 
-extension StringLocalization on String {
-  String tr() {
-    return Translator.translate(this);
-  }
-}
+

@@ -74,7 +74,7 @@ class Details {
   String? propTypeId;
   String? roomTypeId;
   String? deposit;
-  String? rent;
+  dynamic rent;
   String? orgRent;
   String? weeklyRent;
   String? monthlyRent;
@@ -618,7 +618,7 @@ class SimilarProp {
   String? propType;
   String? unitType;
   String? newDetails;
-  Null? neighbor;
+  dynamic neighbor;
   String? area;
   String? city;
   String? roomType;

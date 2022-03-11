@@ -141,10 +141,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: DropdownButtonHideUnderline(
+
                           child:
                           DropdownButton(
+
                             items: getTypeList
                                 .map((type) => DropdownMenuItem(
+
                                       child: Padding(
                                         padding: const EdgeInsets.all(10.0),
                                         child: Text(type),

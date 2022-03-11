@@ -26,6 +26,8 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../../images.dart';
 import '../../property_details_module/model/property_details_util_model.dart';
 import '../../utils/date_range/blackout_date_range.dart';
+import '../../utils/service/date_time_service.dart';
+import '../../utils/view/calander_page.dart';
 
 class BookingPage extends StatefulWidget {
   final PropertyDetailsUtilModel propertyDetailsUtilModel;
@@ -46,9 +48,9 @@ class _BookingPageState extends State<BookingPage> {
 
   DateTime selectedDate = DateTime.now();
   String showDate = 'Select Date For Visit';
-  String checkInDate = ddMMYYYYformatDate(DateTime.now());
+  String checkInDate = DateTimeService.ddMMYYYYformatDate(DateTime.now());
   String checkOutDate =
-      ddMMYYYYformatDate(DateTime.now().add(const Duration(days: 1)));
+  DateTimeService.ddMMYYYYformatDate(DateTime.now().add(const Duration(days: 1)));
   final _emailController = TextEditingController();
   final _coupanController = TextEditingController();
   final _nameController = TextEditingController();
@@ -246,7 +248,7 @@ class _BookingPageState extends State<BookingPage> {
                                 isActive: true,
                                 state: StepState.complete,
                                 title: Text(
-                                  'Guest Name* (As per AAdhar)',
+                                  'Guest Name* (As per Aadhar)',
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -274,7 +276,6 @@ class _BookingPageState extends State<BookingPage> {
                                       controller: _nameController,
                                       decoration: InputDecoration(
                                         border: InputBorder.none,
-                                        //hintText: 'Email',
                                         prefixIcon: Icon(
                                             Icons.drive_file_rename_outline),
                                       ),
@@ -661,14 +662,7 @@ class _BookingPageState extends State<BookingPage> {
         toastLength: Toast.LENGTH_SHORT);
   }
 
-  static String zeroMonth(DateTime text) =>
-      text.month < 10 ? '0${text.month}' : text.month.toString();
 
-  static String zeroDay(DateTime text) =>
-      text.day < 10 ? '0${text.day}' : text.day.toString();
-
-  static String ddMMYYYYformatDate(DateTime text) =>
-      '${text.year}-${zeroMonth(text)}-${zeroDay(text)}';
 
   static String showformatDate(String da) {
     var a = da.split('-');
@@ -721,7 +715,7 @@ class _BookingPageState extends State<BookingPage> {
       onTap: () async {
         PickerDateRange? dateRange =
             await Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => SelectDates(
+          builder: (context) => CalenderPage(
               initialDatesRange: PickerDateRange(
             DateTime.parse(checkInDate),
             DateTime.parse(checkOutDate),
@@ -731,8 +725,8 @@ class _BookingPageState extends State<BookingPage> {
           RMSWidgets.showLoaderDialog(context: context, message: 'Loading...');
 
           checkInDate =
-              ddMMYYYYformatDate(dateRange.startDate ?? DateTime.now());
-          checkOutDate = ddMMYYYYformatDate(
+              DateTimeService.ddMMYYYYformatDate(dateRange.startDate ?? DateTime.now());
+          checkOutDate = DateTimeService.ddMMYYYYformatDate(
               dateRange.endDate ?? DateTime.now().add(const Duration(days: 1)));
 
           await _viewModel.getBookingDetails(
@@ -953,145 +947,7 @@ class _BookingPageState extends State<BookingPage> {
         });
   }
 
-  static String date1(DateTime tm) {
-    DateTime today = new DateTime.now();
-    Duration oneDay = new Duration(days: 1);
-    Duration twoDay = new Duration(days: 2);
-    Duration oneWeek = new Duration(days: 7);
-    String month = '';
-    String fordate = '';
-    switch (tm.month) {
-      case 1:
-        month = "january";
-        break;
-      case 2:
-        month = "february";
-        break;
-      case 3:
-        month = "march";
-        break;
-      case 4:
-        month = "april";
-        break;
-      case 5:
-        month = "may";
-        break;
-      case 6:
-        month = "june";
-        break;
-      case 7:
-        month = "july";
-        break;
-      case 8:
-        month = "august";
-        break;
-      case 9:
-        month = "september";
-        break;
-      case 10:
-        month = "october";
-        break;
-      case 11:
-        month = "november";
-        break;
-      case 12:
-        month = "december";
-        break;
-    }
-    Duration difference = today.difference(tm);
-    if (difference.compareTo(oneDay) < 1) {
-      fordate = "today";
-    } else if (difference.compareTo(twoDay) < 1) {
-      fordate = "yesterday";
-    } else if (difference.compareTo(oneWeek) < 1) {
-      switch (tm.weekday) {
-        case 1:
-          fordate = "monday";
-          break;
-        case 2:
-          fordate = "tuesday";
-          break;
-        case 3:
-          fordate = "wednesday";
-          break;
-        case 4:
-          fordate = "thursday";
-          break;
-        case 5:
-          fordate = "friday";
-          break;
-        case 6:
-          fordate = "saturday";
-          break;
-        case 7:
-          fordate = "sunday";
-          break;
-      }
-    } else if (tm.year == today.year) {
-      fordate = '${tm.day} $month';
-    } else {
-      fordate = '${tm.day} $month ${tm.year}';
-    }
-    return fordate;
-  }
+
 }
 
-class SelectDates extends StatelessWidget {
-  final DateRangePickerNavigationMode _navigationMode =
-      DateRangePickerNavigationMode.scroll;
-  final PickerDateRange initialDatesRange;
 
-  SelectDates({required this.initialDatesRange});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Select Moving/MoveOut Date'),
-        titleSpacing: 0,
-        backgroundColor: CustomTheme.skyBlue,
-      ),
-      body: Container(
-        child: _getDates(context: context),
-      ),
-    );
-  }
-
-  Widget _getDates({required BuildContext context}) {
-    return Container(
-      padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-      child: SfDateRangePicker(
-        enableMultiView: true,
-        enablePastDates: false,
-        endRangeSelectionColor: CustomTheme.peach,
-        startRangeSelectionColor: CustomTheme.peach,
-        confirmText: 'SELECT',
-        onCancel: () => Navigator.pop(context),
-        onSubmit: (dynamic data) {
-          if (data is PickerDateRange &&
-              data.startDate != null &&
-              data.endDate != null) {
-            Navigator.pop(context, data);
-          } else {
-            RMSWidgets.showSnackbar(
-                context: context,
-                message: 'Please Select Valid Date Range',
-                color: Colors.red);
-          }
-        },
-        initialSelectedRange: initialDatesRange,
-        todayHighlightColor: myFavColor,
-        selectionShape: DateRangePickerSelectionShape.rectangle,
-        showActionButtons: true,
-        headerStyle:
-            DateRangePickerHeaderStyle(backgroundColor: CustomTheme.skyBlue),
-        navigationDirection: DateRangePickerNavigationDirection.vertical,
-        selectionMode: DateRangePickerSelectionMode.range,
-        monthViewSettings:
-            const DateRangePickerMonthViewSettings(enableSwipeSelection: false),
-        showNavigationArrow: false,
-        navigationMode: _navigationMode,
-      ),
-    );
-  }
-}

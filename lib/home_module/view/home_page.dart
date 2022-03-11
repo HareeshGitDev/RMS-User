@@ -57,6 +57,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<Map<String, String>> getSharedPreferencesValues() async {
     SharedPreferenceUtil sharedPreferenceUtil = SharedPreferenceUtil();
+    await sharedPreferenceUtil.getString(rms_gmapKey);
 
     return {
       'email': (await sharedPreferenceUtil.getString(rms_email)).toString(),
@@ -77,33 +78,23 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         elevation: 4,
         bottom: PreferredSize(
-          preferredSize: Size(20, 60),
-          child: Container(
-            margin: EdgeInsets.all(15),
-            /*decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              color: Colors.white,
-            ),*/
-            child: Neumorphic(
-              style: NeumorphicStyle(
-                depth: -10,
+          preferredSize: Size(20, 50),
+          child: GestureDetector(
+            onTap: () => Navigator.of(context).pushNamed(AppRoutes.searchPage),
+            child: Container(
+              height: 40,
+              padding: EdgeInsets.only(left: 15,),
+              margin: EdgeInsets.only(left: 15,right: 15,bottom: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
                 color: Colors.white,
               ),
-              child: TextFormField(
-                /*validator: (value) {
-                  if (value != null && value.length < 6) {
-                    return "Enter proper email";
-                  }
-                  return null;
-                },*/
-                // keyboardType: TextInputType.emailAddress,
-                controller: _searchController,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Search',
-                  prefixIcon: Icon(Icons.search_rounded),
-                  //suffix: _searchController.text.trim().isNotEmpty?Icon(Icons.clear):Container()
-                ),
+              child: Row(
+                children: [
+                  Icon(Icons.search_rounded),
+                  SizedBox(width: 10,),
+                  Text('Search'),
+                ],
               ),
             ),
           ),
@@ -427,15 +418,15 @@ class _HomePageState extends State<HomePage> {
                               RMSWidgets.showLoaderDialog(
                                   context: context, message: 'Logging...');
                               SharedPreferenceUtil shared =
-                              SharedPreferenceUtil();
+                                  SharedPreferenceUtil();
                               Navigator.of(context).pop();
                               if ((await shared.getToken()) != null &&
-                              (await shared.getToken())!.isEmpty) {
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                              AppRoutes.loginPage, (route) => false);
+                                  (await shared.getToken())!.isEmpty) {
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    AppRoutes.loginPage, (route) => false);
                               } else {
-                              Navigator.of(context)
-                                  .pushNamed(AppRoutes.referAndEarn);
+                                Navigator.of(context)
+                                    .pushNamed(AppRoutes.referAndEarn);
                               }
                             },
                             child: Text("Earn Now",
@@ -446,9 +437,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                   Container(
-
-                      height: 200,
-                      child: Image.asset(Images.referIconHome))
+                      height: 200, child: Image.asset(Images.referIconHome))
                 ],
               ))
             ],
@@ -487,7 +476,7 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     Container(
                       padding: FxSpacing.only(
-                          left: 20, bottom: 24, top: 24, right: 20),
+                          left: 20, bottom: 10, top: 20, right: 20),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -497,7 +486,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             radius: 45,
                           ),
-                          FxSpacing.height(16),
+                          FxSpacing.height(12),
                           FxContainer(
                             padding: FxSpacing.fromLTRB(12, 4, 12, 4),
                             borderRadiusAll: 4,
@@ -525,17 +514,18 @@ class _HomePageState extends State<HomePage> {
                     Divider(
                       thickness: 1,
                     ),
-                    FxSpacing.height(15),
+                    FxSpacing.height(10),
                     Container(
-                      margin: FxSpacing.x(20),
+                      margin: FxSpacing.x(15),
                       child: Column(
                         children: [
                           InkWell(
                             onTap: () {
                               Navigator.pushNamed(
-                                context,AppRoutes.profilePage,);
-                        },
-
+                                context,
+                                AppRoutes.profilePage,
+                              );
+                            },
                             highlightColor: Colors.transparent,
                             splashColor: Colors.transparent,
                             child: Row(
@@ -553,7 +543,7 @@ class _HomePageState extends State<HomePage> {
                                 FxSpacing.width(16),
                                 Expanded(
                                   child: FxText.b1(
-                                    'Profile'.tr(),
+                                    'Profile'.trim(),
                                   ),
                                 ),
                                 FxSpacing.width(16),
@@ -567,12 +557,12 @@ class _HomePageState extends State<HomePage> {
                           ),
                           FxSpacing.height(20),
                           InkWell(
-                             onTap: () {
-                               log('YYY ${base64Encode(utf8.encode("pay_J3v0h2l8U0PG8X"))}');
-                               log('XXX ${base64Encode(utf8.encode("0f40038d4d2c4959611e5f905c1f6a9601be0d6ad7136a3d60be7ef84dd1e43e"))}');
-                        },
-
-
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                AppRoutes.myStayListPage,
+                              );
+                            },
                             highlightColor: Colors.transparent,
                             splashColor: Colors.transparent,
                             child: Row(
@@ -590,7 +580,7 @@ class _HomePageState extends State<HomePage> {
                                 FxSpacing.width(16),
                                 Expanded(
                                   child: FxText.b1(
-                                    'My Stays'.tr(),
+                                    'My Stays'.trim(),
                                   ),
                                 ),
                                 FxSpacing.width(16),
@@ -625,7 +615,7 @@ class _HomePageState extends State<HomePage> {
                                 FxSpacing.width(16),
                                 Expanded(
                                   child: FxText.b1(
-                                    'My Wishlist'.tr(),
+                                    'My Wishlist'.trim(),
                                   ),
                                 ),
                                 FxSpacing.width(16),
@@ -660,7 +650,45 @@ class _HomePageState extends State<HomePage> {
                                 FxSpacing.width(16),
                                 Expanded(
                                   child: FxText.b1(
-                                    'Refer & Earn'.tr(),
+                                    'Refer & Earn'.trim(),
+                                  ),
+                                ),
+                                FxSpacing.width(16),
+                                Icon(
+                                  FeatherIcons.chevronRight,
+                                  size: 18,
+                                  color: theme.colorScheme.onBackground,
+                                ).autoDirection(),
+                              ],
+                            ),
+                          ),
+                          FxSpacing.height(20),
+                          InkWell(
+                            /* onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      SelectLanguageDialog());
+                            }*/
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            child: Row(
+                              children: [
+                                FxContainer(
+                                  paddingAll: 12,
+                                  borderRadiusAll: 4,
+                                  child: Image(
+                                    height: 20,
+                                    width: 20,
+                                    image: AssetImage(Images.wallet),
+                                    color: CustomTheme.peach,
+                                  ),
+                                  color: CustomTheme.peach.withAlpha(20),
+                                ),
+                                FxSpacing.width(16),
+                                Expanded(
+                                  child: FxText.b1(
+                                    'language'.trim(),
                                   ),
                                 ),
                                 FxSpacing.width(16),
@@ -715,7 +743,7 @@ class _HomePageState extends State<HomePage> {
                                 FxSpacing.width(16),
                                 Expanded(
                                   child: FxText.b1(
-                                    'Logout'.tr(),
+                                    'Logout'.trim(),
                                   ),
                                 ),
                                 FxSpacing.width(16),
@@ -763,7 +791,7 @@ class _HomePageState extends State<HomePage> {
                                 FxSpacing.width(16),
                                 Expanded(
                                   child: FxText.b1(
-                                    'FAQ'.tr(),
+                                    'FAQ'.trim(),
                                   ),
                                 ),
                               ],
@@ -793,7 +821,7 @@ class _HomePageState extends State<HomePage> {
                                 FxSpacing.width(16),
                                 Expanded(
                                   child: FxText.b1(
-                                    'changelog'.tr(),
+                                    'changelog'.trim(),
                                   ),
                                 ),
                               ],

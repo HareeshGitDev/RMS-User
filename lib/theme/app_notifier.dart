@@ -8,8 +8,6 @@ import 'package:RentMyStay_user/theme/theme_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutx/flutx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../localizations/language.dart';
 import 'app_theme.dart';
 import 'material_theme.dart';
 
@@ -46,19 +44,7 @@ class AppNotifier extends ChangeNotifier {
     if (notify) notifyListeners();
   }
 
-  Future<void> changeLanguage(Language language,
-      [bool notify = true, bool changeDirection = true]) async {
-    if (changeDirection) {
-      if (language.supportRTL)
-        changeDirectionality(TextDirection.rtl, false);
-      else
-        changeDirectionality(TextDirection.ltr, false);
-    }
 
-    await Language.changeLanguage(language);
-
-    if (notify) notifyListeners();
-  }
 
   void _changeTheme(ThemeType themeType) {
     AppTheme.themeType = themeType;

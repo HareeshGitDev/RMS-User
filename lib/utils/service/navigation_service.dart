@@ -5,6 +5,7 @@ import 'package:RentMyStay_user/login_module/view/login_page.dart';
 import 'package:RentMyStay_user/login_module/view/firebase_registration_page.dart';
 import 'package:RentMyStay_user/login_module/view/success_page.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
+import 'package:RentMyStay_user/my_stays/viewmodel/mystay_viewmodel.dart';
 import 'package:RentMyStay_user/property_details_module/model/property_details_util_model.dart';
 import 'package:RentMyStay_user/property_details_module/view/property_details_page.dart';
 import 'package:RentMyStay_user/property_details_module/viewModel/property_details_viewModel.dart';
@@ -20,9 +21,11 @@ import '../../home_module/view/home_page.dart';
 import '../../login_module/view/forgot_password_page.dart';
 import '../../login_module/view/mobile_otp_page.dart';
 import '../../login_module/view/registration_page.dart';
+import '../../my_stays/view/mystay_listing_page.dart';
 import '../../profile_Module/view/Edit_profile.dart';
 import '../../profile_Module/view/profile_page.dart';
 import '../../profile_Module/viewmodel/profile_view_model.dart';
+import '../../property_module/view/search_page.dart';
 
 class NavigationService {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -96,14 +99,21 @@ class NavigationService {
                 ));
 
       case AppRoutes.profilePage:
-        return MaterialPageRoute(builder:(context) => ChangeNotifierProvider(create: (_) => ProfileViewModel(),
-          child: Profile(
-          ),));
-       // return builder: (context) => Profile());
+        return MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider(
+                  create: (_) => ProfileViewModel(),
+                  child: Profile(),
+                ));
 
-      case AppRoutes.editprofilePage:
+      case AppRoutes.editProfilePage:
         return MaterialPageRoute(builder: (context) => EditProfile());
 
+      case AppRoutes.myStayListPage:
+        return MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider(
+                  create: (_) => MyStayViewModel(),
+                  child: MyStayListPage(),
+                ));
 
       case AppRoutes.propertyListingPage:
         final data = settings.arguments as Map<String, dynamic>;
@@ -112,11 +122,15 @@ class NavigationService {
           builder: (context) => ChangeNotifierProvider(
             create: (_) => PropertyViewModel(),
             child: PropertyListingPage(
-                locationName: data['location'],
-                propertyType: data['propertyType'],
-                property: data['property']),
+              locationName: data['location'],
+              propertyType: data['propertyType'],
+              property: data['property'],
+              checkInDate: data['checkInDate'],
+              checkOutDate: data['checkOutDate'],
+            ),
           ),
         );
+
       case AppRoutes.wishListPage:
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
@@ -131,6 +145,11 @@ class NavigationService {
               child: PropertyDetailsPage(
                 propId: propId,
               )),
+        );
+      case AppRoutes.searchPage:
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+              create: (_) => PropertyViewModel(), child: SearchPage()),
         );
 
       default:
@@ -147,7 +166,7 @@ class AppRoutes {
   static const String loginPage = 'loginPage';
   static const String homePage = 'homePage';
   static const String profilePage = 'profile';
-  static const String editprofilePage = 'editprofile';
+  static const String editProfilePage = 'editProfilePage';
   static const String referAndEarn = 'referAndEarnPage';
   static const String registrationPage = 'registrationPage';
   static const String propertyListingPage = 'propertyListingPage';
@@ -158,4 +177,6 @@ class AppRoutes {
   static const String firebaseRegistrationPage = 'firebaseRegistrationPage';
   static const String wishListPage = 'wishListPage';
   static const String propertyDetailsPage = 'propertyDetailsPage';
+  static const String myStayListPage = 'myStayListPage';
+  static const String searchPage = 'searchPage';
 }

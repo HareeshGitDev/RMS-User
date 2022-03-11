@@ -5,3 +5,7 @@ const String rms_profilePicUrl='profilePicUrl';
 const String rms_name='name';
 const String rms_gmapKey='gmapKey';
 const String rms_userId='userId';
+const String rms_user_longitude='userLongitude';
+const String rms_user_latitude='userLatitude';
+const String rms_checkInDate='checkInDate';
+const String rms_checkOutDate='checkOutDate';

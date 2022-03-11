@@ -1,4 +1,6 @@
+import 'dart:developer';
 import 'dart:io' show Platform;
+import 'package:RentMyStay_user/utils/service/location_service.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +26,7 @@ void main() async{
   );
 
   runApp(MyApp());
+  LocationService.getCurrentPosition().then((value) => log('Longitude :: ${value.longitude} :: Latitude :: ${value.latitude}'));
 }
 
 

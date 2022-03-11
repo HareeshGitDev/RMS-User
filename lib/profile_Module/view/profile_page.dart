@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
@@ -19,7 +20,12 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  late ProfileViewModel _profileViewModel;
+  late ProfileViewModel _profileViewModel ;
+  late String update_kyc =
+      "https://www.rentmystay.com/dashboard/userVerify/" ;
+  String? userid="";
+  String?token="";
+ //+user_id.trim()+"/"+token+"?app=1");
 
   @override
   void initState() {
@@ -31,7 +37,9 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ProfileViewModel>(builder: (context, value, child) {
-      return Scaffold(
+     userid=value.profileModel.result != null?value.profileModel.result![0].userId.toString():"";
+     token=value.profileModel.result  != null && value.profileModel.result![0].appToken != null?value.profileModel.result![0].appToken.toString():"";
+       return Scaffold(
         appBar: _getAppBar(context: context),
         backgroundColor: Colors.white,
         body: value.profileModel.result != null && value.profileModel.result!.isNotEmpty &&
@@ -89,11 +97,11 @@ class _ProfileState extends State<Profile> {
                             ListTile(
                               leading: Icon(
                                 Icons.email,
-                                color: CustomTheme.peach,
+                                color: CustomTheme.skyBlue,
                               ),
                               title: Text(
                                    value.profileModel.result!.isNotEmpty && value.profileModel.result![0].email != null ?
-                                   value.profileModel.result![0].email.toString():""),
+                                   value.profileModel.result![0].email.toString():"",style: TextStyle(fontSize: 14),),
                             ),
                             Divider(
                               height: 0.6,
@@ -102,11 +110,11 @@ class _ProfileState extends State<Profile> {
                             ListTile(
                               leading: Icon(
                                 Icons.phone,
-                                color: CustomTheme.peach,
+                                color: CustomTheme.skyBlue,
                               ),
                               title: Text(
                                   value.profileModel.result![0].contactNo ??
-                                      ""),
+                                      "",style: TextStyle(fontSize: 14),),
                             ),
                             Divider(
                               height: 0.6,
@@ -115,11 +123,11 @@ class _ProfileState extends State<Profile> {
                             ListTile(
                               leading: Icon(
                                 Icons.location_on_outlined,
-                                color: CustomTheme.peach,
+                                color: CustomTheme.skyBlue,
                               ),
                               title: Text(value.profileModel.result![0]
                                       .permanentAddress ??
-                                  " "),
+                                  " ",style: TextStyle(fontSize: 14),),
                             )
                           ],
                         ),
@@ -177,22 +185,26 @@ class _ProfileState extends State<Profile> {
             ListTile(
               leading: Icon(
                 Icons.home_outlined,
-                color: CustomTheme.peach,
+                color: CustomTheme.skyBlue,
               ),
-              title: Text("My Stays"),
+              title: Text("My Stays",style: TextStyle(fontSize: 14),),
             ),
 
             Divider(
               height: 0.6,
               color: Colors.black87,
             ),
-            ListTile(
-              //onTap: () => _handleURLButtonPress(context, , title),
-              leading: Icon(
-                Icons.topic,
-                color: CustomTheme.peach,
+            GestureDetector(onTap: () =>
+                _handleURLButtonPress(
+                context, update_kyc, 'Update Your kyc'),
+              child: ListTile(
+                //onTap: () => _handleURLButtonPress(context, , title),
+                leading: Icon(
+                  Icons.topic,
+                  color: CustomTheme.skyBlue,
+                ),
+                title: Text("Update KYC",style: TextStyle(fontSize: 14),),
               ),
-              title: Text("Update KYC"),
             ),
 
             Divider(
@@ -202,9 +214,9 @@ class _ProfileState extends State<Profile> {
             ListTile(
               leading: Icon(
                 Icons.camera_alt_outlined,
-                color: CustomTheme.peach,
+                color: CustomTheme.skyBlue,
               ),
-              title: Text("Upload ID-proof"),
+              title: Text("Upload ID-proof",style: TextStyle(fontSize: 14),),
             ),
           ],
         ),
@@ -245,12 +257,12 @@ class _ProfileState extends State<Profile> {
       actions: [
         GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, AppRoutes.editprofilePage);
+            Navigator.pushNamed(context, AppRoutes.editProfilePage);
           },
           child: Container(
             child: Text(
               "EDIT",
-              style: TextStyle(color: Colors.black45, fontSize: 20),
+              style: TextStyle(color: Colors.black45, fontSize: 16),
               textAlign: TextAlign.center,
             ),
             margin: EdgeInsets.only(right: 20, top: 16),
@@ -262,14 +274,17 @@ class _ProfileState extends State<Profile> {
       elevation: 0,
       backgroundColor: Colors.white,
       // centerTitle: true,
-      title: Text('Profile', style: TextStyle(color: Colors.black45)),
+      title: Text('Profile', style: TextStyle(color: Colors.black45,fontSize: 16)),
     );
   }
 
   void _handleURLButtonPress(BuildContext context, String url, String title) {
+
+    String urlwithparams=url+base64Encode(utf8.encode(userid!.trim()))+"/"+token!+"?app=1";
+
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Web_View_Container(url, title)),
+      MaterialPageRoute(builder: (context) => Web_View_Container(urlwithparams, title)),
     );
   }
 }

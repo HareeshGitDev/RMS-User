@@ -7,6 +7,7 @@ class AppUrls{
   static const String referUrl = "/m/generate_refferal";
   static const String forgotPasswordUrl = "/m/forgot_password";
   static const String propertyListingUrl = "/m/home_page_search_link";
+  static const String searchPropertyUrl = "/m/home_page_search";
   static const String signInWithGoogleUrl = "/m/google_login";
   static const String registrationWithGoogleUrl = "/m/add_phone";
   static const String addWishListPropertyUrl = "/m/add_wishlist_prop";
@@ -17,5 +18,6 @@ class AppUrls{
   static const String bookingCredentialsUrl = '/m/process_via_payumoney';
   static const String submitBookingResponseUrl='/m/razorpay_response/booking/bs/NDA2Mjc';
   static const String profileUrl='/m/getprofile';
+  static const String myStayListUrl='/m/get_booking_history';
 
 }

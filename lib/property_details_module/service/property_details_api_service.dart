@@ -118,12 +118,13 @@ class PropertyDetailsApiService {
           status: 'failure');
     }
   }
+
   Future<dynamic> submitPaymentResponse(
       {required String paymentId,required String paymentSignature}) async {
     String url = AppUrls.submitBookingResponseUrl;
     final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
-      'razorpay_payment_id': base64Encode(utf8.encode(paymentId)),
-      'razorpay_signature': base64Encode(utf8.encode(paymentSignature)),
+      'razorpay_payment_id': paymentId,
+      'razorpay_signature':paymentSignature,
       'app_token': await _getRegisteredToken() ?? '',
     });
 

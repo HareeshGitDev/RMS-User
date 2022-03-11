@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import '../constants/api_urls.dart';
 
 class RMSUserApiService {
-  final String _baseURL=AppUrls.baseUrl;
+  final String _baseURL = AppUrls.baseUrl;
 
   /*Future<Map<String, String>> getHeaders() async {
     String? userToken = await SharedPreferenceUtil().getToken();
@@ -39,13 +39,37 @@ class RMSUserApiService {
     }
     return null;
   }
-  Future<dynamic> getApiCallWithQueryParams({required String endPoint,required Map<String,dynamic> queryParams}) async {
-   log('URL :: $_baseURL/$endPoint ---- QueryParams :: ${queryParams.toString()}');
+
+  Future<dynamic> getApiCallWithQueryParams(
+      {required String endPoint,
+      required Map<String, dynamic> queryParams}) async {
+    log('URL :: $_baseURL/$endPoint ---- QueryParams :: ${queryParams.toString()}');
     try {
       final response = await http.get(
-        Uri.https(_baseURL, endPoint,queryParams),
-
+        Uri.https(_baseURL, endPoint, queryParams),
       );
+
+      return await _response(response);
+    } on SocketException {
+      log('SocketException Happened');
+      //throw FetchDataException('No Internet connection');
+    } catch (e) {
+      /*  CustomWidgets.getToast(
+        message: 'Error : ${e.toString()}',
+        color: Color(0xffF40909),
+      );*/
+      log('Error : ${e.toString()}');
+    }
+    return null;
+  }
+
+  Future<dynamic> getApiCallWithURL(
+      {required String endPoint}) async {
+    log('URL :: $endPoint');
+    try {
+      final response = await http.get(Uri.parse(
+        endPoint,
+      ));
 
       return await _response(response);
     } on SocketException {
@@ -65,7 +89,6 @@ class RMSUserApiService {
       {required String endPoint,
       required Map<String, dynamic> bodyParams}) async {
     log('URL :: $_baseURL/$endPoint ---- Model :: ${bodyParams.toString()}');
-
 
     try {
       final response = await http.post(
