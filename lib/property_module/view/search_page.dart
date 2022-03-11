@@ -100,16 +100,14 @@ class _SearchPageState extends State<SearchPage> {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+
                   Visibility(
                     visible: _searchController.text.length < 3,
                     replacement: Container(
-                        color: Colors.white,
-                        padding: EdgeInsets.only(left: 10, top: 10, bottom: 10),
+
+                        padding: EdgeInsets.only(left: 0, bottom: 10,right: 0,top: 10),
                         height: _mainHeight,
-                        child: ListView.separated(
+                        child: ListView.separated(padding: EdgeInsets.all(0),
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: () => Navigator.of(context).pushNamed(
@@ -125,6 +123,7 @@ class _SearchPageState extends State<SearchPage> {
                                   left: 15,
                                 ),
                                 height: 35,
+
                                 alignment: Alignment.centerLeft,
                                 decoration: BoxDecoration(
                                     color: Colors.blueGrey.shade50,
@@ -140,15 +139,19 @@ class _SearchPageState extends State<SearchPage> {
                                     SizedBox(
                                       width: 5,
                                     ),
-                                    Text(
-                                      value.locations[index],
-                                      style: TextStyle(
-                                          fontFamily: fontFamily,
-                                          fontSize: 14,
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.w600),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
+                                    Container(
+
+                                      width: _mainWidth*0.8,
+                                      child: Text(
+                                        value.locations[index],
+                                        style: TextStyle(
+                                            fontFamily: fontFamily,
+                                            fontSize: 14,
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w600),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -163,6 +166,7 @@ class _SearchPageState extends State<SearchPage> {
                     child: Container(
                       height: _mainHeight,
                       color: Colors.white,
+                      padding: EdgeInsets.only(top: 20),
                       child: Column(
                         children: [
                           GestureDetector(

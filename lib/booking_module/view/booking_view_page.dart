@@ -9,7 +9,9 @@ import 'package:RentMyStay_user/property_details_module/viewModel/property_detai
 import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/color.dart';
 import 'package:RentMyStay_user/utils/constants/app_consts.dart';
+import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
+import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -49,8 +51,8 @@ class _BookingPageState extends State<BookingPage> {
   DateTime selectedDate = DateTime.now();
   String showDate = 'Select Date For Visit';
   String checkInDate = DateTimeService.ddMMYYYYformatDate(DateTime.now());
-  String checkOutDate =
-  DateTimeService.ddMMYYYYformatDate(DateTime.now().add(const Duration(days: 1)));
+  String checkOutDate = DateTimeService.ddMMYYYYformatDate(
+      DateTime.now().add(const Duration(days: 1)));
   final _emailController = TextEditingController();
   final _coupanController = TextEditingController();
   final _nameController = TextEditingController();
@@ -67,12 +69,21 @@ class _BookingPageState extends State<BookingPage> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
-    log('UTIL MODEL :: ${widget.propertyDetailsUtilModel.toJosn()}');
+    _viewModel = Provider.of<PropertyDetailsViewModel>(context, listen: false);
+    initMethod();
+  }
+
+  Future<void> initMethod() async {
     _emailController.text = (widget.propertyDetailsUtilModel.email).toString();
     _nameController.text = (widget.propertyDetailsUtilModel.name).toString();
     _phoneNumberController.text =
         (widget.propertyDetailsUtilModel.mobile).toString();
-    _viewModel = Provider.of<PropertyDetailsViewModel>(context, listen: false);
+    SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+    checkInDate = await preferenceUtil.getString(rms_checkInDate) ??
+        DateTimeService.ddMMYYYYformatDate(DateTime.now());
+    checkOutDate = await preferenceUtil.getString(rms_checkOutDate) ??
+        DateTimeService.ddMMYYYYformatDate(
+            DateTime.now().add(const Duration(days: 1)));
     _viewModel.getBookingDetails(
         model: BookingAmountRequestModel(
       propId: (widget.propertyDetailsUtilModel.propId).toString(),
@@ -82,7 +93,6 @@ class _BookingPageState extends State<BookingPage> {
       fromDate: checkInDate,
       toDate: checkOutDate,
     ));
-    theme = AppTheme.theme;
   }
 
   @override
@@ -662,8 +672,6 @@ class _BookingPageState extends State<BookingPage> {
         toastLength: Toast.LENGTH_SHORT);
   }
 
-
-
   static String showformatDate(String da) {
     var a = da.split('-');
     String month = '';
@@ -724,8 +732,8 @@ class _BookingPageState extends State<BookingPage> {
         if (dateRange != null) {
           RMSWidgets.showLoaderDialog(context: context, message: 'Loading...');
 
-          checkInDate =
-              DateTimeService.ddMMYYYYformatDate(dateRange.startDate ?? DateTime.now());
+          checkInDate = DateTimeService.ddMMYYYYformatDate(
+              dateRange.startDate ?? DateTime.now());
           checkOutDate = DateTimeService.ddMMYYYYformatDate(
               dateRange.endDate ?? DateTime.now().add(const Duration(days: 1)));
 
@@ -946,8 +954,4 @@ class _BookingPageState extends State<BookingPage> {
           );
         });
   }
-
-
 }
-
-
