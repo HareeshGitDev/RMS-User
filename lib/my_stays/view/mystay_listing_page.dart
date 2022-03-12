@@ -36,9 +36,9 @@ class _MyStayListPageState extends State<MyStayListPage> {
       initialIndex: 0,
       child: Scaffold(
           appBar: AppBar(
-            backgroundColor: CustomTheme.green,
+            backgroundColor: CustomTheme.skyBlue,
             toolbarHeight: 50,
-            title: Text('My Stays'),
+            title: Text('My Stays',style: TextStyle(fontFamily: fontFamily),),
             titleSpacing: 0,
             bottom: TabBar(
               indicatorColor: CustomTheme.peach,
@@ -92,6 +92,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
           itemBuilder: (context, index) {
             var data = activeBookingList[index];
             return Card(
+              elevation: 5,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5.0),
               ),
@@ -111,9 +112,9 @@ class _MyStayListPageState extends State<MyStayListPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 5, right: 5,top: 5,bottom: 5),
-                    child: Row(
+                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
+                        Row(children: [Container(
                           height: 70,
                           width: 75,
                           padding: const EdgeInsets.only(right: 10),
@@ -136,42 +137,43 @@ class _MyStayListPageState extends State<MyStayListPage> {
                                 baseColor: Colors.grey[200] as Color,
                                 highlightColor: Colors.grey[350] as Color),
                             errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
+                            const Icon(Icons.error),
                           ),
                         ),
-                        Container(
-                          child: Column(
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 '${data.numGuests ?? " "} guests',
                               ),
-                              Text(data.bookingDatetime ?? ''),
+                              SizedBox(height: 10,),
+                              Row(
+                                children: [
+                                  Text(
+                                    checkDateFormat(data.travelFromDate) ?? '',
+                                  ),
+                                  Text("  -  "),
+                                  Text(
+                                    checkDateFormat(data.travelToDate) ?? '',
+                                  ),
+                                ],
+                              ),
+
                             ],
-                          ),
+                          ),],
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text('ID: ${data.bookingId}'),
+                            Text(data.bookingDatetime ?? ''),
                             Text(
                               data.checkInStatus == '0'
                                   ? 'Upcoming'
                                   : 'Success',
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  checkDateFormat(data.travelFromDate) ?? '',
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  checkDateFormat(data.travelToDate) ?? '',
-                                ),
-                              ],
-                            )
+
                           ],
                         )
                       ],

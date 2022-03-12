@@ -265,10 +265,10 @@ class _SearchPageState extends State<SearchPage> {
                             child: Text(
                               'Frequently Searched Locations',
                               style: TextStyle(
-                                  color: CustomTheme.peach,
+                                  color: Colors.black,
                                   fontFamily: fontFamily,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600),
+                                  fontSize: 16,
+                                  ),
                             ),
                           ),
                           SizedBox(
@@ -288,15 +288,14 @@ class _SearchPageState extends State<SearchPage> {
                                   height: 35,
                                   width: 110,
                                   decoration: BoxDecoration(
-                                    color: Colors.blueGrey.shade50,
+                                    color: CustomTheme.skyBlue.withAlpha(20),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
                                     'Bangalore',
                                     style: TextStyle(
-                                        color: Colors.black54,
+                                        color: Colors.black,
                                         fontFamily: fontFamily,
-                                        fontWeight: FontWeight.w600,
                                         fontSize: 14),
                                   ),
                                 ),
@@ -317,15 +316,15 @@ class _SearchPageState extends State<SearchPage> {
                                   height: 35,
                                   width: 110,
                                   decoration: BoxDecoration(
-                                    color: Colors.blueGrey.shade50,
+                                    color: CustomTheme.skyBlue.withAlpha(20),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
                                     'BTM Layout',
                                     style: TextStyle(
-                                        color: Colors.black54,
+                                        color: Colors.black,
                                         fontFamily: fontFamily,
-                                        fontWeight: FontWeight.w600,
+
                                         fontSize: 14),
                                   ),
                                 ),
@@ -346,15 +345,15 @@ class _SearchPageState extends State<SearchPage> {
                                   height: 35,
                                   width: 110,
                                   decoration: BoxDecoration(
-                                    color: Colors.blueGrey.shade50,
+                                    color: CustomTheme.skyBlue.withAlpha(20),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
                                     'HSR Layout',
                                     style: TextStyle(
-                                        color: Colors.black54,
+                                        color: Colors.black,
                                         fontFamily: fontFamily,
-                                        fontWeight: FontWeight.w600,
+
                                         fontSize: 14),
                                   ),
                                 ),
@@ -379,15 +378,14 @@ class _SearchPageState extends State<SearchPage> {
                                   height: 35,
                                   width: 110,
                                   decoration: BoxDecoration(
-                                    color: Colors.blueGrey.shade50,
+                                    color: CustomTheme.skyBlue.withAlpha(20),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
                                     'Kundlahalli',
                                     style: TextStyle(
-                                        color: Colors.black54,
+                                        color: Colors.black,
                                         fontFamily: fontFamily,
-                                        fontWeight: FontWeight.w600,
                                         fontSize: 14),
                                   ),
                                 ),
@@ -408,15 +406,14 @@ class _SearchPageState extends State<SearchPage> {
                                   height: 35,
                                   width: 110,
                                   decoration: BoxDecoration(
-                                    color: Colors.blueGrey.shade50,
+                                    color: CustomTheme.skyBlue.withAlpha(20),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
                                     'Marathalli',
                                     style: TextStyle(
-                                        color: Colors.black54,
+                                        color: Colors.black,
                                         fontFamily: fontFamily,
-                                        fontWeight: FontWeight.w600,
                                         fontSize: 14),
                                   ),
                                 ),
@@ -437,15 +434,14 @@ class _SearchPageState extends State<SearchPage> {
                                   height: 35,
                                   width: 110,
                                   decoration: BoxDecoration(
-                                    color: Colors.blueGrey.shade50,
+                                    color: CustomTheme.skyBlue.withAlpha(20),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
                                     'Whitefield',
                                     style: TextStyle(
-                                        color: Colors.black54,
+                                        color: Colors.black,
                                         fontFamily: fontFamily,
-                                        fontWeight: FontWeight.w600,
                                         fontSize: 14),
                                   ),
                                 ),
@@ -468,15 +464,14 @@ class _SearchPageState extends State<SearchPage> {
                               height: 35,
                               width: 110,
                               decoration: BoxDecoration(
-                                color: Colors.blueGrey.shade50,
+                                color: CustomTheme.skyBlue.withAlpha(20),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
                                 'Old Airport Road',
                                 style: TextStyle(
-                                    color: Colors.black54,
+                                    color: Colors.black,
                                     fontFamily: fontFamily,
-                                    fontWeight: FontWeight.w600,
                                     fontSize: 14),
                               ),
                             ),
@@ -489,10 +484,10 @@ class _SearchPageState extends State<SearchPage> {
                             child: Text(
                               'Search by Desired Property Type',
                               style: TextStyle(
-                                  color: CustomTheme.peach,
+                                  color: Colors.black,
                                   fontFamily: fontFamily,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600),
+                                  fontSize: 16,
+                                  ),
                             ),
                           ),
                           SizedBox(
@@ -513,15 +508,14 @@ class _SearchPageState extends State<SearchPage> {
                                   height: 35,
                                   width: 110,
                                   decoration: BoxDecoration(
-                                    color: Colors.blueGrey.shade50,
+                                    color: CustomTheme.skyBlue.withAlpha(20),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
                                     '1 BHK',
                                     style: TextStyle(
-                                        color: Colors.black54,
+                                        color: Colors.black,
                                         fontFamily: fontFamily,
-                                        fontWeight: FontWeight.w600,
                                         fontSize: 14),
                                   ),
                                 ),
@@ -542,15 +536,14 @@ class _SearchPageState extends State<SearchPage> {
                                   height: 35,
                                   width: 110,
                                   decoration: BoxDecoration(
-                                    color: Colors.blueGrey.shade50,
+                                    color: CustomTheme.skyBlue.withAlpha(20),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
                                     '2 BHK',
                                     style: TextStyle(
-                                        color: Colors.black54,
+                                        color: Colors.black,
                                         fontFamily: fontFamily,
-                                        fontWeight: FontWeight.w600,
                                         fontSize: 14),
                                   ),
                                 ),
@@ -571,15 +564,14 @@ class _SearchPageState extends State<SearchPage> {
                                   height: 35,
                                   width: 110,
                                   decoration: BoxDecoration(
-                                    color: Colors.blueGrey.shade50,
+                                    color: CustomTheme.skyBlue.withAlpha(20),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
                                     'Studio',
                                     style: TextStyle(
-                                        color: Colors.black54,
+                                        color: Colors.black,
                                         fontFamily: fontFamily,
-                                        fontWeight: FontWeight.w600,
                                         fontSize: 14),
                                   ),
                                 ),
