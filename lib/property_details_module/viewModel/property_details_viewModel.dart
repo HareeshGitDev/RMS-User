@@ -61,8 +61,8 @@ class PropertyDetailsViewModel extends ChangeNotifier {
 
   }
   Future<dynamic> submitPaymentResponse(
-      {required String paymentId,required String paymentSignature}) async {
-    return await _detailsApiService.submitPaymentResponse(paymentId: paymentId, paymentSignature: paymentSignature);
+      {required String paymentId,required String paymentSignature,required String redirectApi}) async {
+    return await _detailsApiService.submitPaymentResponse(paymentId: paymentId, paymentSignature: paymentSignature,redirectApi: redirectApi);
 
   }
 }

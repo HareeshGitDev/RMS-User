@@ -32,6 +32,7 @@ class Data {
   Theme? theme;
   String? successUrl;
   String? errorUrl;
+  String? redirect_api;
 
   Data(
       {this.description,
@@ -40,6 +41,7 @@ class Data {
         this.currency,
         this.name,
         this.image,
+        this.redirect_api,
         this.orderId,
         this.prefill,
         this.notes,
@@ -55,6 +57,7 @@ class Data {
     name = json['name'];
     image = json['image'];
     orderId = json['order_id'];
+    redirect_api=json['redirect_api'];
     prefill =
     json['prefill'] != null ? new Prefill.fromJson(json['prefill']) : null;
     notes = json['notes'] != null ? new Notes.fromJson(json['notes']) : null;
@@ -68,6 +71,7 @@ class Data {
     data['description'] = this.description;
     data['key'] = this.key;
     data['amount'] = this.amount;
+   data['redirect_api']=this.redirect_api;
     data['currency'] = this.currency;
     data['name'] = this.name;
     data['image'] = this.image;

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:RentMyStay_user/profile_Module/model/filter_sort_request_model.dart';
 import 'package:RentMyStay_user/property_module/model/property_list_model.dart';
 import 'package:RentMyStay_user/property_module/model/wish_list_model.dart';
 import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
@@ -91,6 +92,23 @@ class PropertyApiService {
       return WishListModel.fromJson(data);
     } else {
       return WishListModel(status: 'failure', data: []);
+    }
+  }
+  Future<PropertyListModel> filterSortPropertyList({
+    required FilterSortRequestModel requestModel,
+  }) async {
+    String url = AppUrls.filterSortPropsUrl;
+
+    final response = await _apiService.getApiCallWithQueryParams(
+        endPoint: url,
+        queryParams: requestModel.toJson());
+    final data = response as Map<String, dynamic>;
+
+    if (data['success'].toString().toLowerCase() == 'true') {
+      data['status']='success';
+      return PropertyListModel.fromJson(data);
+    } else {
+      return PropertyListModel(status: 'failure');
     }
   }
 }

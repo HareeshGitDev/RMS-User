@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'dart:ffi';
+
 
 import 'package:RentMyStay_user/property_details_module/viewModel/property_details_viewModel.dart';
 import 'package:RentMyStay_user/utils/color.dart';
@@ -299,7 +299,7 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                   child: ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(CustomTheme.skyBlue),
+                          MaterialStateProperty.all<Color>(CustomTheme.appTheme),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
@@ -331,7 +331,7 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                       Navigator.of(context).pop();
                       if(response.toLowerCase() =='success'){
                         Navigator.of(context).pop();
-                        RMSWidgets.showSnackbar(context: context, message: 'Congratulations,Your Site Visit is Scheduled.', color: CustomTheme.skyBlue);
+                        RMSWidgets.showSnackbar(context: context, message: 'Congratulations,Your Site Visit is Scheduled.', color: CustomTheme.appTheme);
                         log('Response From Site Visit is :: $response');
                       }
 

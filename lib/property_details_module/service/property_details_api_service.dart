@@ -92,12 +92,13 @@ class PropertyDetailsApiService {
           status: 'failure', message: data['message']);
     }
   }
+
   Future<BookingCredentialResponseModel> fetchBookingCredentials(
       {required BookingAmountRequestModel model}) async {
     String url = AppUrls.bookingCredentialsUrl;
     final response = await _apiService
         .getApiCallWithQueryParams(endPoint: url, queryParams: {
-      'id': base64Encode(utf8.encode('8791')),
+      'id': base64Encode(utf8.encode(model.propId.toString())),
       'travel_from_date': model.fromDate,
       'travel_to_date': model.toDate,
       'num_guests': model.numOfGuests,
@@ -120,8 +121,8 @@ class PropertyDetailsApiService {
   }
 
   Future<dynamic> submitPaymentResponse(
-      {required String paymentId,required String paymentSignature}) async {
-    String url = AppUrls.submitBookingResponseUrl;
+      {required String paymentId,required String paymentSignature,required String redirectApi}) async {
+    String url = 'v2/$redirectApi';
     final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
       'razorpay_payment_id': paymentId,
       'razorpay_signature':paymentSignature,

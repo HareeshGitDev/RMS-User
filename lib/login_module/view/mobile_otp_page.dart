@@ -70,7 +70,7 @@ class _OtpState extends State<MobileOtpPage> {
                 width: 200,
                 height: 200,
                 decoration: BoxDecoration(
-                  color: CustomTheme.skyBlue.withAlpha(20),
+                  color: CustomTheme.appTheme.withAlpha(20),
                   shape: BoxShape.circle,
                 ),
                 child: Image.asset(Images.mobSignIn),
@@ -143,7 +143,7 @@ class _OtpState extends State<MobileOtpPage> {
                     foregroundColor:
                         MaterialStateProperty.all<Color>(Colors.white),
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(CustomTheme.skyBlue),
+                        MaterialStateProperty.all<Color>(CustomTheme.appTheme),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24.0),
@@ -179,7 +179,7 @@ class _OtpState extends State<MobileOtpPage> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: CustomTheme.skyBlue,
+                  color: CustomTheme.appTheme,
                 ),
                 textAlign: TextAlign.center,
               ),

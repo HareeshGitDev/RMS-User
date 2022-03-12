@@ -36,7 +36,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
       initialIndex: 0,
       child: Scaffold(
           appBar: AppBar(
-            backgroundColor: CustomTheme.skyBlue,
+            backgroundColor: CustomTheme.appTheme,
             toolbarHeight: 50,
             title: Text('My Stays',style: TextStyle(fontFamily: fontFamily),),
             titleSpacing: 0,

@@ -10,7 +10,7 @@ class RMSWidgets{
       content: Row(
         children: [
           CircularProgressIndicator(
-              valueColor:AlwaysStoppedAnimation<Color>(CustomTheme.skyBlue)),
+              valueColor:AlwaysStoppedAnimation<Color>(CustomTheme.appTheme)),
           SizedBox(width: 5,),
           Container(
               child: Text('$message...',style: TextStyle(fontFamily: 'HKGrotesk'),)),

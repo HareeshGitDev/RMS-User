@@ -26,7 +26,8 @@ void main() async{
   );
 
   runApp(MyApp());
-  LocationService.getCurrentPosition().then((value) => log('Longitude :: ${value.longitude} :: Latitude :: ${value.latitude}'));
+  LocationService.getCurrentPosition().then((value) => log('Longitude :: ${value.longitude} :: Latitude :: ${value.latitude
+  }'));
 }
 
 
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'RentMyStay ',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.blue,fontFamily: 'hk-grotest',
 
         visualDensity: VisualDensity.adaptivePlatformDensity,
 

@@ -16,7 +16,7 @@ class _WebViewContainerState extends State<Web_View_Container> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: CustomTheme.skyBlue,
+          backgroundColor: CustomTheme.appTheme,
           title: Container(
 
               padding: EdgeInsets.only(bottom: 10),child: Text(widget.title)),

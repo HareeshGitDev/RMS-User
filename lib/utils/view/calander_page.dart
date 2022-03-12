@@ -9,7 +9,7 @@ import '../color.dart';
 class CalenderPage extends StatelessWidget {
   final DateRangePickerNavigationMode _navigationMode =
       DateRangePickerNavigationMode.scroll;
-   final PickerDateRange initialDatesRange;
+  final PickerDateRange initialDatesRange;
 
   CalenderPage({required this.initialDatesRange});
 
@@ -19,7 +19,7 @@ class CalenderPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Select Moving/MoveOut Date'),
         titleSpacing: 0,
-        backgroundColor: CustomTheme.skyBlue,
+        backgroundColor: CustomTheme.peach,
       ),
       body: Container(
         child: _getDates(context: context),
@@ -53,12 +53,20 @@ class CalenderPage extends StatelessWidget {
         todayHighlightColor: myFavColor,
         selectionShape: DateRangePickerSelectionShape.rectangle,
         showActionButtons: true,
-        headerStyle:
-        DateRangePickerHeaderStyle(backgroundColor: CustomTheme.skyBlue),
+        headerStyle: DateRangePickerHeaderStyle(
+
+          textStyle: TextStyle(
+            fontSize: 18,
+            fontFamily: 'hk-grotest',
+            fontWeight: FontWeight.w500,
+            color: Colors.black54
+          ),
+          textAlign: TextAlign.center,
+        ),
         navigationDirection: DateRangePickerNavigationDirection.vertical,
         selectionMode: DateRangePickerSelectionMode.range,
         monthViewSettings:
-        const DateRangePickerMonthViewSettings(enableSwipeSelection: false),
+            const DateRangePickerMonthViewSettings(enableSwipeSelection: false),
         showNavigationArrow: false,
         navigationMode: _navigationMode,
       ),

@@ -23,7 +23,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     _mainWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
-        color: CustomTheme.skyBlue,
+        color: CustomTheme.appTheme,
         height: _mainHeight,
         width: _mainWidth,
         child: Column(
@@ -47,7 +47,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       textStyle: TextStyle(fontSize: 30, fontFamily: "Nunito"),
                       colors: [
                         Colors.white,
-                        CustomTheme.skyBlue,
+                        CustomTheme.appTheme,
                       ]),
                 ],
                 isRepeatingAnimation: true,

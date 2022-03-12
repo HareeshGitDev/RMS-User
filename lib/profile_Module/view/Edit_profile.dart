@@ -21,7 +21,7 @@ class _EditProfilestate extends State<EditProfile>  {
     return Scaffold(
       appBar: AppBar(title: Text("Edit Your Profile",style: TextStyle(fontFamily: 'HKGrotesk-Light'),),
         elevation: 0.0,
-        backgroundColor: CustomTheme.skyBlue,
+        backgroundColor: CustomTheme.appTheme,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -81,11 +81,11 @@ class _EditProfilestate extends State<EditProfile>  {
                       Padding(
                         padding: EdgeInsets.only(top: 230, left: 230),
                         child: CircleAvatar(
-                          backgroundColor: CustomTheme.skyBlue.withAlpha(20),radius: 15,
+                          backgroundColor: CustomTheme.appTheme.withAlpha(20),radius: 15,
                           child: IconButton(
                             icon: Icon(
                               Icons.edit,
-                              color: CustomTheme.skyBlue,size: 15,
+                              color: CustomTheme.appTheme,size: 15,
                             ),
                             onPressed: () {},
                           ),
@@ -120,7 +120,7 @@ class _EditProfilestate extends State<EditProfile>  {
                           style: ButtonStyle(
                               backgroundColor:
                               MaterialStateProperty.all<Color>(
-                                  CustomTheme.skyBlue),
+                                  CustomTheme.appTheme),
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
@@ -193,7 +193,7 @@ class _EditProfilestate extends State<EditProfile>  {
 class HeaderCurvedContainer extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()..color = CustomTheme.skyBlue.withAlpha(50);
+    Paint paint = Paint()..color = CustomTheme.appTheme.withAlpha(50);
     Path path = Path()
       ..relativeLineTo(0, 150)
       ..quadraticBezierTo(size.width / 2, 225, size.width, 150)

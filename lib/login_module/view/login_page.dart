@@ -58,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Form(
           key: _formKey,
           child: Container(
-            color: CustomTheme.skyBlue,
+            color: CustomTheme.appTheme,
             height: _mainHeight,
             width: _mainWidth,
             child: Column(
@@ -83,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                           TextStyle(fontSize: 25, fontFamily: "HKGrotest-Light"),
                           colors: [
                             Colors.white,
-                            CustomTheme.skyBlue,
+                            CustomTheme.appTheme,
                           ]),
                     ],
                     isRepeatingAnimation: true,
@@ -109,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           child: Neumorphic(
                             style: NeumorphicStyle(
-                              depth: -10,
+                              depth: -3,
                               color: Colors.white,
                             ),
                             child: TextFormField(
@@ -140,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           child: Neumorphic(
                             style: NeumorphicStyle(
-                              depth: -10,
+                              depth: -3,
                               color: Colors.white,
                             ),
                             child: TextFormField(
@@ -173,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
                             style: ButtonStyle(
                                 backgroundColor:
                                 MaterialStateProperty.all<Color>(
-                                    CustomTheme.skyBlue),
+                                    CustomTheme.appTheme),
                                 shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
@@ -258,7 +258,7 @@ class _LoginPageState extends State<LoginPage> {
                                   style: ButtonStyle(
                                       backgroundColor:
                                       MaterialStateProperty.all<Color>(
-                                          CustomTheme.skyBlue),
+                                          CustomTheme.appTheme),
                                       shape: MaterialStateProperty.all<
                                           RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
@@ -288,7 +288,7 @@ class _LoginPageState extends State<LoginPage> {
                                   style: ButtonStyle(
                                       backgroundColor:
                                       MaterialStateProperty.all<Color>(
-                                          CustomTheme.skyBlue),
+                                          CustomTheme.appTheme),
                                       shape: MaterialStateProperty.all<
                                           RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
@@ -458,7 +458,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Neumorphic(
                     style: NeumorphicStyle(
-                        depth: -10,
+                        depth: -3,
                         color: Colors.white,
                         lightSource: LightSource.bottomLeft),
                     child: TextFormField(
@@ -548,7 +548,7 @@ class _LoginPageState extends State<LoginPage> {
                         width: 120,
                         height: 120,
                         decoration: BoxDecoration(
-                          color: CustomTheme.skyBlue.withAlpha(20),
+                          color: CustomTheme.appTheme.withAlpha(20),
                           shape: BoxShape.circle,
                         ),
                         child: Image.asset(Images.mobSignIn),
@@ -578,7 +578,7 @@ class _LoginPageState extends State<LoginPage> {
                       Container(
                         padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: CustomTheme.skyBlue.withAlpha(20),
+                          color: CustomTheme.appTheme.withAlpha(20),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Column(
@@ -647,7 +647,7 @@ class _LoginPageState extends State<LoginPage> {
                                       Colors.white),
                                   backgroundColor:
                                   MaterialStateProperty.all<Color>(
-                                      CustomTheme.skyBlue),
+                                      CustomTheme.appTheme),
                                   shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                     RoundedRectangleBorder(

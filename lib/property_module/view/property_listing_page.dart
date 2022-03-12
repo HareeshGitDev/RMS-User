@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
+import 'package:RentMyStay_user/profile_Module/model/filter_sort_request_model.dart';
 import 'package:RentMyStay_user/property_module/viewModel/property_viewModel.dart';
 import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/color.dart';
@@ -50,11 +51,16 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
   var _mainWidth;
   late PropertyViewModel _propertyViewModel;
   static const String fontFamily = 'hk-grotest';
+  final List<bool> _sortKeys = [
+    false,
+    false,
+    false,
+  ];
 
   @override
   void initState() {
     _propertyViewModel = Provider.of<PropertyViewModel>(context, listen: false);
-   log('XXXXXXX  ${widget.property}');
+    log('XXXXXXX  ${widget.property}');
     if (widget.property == Property.FromLocation) {
       _propertyViewModel.getPropertyDetailsList(
           address: widget.locationName, property: Property.FromLocation);
@@ -75,6 +81,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
 
   @override
   Widget build(BuildContext context) {
+    log('Called BUUUUU');
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
 
@@ -102,7 +109,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                           height: _mainHeight * 0.48,
                           child: Card(
                             elevation: 5,
-                            shadowColor: CustomTheme.skyBlue,
+                            shadowColor: CustomTheme.appTheme,
                             shape: const RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10))),
@@ -312,7 +319,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                       height: 5,
                                     ),
                                     Divider(
-                                      color: CustomTheme.skyBlue,
+                                      color: CustomTheme.appTheme,
                                       height: 1,
                                     ),
                                     SizedBox(
@@ -512,28 +519,32 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                     .rmsProp ==
                                                 "RMS Prop",
                                         child: Container(
-                                          color: myFavColor,
+                                          padding: EdgeInsets.only(right: 5),
+                                          decoration: BoxDecoration(
+                                              color: Colors.white60,
+                                              border: Border.all(
+                                                  color: CustomTheme.appTheme),
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
                                           child: Row(children: [
                                             CircleAvatar(
                                                 radius: 10,
-                                                backgroundColor:
-                                                    myFavColor.withAlpha(40),
+                                                backgroundColor: myFavColor,
                                                 child: Icon(
                                                   Icons.check,
                                                   size: 15,
                                                   color: Colors.white,
                                                 )),
                                             Container(
-                                                color: myFavColor.withAlpha(95),
                                                 child: Text(
-                                                  'Managed by RMS',
-                                                  style: TextStyle(
-                                                      fontStyle:
-                                                          FontStyle.italic,
-                                                      color: Colors.white,
-                                                      fontFamily: fontFamily,
-                                                      fontSize: 16),
-                                                )),
+                                              'Managed by RMS',
+                                              style: TextStyle(
+                                                  fontStyle: FontStyle.italic,
+                                                  color: Colors.black,
+                                                  fontFamily: fontFamily,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14),
+                                            )),
                                           ]),
                                         ),
                                       ),
@@ -557,7 +568,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                         context: context,
                                                         message: response,
                                                         color: CustomTheme
-                                                            .skyBlue);
+                                                            .appTheme);
                                                   }
                                                 }
                                               },
@@ -642,7 +653,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
               bottomLeft: Radius.circular(15),
               bottomRight: Radius.circular(15))),
       titleSpacing: 0,
-      backgroundColor: CustomTheme.skyBlue,
+      backgroundColor: CustomTheme.appTheme,
       title: Padding(
         padding: EdgeInsets.only(right: 10),
         child: Container(
@@ -672,27 +683,218 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
   Widget _getFilterSortSetting({required BuildContext context}) {
     return Positioned(
       bottom: _mainHeight * 0.01,
-      left: _mainWidth * 0.3,
-      child: ElevatedButton(
-        onPressed: () {
-          log('Sort __ Filter');
-        },
-        child: Container(
-          width: _mainWidth * 0.32,
-          child: Row(
-            children: [
-              Icon(Icons.filter_alt_outlined),
-              SizedBox(
-                width: 15,
+      left: _mainWidth * 0.15,
+      child: Row(
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              log('Filter');
+            },
+            style: ButtonStyle(
+                backgroundColor:
+                MaterialStateProperty.all<Color>(
+                  CustomTheme.appTheme,
+                ),
+                shape: MaterialStateProperty.all<
+                    RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                      borderRadius:
+                      BorderRadius.circular(30)),
+                )),
+            child: Container(
+              width: _mainWidth * 0.2,
+              child: Row(
+                children: [
+                  Icon(Icons.filter_alt_outlined),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Text(
+                    'Filter',
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      fontFamily: fontFamily
+                    ),
+                  ),
+                ],
               ),
-              Text(
-                'Filter & Sort',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-            ],
+            ),
           ),
-        ),
+          SizedBox(
+            width: 10,
+          ),
+          ElevatedButton(
+            onPressed: () => applySorting(
+                context: context,
+              ),
+            style: ButtonStyle(
+                backgroundColor:
+                MaterialStateProperty.all<Color>(
+                  CustomTheme.appTheme,
+                ),
+                shape: MaterialStateProperty.all<
+                    RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                      borderRadius:
+                      BorderRadius.circular(30)),
+                )),
+            child: Container(
+              width: _mainWidth * 0.2,
+              child: Row(
+                children: [
+                  Icon(Icons.waves),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Text(
+                    'Sort',
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: fontFamily
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
+  }
+
+  Future<void> applySorting(
+      {required BuildContext context}) async {
+    return await showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+              return Container(
+                padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                height: 300,
+                child: Column(
+                  children: [
+                    Text(
+                      'Sort By',
+                      style: TextStyle(
+                          fontFamily: fontFamily,
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    Divider(
+                      color: Colors.red,
+                      thickness: 0,
+                    ),
+                    CheckboxListTile(
+                      value: _sortKeys[0],
+                      activeColor: CustomTheme.appTheme,
+                      contentPadding: EdgeInsets.zero,
+
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() {
+                            _sortKeys[0] = value;
+                            _sortKeys[1] = false;
+                            _sortKeys[2] = false;
+                          });
+                        }
+                      },
+                      //selected:_sortKeys[0],
+                      title: Text('Price Low to High'),
+                    ),
+                    CheckboxListTile(
+                      value: _sortKeys[1],
+                      activeColor: CustomTheme.appTheme,
+                      contentPadding: EdgeInsets.zero,
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() {
+                            _sortKeys[0] = false;
+                            _sortKeys[1] = value;
+                            _sortKeys[2] = false;
+                          });
+                        }
+                      },
+                      //selected:_sortKeys[0],
+                      title: Text('Price High to Low'),
+                    ),
+                    CheckboxListTile(
+                      value: _sortKeys[2],
+                      activeColor: CustomTheme.appTheme,
+                      contentPadding: EdgeInsets.zero,
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() {
+                            _sortKeys[0] = false;
+                            _sortKeys[1] = false;
+                            _sortKeys[2] = value;
+                          });
+                        }
+                      },
+                      //selected:_sortKeys[0],
+                      title: Text('Show Near By'),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      height: 35,
+                      width: 200,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          RMSWidgets.showLoaderDialog(
+                              context: context, message: 'Loading...');
+                          String sortOrder = '0';
+
+                          if (_sortKeys[0] == true) {
+                            sortOrder = '1';
+                          } else if (_sortKeys[1] == true) {
+                            sortOrder = '2';
+                          } else if (_sortKeys[2] == true) {
+                            sortOrder = '3';
+                          }
+
+                          FilterSortRequestModel model =
+                              FilterSortRequestModel(sortOrder: sortOrder);
+
+                          await _propertyViewModel.filterSortPropertyList(
+                              requestModel: model);
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text(
+                          'Apply Sort',
+                          style: TextStyle(
+                              fontFamily: fontFamily,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16),
+                        ),
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                              CustomTheme.appTheme,
+                            ),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30)),
+                            )),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        });
   }
 }

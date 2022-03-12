@@ -64,7 +64,7 @@ class _WishListPageState extends State<WishListPage> {
                       height: _mainHeight * 0.48,
                       child: Card(
                         elevation: 5,
-                        shadowColor: CustomTheme.skyBlue,
+                        shadowColor: CustomTheme.appTheme,
                         shape: RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10))),
@@ -271,7 +271,7 @@ class _WishListPageState extends State<WishListPage> {
                                   ),
                                 ),
                                 Divider(
-                                  color: CustomTheme.skyBlue,
+                                  color: CustomTheme.appTheme,
                                 ),
                                 Container(
                                     height: 25,
@@ -438,7 +438,7 @@ class _WishListPageState extends State<WishListPage> {
                                                 RMSWidgets.showSnackbar(
                                                     context: context,
                                                     message: response,
-                                                    color: CustomTheme.skyBlue);
+                                                    color: CustomTheme.appTheme);
                                               }
                                             }
                                           },
@@ -530,7 +530,7 @@ class _WishListPageState extends State<WishListPage> {
               bottomLeft: Radius.circular(15),
               bottomRight: Radius.circular(15))),
       titleSpacing: 0,
-      backgroundColor: CustomTheme.skyBlue,
+      backgroundColor: CustomTheme.appTheme,
       title: Container(
         child: Text('My WishList'),
       ),

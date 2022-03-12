@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:RentMyStay_user/profile_Module/model/filter_sort_request_model.dart';
 import 'package:RentMyStay_user/property_module/model/wish_list_model.dart';
 import 'package:RentMyStay_user/property_module/service/property_api_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,13 +46,13 @@ class PropertyViewModel extends ChangeNotifier {
     log('ALL WishListed PROPERTIES :: ${wishListModel.data?.length}');
     notifyListeners();
   }
-   Future<void> getSearchedPlace(String searchText) async {
+
+  Future<void> getSearchedPlace(String searchText) async {
     RMSUserApiService apiService = RMSUserApiService();
     String url =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$searchText&types=geocode&key=AIzaSyCplw9xnQ2u1ZNsLARd0mD4YAeBotTFkYM';
     final data = await apiService.getApiCallWithURL(endPoint: url)
-    as Map<String, dynamic>;
-
+        as Map<String, dynamic>;
 
     if (data['status'] == 'OK' && data['predictions'] != null) {
       Iterable iterable = data['predictions'];
@@ -60,6 +61,16 @@ class PropertyViewModel extends ChangeNotifier {
           .toList();
       notifyListeners();
     }
+  }
 
+  Future<void> filterSortPropertyList({
+    required FilterSortRequestModel requestModel,
+  }) async {
+    final PropertyListModel data = await _propertyApiService
+        .filterSortPropertyList(requestModel: requestModel);
+
+    propertyListModel = data;
+    log('ALL Sorted PROPERTIES ::  ${data.data?.length}');
+    notifyListeners();
   }
 }

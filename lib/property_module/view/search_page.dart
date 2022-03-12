@@ -33,6 +33,13 @@ class _SearchPageState extends State<SearchPage> {
   static const String fontFamily = 'hk-grotest';
   final _searchController = TextEditingController();
   final SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+  bool showSearchResults = false;
+
+  TextStyle get getTextStyle => const TextStyle(
+      color: Colors.black,
+      fontFamily: fontFamily,
+      fontWeight: FontWeight.w500,
+      fontSize: 15);
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +49,6 @@ class _SearchPageState extends State<SearchPage> {
       builder: (context, value, child) {
         return Scaffold(
           body: Container(
-             height: _mainHeight,
             width: _mainWidth,
             color: Colors.white,
             padding: EdgeInsets.all(15),
@@ -52,81 +58,94 @@ class _SearchPageState extends State<SearchPage> {
                   SizedBox(
                     height: 40,
                   ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    elevation: 5,
-                    color: Colors.blueGrey.shade50,
-                    child: Row(
-                      children: [
-                        IconButton(
-                            onPressed: () => Navigator.pop(context),
-                            icon: Icon(Icons.arrow_back,size: 20,)),
-                        Container(
-                          width: _mainWidth*0.78,
-                          height: 44,
-
-
-                          child: TextFormField(
-                            controller: _searchController,
-                            onChanged: (text) async {
-                              if (text.length < 3) {
-                                return;
-                              }
-                              await value.getSearchedPlace(text);
-                            },
-                            decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Search by Locality , Landmark or City',hintStyle: TextStyle(
-                              fontFamily: fontFamily,
-                              fontSize: 16,
-                              color: Colors.black54,
-                              fontWeight: FontWeight.w500
+                  Container(
+                    height: 45,
+                    child: Neumorphic(
+                      style: NeumorphicStyle(
+                          // shadowLightColor: CustomTheme.appTheme.withAlpha(150),
+                          shadowDarkColor: CustomTheme.appTheme.withAlpha(150),
+                          color: CustomTheme.appTheme.withAlpha(40),
+                          lightSource: LightSource.top,
+                          intensity: 5,
+                          depth: 3),
+                      child: Row(
+                        children: [
+                          IconButton(
+                              onPressed: () => Navigator.pop(context),
+                              icon: Icon(
+                                Icons.arrow_back,
+                                size: 20,
+                              )),
+                          Container(
+                            width: _mainWidth * 0.78,
+                            height: 44,
+                            child: TextFormField(
+                              controller: _searchController,
+                              onChanged: (text) async {
+                                if (text.length < 3) {
+                                  return;
+                                }
+                                showSearchResults = true;
+                                await value.getSearchedPlace(text);
+                              },
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText:
+                                      'Search by Locality , Landmark or City',
+                                  hintStyle: TextStyle(
+                                      fontFamily: fontFamily,
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w500),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      Icons.clear,
+                                      color: Colors.black,
+                                    ),
+                                    onPressed: () async {
+                                      _searchController.clear();
+                                      setState(() {
+                                        showSearchResults = false;
+                                      });
+                                    },
+                                  )),
                             ),
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    Icons.clear,
-                                    color: Colors.black,
-                                  ),
-                                  onPressed: () async {
-                                    _searchController.clear();
-                                    FocusScope.of(context).unfocus();
-                                    setState(() {});
-                                  },
-                                )),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-
+                  SizedBox(
+                    height: 10,
+                  ),
                   Visibility(
-                    visible: _searchController.text.length < 3,
+                    visible: !showSearchResults,
                     replacement: Container(
-
-                        padding: EdgeInsets.only(left: 0, bottom: 10,right: 0,top: 10),
+                        padding: EdgeInsets.only(
+                            left: 0, bottom: 10, right: 0, top: 10),
                         height: _mainHeight,
-                        child: ListView.separated(padding: EdgeInsets.all(0),
+                        color: Colors.white,
+                        child: ListView.separated(
+                          padding: EdgeInsets.zero,
                           itemBuilder: (context, index) {
                             return GestureDetector(
-                              onTap: () => Navigator.of(context).pushNamed(
-                                  AppRoutes.propertyListingPage,
-                                  arguments: {
-                                    'location': value.locations[index],
-                                    'property': Property.FromSearch,
-                                    'checkInDate': checkInDate,
-                                    'checkOutDate': checkOutDate,
-                                  }),
+                              onTap: () => setState(() {
+                                showSearchResults = false;
+                                FocusScope.of(context)
+                                    .requestFocus(FocusNode());
+                                _searchController.text = value.locations[index];
+                              }),
                               child: Container(
                                 padding: EdgeInsets.only(
                                   left: 15,
                                 ),
                                 height: 35,
-
                                 alignment: Alignment.centerLeft,
                                 decoration: BoxDecoration(
-                                    color: Colors.blueGrey.shade50,
+                                    //  color: Colors.white,//CustomTheme.appTheme.withAlpha(20),
+                                    border: Border.all(
+                                        color: CustomTheme.appTheme
+                                            .withAlpha(100)),
                                     borderRadius: BorderRadius.circular(10)),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -134,20 +153,19 @@ class _SearchPageState extends State<SearchPage> {
                                     Icon(
                                       Icons.location_on_outlined,
                                       size: 20,
-                                      color: CustomTheme.skyBlue,
+                                      color: CustomTheme.appTheme,
                                     ),
                                     SizedBox(
                                       width: 5,
                                     ),
                                     Container(
-
-                                      width: _mainWidth*0.8,
+                                      width: _mainWidth * 0.8,
                                       child: Text(
                                         value.locations[index],
                                         style: TextStyle(
                                             fontFamily: fontFamily,
                                             fontSize: 14,
-                                            color: Colors.grey,
+                                            color: Colors.black54,
                                             fontWeight: FontWeight.w600),
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
@@ -164,13 +182,14 @@ class _SearchPageState extends State<SearchPage> {
                           ),
                         )),
                     child: Container(
-                      height: _mainHeight,
+                      height: _mainHeight * 0.85,
                       color: Colors.white,
                       padding: EdgeInsets.only(top: 20),
                       child: Column(
                         children: [
                           GestureDetector(
                             onTap: () async {
+                              FocusScope.of(context).requestFocus(FocusNode());
                               PickerDateRange? dateRange =
                                   await Navigator.of(context)
                                       .push(MaterialPageRoute(
@@ -180,16 +199,18 @@ class _SearchPageState extends State<SearchPage> {
                                   DateTime.parse(checkOutDate),
                                 )),
                               ));
+
                               if (dateRange != null) {
                                 setState(() {
                                   checkInDate =
                                       DateTimeService.ddMMYYYYformatDate(
-                                          dateRange.startDate ?? DateTime.now());
+                                          dateRange.startDate ??
+                                              DateTime.now());
                                   checkOutDate =
                                       DateTimeService.ddMMYYYYformatDate(
                                           dateRange.endDate ??
-                                              DateTime.now()
-                                                  .add(const Duration(days: 1)));
+                                              DateTime.now().add(
+                                                  const Duration(days: 1)));
                                 });
                                 await preferenceUtil.setString(
                                     rms_checkInDate, checkInDate);
@@ -200,14 +221,15 @@ class _SearchPageState extends State<SearchPage> {
                             child: Container(
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: CustomTheme.peach,
+                                  color: CustomTheme.appTheme,
                                   width: 1,
                                 ),
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              height: _mainHeight * 0.06,
+                              height: _mainHeight * 0.05,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Column(
                                     mainAxisAlignment:
@@ -258,6 +280,50 @@ class _SearchPageState extends State<SearchPage> {
                             ),
                           ),
                           SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: 35,
+                            width: 80,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (_searchController.text.isEmpty ||
+                                    _searchController.text.length < 3) {
+                                  return;
+                                }
+
+                                Navigator.of(context).pushNamed(
+                                    AppRoutes.propertyListingPage,
+                                    arguments: {
+                                      'location': _searchController.text,
+                                      'property': Property.FromSearch,
+                                      'checkInDate': checkInDate,
+                                      'checkOutDate': checkOutDate,
+                                    });
+                                FocusScope.of(context).unfocus();
+                              },
+                              child: Text(
+                                'Search',
+                                style: TextStyle(
+                                    fontFamily: fontFamily,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16),
+                              ),
+                              style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                    CustomTheme.appTheme,
+                                  ),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30)),
+                                  )),
+                            ),
+                          ),
+                          SizedBox(
                             height: 20,
                           ),
                           Container(
@@ -265,10 +331,11 @@ class _SearchPageState extends State<SearchPage> {
                             child: Text(
                               'Frequently Searched Locations',
                               style: TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: fontFamily,
-                                  fontSize: 16,
-                                  ),
+                                //  color: CustomTheme.appTheme,
+                                fontFamily: fontFamily,
+                                // fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                           SizedBox(
@@ -288,15 +355,14 @@ class _SearchPageState extends State<SearchPage> {
                                   height: 35,
                                   width: 110,
                                   decoration: BoxDecoration(
-                                    color: CustomTheme.skyBlue.withAlpha(20),
+                                    //  color: Colors.blueGrey.shade50,
+                                    border:
+                                        Border.all(color: CustomTheme.appTheme),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
                                     'Bangalore',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: fontFamily,
-                                        fontSize: 14),
+                                    style: getTextStyle,
                                   ),
                                 ),
                               ),
@@ -316,16 +382,14 @@ class _SearchPageState extends State<SearchPage> {
                                   height: 35,
                                   width: 110,
                                   decoration: BoxDecoration(
-                                    color: CustomTheme.skyBlue.withAlpha(20),
+                                    //  color: Colors.blueGrey.shade50,
+                                    border:
+                                        Border.all(color: CustomTheme.appTheme),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
                                     'BTM Layout',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: fontFamily,
-
-                                        fontSize: 14),
+                                    style: getTextStyle,
                                   ),
                                 ),
                               ),
@@ -345,16 +409,14 @@ class _SearchPageState extends State<SearchPage> {
                                   height: 35,
                                   width: 110,
                                   decoration: BoxDecoration(
-                                    color: CustomTheme.skyBlue.withAlpha(20),
+                                    //  color: Colors.blueGrey.shade50,
+                                    border:
+                                        Border.all(color: CustomTheme.appTheme),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
                                     'HSR Layout',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: fontFamily,
-
-                                        fontSize: 14),
+                                    style: getTextStyle,
                                   ),
                                 ),
                               ),
@@ -378,15 +440,14 @@ class _SearchPageState extends State<SearchPage> {
                                   height: 35,
                                   width: 110,
                                   decoration: BoxDecoration(
-                                    color: CustomTheme.skyBlue.withAlpha(20),
+                                    //  color: Colors.blueGrey.shade50,
+                                    border:
+                                        Border.all(color: CustomTheme.appTheme),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
                                     'Kundlahalli',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: fontFamily,
-                                        fontSize: 14),
+                                    style: getTextStyle,
                                   ),
                                 ),
                               ),
@@ -406,15 +467,14 @@ class _SearchPageState extends State<SearchPage> {
                                   height: 35,
                                   width: 110,
                                   decoration: BoxDecoration(
-                                    color: CustomTheme.skyBlue.withAlpha(20),
+                                    //  color: Colors.blueGrey.shade50,
+                                    border:
+                                        Border.all(color: CustomTheme.appTheme),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
                                     'Marathalli',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: fontFamily,
-                                        fontSize: 14),
+                                    style: getTextStyle,
                                   ),
                                 ),
                               ),
@@ -434,15 +494,14 @@ class _SearchPageState extends State<SearchPage> {
                                   height: 35,
                                   width: 110,
                                   decoration: BoxDecoration(
-                                    color: CustomTheme.skyBlue.withAlpha(20),
+                                    //  color: Colors.blueGrey.shade50,
+                                    border:
+                                        Border.all(color: CustomTheme.appTheme),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
                                     'Whitefield',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: fontFamily,
-                                        fontSize: 14),
+                                    style: getTextStyle,
                                   ),
                                 ),
                               ),
@@ -464,15 +523,13 @@ class _SearchPageState extends State<SearchPage> {
                               height: 35,
                               width: 110,
                               decoration: BoxDecoration(
-                                color: CustomTheme.skyBlue.withAlpha(20),
+                                //  color: Colors.blueGrey.shade50,
+                                border: Border.all(color: CustomTheme.appTheme),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
                                 'Old Airport Road',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: fontFamily,
-                                    fontSize: 14),
+                                style: getTextStyle,
                               ),
                             ),
                           ),
@@ -484,10 +541,11 @@ class _SearchPageState extends State<SearchPage> {
                             child: Text(
                               'Search by Desired Property Type',
                               style: TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: fontFamily,
-                                  fontSize: 16,
-                                  ),
+                                color: Colors.black,
+                                fontFamily: fontFamily,
+                                // fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                           SizedBox(
@@ -508,15 +566,14 @@ class _SearchPageState extends State<SearchPage> {
                                   height: 35,
                                   width: 110,
                                   decoration: BoxDecoration(
-                                    color: CustomTheme.skyBlue.withAlpha(20),
+                                    //  color: Colors.blueGrey.shade50,
+                                    border:
+                                        Border.all(color: CustomTheme.appTheme),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
                                     '1 BHK',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: fontFamily,
-                                        fontSize: 14),
+                                    style: getTextStyle,
                                   ),
                                 ),
                               ),
@@ -536,15 +593,14 @@ class _SearchPageState extends State<SearchPage> {
                                   height: 35,
                                   width: 110,
                                   decoration: BoxDecoration(
-                                    color: CustomTheme.skyBlue.withAlpha(20),
+                                    //  color: Colors.blueGrey.shade50,
+                                    border:
+                                        Border.all(color: CustomTheme.appTheme),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
                                     '2 BHK',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: fontFamily,
-                                        fontSize: 14),
+                                    style: getTextStyle,
                                   ),
                                 ),
                               ),
@@ -564,15 +620,14 @@ class _SearchPageState extends State<SearchPage> {
                                   height: 35,
                                   width: 110,
                                   decoration: BoxDecoration(
-                                    color: CustomTheme.skyBlue.withAlpha(20),
+                                    //  color: Colors.blueGrey.shade50,
+                                    border:
+                                        Border.all(color: CustomTheme.appTheme),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
                                     'Studio',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: fontFamily,
-                                        fontSize: 14),
+                                    style: getTextStyle,
                                   ),
                                 ),
                               ),

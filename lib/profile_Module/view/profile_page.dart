@@ -97,7 +97,7 @@ class _ProfileState extends State<Profile> {
                             ListTile(
                               leading: Icon(
                                 Icons.email,
-                                color: CustomTheme.skyBlue,
+                                color: CustomTheme.appTheme,
                               ),
                               title: Text(
                                    value.profileModel.result!.isNotEmpty && value.profileModel.result![0].email != null ?
@@ -110,7 +110,7 @@ class _ProfileState extends State<Profile> {
                             ListTile(
                               leading: Icon(
                                 Icons.phone,
-                                color: CustomTheme.skyBlue,
+                                color: CustomTheme.appTheme,
                               ),
                               title: Text(
                                   value.profileModel.result![0].contactNo ??
@@ -123,7 +123,7 @@ class _ProfileState extends State<Profile> {
                             ListTile(
                               leading: Icon(
                                 Icons.location_on_outlined,
-                                color: CustomTheme.skyBlue,
+                                color: CustomTheme.appTheme,
                               ),
                               title: Text(value.profileModel.result![0]
                                       .permanentAddress ??
@@ -154,7 +154,7 @@ class _ProfileState extends State<Profile> {
                 ),
               )
             : Center(child:  CircularProgressIndicator(
-            valueColor:AlwaysStoppedAnimation<Color>(CustomTheme.skyBlue))),
+            valueColor:AlwaysStoppedAnimation<Color>(CustomTheme.appTheme))),
       );
     });
   }
@@ -185,7 +185,7 @@ class _ProfileState extends State<Profile> {
             ListTile(
               leading: Icon(
                 Icons.home_outlined,
-                color: CustomTheme.skyBlue,
+                color: CustomTheme.appTheme,
               ),
               title: Text("My Stays",style: TextStyle(fontSize: 14),),
             ),
@@ -201,7 +201,7 @@ class _ProfileState extends State<Profile> {
                 //onTap: () => _handleURLButtonPress(context, , title),
                 leading: Icon(
                   Icons.topic,
-                  color: CustomTheme.skyBlue,
+                  color: CustomTheme.appTheme,
                 ),
                 title: Text("Update KYC",style: TextStyle(fontSize: 14),),
               ),
@@ -214,7 +214,7 @@ class _ProfileState extends State<Profile> {
             ListTile(
               leading: Icon(
                 Icons.camera_alt_outlined,
-                color: CustomTheme.skyBlue,
+                color: CustomTheme.appTheme,
               ),
               title: Text("Upload ID-proof",style: TextStyle(fontSize: 14),),
             ),
@@ -252,7 +252,7 @@ class _ProfileState extends State<Profile> {
   AppBar _getAppBar({required BuildContext context}) {
     return AppBar(
       leading: BackButton(
-        color: CustomTheme.skyBlue,
+        color: CustomTheme.appTheme,
       ),
       actions: [
         GestureDetector(

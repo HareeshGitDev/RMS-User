@@ -60,7 +60,7 @@ class _BookingPageState extends State<BookingPage> {
   late PropertyDetailsViewModel _viewModel;
   late Razorpay _razorpay;
 
-  BookingCredentialResponseModel? _credentialResponseModel;
+  String? redirectApi;
 
   @override
   void initState() {
@@ -118,7 +118,7 @@ class _BookingPageState extends State<BookingPage> {
               ),
             ),
             titleSpacing: 0,
-            backgroundColor: CustomTheme.skyBlue,
+            backgroundColor: CustomTheme.appTheme,
           ),
           body: Container(
             height: _mainHeight,
@@ -182,7 +182,8 @@ class _BookingPageState extends State<BookingPage> {
                                         style: ButtonStyle(
                                             backgroundColor:
                                                 MaterialStateProperty.all<
-                                                    Color>(CustomTheme.skyBlue),
+                                                        Color>(
+                                                    CustomTheme.appTheme),
                                             shape: MaterialStateProperty.all<
                                                 RoundedRectangleBorder>(
                                               RoundedRectangleBorder(
@@ -202,7 +203,8 @@ class _BookingPageState extends State<BookingPage> {
                                         style: ButtonStyle(
                                             backgroundColor:
                                                 MaterialStateProperty.all<
-                                                    Color>(CustomTheme.skyBlue),
+                                                        Color>(
+                                                    CustomTheme.appTheme),
                                             shape: MaterialStateProperty.all<
                                                 RoundedRectangleBorder>(
                                               RoundedRectangleBorder(
@@ -464,7 +466,7 @@ class _BookingPageState extends State<BookingPage> {
                                       style: ButtonStyle(
                                           backgroundColor:
                                               MaterialStateProperty.all<Color>(
-                                                  CustomTheme.skyBlue),
+                                                  CustomTheme.appTheme),
                                           shape: MaterialStateProperty.all<
                                               RoundedRectangleBorder>(
                                             RoundedRectangleBorder(
@@ -581,7 +583,11 @@ class _BookingPageState extends State<BookingPage> {
 
                             Navigator.pop(context);
                             if (response.status?.toLowerCase() == 'success') {
-                              _credentialResponseModel = response;
+                              if (response.data != null &&
+                                  response.data?.redirect_api != null) {
+                                redirectApi = response.data?.redirect_api;
+                              }
+
                               await openCheckout(model: response);
                             }
                           },
@@ -594,7 +600,7 @@ class _BookingPageState extends State<BookingPage> {
                           ),
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
-                                  CustomTheme.skyBlue),
+                                  CustomTheme.appTheme),
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
@@ -647,14 +653,20 @@ class _BookingPageState extends State<BookingPage> {
     if (response.orderId != null &&
         response.signature != null &&
         response.paymentId != null) {
+     RMSWidgets.showLoaderDialog(context: context, message: 'Confirmation Pending...');
       await _viewModel
           .submitPaymentResponse(
               paymentId: response.paymentId!,
-              paymentSignature: response.signature!)
-          .then((value) => Navigator.pushNamedAndRemoveUntil(
-              context, AppRoutes.homePage, (route) => false))
+              paymentSignature: response.signature!,
+              redirectApi: redirectApi ?? '')
+          .then((value) {
+            Navigator.of(context).pop();
+            return Navigator.pushNamedAndRemoveUntil(
+              context, AppRoutes.homePage, (route) => false);
+          })
           .catchError(
         (error) {
+          Navigator.of(context).pop();
           log('Error :: ${error.toString()}');
         },
       );

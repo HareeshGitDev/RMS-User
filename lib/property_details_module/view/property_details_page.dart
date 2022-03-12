@@ -23,7 +23,6 @@ import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-
 import '../../Web_View_Container.dart';
 import '../../utils/constants/app_consts.dart';
 import '../../utils/constants/sp_constants.dart';
@@ -42,7 +41,8 @@ class PropertyDetailsPage extends StatefulWidget {
 }
 
 class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
-  String  cancellationPolicy = 'https://www.rentmystay.com/info/cancellation_policy/1';
+  String cancellationPolicy =
+      'https://www.rentmystay.com/info/cancellation_policy/1';
   var _mainHeight;
   var _mainWidth;
   static const String fontFamily = 'hk-grotest';
@@ -88,26 +88,33 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                       SliverAppBar(
                         expandedHeight: _mainHeight * 0.30,
                         floating: true,
-                        backgroundColor: CustomTheme.skyBlue,
+                        backgroundColor: CustomTheme.appTheme,
                         // pinned: true,
-                        actions:  [
+                        actions: [
                           CircleAvatar(
                               backgroundColor: Colors.white,
                               radius: 15,
-                              child:value.propertyDetailsModel?.details != null && value.propertyDetailsModel?.details?.wishlist ==1? Icon(
-                                Icons.favorite,
-                                color: Colors.red,
-                              ):Icon(
-                                Icons.favorite_outline_rounded,
-                                color: Colors.black54,
-                              )),
+                              child:
+                                  value.propertyDetailsModel?.details != null &&
+                                          value.propertyDetailsModel?.details
+                                                  ?.wishlist ==
+                                              1
+                                      ? Icon(
+                                          Icons.favorite,
+                                          color: Colors.red,
+                                        )
+                                      : Icon(
+                                          Icons.favorite_outline_rounded,
+                                          color: Colors.black54,
+                                        )),
                           SizedBox(
                             width: 15,
                           ),
-                           GestureDetector( onTap: () async {
-                             await Share.share(
-                                 value.propertyDetailsModel!.shareLink ?? " ");
-                           },
+                          GestureDetector(
+                            onTap: () async {
+                              await Share.share(
+                                  value.propertyDetailsModel!.shareLink ?? " ");
+                            },
                             child: CircleAvatar(
                                 backgroundColor: Colors.white,
                                 radius: 15,
@@ -320,17 +327,9 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                           height: _mainHeight * 0.015,
                         ),
                         Container(
-                          // height: _mainHeight * 0.04,
-
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
+                          height: _mainHeight * 0.04,
                           margin: EdgeInsets.only(
-                            left: _mainWidth * 0.02,
-                            right: _mainWidth * 0.02,
-                          ),
-                          padding: EdgeInsets.only(
-                            left: _mainWidth * 0.02,
+                            left: _mainWidth * 0.04,
                             right: _mainWidth * 0.02,
                           ),
                           child: Row(
@@ -339,7 +338,6 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                               Container(
                                 width: _mainWidth * 0.8,
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       value.propertyDetailsModel?.details !=
@@ -350,14 +348,14 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                           ? (value.propertyDetailsModel?.details
                                                   ?.title)
                                               .toString()
-                                          : ' ',
-                                      overflow: TextOverflow.ellipsis,
+                                          : '',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontFamily: fontFamily,
+                                          fontWeight: FontWeight.w600),
                                       maxLines: 1,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: fontFamily,
-                                      ),
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                     Text(
                                       value.propertyDetailsModel?.details !=
@@ -368,70 +366,54 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                           ? (value.propertyDetailsModel?.details
                                                   ?.bname)
                                               .toString()
-                                          : ' ',
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      style: const TextStyle(
+                                          : '',
+                                      style: TextStyle(
+                                          color: Colors.black54,
                                           fontSize: 14,
-                                          fontWeight: FontWeight.w600,
                                           fontFamily: fontFamily,
-                                          color: Colors.black54),
-                                    )
+                                          fontWeight: FontWeight.w600),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ],
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                 ),
                               ),
                               GestureDetector(
                                 onTap: () async {
-                                  if ((value.propertyDetailsModel != null &&
-                                          value.propertyDetailsModel?.details !=
-                                              null &&
-                                          value.propertyDetailsModel?.details
-                                                  ?.glat !=
-                                              null) &&
-                                      (value.propertyDetailsModel != null &&
-                                          value.propertyDetailsModel?.details !=
-                                              null &&
-                                          value.propertyDetailsModel?.details
-                                                  ?.glng !=
-                                              null)) {
-                                    String latitude = (value
-                                            .propertyDetailsModel
-                                            ?.details
-                                            ?.glat)
-                                        .toString();
-                                    String longitude = (value
-                                            .propertyDetailsModel
-                                            ?.details
-                                            ?.glng)
-                                        .toString();
+                                  if ((value.propertyDetailsModel?.details != null && value.propertyDetailsModel?.details?.glat != null) &&
+                                      (value.propertyDetailsModel?.details != null && value.propertyDetailsModel?.details?.glng != null)) {
+                                    var latitude = (value.propertyDetailsModel?.details?.glat).toString();
+                                    var longitude =(value.propertyDetailsModel?.details?.glng).toString();
                                     await SystemService.launchGoogleMaps(
                                         latitude: latitude,
                                         longitude: longitude);
                                   }
                                 },
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Icon(Icons.location_on_outlined,
-                                        color: myFavColor),
-                                    Text(
-                                      'Map',
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: fontFamily,
-                                          color: Colors.black54),
-                                    )
-                                  ],
+                                child: Container(
+                                  width: _mainWidth * 0.08,
+                                  child: Column(
+                                   children: [
+                                      Icon(
+                                        Icons.location_on_outlined,
+                                        color: CustomTheme.appTheme,
+                                        size: _mainHeight * 0.02,
+                                      ),
+                                      Text('Map',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 14,
+                                            fontFamily: fontFamily,
+                                            fontWeight: FontWeight.w500),),
+                                    ],
+                                  ),
                                 ),
-                              ),
+                              )
                             ],
                           ),
                         ),
                         SizedBox(
-                          height: _mainHeight * 0.015,
+                          height: _mainHeight * 0.01,
                         ),
                         _getAmountView(
                             context: context,
@@ -584,7 +566,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   padding:
                                       EdgeInsets.only(left: _mainWidth * 0.08),
                                   icon: Icon(Icons.call,
-                                      color: CustomTheme.skyBlue,
+                                      color: CustomTheme.appTheme,
                                       size: _mainWidth * 0.06),
                                   onPressed: () {
                                     if (value.propertyDetailsModel != null &&
@@ -605,7 +587,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   padding:
                                       EdgeInsets.only(left: _mainWidth * 0.06),
                                   icon: Icon(Icons.email_outlined,
-                                      color: CustomTheme.skyBlue,
+                                      color: CustomTheme.appTheme,
                                       size: _mainWidth * 0.06),
                                   onPressed: () {
                                     if (value.propertyDetailsModel != null &&
@@ -624,7 +606,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         const Divider(
                           thickness: 2,
                         ),
-                        Container(
+                        /* Container(
                           // color: CustomTheme.peach,
                           padding: EdgeInsets.only(
                             left: _mainWidth * 0.04,
@@ -655,7 +637,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         ),
                         const Divider(
                           thickness: 2,
-                        ),
+                        ),*/
                         Padding(
                           padding: EdgeInsets.only(
                             left: _mainWidth * 0.04,
@@ -849,7 +831,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                       fontWeight: FontWeight.w700,
                                       fontSize: 14,
                                       fontFamily: fontFamily,
-                                      color: CustomTheme.skyBlue),
+                                      color: CustomTheme.appTheme),
                                 ),
                               ]),
                         ),
@@ -877,15 +859,18 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                     ],
                   ),
                   bottomNavigationBar: Container(
-                    height: _mainHeight*0.06,
+                    height: _mainHeight * 0.06,
                     width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.only(left: _mainWidth*0.02, right: _mainWidth*0.02, bottom: _mainHeight*0.01),
+                    padding: EdgeInsets.only(
+                        left: _mainWidth * 0.02,
+                        right: _mainWidth * 0.02,
+                        bottom: _mainHeight * 0.01),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         SizedBox(
-                            width: _mainWidth*0.4,
-                            height: _mainHeight*0.05,
+                            width: _mainWidth * 0.4,
+                            height: _mainHeight * 0.05,
                             child: ElevatedButton(
                               onPressed: () async {
                                 RMSWidgets.showLoaderDialog(
@@ -918,7 +903,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                               style: ButtonStyle(
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
-                                          CustomTheme.skyBlue),
+                                          CustomTheme.appTheme),
                                   shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
@@ -927,8 +912,8 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   )),
                             )),
                         Container(
-                            width: _mainWidth*0.4,
-                            height: _mainHeight*0.05,
+                            width: _mainWidth * 0.4,
+                            height: _mainHeight * 0.05,
                             child: ElevatedButton(
                               onPressed: () async {
                                 if (value.propertyDetailsModel == null ||
@@ -993,7 +978,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                               style: ButtonStyle(
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
-                                          CustomTheme.skyBlue),
+                                          CustomTheme.appTheme),
                                   shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
@@ -1007,12 +992,12 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                 )
               : Scaffold(
                   appBar: AppBar(
-                    backgroundColor: CustomTheme.skyBlue,
+                    backgroundColor: CustomTheme.appTheme,
                   ),
                   body: Center(
                     child: CircularProgressIndicator(
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(CustomTheme.skyBlue)),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            CustomTheme.appTheme)),
                   ),
                 ),
         );
@@ -1060,7 +1045,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                       width: _mainWidth * 0.3,
                       decoration: BoxDecoration(
                           color: dailyFlag
-                              ? CustomTheme.skyBlue
+                              ? CustomTheme.appTheme
                               : Colors.blueGrey.shade100,
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(50),
@@ -1093,7 +1078,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                       height: _mainHeight * 0.04,
                       width: _mainWidth * 0.3,
                       color: monthlyFlag
-                          ? CustomTheme.skyBlue
+                          ? CustomTheme.appTheme
                           : Colors.blueGrey.shade100,
                       child: Text(
                         'Monthly',
@@ -1123,7 +1108,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                       width: _mainWidth * 0.3,
                       decoration: BoxDecoration(
                           color: moreThanThreeFlag
-                              ? CustomTheme.skyBlue
+                              ? CustomTheme.appTheme
                               : Colors.blueGrey.shade100,
                           borderRadius: const BorderRadius.only(
                             topRight: Radius.circular(50),
@@ -1159,7 +1144,9 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                   color: Colors.grey.shade600,
                   fontWeight: FontWeight.w500),
             ),
-            GestureDetector(onTap:() =>_handleURLButtonPress(context, cancellationPolicy, 'Cancellation Policy'),
+            GestureDetector(
+              onTap: () => _handleURLButtonPress(
+                  context, cancellationPolicy, 'Cancellation Policy'),
               child: const Text(
                 'Cancellation Policy',
                 style: TextStyle(
@@ -1351,23 +1338,21 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             const Icon(Icons.error),
                       ),
                       Container(
-
-                      padding: EdgeInsets.only(
-                          left: _mainWidth * 0.01,
-                          right: _mainWidth * 0.01,
-                          top: _mainHeight * 0.005),
-                      child: Text(
-                        data.title ?? '',
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontFamily: fontFamily,
-                            color: Colors.grey.shade600,
-                            fontWeight: FontWeight.w500),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        padding: EdgeInsets.only(
+                            left: _mainWidth * 0.01,
+                            right: _mainWidth * 0.01,
+                            top: _mainHeight * 0.005),
+                        child: Text(
+                          data.title ?? '',
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: fontFamily,
+                              color: Colors.grey.shade600,
+                              fontWeight: FontWeight.w500),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                      ),
-
                       Row(
                         children: [
                           Container(
@@ -1568,6 +1553,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                   propId: propId, email: email, phoneNumber: phone, name: name),
             ));
   }
+
   void _handleURLButtonPress(BuildContext context, String url, String title) {
     Navigator.push(
       context,

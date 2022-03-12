@@ -57,7 +57,7 @@ class _SplashPageState extends State<SplashPage> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-              colors: [CustomTheme.skyBlue.withAlpha(50), CustomTheme.skyBlue],
+              colors: [CustomTheme.appTheme.withAlpha(50), CustomTheme.appTheme],
               end: Alignment.bottomCenter,
               begin: Alignment.topCenter),
         ),

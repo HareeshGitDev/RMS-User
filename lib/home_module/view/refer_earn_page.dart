@@ -55,7 +55,7 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                                 colors: [
-                                  CustomTheme.skyBlue.withAlpha(99),
+                                  CustomTheme.appTheme.withAlpha(99),
                                   CustomTheme.peach.withAlpha(20)
                                 ],
                                 end: Alignment.topCenter,
@@ -175,7 +175,7 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                         offset: Offset(1, 1),
                                         blurStyle: BlurStyle.outer,
                                         blurRadius: 6,
-                                        color: CustomTheme.skyBlue),
+                                        color: CustomTheme.appTheme),
                                   ]),
                               margin: EdgeInsets.symmetric(horizontal: 15),
                               height: _mainHeight * 0.20,
@@ -264,7 +264,7 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                   ),
                   Container(margin: EdgeInsets.only(top: 50), alignment: Alignment.center,
                     child: GestureDetector(onTap: _showDialog,
-                        child: Text("Terms and Conditions",style: TextStyle(color: CustomTheme.skyBlue))),
+                        child: Text("Terms and Conditions",style: TextStyle(color: CustomTheme.appTheme))),
                    ),
                 ],
               )),
@@ -283,7 +283,7 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
               bottomLeft: Radius.circular(15),
               bottomRight: Radius.circular(15))),
       titleSpacing: 0,
-      backgroundColor: CustomTheme.skyBlue,
+      backgroundColor: CustomTheme.appTheme,
       title: Text('Refer And Earn'),
     );
   }

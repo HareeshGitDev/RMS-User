@@ -65,7 +65,7 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
       body: GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         child: Container(
-          color: CustomTheme.skyBlue,
+          color: CustomTheme.appTheme,
           height: _mainHeight,
           width: _mainWidth,
           child: SingleChildScrollView(
@@ -91,7 +91,7 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
                               fontSize: 30, fontFamily: "HKGrotest-Light"),
                           colors: [
                             Colors.white,
-                            CustomTheme.skyBlue,
+                            CustomTheme.appTheme,
                           ]),
                     ],
                     isRepeatingAnimation: true,
@@ -319,7 +319,7 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
                         child: ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
-                                  CustomTheme.skyBlue),
+                                  CustomTheme.appTheme),
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(

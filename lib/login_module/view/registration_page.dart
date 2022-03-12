@@ -49,7 +49,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          color: CustomTheme.skyBlue,
+          color: CustomTheme.appTheme,
           height: _mainHeight,
           width: _mainWidth,
           child: SingleChildScrollView(
@@ -74,7 +74,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               TextStyle(fontSize: 25, fontFamily: "HKGrotest-Light"),
                           colors: [
                             Colors.white,
-                            CustomTheme.skyBlue,
+                            CustomTheme.appTheme,
                           ]),
                     ],
                     isRepeatingAnimation: true,
@@ -228,7 +228,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         child: ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
-                                  CustomTheme.skyBlue),
+                                  CustomTheme.appTheme),
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(

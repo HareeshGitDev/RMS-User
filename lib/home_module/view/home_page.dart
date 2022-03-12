@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        backgroundColor: CustomTheme.skyBlue,
+        backgroundColor: CustomTheme.appTheme,
         centerTitle: true,
         elevation: 4,
         bottom: PreferredSize(
@@ -122,8 +122,9 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: CurvedNavigationBar(
         height: 50,
         backgroundColor: Colors.white,
-        buttonBackgroundColor: CustomTheme.skyBlue,
-        color: CustomTheme.skyBlue,
+        buttonBackgroundColor: CustomTheme.appTheme,
+        color: CustomTheme.appTheme,
+        animationDuration: Duration(milliseconds: 50),
         items: const <Widget>[
           Icon(
             Icons.home_rounded,
@@ -283,7 +284,7 @@ class _HomePageState extends State<HomePage> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10))),
                           elevation: 3,
-                          shadowColor: CustomTheme.skyBlue,
+                          shadowColor: CustomTheme.appTheme,
                           margin: EdgeInsets.all(10),
                           child: Container(
                             //margin: EdgeInsets.all(10),
@@ -411,7 +412,7 @@ class _HomePageState extends State<HomePage> {
                         child: Neumorphic(
                           style: NeumorphicStyle(
                             color: CustomTheme.peach,
-                            shadowDarkColor: CustomTheme.skyBlue,
+                            shadowDarkColor: CustomTheme.appTheme,
                           ),
                           child: TextButton(
                             onPressed: () async {
@@ -535,10 +536,10 @@ class _HomePageState extends State<HomePage> {
                                   borderRadiusAll: 4,
                                   child: Icon(
                                     Icons.person_outline,
-                                    color: CustomTheme.skyBlue,
+                                    color: CustomTheme.appTheme,
                                     size: 20,
                                   ),
-                                  color: CustomTheme.skyBlue.withAlpha(20),
+                                  color: CustomTheme.appTheme.withAlpha(20),
                                 ),
                                 FxSpacing.width(16),
                                 Expanded(
@@ -572,10 +573,10 @@ class _HomePageState extends State<HomePage> {
                                   borderRadiusAll: 4,
                                   child: Icon(
                                     Icons.house_outlined,
-                                    color: CustomTheme.skyBlue,
+                                    color: CustomTheme.appTheme,
                                     size: 20,
                                   ),
-                                  color: CustomTheme.skyBlue.withAlpha(20),
+                                  color: CustomTheme.appTheme.withAlpha(20),
                                 ),
                                 FxSpacing.width(16),
                                 Expanded(
@@ -607,10 +608,10 @@ class _HomePageState extends State<HomePage> {
                                   borderRadiusAll: 4,
                                   child: Icon(
                                     Icons.favorite_outline,
-                                    color: CustomTheme.skyBlue,
+                                    color: CustomTheme.appTheme,
                                     size: 20,
                                   ),
-                                  color: CustomTheme.skyBlue.withAlpha(20),
+                                  color: CustomTheme.appTheme.withAlpha(20),
                                 ),
                                 FxSpacing.width(16),
                                 Expanded(
@@ -642,10 +643,10 @@ class _HomePageState extends State<HomePage> {
                                   borderRadiusAll: 4,
                                   child: Icon(
                                     Icons.record_voice_over_outlined,
-                                    color: CustomTheme.skyBlue,
+                                    color: CustomTheme.appTheme,
                                     size: 20,
                                   ),
-                                  color: CustomTheme.skyBlue.withAlpha(20),
+                                  color: CustomTheme.appTheme.withAlpha(20),
                                 ),
                                 FxSpacing.width(16),
                                 Expanded(
@@ -727,7 +728,7 @@ class _HomePageState extends State<HomePage> {
                                   borderRadiusAll: 4,
                                   child: Icon(
                                     Icons.logout_rounded,
-                                    color: CustomTheme.skyBlue,
+                                    color: CustomTheme.appTheme,
                                     size: 20,
                                   ),
                                   /* Image(
@@ -738,7 +739,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
 
                                 */
-                                  color: CustomTheme.skyBlue.withAlpha(20),
+                                  color: CustomTheme.appTheme.withAlpha(20),
                                 ),
                                 FxSpacing.width(16),
                                 Expanded(
@@ -784,9 +785,9 @@ class _HomePageState extends State<HomePage> {
                                     height: 20,
                                     width: 20,
                                     image: AssetImage(Images.wallet),
-                                    color: CustomTheme.skyBlue,
+                                    color: CustomTheme.appTheme,
                                   ),
-                                  color: CustomTheme.skyBlue.withAlpha(20),
+                                  color: CustomTheme.appTheme.withAlpha(20),
                                 ),
                                 FxSpacing.width(16),
                                 Expanded(
