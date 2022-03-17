@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io' show Platform;
+import 'package:RentMyStay_user/theme/custom_theme.dart';
 import 'package:RentMyStay_user/utils/service/location_service.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -41,8 +42,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'RentMyStay ',
       theme: ThemeData(
-        primarySwatch: Colors.blue,fontFamily: 'hk-grotest',
-
+        primarySwatch: Colors.red,fontFamily: 'hk-grotest',
         visualDensity: VisualDensity.adaptivePlatformDensity,
 
       ),

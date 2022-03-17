@@ -769,11 +769,11 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         children: [
                           InkWell(
-                            /*
+
                         onTap: () {
-                          launchDocumentation();
+                          Navigator.pushNamed(context, AppRoutes.myStayDetailsPage);
                         },
-                        */
+
                             highlightColor: Colors.transparent,
                             splashColor: Colors.transparent,
                             child: Row(

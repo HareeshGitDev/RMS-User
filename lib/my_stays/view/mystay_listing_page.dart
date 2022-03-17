@@ -14,6 +14,8 @@ import '../../theme/app_theme.dart';
 import '../../theme/custom_theme.dart';
 
 class MyStayListPage extends StatefulWidget {
+  const MyStayListPage({Key? key}) : super(key: key);
+
   @override
   _MyStayListPageState createState() => _MyStayListPageState();
 }

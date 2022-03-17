@@ -530,7 +530,7 @@ class _BookingPageState extends State<BookingPage> {
                       color: Colors.white,
                       height: _mainHeight * 0.06,
                       width: MediaQuery.of(context).size.width * 0.4,
-                      padding: EdgeInsets.only(
+                      margin: EdgeInsets.only(
                           left: _mainWidth * 0.05,
                           right: _mainWidth * 0.05,
                           bottom: _mainHeight * 0.01),
@@ -542,7 +542,7 @@ class _BookingPageState extends State<BookingPage> {
                             style: TextStyle(
                                 fontSize: 20,
                                 fontFamily: fontFamily,
-                                fontWeight: FontWeight.w600),
+                                fontWeight: FontWeight.w600,),
                           ),
                           Text('Payable Amount'),
                         ],
@@ -768,7 +768,7 @@ class _BookingPageState extends State<BookingPage> {
           borderRadius: BorderRadius.circular(5),
         ),
         padding: EdgeInsets.only(left: _mainWidth * 0.02, top: 10, bottom: 10),
-        height: _mainHeight * 0.22,
+        height: _mainHeight * 0.26,
         width: MediaQuery.of(context).size.width,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

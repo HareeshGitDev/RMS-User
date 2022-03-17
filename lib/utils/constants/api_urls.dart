@@ -19,5 +19,6 @@ class AppUrls{
   static const String profileUrl='/m/getprofile';
   static const String myStayListUrl='/m/get_booking_history';
   static const String filterSortPropsUrl='/m/match_props';
+  static const String myBookingDetails='/v2/bookingDetail';
 
 }

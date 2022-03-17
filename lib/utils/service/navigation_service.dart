@@ -21,6 +21,7 @@ import '../../home_module/view/home_page.dart';
 import '../../login_module/view/forgot_password_page.dart';
 import '../../login_module/view/mobile_otp_page.dart';
 import '../../login_module/view/registration_page.dart';
+import '../../my_stays/view/mystay_details_page.dart';
 import '../../my_stays/view/mystay_listing_page.dart';
 import '../../profile_Module/view/Edit_profile.dart';
 import '../../profile_Module/view/profile_page.dart';
@@ -87,6 +88,9 @@ class NavigationService {
 
       case AppRoutes.successPage:
         return MaterialPageRoute(builder: (context) => SuccessPage());
+
+      case AppRoutes.myStayDetailsPage:
+        return MaterialPageRoute(builder: (context) => MyStayPage());
 
       case AppRoutes.bookingPage:
         final data = settings.arguments as PropertyDetailsUtilModel;
@@ -179,4 +183,5 @@ class AppRoutes {
   static const String propertyDetailsPage = 'propertyDetailsPage';
   static const String myStayListPage = 'myStayListPage';
   static const String searchPage = 'searchPage';
+  static const String myStayDetailsPage = 'myStay_details_page';
 }

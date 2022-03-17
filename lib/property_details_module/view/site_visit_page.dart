@@ -257,7 +257,7 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                 height: 40,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: Colors.amber,
+                  color: CustomTheme.peach,
 
                   borderRadius: BorderRadius.all(Radius.circular(20)),
 
@@ -268,8 +268,6 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                     icon: Container(),
                     elevation: 10,
                     menuMaxHeight: 300,
-
-
                     items: getTimeList
                         .map((type) => DropdownMenuItem(
                               child: Padding(
@@ -306,34 +304,57 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                       ),
                     ),
                     onPressed: () async {
-                      RMSWidgets.showLoaderDialog(context: context, message: 'Please wait...');
-                      SharedPreferenceUtil _shared = SharedPreferenceUtil();
-                      String? token =
-                          await _shared.getString(rms_registeredUserToken);
-
-                      Map<String, dynamic> scheduleVisitData = {
-                        'email': _emailController.text,
-                        'propid': widget.propId,
-                        'name': _nameController.text,
-                        'app_token': token,
-                        'phone': _phoneNumberController.text,
-                        'date': '$typeValue   $showDate',
-                        'visit_type': _selected[0] == true
-                            ? 'Virtual Visit'
-                            : 'Physical Visit',
-                      };
-                      final viewModel = Provider.of<PropertyDetailsViewModel>(
-                          context,
-                          listen: false);
-                      String response = await viewModel.scheduleSiteVisit(
-                          scheduleVisitData: scheduleVisitData);
-
-                      Navigator.of(context).pop();
-                      if(response.toLowerCase() =='success'){
-                        Navigator.of(context).pop();
-                        RMSWidgets.showSnackbar(context: context, message: 'Congratulations,Your Site Visit is Scheduled.', color: CustomTheme.appTheme);
-                        log('Response From Site Visit is :: $response');
+                      if(_nameController.text.isEmpty){
+                        RMSWidgets.getToast(message: 'Please Enter Your Name', color: Colors.grey);
                       }
+                      else{
+                        if(_emailController.text.isEmpty){
+                          RMSWidgets.getToast(message: 'Please Enter Your Email Address', color: Colors.grey);
+                        }
+                        else{
+                          if(_phoneNumberController.text.isEmpty){
+                            RMSWidgets.getToast(message: 'Please Enter Your Mobile Number', color: Colors.grey);
+                          }
+                          else{
+                            if(showDate=='Select Date For Visit' || typeValue=='HH:MM')
+                              {
+                                RMSWidgets.getToast(message: 'Please Select Date And Time', color: Colors.grey);
+                              }
+                            else{
+                              RMSWidgets.showLoaderDialog(context: context, message: 'Please wait...');
+                              SharedPreferenceUtil _shared = SharedPreferenceUtil();
+                              String? token =
+                              await _shared.getString(rms_registeredUserToken);
+
+                              Map<String, dynamic> scheduleVisitData = {
+                                'email': _emailController.text,
+                                'propid': widget.propId,
+                                'name': _nameController.text,
+                                'app_token': token,
+                                'phone': _phoneNumberController.text,
+                                'date': '$typeValue   $showDate',
+                                'visit_type': _selected[0] == true
+                                    ? 'Virtual Visit'
+                                    : 'Physical Visit',
+                              };
+                              final viewModel = Provider.of<PropertyDetailsViewModel>(
+                                  context,
+                                  listen: false);
+                              String response = await viewModel.scheduleSiteVisit(
+                                  scheduleVisitData: scheduleVisitData);
+
+                              Navigator.of(context).pop();
+                              if(response.toLowerCase() =='success'){
+                                Navigator.of(context).pop();
+                                RMSWidgets.showSnackbar(context: context, message: 'Congratulations,Your Site Visit is Scheduled.', color: CustomTheme.appTheme);
+                                log('Response From Site Visit is :: $response');
+                              }
+                            }
+
+                          }
+                        }
+                      }
+
 
                     },
                     child: Center(child: Text("Confirm Visit")),
@@ -396,7 +417,7 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
         context: context,
         initialDate: selectedDate,
         confirmText: 'Selected',
-        cancelText: 'Later',
+        cancelText: 'Cancel',
         helpText: 'Date for Site Visit',
         firstDate: DateTime.now(),
         lastDate: DateTime(2101));

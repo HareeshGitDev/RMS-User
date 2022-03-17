@@ -7,6 +7,7 @@ class Images {
   static String brandLogo_blue = 'assets/brand/logormsblue.png';
   static String referEarn = 'assets/brand/refer&earn.jpg';
   static String google = 'assets/brand/google.png';
+
   static String rupeeSilverIcon = 'assets/brand/rupeeSilverIcon.png';
   static String rmscard_background = 'assets/brand/rmscard_background.jpg';
 
@@ -37,6 +38,7 @@ class Images {
 
   // ------ Widgets --------//
   static String buttonIcon = 'assets/icons/toggle_outline.png';
+  static String whatsapplogo = 'assets/icons/whatsapplogo.png';
   static String wallet='assets/icons/wallet-outline.png';
   static String mobSignIn='assets/icons/mob_signin.png';
   static String mobOtp='assets/icons/mob_otp.png';

@@ -24,6 +24,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../Web_View_Container.dart';
+import '../../images.dart';
 import '../../utils/constants/app_consts.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/navigation_service.dart';
@@ -327,7 +328,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                           height: _mainHeight * 0.015,
                         ),
                         Container(
-                          height: _mainHeight * 0.04,
+                          height: _mainHeight * 0.05,
                           margin: EdgeInsets.only(
                             left: _mainWidth * 0.04,
                             right: _mainWidth * 0.02,
@@ -566,7 +567,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   padding:
                                       EdgeInsets.only(left: _mainWidth * 0.08),
                                   icon: Icon(Icons.call,
-                                      color: CustomTheme.appTheme,
+                                      color: Colors.blueGrey,
                                       size: _mainWidth * 0.06),
                                   onPressed: () {
                                     if (value.propertyDetailsModel != null &&
@@ -586,9 +587,13 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                 IconButton(
                                   padding:
                                       EdgeInsets.only(left: _mainWidth * 0.06),
-                                  icon: Icon(Icons.email_outlined,
+                                  icon: Image(image: NetworkImage('https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/whatsapplogo.png?alt=media&token=41df11ff-b9e7-4f5b-a4fc-30b47cfe1435'),),
+
+                                  /*Icon(Icons.email_outlined,
                                       color: CustomTheme.appTheme,
                                       size: _mainWidth * 0.06),
+
+                                   */
                                   onPressed: () {
                                     if (value.propertyDetailsModel != null &&
                                         value.propertyDetailsModel?.details !=

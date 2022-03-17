@@ -64,10 +64,11 @@ class _SearchPageState extends State<SearchPage> {
                       style: NeumorphicStyle(
                           // shadowLightColor: CustomTheme.appTheme.withAlpha(150),
                           shadowDarkColor: CustomTheme.appTheme.withAlpha(150),
-                          color: CustomTheme.appTheme.withAlpha(40),
+                          color: Colors.black26.withAlpha(40),
                           lightSource: LightSource.top,
                           intensity: 5,
-                          depth: 3),
+                          depth: 2,
+                          shape:NeumorphicShape.convex, ),
                       child: Row(
                         children: [
                           IconButton(
@@ -282,7 +283,7 @@ class _SearchPageState extends State<SearchPage> {
                           SizedBox(
                             height: 10,
                           ),
-                          Container(
+                          SizedBox(
                             height: 35,
                             width: 80,
                             child: ElevatedButton(
