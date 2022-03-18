@@ -47,9 +47,9 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
   var _mainHeight;
   var _mainWidth;
   static const String fontFamily = 'hk-grotest';
-  bool dailyFlag = true;
+  bool dailyFlag = false;
   bool monthlyFlag = false;
-  bool moreThanThreeFlag = false;
+  bool moreThanThreeFlag = true;
   ValueNotifier<bool> showPics = ValueNotifier(true);
 
   late PropertyDetailsViewModel _propertyDetailsViewModel;
@@ -567,8 +567,10 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   padding:
                                       EdgeInsets.only(left: _mainWidth * 0.08),
                                   icon: Icon(Icons.call,
-                                      color: Colors.blueGrey,
-                                      size: _mainWidth * 0.06),
+                                      color: CustomTheme.myFavColor,
+                                      size: _mainWidth * 0.05,
+
+                                  ),
                                   onPressed: () {
                                     if (value.propertyDetailsModel != null &&
                                         value.propertyDetailsModel?.details !=
@@ -582,7 +584,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   },
                                 ),
                                 SizedBox(
-                                  width: _mainWidth * 0.02,
+                                  width: _mainWidth * 0.02 ,
                                 ),
                                 IconButton(
                                   padding:

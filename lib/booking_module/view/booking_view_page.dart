@@ -59,8 +59,8 @@ class _BookingPageState extends State<BookingPage> {
   final _phoneNumberController = TextEditingController();
   late PropertyDetailsViewModel _viewModel;
   late Razorpay _razorpay;
-
-  String? redirectApi;
+  BookingCredentialResponseModel _bookingCredentialResponseModel =
+      BookingCredentialResponseModel();
 
   @override
   void initState() {
@@ -540,9 +540,10 @@ class _BookingPageState extends State<BookingPage> {
                           Text(
                             '$rupee ${value.bookingAmountsResponseModel.amountPayable ?? 0}',
                             style: TextStyle(
-                                fontSize: 20,
-                                fontFamily: fontFamily,
-                                fontWeight: FontWeight.w600,),
+                              fontSize: 20,
+                              fontFamily: fontFamily,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                           Text('Payable Amount'),
                         ],
@@ -582,12 +583,11 @@ class _BookingPageState extends State<BookingPage> {
                             ));
 
                             Navigator.pop(context);
-                            if (response.status?.toLowerCase() == 'success') {
-                              if (response.data != null &&
-                                  response.data?.redirect_api != null) {
-                                redirectApi = response.data?.redirect_api;
-                              }
 
+                            if (response.status?.toLowerCase() == 'success' &&
+                                response.data != null &&
+                                response.data?.redirect_api != null) {
+                              _bookingCredentialResponseModel = response;
                               await openCheckout(model: response);
                             }
                           },
@@ -621,6 +621,9 @@ class _BookingPageState extends State<BookingPage> {
 
   Future<void> openCheckout(
       {required BookingCredentialResponseModel model}) async {
+    if (model.data == null) {
+      return;
+    }
     var options = {
       'key': model.data?.key,
       'amount': model.data?.amount,
@@ -653,18 +656,26 @@ class _BookingPageState extends State<BookingPage> {
     if (response.orderId != null &&
         response.signature != null &&
         response.paymentId != null) {
-     RMSWidgets.showLoaderDialog(context: context, message: 'Confirmation Pending...');
+      RMSWidgets.showLoaderDialog(
+          context: context, message: 'Confirmation Pending...');
       await _viewModel
           .submitPaymentResponse(
               paymentId: response.paymentId!,
               paymentSignature: response.signature!,
-              redirectApi: redirectApi ?? '')
+              redirectApi:
+                  _bookingCredentialResponseModel.data?.redirect_api ?? '')
           .then((value) {
-            Navigator.of(context).pop();
-            return Navigator.pushNamedAndRemoveUntil(
-              context, AppRoutes.homePage, (route) => false);
-          })
-          .catchError(
+        Navigator.of(context).pop();
+        return Navigator.pushNamedAndRemoveUntil(
+            context, AppRoutes.homePage, (route) => false,
+            arguments: {
+              'status': 'success',
+              'paymentId': response.paymentId,
+              'amount': _bookingCredentialResponseModel.data?.amount.toString(),
+              'buildingName': widget.propertyDetailsUtilModel.buildingName,
+              'title': widget.propertyDetailsUtilModel.title,
+            });
+      }).catchError(
         (error) {
           Navigator.of(context).pop();
           log('Error :: ${error.toString()}');
@@ -675,7 +686,13 @@ class _BookingPageState extends State<BookingPage> {
 
   void _handlePaymentError(PaymentFailureResponse response) {
     Navigator.pushNamedAndRemoveUntil(
-        context, AppRoutes.homePage, (route) => false);
+        context, AppRoutes.paymentStatusPage, (route) => false,
+        arguments: {
+          'status': 'failed',
+          'amount': _bookingCredentialResponseModel.data?.amount.toString(),
+          'buildingName': widget.propertyDetailsUtilModel.buildingName,
+          'title': widget.propertyDetailsUtilModel.title,
+        });
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {

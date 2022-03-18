@@ -63,9 +63,10 @@ class _SearchPageState extends State<SearchPage> {
                     child: Neumorphic(
                       style: NeumorphicStyle(
                           // shadowLightColor: CustomTheme.appTheme.withAlpha(150),
-                          shadowDarkColor: CustomTheme.appTheme.withAlpha(150),
-                          color: Colors.black26.withAlpha(40),
-                          lightSource: LightSource.top,
+                          shadowDarkColor: Colors.blueGrey.shade100,
+                         // color: Colors.black26.withAlpha(40),
+                        color: Colors.white,border: NeumorphicBorder(color: CustomTheme.appTheme),
+                        lightSource: LightSource.bottom,
                           intensity: 5,
                           depth: 2,
                           shape:NeumorphicShape.convex, ),
@@ -96,7 +97,7 @@ class _SearchPageState extends State<SearchPage> {
                                   hintStyle: TextStyle(
                                       fontFamily: fontFamily,
                                       fontSize: 16,
-                                      color: Colors.black87,
+                                      color: Colors.black54,
                                       fontWeight: FontWeight.w500),
                                   suffixIcon: IconButton(
                                     icon: Icon(
@@ -286,7 +287,8 @@ class _SearchPageState extends State<SearchPage> {
                           SizedBox(
                             height: 35,
                             width: 80,
-                            child: ElevatedButton(
+                            child:
+                            ElevatedButton(
                               onPressed: () {
                                 if (_searchController.text.isEmpty ||
                                     _searchController.text.length < 3) {
@@ -303,7 +305,8 @@ class _SearchPageState extends State<SearchPage> {
                                     });
                                 FocusScope.of(context).unfocus();
                               },
-                              child: Text(
+                              child:
+                              Text(
                                 'Search',
                                 style: TextStyle(
                                     fontFamily: fontFamily,

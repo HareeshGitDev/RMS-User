@@ -1,10 +1,13 @@
+import 'package:RentMyStay_user/Web_View_Container.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../theme/custom_theme.dart';
+import '../../utils/service/navigation_service.dart';
 import '../viewmodel/mystay_viewmodel.dart';
+import 'invoices_view_page.dart';
 
 class MyStayPage extends StatefulWidget {
   const MyStayPage({Key? key}) : super(key: key);
@@ -13,6 +16,7 @@ class MyStayPage extends StatefulWidget {
   _MyStayPageState createState() => _MyStayPageState();
 }
   class _MyStayPageState extends State<MyStayPage> {
+    late String privacy_policy ='https://www.rentmystay.com/info/privacy-policy/';
   static const String fontFamily = 'hk-grotest';
   late MyStayViewModel _viewModel;
   var _mainHeight;
@@ -23,7 +27,6 @@ class MyStayPage extends StatefulWidget {
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
-    // TODO: implement build
     return Scaffold(
       appBar: _getAppBar(context: context),
       body: SingleChildScrollView(
@@ -233,22 +236,38 @@ class MyStayPage extends StatefulWidget {
 
               Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _gridInput(hint: "Monthly Invoice(s)",
-                    icon: Icons.line_weight_outlined,),
+                  GestureDetector(onTap:  () {
+          Navigator.pushNamed(context, AppRoutes.invoicePage);
+          },
+                    child: _gridInput(hint: "Monthly Invoice(s)",
+                      icon: Icons.line_weight_outlined,),
+                  ),
                   _gridInput(hint: "Agreement Sign",
                     icon: Icons.assignment_turned_in_outlined,),
-                  _gridInput(hint: "Refund SplitUp",
-                    icon: Icons.sticky_note_2_outlined,),
+                  GestureDetector(onTap: (){
+                    Navigator.of(context).pushNamed(AppRoutes.refundSplitPage);
+                  },
+                    child: _gridInput(hint: "Refund SplitUp",
+                      icon: Icons.sticky_note_2_outlined,),
+                  ),
                 ],
               ),
               Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _gridInput(hint: "Raise Ticket",
-                    icon: Icons.description_outlined,),
-                  _gridInput(hint: "Refund Process",
-                    icon: Icons.person_outline,),
-                  _gridInput(hint: "Privacy Policies",
-                    icon: Icons.person_outline,),
+                  GestureDetector(
+                    child: _gridInput(hint: "Raise Ticket",
+                      icon: Icons.report_problem_outlined,),
+                  ),
+                  GestureDetector(onTap: (){
+                    Navigator.of(context).pushNamed(AppRoutes.refundForm);
+                  },
+                    child: _gridInput(hint: "Refund Form",
+                      icon: Icons.person_outline,),
+                  ),
+                  GestureDetector(onTap: (){_handleURLButtonPress(context,privacy_policy,'Privacy Policy');},
+                    child: _gridInput(hint: "Privacy Policies",
+                      icon: Icons.policy_outlined,),
+                  ),
                 ],
               ),
               ],
@@ -274,8 +293,7 @@ class MyStayPage extends StatefulWidget {
       ),
   );
 }
-Widget _gridInput({required String hint,
-  required IconData icon})
+Widget _gridInput({required String hint, required IconData icon})
 {
   return SafeArea(
     child: Container(
@@ -327,5 +345,15 @@ Widget _gridInput({required String hint,
         ],
       ),
     ),
+  );
+
+}
+void _handleURLButtonPress(BuildContext context, String url, String title) {
+
+  String urlwithparams=url+'/1';
+
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => Web_View_Container(urlwithparams, title)),
   );
 }

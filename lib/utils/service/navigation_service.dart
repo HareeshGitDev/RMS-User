@@ -5,6 +5,7 @@ import 'package:RentMyStay_user/login_module/view/login_page.dart';
 import 'package:RentMyStay_user/login_module/view/firebase_registration_page.dart';
 import 'package:RentMyStay_user/login_module/view/success_page.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
+import 'package:RentMyStay_user/my_stays/view/refund_splitup_view_page.dart';
 import 'package:RentMyStay_user/my_stays/viewmodel/mystay_viewmodel.dart';
 import 'package:RentMyStay_user/property_details_module/model/property_details_util_model.dart';
 import 'package:RentMyStay_user/property_details_module/view/property_details_page.dart';
@@ -21,6 +22,8 @@ import '../../home_module/view/home_page.dart';
 import '../../login_module/view/forgot_password_page.dart';
 import '../../login_module/view/mobile_otp_page.dart';
 import '../../login_module/view/registration_page.dart';
+import '../../my_stays/view/feedback_form_viewPage.dart';
+import '../../my_stays/view/invoices_view_page.dart';
 import '../../my_stays/view/mystay_details_page.dart';
 import '../../my_stays/view/mystay_listing_page.dart';
 import '../../profile_Module/view/Edit_profile.dart';
@@ -86,11 +89,28 @@ class NavigationService {
                       mobile: data['mobile']),
                 ));
 
-      case AppRoutes.successPage:
-        return MaterialPageRoute(builder: (context) => SuccessPage());
+      case AppRoutes.paymentStatusPage:
+        final data = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(builder: (context) => PaymentStatusPage(
+          status: data['status'],
+          title: data['title'],
+          buildingName: data['buildingName'],
+          amount: data['amount'],
+          paymentId: data['paymentId'],
+
+        ));
 
       case AppRoutes.myStayDetailsPage:
         return MaterialPageRoute(builder: (context) => MyStayPage());
+
+      case AppRoutes.invoicePage:
+        return MaterialPageRoute(builder: (context) => InvoicePage());
+
+      case AppRoutes.refundSplitPage:
+        return MaterialPageRoute(builder: (context) => RefundSplitPage());
+
+      case AppRoutes.refundForm:
+        return MaterialPageRoute(builder: (context) => FeedbackPage());
 
       case AppRoutes.bookingPage:
         final data = settings.arguments as PropertyDetailsUtilModel;
@@ -175,7 +195,7 @@ class AppRoutes {
   static const String registrationPage = 'registrationPage';
   static const String propertyListingPage = 'propertyListingPage';
   static const String forgotPassword = 'forgotPassword';
-  static const String successPage = 'successPage';
+  static const String paymentStatusPage = 'paymentStatusPage';
   static const String bookingPage = 'bookingPage';
   static const String otpVerifyPage = 'otpVerifyPage';
   static const String firebaseRegistrationPage = 'firebaseRegistrationPage';
@@ -184,4 +204,7 @@ class AppRoutes {
   static const String myStayListPage = 'myStayListPage';
   static const String searchPage = 'searchPage';
   static const String myStayDetailsPage = 'myStay_details_page';
+  static const String invoicePage = 'Invoice_page';
+  static const String refundSplitPage = 'refund_splitup_page';
+  static const String refundForm = 'refund_form_page';
 }

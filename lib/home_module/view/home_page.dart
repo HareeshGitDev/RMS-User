@@ -8,6 +8,7 @@ import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,6 +21,7 @@ import 'package:flutx/widgets/button/button.dart';
 import 'package:flutx/widgets/container/container.dart';
 import 'package:flutx/widgets/text/text.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../images.dart';
 import '../../theme/app_notifier.dart';
 import '../../theme/app_theme.dart';
@@ -83,8 +85,10 @@ class _HomePageState extends State<HomePage> {
             onTap: () => Navigator.of(context).pushNamed(AppRoutes.searchPage),
             child: Container(
               height: 40,
-              padding: EdgeInsets.only(left: 15,),
-              margin: EdgeInsets.only(left: 15,right: 15,bottom: 10),
+              padding: EdgeInsets.only(
+                left: 15,
+              ),
+              margin: EdgeInsets.only(left: 15, right: 15, bottom: 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 color: Colors.white,
@@ -92,7 +96,9 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 children: [
                   Icon(Icons.search_rounded),
-                  SizedBox(width: 10,),
+                  SizedBox(
+                    width: 10,
+                  ),
                   Text('Search'),
                 ],
               ),
@@ -179,20 +185,38 @@ class _HomePageState extends State<HomePage> {
                               'location': data.value,
                               'property': Property.FromLocation,
                             }),
-                        child: Container(
-                          margin: EdgeInsets.all(5),
-                          width: 75,
-                          height: 40,
-                          child: Column(
-                            children: [
-                              CircleAvatar(
-                                backgroundImage: NetworkImage(data.imageUrl),
-                                radius: 30,
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 60,
+                              width: 75,
+                              child: CachedNetworkImage(
+                                imageUrl: data.imageUrl.toString(),
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                placeholder: (context, url) =>
+                                    Shimmer.fromColors(
+                                        child: Container(
+                                          height: 60,
+                                          color: Colors.grey,
+                                        ),
+                                        baseColor: Colors.grey[200] as Color,
+                                        highlightColor:
+                                            Colors.grey[350] as Color),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
                               ),
-                              Text(data.cityName,
-                                  style: TextStyle(fontSize: 14)),
-                            ],
-                          ),
+                            ),
+                            Text(data.cityName, style: TextStyle(fontSize: 14)),
+                          ],
                         ),
                       );
                     },
@@ -204,38 +228,41 @@ class _HomePageState extends State<HomePage> {
                 margin: EdgeInsets.only(top: 10),
                 width: MediaQuery.of(context).size.width,
                 child: CarouselSlider(
-                  items: [
-                    Container(
-                      margin: EdgeInsets.all(1),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                                'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/WhatsApp%20Image%202022-02-14%20at%2012.01.04%20PM.jpeg?alt=media&token=6d78225a-59f7-4a7c-8bf3-e5d3f3c66bca'),
-                            fit: BoxFit.cover,
-                          )),
+                  items: _homeViewModel
+                      .getAdsImageList()
+                      .map((imageUrl) =>  Container(
+
+                    child: CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      imageBuilder: (context, imageProvider) =>
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                      placeholder: (context, url) =>
+                          Shimmer.fromColors(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(15),
+
+                                ),
+                                height: 180,
+
+                              ),
+                              baseColor: Colors.grey[200] as Color,
+                              highlightColor:
+                              Colors.grey[350] as Color),
+                      errorWidget: (context, url, error) =>
+                      const Icon(Icons.error),
                     ),
-                    Container(
-                      margin: EdgeInsets.all(1),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                                "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/bannerhome.png?alt=media&token=b66dab51-8676-470a-b876-025c613c303a"),
-                            fit: BoxFit.cover,
-                          )),
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(1),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                                'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/WhatsApp%20Image%202022-02-14%20at%2012.01.05%20PM.jpeg?alt=media&token=153f6374-979f-46ad-aaf3-06f9ff1d0b20'),
-                            fit: BoxFit.cover,
-                          )),
-                    ),
-                  ],
+                  ),)
+                      .toList(),
                   options: CarouselOptions(
                       height: 180,
                       enlargeCenterPage: true,
@@ -280,7 +307,7 @@ class _HomePageState extends State<HomePage> {
                               'property': Property.FromBHK,
                             }),
                         child: Card(
-                          shape: RoundedRectangleBorder(
+                          shape: const RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10))),
                           elevation: 3,
@@ -319,7 +346,10 @@ class _HomePageState extends State<HomePage> {
                                     alignment: Alignment.topLeft,
                                     child: Text(
                                       data.propertyDesc!,
-                                      style: TextStyle(color: Colors.black45),
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 12),
                                     )),
                                 Container(
                                     margin: EdgeInsets.only(
@@ -769,11 +799,10 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         children: [
                           InkWell(
-
-                        onTap: () {
-                          Navigator.pushNamed(context, AppRoutes.myStayDetailsPage);
-                        },
-
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, AppRoutes.myStayDetailsPage);
+                            },
                             highlightColor: Colors.transparent,
                             splashColor: Colors.transparent,
                             child: Row(
