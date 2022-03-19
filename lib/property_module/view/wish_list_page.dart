@@ -427,8 +427,8 @@ class _WishListPageState extends State<WishListPage> {
                                                                   .data![index]
                                                                   .propId ??
                                                               " ");
-                                              if (response ==
-                                                  'Successfully added') {
+                                              if (response.toLowerCase() ==
+                                                  'successfully added') {
                                                 setState(() {
                                                   value
                                                       .wishListModel
@@ -465,8 +465,8 @@ class _WishListPageState extends State<WishListPage> {
                                                                   .data![index]
                                                                   .propId ??
                                                               " ");
-                                              if (response ==
-                                                  'Successfully removed') {
+                                              if (response.toLowerCase() ==
+                                                  'successfully removed') {
                                                 setState(() {
                                                   value
                                                       .wishListModel

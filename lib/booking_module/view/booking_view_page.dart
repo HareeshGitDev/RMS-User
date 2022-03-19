@@ -667,7 +667,7 @@ class _BookingPageState extends State<BookingPage> {
           .then((value) {
         Navigator.of(context).pop();
         return Navigator.pushNamedAndRemoveUntil(
-            context, AppRoutes.homePage, (route) => false,
+            context, AppRoutes.paymentStatusPage, (route) => false,
             arguments: {
               'status': 'success',
               'paymentId': response.paymentId,

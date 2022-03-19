@@ -91,17 +91,22 @@ class NavigationService {
 
       case AppRoutes.paymentStatusPage:
         final data = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(builder: (context) => PaymentStatusPage(
-          status: data['status'],
-          title: data['title'],
-          buildingName: data['buildingName'],
-          amount: data['amount'],
-          paymentId: data['paymentId'],
-
-        ));
+        return MaterialPageRoute(
+            builder: (context) => PaymentStatusPage(
+                  status: data['status'],
+                  title: data['title'],
+                  buildingName: data['buildingName'],
+                  amount: data['amount'],
+                  paymentId: data['paymentId'],
+                ));
 
       case AppRoutes.myStayDetailsPage:
-        return MaterialPageRoute(builder: (context) => MyStayPage());
+        String bookingId = settings.arguments as String;
+        return MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider(
+                  create: (_) => MyStayViewModel(),
+                  child: MyStayPage(bookingId: bookingId),
+                ));
 
       case AppRoutes.invoicePage:
         return MaterialPageRoute(builder: (context) => InvoicePage());
@@ -203,8 +208,8 @@ class AppRoutes {
   static const String propertyDetailsPage = 'propertyDetailsPage';
   static const String myStayListPage = 'myStayListPage';
   static const String searchPage = 'searchPage';
-  static const String myStayDetailsPage = 'myStay_details_page';
-  static const String invoicePage = 'Invoice_page';
-  static const String refundSplitPage = 'refund_splitup_page';
+  static const String myStayDetailsPage = 'myStayDetailsPage';
+  static const String invoicePage = 'InvoicePage';
+  static const String refundSplitPage = 'refundSplitPage';
   static const String refundForm = 'refund_form_page';
 }

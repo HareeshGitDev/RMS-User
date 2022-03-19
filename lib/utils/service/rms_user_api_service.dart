@@ -1,30 +1,35 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import '../constants/api_urls.dart';
+import '../constants/sp_constants.dart';
 
 class RMSUserApiService {
   final String _baseURL = AppUrls.baseUrl;
 
-  /*Future<Map<String, String>> getHeaders() async {
-    String? userToken = await SharedPreferenceUtil().getToken();
-    return <String, String>{
-      'Authorization': userToken.toString(),
-      "Content-Type": "application/json",
-      'x-app-os': HeaderDetails.SDK_INFO,
-      'x-app-version': HeaderDetails.APP_INFO,
-      'x-app-device': HeaderDetails.ANDROID_INFO,
-    };
+  String? registeredToken;
+  final SharedPreferenceUtil _shared = SharedPreferenceUtil();
+
+  Future<String?> _getRegisteredToken() async {
+    registeredToken = await _shared.getString(rms_registeredUserToken);
+    return registeredToken;
   }
-*/
-  Future<dynamic> getApiCall({required String endPoint}) async {
+
+  Future<Map<String, String>> get getHeaders async => {
+        'authorization':
+            (registeredToken ?? await _getRegisteredToken()).toString()
+      };
+
+  Future<dynamic> getApiCall(
+      {required String endPoint,}) async {
     try {
-      final response = await http.get(
-        Uri.https(_baseURL, endPoint),
-      );
+      final response =
+          await http.get(Uri.https(_baseURL, endPoint), headers: await getHeaders);
 
       return await _response(response);
     } on SocketException {
@@ -40,36 +45,33 @@ class RMSUserApiService {
     return null;
   }
 
-  Future<dynamic> getApiCallWithQueryParams(
-      {required String endPoint,
-      required Map<String, dynamic> queryParams}) async {
-    log('URL :: $_baseURL/$endPoint ---- QueryParams :: ${queryParams.toString()}');
+  Future<dynamic> getApiCallWithQueryParams({
+    required String endPoint,
+    required Map<String, dynamic> queryParams,
+  }) async {
+    log('URL :: $_baseURL$endPoint ---- QueryParams :: ${queryParams.toString()} ');
     try {
-      final response = await http.get(
-        Uri.https(_baseURL, endPoint, queryParams),
-      );
+      final response = await http
+          .get(Uri.https(_baseURL, endPoint, queryParams), headers: await getHeaders);
 
       return await _response(response);
     } on SocketException {
       log('SocketException Happened');
-      //throw FetchDataException('No Internet connection');
     } catch (e) {
-      /*  CustomWidgets.getToast(
-        message: 'Error : ${e.toString()}',
-        color: Color(0xffF40909),
-      );*/
       log('Error : ${e.toString()}');
     }
     return null;
   }
 
   Future<dynamic> getApiCallWithURL(
-      {required String endPoint}) async {
-    log('URL :: $endPoint');
+      {required String endPoint, Map<String, String>? headers}) async {
+    log('URL :: $endPoint --headers $headers');
     try {
-      final response = await http.get(Uri.parse(
-        endPoint,
-      ));
+      final response = await http.get(
+          Uri.parse(
+            endPoint,
+          ),
+          headers: headers);
 
       return await _response(response);
     } on SocketException {

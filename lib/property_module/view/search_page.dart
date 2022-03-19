@@ -65,7 +65,7 @@ class _SearchPageState extends State<SearchPage> {
                           // shadowLightColor: CustomTheme.appTheme.withAlpha(150),
                           shadowDarkColor: Colors.blueGrey.shade100,
                          // color: Colors.black26.withAlpha(40),
-                        color: Colors.white,border: NeumorphicBorder(color: CustomTheme.appTheme),
+                        color: Colors.white,border: NeumorphicBorder(color: CustomTheme.appTheme,width: 1),
                         lightSource: LightSource.bottom,
                           intensity: 5,
                           depth: 2,

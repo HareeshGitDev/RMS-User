@@ -99,11 +99,11 @@ class _PaymentStatusPageState extends State<PaymentStatusPage> {
           ),
           Text('Payment of $rupee ' +
               (double.parse(widget.amount) / 100).toString() +
-              'Failed '),
+              'Success '),
           Text('For'),
           Text(widget.buildingName),
           Text(widget.title),
-          Text('Payment Id : ' + widget.paymentId.toString() ?? ''),
+          Text('Payment Id : ' + widget.paymentId.toString()),
         ],
       ),
     );

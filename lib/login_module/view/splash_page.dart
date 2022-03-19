@@ -56,10 +56,11 @@ class _SplashPageState extends State<SplashPage> {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
+          color: CustomTheme.appTheme
+          /*gradient: LinearGradient(
               colors: [CustomTheme.appTheme.withAlpha(50), CustomTheme.appTheme],
               end: Alignment.bottomCenter,
-              begin: Alignment.topCenter),
+              begin: Alignment.topCenter),*/
         ),
         child: Center(
           child: Image.asset("assets/images/transparent_logo_rms.png"),

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:RentMyStay_user/extensions/extensions.dart';
 import 'package:RentMyStay_user/my_stays/model/mystay_list_model.dart';
 import 'package:RentMyStay_user/my_stays/viewmodel/mystay_viewmodel.dart';
+import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,8 @@ class MyStayListPage extends StatefulWidget {
 class _MyStayListPageState extends State<MyStayListPage> {
   static const String fontFamily = 'hk-grotest';
   late MyStayViewModel _viewModel;
+  var _mainHeight;
+  var _mainWidth;
 
   @override
   void initState() {
@@ -33,14 +36,19 @@ class _MyStayListPageState extends State<MyStayListPage> {
 
   @override
   Widget build(BuildContext context) {
+    _mainHeight = MediaQuery.of(context).size.height;
+    _mainWidth = MediaQuery.of(context).size.width;
     return DefaultTabController(
       length: 2,
       initialIndex: 0,
       child: Scaffold(
           appBar: AppBar(
             backgroundColor: CustomTheme.appTheme,
-            toolbarHeight: 50,
-            title: Text('My Stays',style: TextStyle(fontFamily: fontFamily),),
+            toolbarHeight: _mainHeight * 0.05,
+            title: Text(
+              'My Stays',
+              style: TextStyle(fontFamily: fontFamily),
+            ),
             titleSpacing: 0,
             bottom: TabBar(
               indicatorColor: CustomTheme.peach,
@@ -48,13 +56,17 @@ class _MyStayListPageState extends State<MyStayListPage> {
                 Tab(
                   child: Text(
                     "Active Booking",
-                    style: TextStyle(fontSize: 16, fontFamily: fontFamily),
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
                   ),
                 ),
                 Tab(
                     child: Text(
-                  "Complete Booking",
-                  style: TextStyle(fontSize: 16, fontFamily: fontFamily),
+                  "Completed Booking",
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
                 )),
               ],
             ),
@@ -64,7 +76,11 @@ class _MyStayListPageState extends State<MyStayListPage> {
           body: Consumer<MyStayViewModel>(
             builder: (context, value, child) {
               return Container(
-                padding: EdgeInsets.only(left: 10, right: 10, top: 15),
+                padding: EdgeInsets.only(
+                    left: _mainWidth * 0.02,
+                    right: _mainWidth * 0.02,
+                    top: _mainHeight * 0.01),
+                margin: EdgeInsets.only(bottom: _mainHeight * 0.01),
                 child: TabBarView(
                   children: <Widget>[
                     getActiveTab(
@@ -89,103 +105,140 @@ class _MyStayListPageState extends State<MyStayListPage> {
       {required List<Result> activeBookingList,
       required BuildContext context}) {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: _mainWidth,
       child: ListView.separated(
           itemBuilder: (context, index) {
             var data = activeBookingList[index];
-            return Card(
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              child: Column(
-                textDirection: TextDirection.ltr,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                      margin: EdgeInsets.only(left: 5, right: 10, top: 10),
-                      child: Text(
-                        data.title ?? '',
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      )),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5, right: 5,top: 5,bottom: 5),
-                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(children: [Container(
-                          height: 70,
-                          width: 75,
-                          padding: const EdgeInsets.only(right: 10),
-                          child: CachedNetworkImage(
-                            imageUrl: data.picThumbnail.toString(),
-                            imageBuilder: (context, imageProvider) => Container(
-                              decoration: BoxDecoration(
-                                borderRadius:  BorderRadius.circular(10),
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+            return GestureDetector(
+              onTap: () => Navigator.of(context).pushNamed(
+                  AppRoutes.myStayDetailsPage,
+                  arguments: data.bookingId),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                color: Colors.blueGrey.shade100,
+                child: Row(
+                  children: [
+                    Container(
+                      height: _mainHeight * 0.085,
+                      width: _mainWidth * 0.20,
+                      padding: EdgeInsets.only(right: _mainWidth * 0.02),
+                      child: CachedNetworkImage(
+                        imageUrl: data.picThumbnail.toString(),
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
                             ),
-                            placeholder: (context, url) => Shimmer.fromColors(
-                                child: Container(
-                                  height: 70,
-                                  color: Colors.grey,
-                                ),
-                                baseColor: Colors.grey[200] as Color,
-                                highlightColor: Colors.grey[350] as Color),
-                            errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
                           ),
                         ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        placeholder: (context, url) => Shimmer.fromColors(
+                            child: Container(
+                              height: _mainHeight * 0.075,
+                              width: _mainWidth * 0.2,
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            baseColor: Colors.grey[200] as Color,
+                            highlightColor: Colors.grey[350] as Color),
+                        errorWidget: (context, url, error) => const Icon(
+                          Icons.error,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            width: _mainWidth * 0.72,
+                            child: Text(
+                              data.title ?? '',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            )),
+                        SizedBox(
+                          height: _mainHeight * 0.005,
+                        ),
+                        Container(
+                          width: _mainWidth * 0.72,
+                          child: Row(
                             children: [
                               Text(
                                 '${data.numGuests ?? " "} guests',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14),
                               ),
-                              SizedBox(height: 10,),
-                              Row(
-                                children: [
-                                  Text(
-                                    checkDateFormat(data.travelFromDate) ?? '',
-                                  ),
-                                  Text("  -  "),
-                                  Text(
-                                    checkDateFormat(data.travelToDate) ?? '',
-                                  ),
-                                ],
+                              Spacer(),
+                              Text(
+                                checkDateFormat(data.travelFromDate) ?? '',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14),
                               ),
-
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                checkDateFormat(data.travelToDate) ?? '',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14),
+                              ),
                             ],
-                          ),],
+                          ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text('ID: ${data.bookingId}'),
-                            Text(data.bookingDatetime ?? ''),
-                            Text(
-                              data.checkInStatus == '0'
-                                  ? 'Upcoming'
-                                  : 'Success',
-                            ),
-
-                          ],
-                        )
+                        SizedBox(
+                          height: _mainHeight * 0.005,
+                        ),
+                        Container(
+                          width: _mainWidth * 0.72,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'ID: ${data.bookingId}',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                data.checkInStatus == '0'
+                                    ? 'Upcoming'
+                                    : 'Success',
+                                style: TextStyle(
+                                  color: CustomTheme.myFavColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },
-          separatorBuilder: (context, index) => SizedBox(height: 10),
+          separatorBuilder: (context, index) =>
+              SizedBox(height: _mainHeight * 0.005),
           itemCount: activeBookingList.length),
     );
   }
@@ -194,108 +247,140 @@ class _MyStayListPageState extends State<MyStayListPage> {
       {required List<Result> completedBookingList,
       required BuildContext context}) {
     return Container(
-      width: MediaQuery.of(context).size.width,
-
+      width: _mainWidth,
       child: ListView.separated(
           itemBuilder: (context, index) {
             var data = completedBookingList[index];
-            return Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              color: Colors.blueGrey.shade100,
-              child: Column(
-                textDirection: TextDirection.ltr,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                      margin: EdgeInsets.only(left: 5, right: 10, top: 10),
-                      child: Text(
-                        data.title ?? '',
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      )),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5, right: 5,top: 5,bottom: 5),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 70,
-                          width: 75,
-                          padding: const EdgeInsets.only(right: 10),
-                          child: CachedNetworkImage(
-                            imageUrl: data.picThumbnail.toString(),
-                            imageBuilder: (context, imageProvider) => Container(
-                              decoration: BoxDecoration(
-                                borderRadius:  BorderRadius.circular(10),
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+            return GestureDetector(
+              onTap: () => Navigator.of(context).pushNamed(
+                  AppRoutes.myStayDetailsPage,
+                  arguments: data.bookingId),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                color: Colors.blueGrey.shade100,
+                child: Row(
+                  children: [
+                    Container(
+                      height: _mainHeight * 0.085,
+                      width: _mainWidth * 0.20,
+                      padding: EdgeInsets.only(right: _mainWidth * 0.02),
+                      child: CachedNetworkImage(
+                        imageUrl: data.picThumbnail.toString(),
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
                             ),
-                            placeholder: (context, url) => Shimmer.fromColors(
-                                child: Container(
-                                  height: 70,
-                                  width: 75,
-
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey,
-                                    borderRadius:  BorderRadius.circular(10),
-                                  ),
-                                ),
-                                baseColor: Colors.grey[200] as Color,
-                                highlightColor: Colors.grey[350] as Color),
-                            errorWidget: (context, url, error) =>
-                            const Icon(Icons.error,color: Colors.red,),
                           ),
                         ),
+                        placeholder: (context, url) => Shimmer.fromColors(
+                            child: Container(
+                              height: _mainHeight * 0.075,
+                              width: _mainWidth * 0.2,
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            baseColor: Colors.grey[200] as Color,
+                            highlightColor: Colors.grey[350] as Color),
+                        errorWidget: (context, url, error) => const Icon(
+                          Icons.error,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            width: _mainWidth * 0.72,
+                            child: Text(
+                              data.title ?? '',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            )),
+                        SizedBox(
+                          height: _mainHeight * 0.005,
+                        ),
+                        Container(
+                          width: _mainWidth * 0.72,
+                          child: Row(
                             children: [
                               Text(
                                 '${data.numGuests ?? " "} guests',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14),
                               ),
-                              Text(data.bookingDatetime ?? ''),
+                              Spacer(),
+                              Text(
+                                checkDateFormat(data.travelFromDate) ?? '',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                checkDateFormat(data.travelToDate) ?? '',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14),
+                              ),
                             ],
                           ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text('ID: ${data.bookingId}'),
-                            Text(
-                              data.checkInStatus == '0'
-                                  ? 'Upcoming'
-                                  : 'Success',
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  checkDateFormat(data.travelFromDate) ?? '',
+                        SizedBox(
+                          height: _mainHeight * 0.005,
+                        ),
+                        Container(
+                          width: _mainWidth * 0.72,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'ID: ${data.bookingId}',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                SizedBox(
-                                  width: 10,
+                              ),
+                              Text(
+                                data.checkInStatus == '0'
+                                    ? 'Upcoming'
+                                    : 'Success',
+                                style: TextStyle(
+                                  color: CustomTheme.myFavColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
                                 ),
-                                Text(
-                                  checkDateFormat(data.travelToDate) ?? '',
-                                ),
-                              ],
-                            )
-                          ],
-                        )
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },
-          separatorBuilder: (context, index) => SizedBox(height: 10),
+          separatorBuilder: (context, index) =>
+              SizedBox(height: _mainHeight * 0.005),
           itemCount: completedBookingList.length),
     );
   }

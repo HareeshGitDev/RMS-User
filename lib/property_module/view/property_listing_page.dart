@@ -559,8 +559,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                               propertyId:
                                                                   data.propId ??
                                                                       " ");
-                                                  if (response ==
-                                                      'Successfully Added') {
+                                                  if (response.toLowerCase() ==
+                                                      'successfully added') {
                                                     setState(() {
                                                       data.wishlist = 1;
                                                     });
@@ -592,8 +592,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                               propertyId:
                                                                   data.propId ??
                                                                       " ");
-                                                  if (response ==
-                                                      'Successfully removed') {
+                                                  if (response.toLowerCase() ==
+                                                      'successfully removed') {
                                                     setState(() {
                                                       data.wishlist = 0;
                                                     });

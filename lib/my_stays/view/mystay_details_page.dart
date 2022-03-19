@@ -2,6 +2,7 @@ import 'package:RentMyStay_user/Web_View_Container.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../theme/custom_theme.dart';
@@ -10,7 +11,9 @@ import '../viewmodel/mystay_viewmodel.dart';
 import 'invoices_view_page.dart';
 
 class MyStayPage extends StatefulWidget {
-  const MyStayPage({Key? key}) : super(key: key);
+  final String bookingId;
+
+  const MyStayPage({Key? key,required this.bookingId}) : super(key: key);
 
   @override
   _MyStayPageState createState() => _MyStayPageState();
@@ -22,6 +25,13 @@ class MyStayPage extends StatefulWidget {
   var _mainHeight;
   var _mainWidth;
 
+  @override
+  void initState() {
+    super.initState();
+    _viewModel=Provider.of<MyStayViewModel>(context,listen: false);
+    _viewModel.getMyStayDetails(bookingId: widget.bookingId);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -29,249 +39,253 @@ class MyStayPage extends StatefulWidget {
     _mainWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: _getAppBar(context: context),
-      body: SingleChildScrollView(
-        child: Container(height: _mainHeight,color: Colors.white,
-          width: _mainWidth,
-          child: Column(
-            children: [
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Consumer<MyStayViewModel>(
+        builder: (context, value, child) {
+          return value.myStayDetailsModel != null && value.myStayDetailsModel?.data != null ? SingleChildScrollView(
+            child: Container(height: _mainHeight,color: Colors.white,
+              width: _mainWidth,
+              child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10,top: 10,right: 10),
-                    child: Container(alignment: Alignment.bottomLeft,
-                        child: Text('1BHK- Old Airport Road-Patels Residency-G1',style: TextStyle(fontSize: 14,fontWeight:FontWeight.w500,),textAlign: TextAlign.start, )),
-                  ),
-                  Container(padding: EdgeInsets.only(left: 10,top: 10,right: 10),child: Row(
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(Icons.location_on_outlined),
-                      Text(' Map ')
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10,top: 10,right: 10),
+                        child: Container(alignment: Alignment.bottomLeft,
+                            child: Text(value.myStayDetailsModel?.data?.title ??' ',style: TextStyle(fontSize: 14,fontWeight:FontWeight.w500,),textAlign: TextAlign.start, )),
+                      ),
+                      Container(padding: EdgeInsets.only(left: 10,top: 10,right: 10),child: Row(
+                        children: [
+                          Icon(Icons.location_on_outlined,color: CustomTheme.myFavColor,),
+                          Text(' Map ')
+                        ],
+                      )),
                     ],
-                  )),
-                ],
-              ),
-              Divider(height: 10,thickness: 2,),
-              Container(width: _mainWidth,
-                margin: EdgeInsets.only(bottom: 20),
-                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                  Container(
-                  height: 80,
-                  width: _mainWidth*0.2,
-                  margin:  EdgeInsets.only(left: 10,top: 10),
-                  child: CachedNetworkImage(
-                    imageUrl: "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/btm.png?alt=media&token=8a4a92fb-c0db-4c23-9c5b-e74166373827",
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        borderRadius:  BorderRadius.circular(10),
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    placeholder: (context, url) => Shimmer.fromColors(
-                        child: Container(
-                          height: 70,
-                          color: Colors.grey,
-                        ),
-                        baseColor: Colors.grey[200] as Color,
-                        highlightColor: Colors.grey[350] as Color),
-                    errorWidget: (context, url, error) =>
-                    const Icon(Icons.error),
                   ),
-                ),
-                  Container(width: _mainWidth*0.7,alignment: Alignment.topLeft,margin:EdgeInsets.only(left: 10,right: 10),child: Text("No.17, Nanjund Reddy Layout,!st Cross,konena Agrahara , H.A.L post, Bangalore - 560017",maxLines: 4,)),
-                ],),
-              ),
-              Container(width: _mainWidth,color: Colors.red,
-              height: _mainHeight*0.04,
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text.rich(
-                      TextSpan(
-                        style: TextStyle(
-                          fontSize: 14, color: Colors.white,fontWeight: FontWeight.w500,
-                        ),
-                        children: [
-                          WidgetSpan(
-                            child: Icon(Icons.people_alt_outlined,size: 20,color: Colors.white),
+                  Divider(height: 10,thickness: 2,),
+                  Container(width: _mainWidth,
+                    margin: EdgeInsets.only(bottom: 20),
+                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          height: 80,
+                          width: _mainWidth*0.2,
+                          margin:  EdgeInsets.only(left: 10,top: 10),
+                          child: CachedNetworkImage(
+                            imageUrl: "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/btm.png?alt=media&token=8a4a92fb-c0db-4c23-9c5b-e74166373827",
+                            imageBuilder: (context, imageProvider) => Container(
+                              decoration: BoxDecoration(
+                                borderRadius:  BorderRadius.circular(10),
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            placeholder: (context, url) => Shimmer.fromColors(
+                                child: Container(
+                                  height: 70,
+                                  color: Colors.grey,
+                                ),
+                                baseColor: Colors.grey[200] as Color,
+                                highlightColor: Colors.grey[350] as Color),
+                            errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
                           ),
-                          TextSpan(
-                            text: ' 2 Guest',
-                          )
-                        ],
-                      ),
-                    ),
-                    Text.rich(
-                      TextSpan(
-                        style: TextStyle(
-                          fontSize: 14, color: Colors.white,fontWeight: FontWeight.w500,
                         ),
+                        Container(width: _mainWidth*0.7,alignment: Alignment.topLeft,margin:EdgeInsets.only(left: 10,right: 10),child: Text("No.17, Nanjund Reddy Layout,!st Cross,konena Agrahara , H.A.L post, Bangalore - 560017",maxLines: 4,)),
+                      ],),
+                  ),
+                  Container(width: _mainWidth,color: Colors.red,
+                    height: _mainHeight*0.04,
+                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          WidgetSpan(
-                            child: Icon(Icons.calendar_today_outlined,size: 20,color: Colors.white),
+                          Text.rich(
+                            TextSpan(
+                              style: TextStyle(
+                                fontSize: 14, color: Colors.white,fontWeight: FontWeight.w500,
+                              ),
+                              children: [
+                                WidgetSpan(
+                                  child: Icon(Icons.people_alt_outlined,size: 20,color: Colors.white),
+                                ),
+                                TextSpan(
+                                  text: ' 2 Guest',
+                                )
+                              ],
+                            ),
                           ),
-                          TextSpan(
-                            text: ' 29 Night(s)',
-                          )
-                        ],
-                      ),
-                    ),
-                    Text.rich(
-                      TextSpan(
-                        style: TextStyle(
-                          fontSize: 14, color: Colors.white,fontWeight: FontWeight.w500,
-                        ),
+                          Text.rich(
+                            TextSpan(
+                              style: TextStyle(
+                                fontSize: 14, color: Colors.white,fontWeight: FontWeight.w500,
+                              ),
+                              children: [
+                                WidgetSpan(
+                                  child: Icon(Icons.calendar_today_outlined,size: 20,color: Colors.white),
+                                ),
+                                TextSpan(
+                                  text: ' 29 Night(s)',
+                                )
+                              ],
+                            ),
+                          ),
+                          Text.rich(
+                            TextSpan(
+                              style: TextStyle(
+                                fontSize: 14, color: Colors.white,fontWeight: FontWeight.w500,
+                              ),
+                              children: [
+                                WidgetSpan(
+                                  child: Icon(Icons.outbond_outlined,size: 20,color: Colors.white),
+                                ),
+                                TextSpan(
+                                  text: ' Apr 04,2022',
+                                )
+                              ],
+                            ),
+                          ),
+                        ]
+                    ),),
+                  Divider(height: 10,),
+                  Container(width: _mainWidth,
+                    margin: EdgeInsets.only(left: 10,right: 10,),
+                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [Text("Name : Shubham Kumar"),
+                      Text("Update Your Kyc",style: TextStyle(backgroundColor: CustomTheme.appTheme,color: Colors.white),)
+                      ,]),),
+                  SizedBox(height: 10,),
+                  Container(margin: EdgeInsets.only(left: 10,right: 10),alignment: Alignment.centerLeft,child: Text("Phone No : 919794562047",)),
+                  SizedBox(height: 10,),
+                  Container(width: _mainWidth,color: Colors.red,
+                      height: _mainHeight*0.05,alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Active Booking",style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.w500),),
+                      )),
+
+                  SizedBox(height: 10,),
+                  Container(margin: EdgeInsets.only(left: 10,right: 10,top: 10),width: _mainWidth,
+                      child: Row(
                         children: [
-                          WidgetSpan(
-                            child: Icon(Icons.outbond_outlined,size: 20,color: Colors.white),
+                          Text("Booking From"),
+                          Row(
+                            children: [
+                              Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),color: CustomTheme.appTheme),
+                                  child: Text(" Check In ")),
+                              Text("Mar 06, 2022"),
+                              Icon(Icons.keyboard_arrow_down_outlined)
+                            ],
+                          )],
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,)
+                  ),
+                  Container(margin: EdgeInsets.only(left: 20,right: 20),width: _mainWidth,
+                      child: Row(
+                        children: [
+                          Text("Check In Date",style:TextStyle(fontSize: 10,fontWeight: FontWeight.w600) ),
+                          Row(
+                            children: [
+                              Text("Mar 06, 2022",style: TextStyle(fontSize: 10,fontWeight: FontWeight.w600),),
+                            ],
+                          )],
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,)
+                  ),
+                  Container(margin: EdgeInsets.only(left: 20,right: 20),width: _mainWidth,
+                      child: Row(
+                        children: [
+                          Text("Check In By",style:TextStyle(fontSize: 10,fontWeight: FontWeight.w600) ),
+                          Row(
+                            children: [
+                              Text("Rent My Stay",style: TextStyle(fontSize: 10,fontWeight: FontWeight.w600),),
+                            ],
+                          )],
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,)
+                  ),
+                  Divider(height: 10,thickness: 2,),
+                  Container(margin: EdgeInsets.only(left: 10,right: 10,top: 10),width: _mainWidth,
+                      child: Row(
+                        children: [
+                          Text("Booking To"),
+                          Row(
+                            children: [Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),color: CustomTheme.appTheme),
+                                child: Text(" Check Out ")),
+                              Text("Mar 06, 2022"),
+                              Icon(Icons.keyboard_arrow_down_outlined)
+                            ],
                           ),
-                          TextSpan(
-                            text: ' Apr 04,2022',
-                          )
                         ],
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,)
+                  ),
+                  Container(margin: EdgeInsets.only(left: 20,right: 20),width: _mainWidth,
+                      child: Row(
+                        children: [
+                          Text("Check In Date",style:TextStyle(fontSize: 10,fontWeight: FontWeight.w600) ),
+                          Row(
+                            children: [
+                              Text("Mar 06, 2022",style: TextStyle(fontSize: 10,fontWeight: FontWeight.w600),),
+                            ],
+                          )],
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,)
+                  ),
+                  Container(margin: EdgeInsets.only(left: 20,right: 20),width: _mainWidth,
+                      child: Row(
+                        children: [
+                          Text("Check In By",style:TextStyle(fontSize: 10,fontWeight: FontWeight.w600) ),
+                          Row(
+                            children: [
+                              Text("Rent My Stay",style: TextStyle(fontSize: 10,fontWeight: FontWeight.w600),),
+                            ],
+                          )],
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,)
+                  ),
+                  Divider(height: 10,thickness: 2,),
+                  Container(margin: EdgeInsets.all(10),width: _mainWidth,
+                      child: Row(
+                        children: [
+                          Text("Pending Details "),
+                          Text("21600.00")],
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,)
+                  ),
+                  Divider(height: 10,thickness: 2,),
+
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(onTap:  () {
+                        Navigator.pushNamed(context, AppRoutes.invoicePage);
+                      },
+                        child: _gridInput(hint: "Monthly Invoice(s)",
+                          icon: Icons.line_weight_outlined,),
                       ),
-                    ),
-                ]
+                      _gridInput(hint: "Agreement Sign",
+                        icon: Icons.assignment_turned_in_outlined,),
+                      GestureDetector(onTap: (){
+                        Navigator.of(context).pushNamed(AppRoutes.refundSplitPage);
+                      },
+                        child: _gridInput(hint: "Refund SplitUp",
+                          icon: Icons.sticky_note_2_outlined,),
+                      ),
+                    ],
+                  ),
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        child: _gridInput(hint: "Raise Ticket",
+                          icon: Icons.report_problem_outlined,),
+                      ),
+                      GestureDetector(onTap: (){
+                        Navigator.of(context).pushNamed(AppRoutes.refundForm);
+                      },
+                        child: _gridInput(hint: "Refund Form",
+                          icon: Icons.person_outline,),
+                      ),
+                      GestureDetector(onTap: (){_handleURLButtonPress(context,privacy_policy,'Privacy Policy');},
+                        child: _gridInput(hint: "Privacy Policies",
+                          icon: Icons.policy_outlined,),
+                      ),
+                    ],
+                  ),
+                ],
               ),),
-              Divider(height: 10,),
-              Container(width: _mainWidth,
-                margin: EdgeInsets.only(left: 10,right: 10,),
-                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [Text("Name : Shubham Kumar"),
-                Text("Update Your Kyc",style: TextStyle(backgroundColor: CustomTheme.appTheme,color: Colors.white),)
-                ,]),),
-              SizedBox(height: 10,),
-              Container(margin: EdgeInsets.only(left: 10,right: 10),alignment: Alignment.centerLeft,child: Text("Phone No : 919794562047",)),
-              SizedBox(height: 10,),
-              Container(width: _mainWidth,color: Colors.red,
-                height: _mainHeight*0.05,alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("Active Booking",style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.w500),),
-                )),
-
-              SizedBox(height: 10,),
-              Container(margin: EdgeInsets.only(left: 10,right: 10,top: 10),width: _mainWidth,
-                  child: Row(
-                    children: [
-                      Text("Booking From"),
-                      Row(
-                        children: [
-                          Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),color: CustomTheme.appTheme),
-                              child: Text(" Check In ")),
-                          Text("Mar 06, 2022"),
-                          Icon(Icons.keyboard_arrow_down_outlined)
-                        ],
-                      )],
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,)
-              ),
-              Container(margin: EdgeInsets.only(left: 20,right: 20),width: _mainWidth,
-                  child: Row(
-                    children: [
-                      Text("Check In Date",style:TextStyle(fontSize: 10,fontWeight: FontWeight.w600) ),
-                      Row(
-                        children: [
-                          Text("Mar 06, 2022",style: TextStyle(fontSize: 10,fontWeight: FontWeight.w600),),
-                        ],
-                      )],
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,)
-              ),
-              Container(margin: EdgeInsets.only(left: 20,right: 20),width: _mainWidth,
-                  child: Row(
-                    children: [
-                      Text("Check In By",style:TextStyle(fontSize: 10,fontWeight: FontWeight.w600) ),
-                      Row(
-                        children: [
-                          Text("Rent My Stay",style: TextStyle(fontSize: 10,fontWeight: FontWeight.w600),),
-                        ],
-                      )],
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,)
-              ),
-              Divider(height: 10,thickness: 2,),
-              Container(margin: EdgeInsets.only(left: 10,right: 10,top: 10),width: _mainWidth,
-                  child: Row(
-                    children: [
-                      Text("Booking To"),
-                      Row(
-                        children: [Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),color: CustomTheme.appTheme),
-          child: Text(" Check Out ")),
-                          Text("Mar 06, 2022"),
-                          Icon(Icons.keyboard_arrow_down_outlined)
-                        ],
-                      ),
-                    ],
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,)
-              ),
-              Container(margin: EdgeInsets.only(left: 20,right: 20),width: _mainWidth,
-                  child: Row(
-                    children: [
-                      Text("Check In Date",style:TextStyle(fontSize: 10,fontWeight: FontWeight.w600) ),
-                      Row(
-                        children: [
-                          Text("Mar 06, 2022",style: TextStyle(fontSize: 10,fontWeight: FontWeight.w600),),
-                        ],
-                      )],
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,)
-              ),
-              Container(margin: EdgeInsets.only(left: 20,right: 20),width: _mainWidth,
-                  child: Row(
-                    children: [
-                      Text("Check In By",style:TextStyle(fontSize: 10,fontWeight: FontWeight.w600) ),
-                      Row(
-                        children: [
-                          Text("Rent My Stay",style: TextStyle(fontSize: 10,fontWeight: FontWeight.w600),),
-                        ],
-                      )],
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,)
-              ),
-              Divider(height: 10,thickness: 2,),
-              Container(margin: EdgeInsets.all(10),width: _mainWidth,
-                  child: Row(
-                    children: [
-                      Text("Pending Details "),
-                      Text("21600.00")],
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,)
-              ),
-              Divider(height: 10,thickness: 2,),
-
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(onTap:  () {
-          Navigator.pushNamed(context, AppRoutes.invoicePage);
-          },
-                    child: _gridInput(hint: "Monthly Invoice(s)",
-                      icon: Icons.line_weight_outlined,),
-                  ),
-                  _gridInput(hint: "Agreement Sign",
-                    icon: Icons.assignment_turned_in_outlined,),
-                  GestureDetector(onTap: (){
-                    Navigator.of(context).pushNamed(AppRoutes.refundSplitPage);
-                  },
-                    child: _gridInput(hint: "Refund SplitUp",
-                      icon: Icons.sticky_note_2_outlined,),
-                  ),
-                ],
-              ),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(
-                    child: _gridInput(hint: "Raise Ticket",
-                      icon: Icons.report_problem_outlined,),
-                  ),
-                  GestureDetector(onTap: (){
-                    Navigator.of(context).pushNamed(AppRoutes.refundForm);
-                  },
-                    child: _gridInput(hint: "Refund Form",
-                      icon: Icons.person_outline,),
-                  ),
-                  GestureDetector(onTap: (){_handleURLButtonPress(context,privacy_policy,'Privacy Policy');},
-                    child: _gridInput(hint: "Privacy Policies",
-                      icon: Icons.policy_outlined,),
-                  ),
-                ],
-              ),
-              ],
-          ),),
+          ):Center(child: CircularProgressIndicator());
+        },
       ),
     );
   }
