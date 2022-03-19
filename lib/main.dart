@@ -1,10 +1,12 @@
 import 'dart:developer';
 import 'dart:io' show Platform;
 import 'package:RentMyStay_user/theme/custom_theme.dart';
+import 'package:RentMyStay_user/utils/service/bottom_navigation_provider.dart';
 import 'package:RentMyStay_user/utils/service/location_service.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'login_module/view/splash_page.dart';
 
 void main() async {
@@ -35,16 +37,23 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'RentMyStay ',
-      theme: ThemeData(
-        primarySwatch: Colors.red,
-        fontFamily: 'hk-grotest',
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => BottomNavigationProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'RentMyStay ',
+        theme: ThemeData(
+          primarySwatch: Colors.red,
+          fontFamily: 'hk-grotest',
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: SplashPage(),
+        onGenerateRoute: NavigationService.generateRoute,
       ),
-      home: SplashPage(),
-      onGenerateRoute: NavigationService.generateRoute,
     );
   }
 }

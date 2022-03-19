@@ -1,3 +1,4 @@
+import 'package:RentMyStay_user/home_module/view/dashboard_page.dart';
 import 'package:RentMyStay_user/home_module/view/refer_earn_page.dart';
 import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
 
@@ -180,6 +181,10 @@ class NavigationService {
           builder: (context) => ChangeNotifierProvider(
               create: (_) => PropertyViewModel(), child: SearchPage()),
         );
+      case AppRoutes.dashboardPage:
+        return MaterialPageRoute(
+          builder: (context) => DashboardPage(),
+        );
 
       default:
         return MaterialPageRoute(
@@ -212,4 +217,5 @@ class AppRoutes {
   static const String invoicePage = 'InvoicePage';
   static const String refundSplitPage = 'refundSplitPage';
   static const String refundForm = 'refund_form_page';
+  static const String dashboardPage = 'dashboardPage';
 }

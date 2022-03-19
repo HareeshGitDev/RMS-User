@@ -45,7 +45,7 @@ class _SplashPageState extends State<SplashPage> {
     }else{
       Timer(const Duration(milliseconds: 1000), () {
         Navigator.pushNamedAndRemoveUntil(
-            context,AppRoutes.homePage,(route) => false,);
+            context,AppRoutes.dashboardPage,(route) => false,);
       });
     }
 

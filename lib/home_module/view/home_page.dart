@@ -6,6 +6,7 @@ import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
 import 'package:RentMyStay_user/login_module/service/google_auth_service.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
+import 'package:RentMyStay_user/utils/service/bottom_navigation_provider.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -47,9 +48,11 @@ class _HomePageState extends State<HomePage> {
   final _searchController = TextEditingController();
   bool shouldClearText = true;
 
+
   @override
   void initState() {
     _homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
+
     super.initState();
     isDark = AppTheme.themeType == ThemeType.dark;
     textDirection = AppTheme.textDirection;
@@ -125,41 +128,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      bottomNavigationBar: CurvedNavigationBar(
-        height: 50,
-        backgroundColor: Colors.white,
-        buttonBackgroundColor: CustomTheme.appTheme,
-        color: CustomTheme.appTheme,
-        animationDuration: Duration(milliseconds: 50),
-        items: const <Widget>[
-          Icon(
-            Icons.home_rounded,
-            size: 30,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.search_rounded,
-            size: 30,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.favorite_outline_rounded,
-            size: 30,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.house_outlined,
-            size: 30,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.person_outline_rounded,
-            size: 30,
-            color: Colors.white,
-          )
-        ],
-        onTap: (index) {},
-      ),
       body: Container(
         color: Colors.white,
         height: MediaQuery.of(context).size.height,
@@ -206,7 +174,13 @@ class _HomePageState extends State<HomePage> {
                                     Shimmer.fromColors(
                                         child: Container(
                                           height: 60,
-                                          color: Colors.grey,
+                                          width: 75,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.grey,
+                                          ),
+
+
                                         ),
                                         baseColor: Colors.grey[200] as Color,
                                         highlightColor:
@@ -230,38 +204,35 @@ class _HomePageState extends State<HomePage> {
                 child: CarouselSlider(
                   items: _homeViewModel
                       .getAdsImageList()
-                      .map((imageUrl) =>  Container(
-
-                    child: CachedNetworkImage(
-                      imageUrl: imageUrl,
-                      imageBuilder: (context, imageProvider) =>
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
+                      .map((imageUrl) =>  CachedNetworkImage(
+                        imageUrl: imageUrl,
+                        imageBuilder: (context, imageProvider) =>
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
-                          ),
-                      placeholder: (context, url) =>
-                          Shimmer.fromColors(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(15),
+                        placeholder: (context, url) =>
+                            Shimmer.fromColors(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(15),
+
+                                  ),
+                                  height: 180,
 
                                 ),
-                                height: 180,
-
-                              ),
-                              baseColor: Colors.grey[200] as Color,
-                              highlightColor:
-                              Colors.grey[350] as Color),
-                      errorWidget: (context, url, error) =>
-                      const Icon(Icons.error),
-                    ),
-                  ),)
+                                baseColor: Colors.grey[200] as Color,
+                                highlightColor:
+                                Colors.grey[350] as Color),
+                        errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                      ),)
                       .toList(),
                   options: CarouselOptions(
                       height: 180,
