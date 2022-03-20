@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:RentMyStay_user/my_stays/model/mystay_details_model.dart';
+import 'package:RentMyStay_user/my_stays/model/refund_splitup_model.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../model/mystay_list_model.dart';
@@ -12,6 +13,7 @@ class MyStayViewModel extends ChangeNotifier {
   List<Result>? activeBookingList;
   List<Result>? completedBookingList;
   MyStayDetailsModel? myStayDetailsModel;
+  RefundSplitUpModel? refundSplitUpModel;
 
   Future<void> getMyStayList() async {
     final MyStayListModel response = await _profileApiService.fetchMyStayList();
@@ -37,6 +39,12 @@ class MyStayViewModel extends ChangeNotifier {
     final MyStayDetailsModel response =
         await _profileApiService.fetchMyStayDetails(bookingId: bookingId);
     myStayDetailsModel = response;
+    notifyListeners();
+  }
+  Future<void> getRefundSplitUpDetails({required String bookingId}) async {
+    final RefundSplitUpModel response =
+    await _profileApiService.fetchRefundSplitUpDetails(bookingId: bookingId);
+     refundSplitUpModel = response;
     notifyListeners();
   }
 }

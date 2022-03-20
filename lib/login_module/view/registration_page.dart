@@ -309,8 +309,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               RMSWidgets.getToast(
                                   message:response.message.toString(),
                                   color: myFavColor);
-                              Navigator.of(context)
-                                  .pushNamed(AppRoutes.homePage);
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,AppRoutes.dashboardPage,(route) => false,);
                             } else {
                               RMSWidgets.getToast(message: response.message.toString(), color: CustomTheme().colorError);
 

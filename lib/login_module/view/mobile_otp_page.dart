@@ -217,7 +217,8 @@ class _OtpState extends State<MobileOtpPage> {
           } else if (response.status?.toLowerCase() == 'success' &&
               response.action == 'sign-in') {
             await setSPValues(response: response);
-            Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.homePage,(route) => false,);
+            Navigator.pushNamedAndRemoveUntil(
+              context,AppRoutes.dashboardPage,(route) => false,);
           }
         } else {
           log('Error From Firebase OTP ');
@@ -270,7 +271,8 @@ class _OtpState extends State<MobileOtpPage> {
         } else if (response.status?.toLowerCase() == 'success' &&
             response.action == 'sign-in') {
           await setSPValues(response: response);
-          Navigator.of(context).pushNamed(AppRoutes.homePage);
+          Navigator.pushNamedAndRemoveUntil(
+            context,AppRoutes.dashboardPage,(route) => false,);
         }
       }
     } catch (e) {

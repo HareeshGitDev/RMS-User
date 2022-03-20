@@ -479,7 +479,8 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
 
       if (response == 200) {
         await setSPValues();
-        Navigator.of(context).pushNamed(AppRoutes.homePage);
+        Navigator.pushNamedAndRemoveUntil(
+          context,AppRoutes.dashboardPage,(route) => false,);
       } else {
         RMSWidgets.getToast(
             message: 'Something went wrong...',
@@ -535,7 +536,8 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
       if (response.status?.toLowerCase()=='success') {
         log('Called For OTP Registration');
         await setSPValuesForOTP(response: response);
-        Navigator.of(context).pushNamed(AppRoutes.homePage);
+        Navigator.pushNamedAndRemoveUntil(
+          context,AppRoutes.dashboardPage,(route) => false,);
       } else {
         RMSWidgets.getToast(
             message: 'Something went wrong...',

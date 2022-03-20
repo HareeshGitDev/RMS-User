@@ -35,6 +35,7 @@ class _SearchPageState extends State<SearchPage> {
   final SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
   bool showSearchResults = false;
 
+
   TextStyle get getTextStyle => const TextStyle(
       color: Colors.black,
       fontFamily: fontFamily,

@@ -113,7 +113,14 @@ class NavigationService {
         return MaterialPageRoute(builder: (context) => InvoicePage());
 
       case AppRoutes.refundSplitPage:
-        return MaterialPageRoute(builder: (context) => RefundSplitPage());
+        final data = settings.arguments as String;
+        return MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider(
+                  create: (_) => MyStayViewModel(),
+                  child: RefundSplitPage(
+                    bookingId: data,
+                  ),
+                ));
 
       case AppRoutes.refundForm:
         return MaterialPageRoute(builder: (context) => FeedbackPage());
@@ -132,7 +139,7 @@ class NavigationService {
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
                   create: (_) => ProfileViewModel(),
-                  child: Profile(),
+                  child: ProfilePage(),
                 ));
 
       case AppRoutes.editProfilePage:

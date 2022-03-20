@@ -14,12 +14,12 @@ import '../../theme/custom_theme.dart';
 import '../model/profile_model.dart';
 import '../viewmodel/profile_view_model.dart';
 
-class Profile extends StatefulWidget {
+class ProfilePage extends StatefulWidget {
   @override
-  _ProfileState createState() => _ProfileState();
+  _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfilePageState extends State<ProfilePage> {
   late ProfileViewModel _profileViewModel ;
   late String update_kyc =
       "https://www.rentmystay.com/dashboard/userVerify/" ;

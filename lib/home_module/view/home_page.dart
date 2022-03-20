@@ -470,6 +470,7 @@ class _HomePageState extends State<HomePage> {
               clipBehavior: Clip.antiAliasWithSaveLayer,
               color: theme.scaffoldBackgroundColor,
               child: Drawer(
+
                   child: Container(
                 color: theme.scaffoldBackgroundColor,
                 child: Column(
@@ -480,12 +481,42 @@ class _HomePageState extends State<HomePage> {
                       padding: FxSpacing.only(
                           left: 20, bottom: 10, top: 20, right: 20),
                       child: Column(
+                      //
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           CircleAvatar(
-                            backgroundImage: NetworkImage(
-                              (snapshot.data!['pic']).toString(),
-                            ),
+                           child: Container(
+
+                             child: CachedNetworkImage(
+                               imageUrl: (snapshot.data!['pic']).toString(),
+                               imageBuilder: (context, imageProvider) =>
+                                   Container(
+                                     decoration: BoxDecoration(
+                                       shape: BoxShape.circle,
+                                       image: DecorationImage(
+                                         image: imageProvider,
+                                         fit: BoxFit.cover,
+                                       ),
+                                     ),
+                                   ),
+                               placeholder: (context, url) =>
+                                   Shimmer.fromColors(
+                                       child: Container(
+
+                                         decoration: BoxDecoration(
+                                           shape: BoxShape.circle,
+                                           color: Colors.grey,
+                                         ),
+
+
+                                       ),
+                                       baseColor: Colors.grey[200] as Color,
+                                       highlightColor:
+                                       Colors.grey[350] as Color),
+                               errorWidget: (context, url, error) =>
+                               const Icon(Icons.error),
+                             ),
+                           ),
                             radius: 45,
                           ),
                           FxSpacing.height(12),
@@ -683,9 +714,9 @@ class _HomePageState extends State<HomePage> {
                                     height: 20,
                                     width: 20,
                                     image: AssetImage(Images.wallet),
-                                    color: CustomTheme.peach,
+                                    color: CustomTheme.appTheme,
                                   ),
-                                  color: CustomTheme.peach.withAlpha(20),
+                                  color: CustomTheme.appTheme.withAlpha(20),
                                 ),
                                 FxSpacing.width(16),
                                 Expanded(
@@ -793,36 +824,6 @@ class _HomePageState extends State<HomePage> {
                                 Expanded(
                                   child: FxText.b1(
                                     'FAQ'.trim(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          FxSpacing.height(20),
-                          InkWell(
-                            /*
-                        onTap: () {
-                          launchChangeLog();
-                        },*/
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            child: Row(
-                              children: [
-                                FxContainer(
-                                  paddingAll: 12,
-                                  borderRadiusAll: 4,
-                                  child: Image(
-                                    height: 20,
-                                    width: 20,
-                                    image: AssetImage(Images.wallet),
-                                    color: CustomTheme.peach,
-                                  ),
-                                  color: CustomTheme.peach.withAlpha(20),
-                                ),
-                                FxSpacing.width(16),
-                                Expanded(
-                                  child: FxText.b1(
-                                    'changelog'.trim(),
                                   ),
                                 ),
                               ],

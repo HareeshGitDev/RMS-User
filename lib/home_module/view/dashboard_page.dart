@@ -62,7 +62,7 @@ class _DashboardPageState extends State<DashboardPage> {
             case 4:
               return ChangeNotifierProvider(
                 create: (_) => ProfileViewModel(),
-                child: Profile(),
+                child: ProfilePage(),
               );
             default:
               return Container();
@@ -73,7 +73,7 @@ class _DashboardPageState extends State<DashboardPage> {
         onTap: (value) {
           log('ONTAp :: $value');
           _bottomNavigationProvider.shiftBottom(index: value);
-   },
+  },
 
         height: 50,
         backgroundColor: Colors.white,

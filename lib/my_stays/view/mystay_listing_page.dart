@@ -43,6 +43,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
       initialIndex: 0,
       child: Scaffold(
           appBar: AppBar(
+            leading: BackButton(),
             backgroundColor: CustomTheme.appTheme,
             toolbarHeight: _mainHeight * 0.05,
             title: Text(
@@ -76,6 +77,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
           body: Consumer<MyStayViewModel>(
             builder: (context, value, child) {
               return Container(
+                color: Colors.white,
                 padding: EdgeInsets.only(
                     left: _mainWidth * 0.02,
                     right: _mainWidth * 0.02,
@@ -117,7 +119,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5.0),
                 ),
-                color: Colors.blueGrey.shade100,
+                color: Colors.white,
                 child: Row(
                   children: [
                     Container(

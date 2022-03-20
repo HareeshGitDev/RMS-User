@@ -206,8 +206,8 @@ class _LoginPageState extends State<LoginPage> {
                                       'success') {
                                     await setSPValues(response: response);
                                     Navigator.pop(context);
-                                    Navigator.of(context)
-                                        .pushNamedAndRemoveUntil(AppRoutes.homePage,(route) => false,);
+                                    Navigator.pushNamedAndRemoveUntil(
+                                      context,AppRoutes.dashboardPage,(route) => false,);
                                   } else {
                                     RMSWidgets.showSnackbar(
                                         context: context,
@@ -327,8 +327,8 @@ class _LoginPageState extends State<LoginPage> {
                                         }else{
                                           log("USER"+(response.id).toString());
                                           await setSPValues(response: response);
-                                          Navigator.of(context).pushNamed(
-                                              AppRoutes.homePage);
+                                          Navigator.pushNamedAndRemoveUntil(
+                                            context,AppRoutes.dashboardPage,(route) => false,);
                                         }
 
                                       }

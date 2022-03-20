@@ -47,7 +47,8 @@ class _PaymentStatusPageState extends State<PaymentStatusPage> {
   }
 
   void _goToHome() => Timer(const Duration(seconds: 4),
-      () => Navigator.of(context).pushNamed(AppRoutes.homePage));
+      () => Navigator.pushNamedAndRemoveUntil(
+        context,AppRoutes.dashboardPage,(route) => false,));
 
   Widget getFailedStatus() {
     return Container(

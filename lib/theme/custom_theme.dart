@@ -7,6 +7,7 @@ class CustomTheme {
  // static final Color skyBlue = Color(0xff2596be);
  // static final Color skyBlue =Color(0xff3377fe);
   static final Color appTheme = Colors.red;
+  static final Color appThemeContrast = Colors.blueGrey;
   static final Color myFavColor = Color(0xff7AB02A);
  // static final Color darkGreen = Color(0xff226e79); //original one
   static final Color red = Color(0xfff8575e);
