@@ -538,7 +538,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                           ),
                         ),
                         SizedBox(
-                          height: _mainHeight * 0.015,
+                          height: _mainHeight * 0.01,
                         ),
                         const Divider(
                           thickness: 2,
@@ -906,11 +906,15 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   email: email,
                                 );
                               },
-                              child: Text('Site Visit'),
+                              child: Text('Site Visit',style: TextStyle(
+                                color: CustomTheme.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500
+                              ),),
                               style: ButtonStyle(
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
-                                          CustomTheme.appTheme),
+                                          CustomTheme.appThemeContrast),
                                   shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
@@ -981,7 +985,11 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                     context, AppRoutes.bookingPage,
                                     arguments: model);
                               },
-                              child: Text('Book Now'),
+                              child: Text('Book Now',style: TextStyle(
+                                  color: CustomTheme.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500
+                              ),),
                               style: ButtonStyle(
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
@@ -1023,7 +1031,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
           left: _mainWidth * 0.04,
           right: _mainWidth * 0.04,
         ),
-        height: _mainHeight * 0.15,
+        height: _mainHeight * 0.17,
         width: _mainWidth,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1292,7 +1300,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
       {required BuildContext context,
       required PropertyDetailsViewModel model}) {
     return Container(
-      height: _mainHeight * 0.2,
+      height: _mainHeight * 0.19,
       decoration: BoxDecoration(
         //  color: Colors.amber,
         borderRadius: BorderRadius.circular(10),
@@ -1310,7 +1318,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                 AppRoutes.propertyDetailsPage,
                 arguments: data.propId),
             child: Card(
-              elevation: 5,
+              elevation: 2,
               child: Container(
                   height: _mainHeight * 0.2,
                   width: _mainWidth * 0.4,

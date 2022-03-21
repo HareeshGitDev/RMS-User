@@ -120,7 +120,7 @@ class _BookingPageState extends State<BookingPage> {
             titleSpacing: 0,
             backgroundColor: CustomTheme.appTheme,
           ),
-          body: Container(
+          body: value.bookingAmountsResponseModel != null ? Container(
             height: _mainHeight,
             width: _mainWidth,
             padding: EdgeInsets.only(
@@ -254,7 +254,7 @@ class _BookingPageState extends State<BookingPage> {
                                 state: StepState.complete,
                                 content: _getSelectDateView(
                                     context: context,
-                                    model: value.bookingAmountsResponseModel),
+                                    model: value.bookingAmountsResponseModel ?? BookingAmountsResponseModel()),
                               ),
                               Step(
                                 isActive: true,
@@ -457,9 +457,8 @@ class _BookingPageState extends State<BookingPage> {
 
                                         RMSWidgets.showSnackbar(
                                             context: context,
-                                            message: (value
-                                                .bookingAmountsResponseModel
-                                                .message)!,
+                                            message: '${value
+                                                .bookingAmountsResponseModel?.message}',
                                             color: Colors.green);
                                       },
                                       child: Text('Apply'),
@@ -486,18 +485,18 @@ class _BookingPageState extends State<BookingPage> {
                 ],
               ),
             ),
-          ),
+          ):Center(child: CircularProgressIndicator(),),
           bottomNavigationBar: Container(
             height: 100,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () async {
+                  onTap:value.bookingAmountsResponseModel != null? () async {
                     _showBreakdownBottomSheet(
                         context: context,
-                        model: value.bookingAmountsResponseModel);
-                  },
+                        model: value.bookingAmountsResponseModel ?? BookingAmountsResponseModel() );
+                  }:(){},
                   child: Container(
                     height: 30,
                     color: Colors.blueGrey.shade50,
@@ -538,7 +537,7 @@ class _BookingPageState extends State<BookingPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '$rupee ${value.bookingAmountsResponseModel.amountPayable ?? 0}',
+                            '$rupee ${value.bookingAmountsResponseModel?.amountPayable ?? 0}',
                             style: TextStyle(
                               fontSize: 20,
                               fontFamily: fontFamily,
@@ -554,7 +553,7 @@ class _BookingPageState extends State<BookingPage> {
                         height: _mainHeight * 0.06,
                         width: MediaQuery.of(context).size.width * 0.68,
                         child: ElevatedButton(
-                          onPressed: () async {
+                          onPressed: value.bookingAmountsResponseModel != null ?() async {
                             RMSWidgets.showLoaderDialog(
                                 context: context, message: 'Loading');
                             BookingCredentialResponseModel response =
@@ -573,11 +572,11 @@ class _BookingPageState extends State<BookingPage> {
                               email: _emailController.text,
                               name: _nameController.text,
                               phone: _phoneNumberController.text,
-                              depositAmount: value.bookingAmountsResponseModel
-                                          .amountPayable !=
+                              depositAmount: value.bookingAmountsResponseModel != null && value.bookingAmountsResponseModel
+                                          ?.amountPayable !=
                                       null
                                   ? value
-                                      .bookingAmountsResponseModel.amountPayable
+                                      .bookingAmountsResponseModel?.amountPayable
                                       .toString()
                                   : '',
                             ));
@@ -590,7 +589,7 @@ class _BookingPageState extends State<BookingPage> {
                               _bookingCredentialResponseModel = response;
                               await openCheckout(model: response);
                             }
-                          },
+                          }:(){},
                           child: Text(
                             'Proceed Booking',
                             style: TextStyle(
@@ -600,7 +599,7 @@ class _BookingPageState extends State<BookingPage> {
                           ),
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
-                                  CustomTheme.appTheme),
+                                  value.bookingAmountsResponseModel != null?CustomTheme.appTheme:Colors.grey),
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(

@@ -18,8 +18,10 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../images.dart';
+import '../../utils/constants/app_consts.dart';
 import '../../utils/service/bottom_navigation_provider.dart';
 import '../../utils/service/navigation_service.dart';
+import '../../utils/service/system_service.dart';
 
 class WishListPage extends StatefulWidget {
   final bool fromBottom;
@@ -34,6 +36,7 @@ class _WishListPageState extends State<WishListPage> {
   var _mainHeight;
   var _mainWidth;
   late PropertyViewModel _propertyViewModel;
+  static const String fontFamily = 'hk-grotest';
 
   @override
   void initState() {
@@ -56,85 +59,98 @@ class _WishListPageState extends State<WishListPage> {
               color: Colors.white,
               height: _mainHeight,
               width: _mainWidth,
-              padding: EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 0),
+              padding: EdgeInsets.only(left: _mainWidth*0.03, right: _mainWidth*0.03, top: _mainHeight*0.01, bottom: 0),
               child: ListView.separated(
                 itemBuilder: (context, index) {
+                  var data = value.wishListModel.data![index];
                   return GestureDetector(
                     onTap: () => Navigator.of(context).pushNamed(
                         AppRoutes.propertyDetailsPage,
-                        arguments: value.wishListModel.data![index].propId),
-                    child: Container(
-                      height: _mainHeight * 0.48,
+                        arguments: data.propId),
+                    child: SizedBox(
+                      height: _mainHeight * 0.46,
                       child: Card(
-                        elevation: 5,
+                        elevation: 4,
                         shadowColor: CustomTheme.appTheme,
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(10))),
                         child: Stack(
                           children: [
                             Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
                               children: [
                                 CarouselSlider(
-                                  items: value.wishListModel.data![index].pic
-                                          ?.map((e) => Container(
-                                                child: CachedNetworkImage(
-                                                  imageUrl:
-                                                      e.picLink.toString(),
-                                                  imageBuilder: (context,
-                                                          imageProvider) =>
-                                                      Container(
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.only(
-                                                              topLeft: Radius
-                                                                  .circular(10),
-                                                              topRight: Radius
-                                                                  .circular(
-                                                                      10)),
-                                                      image: DecorationImage(
-                                                        image: imageProvider,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  placeholder: (context, url) =>
-                                                      Shimmer.fromColors(
-                                                          child: Container(
-                                                            height: 225,
-                                                            color: Colors.grey,
-                                                          ),
-                                                          baseColor:
-                                                              Colors.grey[200]
-                                                                  as Color,
-                                                          highlightColor:
-                                                              Colors.grey[350]
-                                                                  as Color),
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          Icon(Icons.error),
+                                  items: data.pic
+                                      ?.map((e) =>
+                                      CachedNetworkImage(
+                                        imageUrl: e.picLink
+                                            .toString(),
+                                        imageBuilder: (context,
+                                            imageProvider) =>
+                                            Container(
+
+                                              decoration:
+                                              BoxDecoration(
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft: Radius
+                                                        .circular(
+                                                        10),
+                                                    topRight: Radius
+                                                        .circular(
+                                                        10)),
+                                                image:
+                                                DecorationImage(
+                                                  image:
+                                                  imageProvider,
+                                                  fit: BoxFit
+                                                      .cover,
                                                 ),
-                                              ))
-                                          .toList() ??
+                                              ),
+                                            ),
+                                        placeholder: (context, url) => Shimmer
+                                            .fromColors(
+                                            child:
+                                            Container(
+                                              height:
+                                              _mainHeight*0.27,
+                                              color: Colors
+                                                  .grey,
+                                            ),
+                                            baseColor: Colors
+                                                .grey[200]
+                                            as Color,
+                                            highlightColor:
+                                            Colors.grey[350]
+                                            as Color),
+                                        errorWidget:
+                                            (context, url,
+                                            error) =>
+                                            Icon(Icons
+                                                .error),
+                                      ))
+                                      .toList() ??
                                       [],
                                   options: CarouselOptions(
-                                      height: 225,
+                                      height: _mainHeight*0.27,
                                       enlargeCenterPage: true,
+
                                       autoPlay: true,
-                                      aspectRatio: 16 / 9,
-                                      autoPlayCurve: Curves.fastOutSlowIn,
+                                      aspectRatio: 16 / 9,autoPlayInterval: const Duration(milliseconds: 1500),
+                                      autoPlayCurve:
+                                      Curves.fastOutSlowIn,
                                       enableInfiniteScroll: true,
                                       viewportFraction: 1),
                                 ),
                                 SizedBox(
-                                  height: 5,
+                                  height: _mainHeight*0.01,
                                 ),
                                 Visibility(
                                   child: Container(
                                     height: _mainHeight * 0.025,
-                                    padding:
-                                        EdgeInsets.only(left: 10, right: 10),
+                                    padding: EdgeInsets.only(
+                                        left: _mainWidth*0.02, right: _mainWidth*0.02),
                                     child: Row(
                                       children: [
                                         Icon(
@@ -147,121 +163,137 @@ class _WishListPageState extends State<WishListPage> {
                                         ),
                                         Expanded(
                                           child: Text(
-                                            value.wishListModel.data![index]
-                                                    .buildingName ??
+                                            data.buildingName ??
                                                 " ",
-                                            overflow: TextOverflow.ellipsis,
+                                            overflow: TextOverflow
+                                                .ellipsis,
                                             maxLines: 1,
                                             style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w600),
+                                              fontSize: 14,
+                                              color: Colors.black87,
+                                              fontFamily:
+                                              fontFamily,
+                                              fontWeight:
+                                              FontWeight.w500,
+                                            ),
                                           ),
                                         ),
                                         Text(
-                                          value.wishListModel.data![index]
-                                                  .unitType ??
-                                              " ",
-                                          overflow: TextOverflow.ellipsis,
+                                          data.unitType ?? " ",
+                                          overflow:
+                                          TextOverflow.ellipsis,
                                           maxLines: 1,
                                           style: TextStyle(
-                                            fontSize: 14,
-                                          ),
+                                              fontSize: 12,
+                                              fontFamily:
+                                              fontFamily,
+                                              fontWeight:
+                                              FontWeight.w700),
                                         ),
                                       ],
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment
+                                          .spaceBetween,
                                     ),
                                   ),
-                                  visible: value.wishListModel.data![index]
-                                              .rmsProp !=
-                                          null &&
-                                      value.wishListModel.data![index]
-                                              .rmsProp ==
-                                          "RMS Prop",
+                                  visible: data.rmsProp != null &&
+                                      data.rmsProp == "RMS Prop",
                                 ),
                                 Visibility(
-                                  visible: value.wishListModel.data![index]
-                                              .rmsProp !=
-                                          null &&
-                                      value.wishListModel.data![index]
-                                              .rmsProp ==
-                                          "RMS Prop",
+                                  visible: data.rmsProp != null &&
+                                      data.rmsProp == "RMS Prop",
                                   child: Container(
                                     child: Text(
                                       'Multiple Units Available',
                                       style: TextStyle(
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 14,
-                                      ),
+                                          color: Colors.grey,
+                                          fontWeight:
+                                          FontWeight.w700,
+                                          fontSize: 12,
+                                          fontFamily: fontFamily),
                                     ),
-                                    alignment: Alignment.centerRight,
-                                    padding: EdgeInsets.only(right: 10),
+                                    alignment:
+                                    Alignment.centerRight,
+                                    padding:
+                                    EdgeInsets.only(right: _mainWidth*0.02),
                                   ),
                                 ),
-                                SizedBox(
-                                  height: 5,
-                                ),
+
                                 Container(
-                                  margin: EdgeInsets.only(left: 10),
+                                  margin: EdgeInsets.only(left: _mainWidth*0.02),
                                   width: _mainWidth * 0.75,
                                   child: Text(
-                                    value.wishListModel.data![index].title ??
-                                        " ",
+                                    data.title ?? " ",
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                     style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
+                                        fontSize: 12,
+                                        fontFamily: fontFamily,
+                                        color: Colors.black,
+                                        fontWeight:
+                                        FontWeight.w600),
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: () {},
+                                  onTap: () async {
+                                    if ((data.glat != null) &&
+                                        (data.glng != null)) {
+                                      var latitude =
+                                      (data.glat).toString();
+                                      var longitude =
+                                      (data.glng).toString();
+                                      await SystemService
+                                          .launchGoogleMaps(
+                                          latitude: latitude,
+                                          longitude: longitude);
+                                    }
+                                  },
                                   child: Container(
                                     width: _mainWidth * 0.40,
                                     color: Colors.white,
                                     child: Row(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding:
-                                              EdgeInsets.only(left: 10, top: 5),
+                                          padding: EdgeInsets.only(
+                                              left: _mainWidth*0.02, top: _mainHeight*0.005),
                                           child: Icon(
-                                            Icons.my_location_outlined,
+                                            Icons
+                                                .my_location_outlined,
                                             color: myFavColor,
-                                            size: 18,
+                                            size: _mainHeight*0.02,
                                           ),
                                         ),
                                         SizedBox(
                                           width: 5,
                                         ),
                                         Container(
+                                          //    color: Colors.amber,
                                           width: _mainWidth * 0.30,
                                           child: Wrap(
                                             children: [
                                               Padding(
                                                 padding:
-                                                    EdgeInsets.only(top: 7),
+                                                EdgeInsets.only(
+                                                    top: _mainHeight*0.007),
                                                 child: Text(
-                                                  (value
-                                                              .wishListModel
-                                                              .data![index]
-                                                              .areas ??
-                                                          value
-                                                              .wishListModel
-                                                              .data![index]
-                                                              .city) ??
+                                                  (data.areas ??
+                                                      data.city) ??
                                                       " ",
                                                   maxLines: 1,
                                                   overflow:
-                                                      TextOverflow.ellipsis,
+                                                  TextOverflow
+                                                      .ellipsis,
                                                   style: TextStyle(
-                                                      color: Colors.black,
+                                                      color: Colors
+                                                          .black,
                                                       fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 14),
+                                                      FontWeight
+                                                          .w600,
+                                                      fontFamily:
+                                                      fontFamily,
+                                                      fontSize: 12),
                                                 ),
                                               ),
                                             ],
@@ -271,243 +303,356 @@ class _WishListPageState extends State<WishListPage> {
                                     ),
                                   ),
                                 ),
+                                SizedBox(
+                                  height: _mainHeight*0.007,
+                                ),
                                 Divider(
                                   color: CustomTheme.appTheme,
+                                  height: 1,
+                                ),
+                                SizedBox(
+                                  height: _mainHeight*0.007,
                                 ),
                                 Container(
-                                    height: 25,
-                                    margin:
-                                        EdgeInsets.only(left: 15, right: 15),
-                                    //  color: Colors.blue,
+                                  //color: Colors.amber,
+                                    height: _mainHeight*0.02,
+                                    margin: EdgeInsets.only(
+                                        left: _mainWidth*0.02, right:  _mainWidth*0.02),
+
                                     child: Row(
                                       children: [
-                                        Text('Rent Per Day'),
-                                        RichText(
-                                          text: TextSpan(children: [
-                                            TextSpan(
-                                                text:
-                                                    'Rs ${value.wishListModel.data![index].orgRent ?? " "}',
-                                                style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 12,
-                                                    fontFamily:
-                                                        "HKGrotest-Light",
-                                                    decoration: TextDecoration
-                                                        .lineThrough)),
-                                            TextSpan(
-                                                text:
-                                                    ' Rs ${value.wishListModel.data![index].rent ?? " "}',
-                                                style: TextStyle(
-                                                    color: myFavColor,
-                                                    fontFamily:
-                                                        "HKGrotest-Light",
-                                                    fontSize: 14)),
-                                          ]),
+                                        Text(
+                                          'Rent Per Day',
+                                          style: TextStyle(
+                                            fontFamily: fontFamily,
+                                            fontSize: 14,
+                                            fontWeight:
+                                            FontWeight.w500,
+                                          ),
+                                        ),
+                                        data.orgRent == data.rent
+                                            ? Text(
+                                            ' $rupee ${data.rent ?? " "}',
+                                            style: TextStyle(
+                                                color:
+                                                myFavColor,
+                                                fontFamily:
+                                                fontFamily,
+                                                fontWeight:
+                                                FontWeight
+                                                    .w500,
+                                                fontSize: 14))
+                                            : RichText(
+                                          text: TextSpan(
+                                              children: [
+                                                TextSpan(
+                                                    text:
+                                                    '$rupee ${data.orgRent ?? " "}',
+                                                    style: TextStyle(
+                                                        color: Colors
+                                                            .grey,
+                                                        fontSize:
+                                                        12,
+                                                        fontWeight: FontWeight
+                                                            .w500,
+                                                        fontFamily:
+                                                        fontFamily,
+                                                        decoration:
+                                                        TextDecoration.lineThrough)),
+                                                TextSpan(
+                                                    text:
+                                                    ' $rupee ${data.rent ?? " "}',
+                                                    style: TextStyle(
+                                                        color:
+                                                        myFavColor,
+                                                        fontFamily:
+                                                        fontFamily,
+                                                        fontWeight: FontWeight
+                                                            .w500,
+                                                        fontSize:
+                                                        14)),
+                                              ]),
                                         ),
                                       ],
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment
+                                          .spaceBetween,
                                     )),
                                 Container(
-                                    height: 25,
-                                    margin:
-                                        EdgeInsets.only(left: 15, right: 15),
-                                    //  color: Colors.amber,
+                                  //color: Colors.amber,
+                                    height: _mainHeight*0.02,
+                                    margin: EdgeInsets.only(
+                                        left: _mainWidth*0.02, right:  _mainWidth*0.02),
                                     child: Row(
                                       children: [
-                                        Text('Rent (Stay < 3 Month)'),
-                                        RichText(
-                                          text: TextSpan(children: [
-                                            TextSpan(
-                                                text:
-                                                    'Rs ${value.wishListModel.data![index].orgMonthRent ?? " "}',
-                                                style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontFamily:
-                                                        "HKGrotest-Light",
-                                                    decoration: TextDecoration
-                                                        .lineThrough,
-                                                    fontSize: 12)),
-                                            TextSpan(
-                                                text:
-                                                    ' Rs ${value.wishListModel.data![index].monthlyRent ?? " "}',
-                                                style: TextStyle(
-                                                    color: myFavColor,
-                                                    fontFamily:
-                                                        "HKGrotest-Light",
-                                                    fontSize: 14)),
-                                          ]),
+                                        Text(
+                                          'Rent (Stay < 3 Month)',
+                                          style: TextStyle(
+                                            fontFamily: fontFamily,
+                                            fontSize: 14,
+                                            fontWeight:
+                                            FontWeight.w500,
+                                          ),
+                                        ),
+                                        data.orgMonthRent ==
+                                            data.monthlyRent
+                                            ? Text(
+                                            ' $rupee ${data.monthlyRent ?? " "}',
+                                            style: TextStyle(
+                                                color:
+                                                myFavColor,
+                                                fontFamily:
+                                                fontFamily,
+                                                fontWeight:
+                                                FontWeight
+                                                    .w500,
+                                                fontSize: 14))
+                                            : RichText(
+                                          text: TextSpan(
+                                              children: [
+                                                TextSpan(
+                                                    text:
+                                                    '$rupee ${data.orgMonthRent ?? " "}',
+                                                    style: TextStyle(
+                                                        color: Colors
+                                                            .grey,
+                                                        fontSize:
+                                                        12,
+                                                        fontWeight: FontWeight
+                                                            .w500,
+                                                        fontFamily:
+                                                        fontFamily,
+                                                        decoration:
+                                                        TextDecoration.lineThrough)),
+                                                TextSpan(
+                                                    text:
+                                                    ' $rupee ${data.monthlyRent ?? " "}',
+                                                    style: TextStyle(
+                                                        color:
+                                                        myFavColor,
+                                                        fontFamily:
+                                                        fontFamily,
+                                                        fontWeight: FontWeight
+                                                            .w500,
+                                                        fontSize:
+                                                        14)),
+                                              ]),
                                         ),
                                       ],
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment
+                                          .spaceBetween,
                                     )),
                                 Container(
-                                    height: 25,
-                                    margin:
-                                        EdgeInsets.only(left: 15, right: 15),
-                                    //   color: Colors.pink,
+                                  //   color: Colors.amber,
+                                    height: _mainHeight*0.02,
+                                    margin: EdgeInsets.only(
+                                        left: _mainWidth*0.02, right:  _mainWidth*0.02),
                                     child: Row(
                                       children: [
-                                        Text('Rent (Stay > 3 Month)'),
-                                        RichText(
-                                          text: TextSpan(children: [
-                                            TextSpan(
-                                                text:
-                                                    'Rs ${value.wishListModel.data![index].orgRmsRent ?? " "}',
-                                                style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontFamily:
-                                                        "HKGrotest-Light",
-                                                    fontSize: 12,
-                                                    decoration: TextDecoration
-                                                        .lineThrough)),
-                                            TextSpan(
-                                                text:
-                                                    ' Rs ${value.wishListModel.data![index].rmsRent ?? " "}',
-                                                style: TextStyle(
-                                                    color: myFavColor,
-                                                    fontFamily:
-                                                        "HKGrotest-Light",
-                                                    fontSize: 14)),
-                                          ]),
+                                        Text(
+                                            'Rent (Stay > 3 Month)',
+                                            style: TextStyle(
+                                              fontFamily:
+                                              fontFamily,
+                                              fontSize: 14,
+                                              fontWeight:
+                                              FontWeight.w500,
+                                            )),
+                                        data.orgRmsRent ==
+                                            data.rmsRent
+                                            ? Text(
+                                            ' $rupee ${data.rmsRent ?? " "}',
+                                            style: TextStyle(
+                                                color:
+                                                myFavColor,
+                                                fontFamily:
+                                                fontFamily,
+                                                fontWeight:
+                                                FontWeight
+                                                    .w500,
+                                                fontSize: 14))
+                                            : RichText(
+                                          text: TextSpan(
+                                              children: [
+                                                TextSpan(
+                                                    text:
+                                                    '$rupee ${data.orgRmsRent ?? " "}',
+                                                    style: TextStyle(
+                                                        color: Colors
+                                                            .grey,
+                                                        fontSize:
+                                                        12,
+                                                        fontWeight: FontWeight
+                                                            .w500,
+                                                        fontFamily:
+                                                        fontFamily,
+                                                        decoration:
+                                                        TextDecoration.lineThrough)),
+                                                TextSpan(
+                                                    text:
+                                                    ' $rupee ${data.rmsRent ?? " "}',
+                                                    style: TextStyle(
+                                                        color:
+                                                        myFavColor,
+                                                        fontFamily:
+                                                        fontFamily,
+                                                        fontWeight: FontWeight
+                                                            .w500,
+                                                        fontSize:
+                                                        14)),
+                                              ]),
                                         ),
                                       ],
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment
+                                          .spaceBetween,
                                     )),
                               ],
                             ),
                             Container(
-                              height: 40,
+                              height: _mainHeight*0.04,
+
                               width: _mainWidth,
                               padding: EdgeInsets.all(5),
                               child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
                                 children: [
                                   Visibility(
-                                    visible: value.wishListModel.data![index]
-                                                .rmsProp !=
-                                            null &&
-                                        value.wishListModel.data![index]
-                                                .rmsProp ==
+                                    visible: data.rmsProp !=
+                                        null &&
+                                        data.rmsProp ==
                                             "RMS Prop",
                                     child: Container(
-                                      color: myFavColor,
+                                      padding:
+                                      EdgeInsets.only(right:_mainWidth*0.02),
+                                      decoration: BoxDecoration(
+                                          color: Colors.white60,
+                                          border: Border.all(
+                                              color: CustomTheme
+                                                  .appTheme),
+                                          borderRadius:
+                                          BorderRadius.circular(
+                                              10)),
                                       child: Row(children: [
                                         CircleAvatar(
-                                            radius: 10,
+                                            radius:_mainHeight*0.012,
                                             backgroundColor:
-                                                myFavColor.withAlpha(40),
+                                            myFavColor,
                                             child: Icon(
                                               Icons.check,
-                                              size: 15,
+                                              size: _mainHeight*0.017,
                                               color: Colors.white,
                                             )),
+                                        SizedBox(width: _mainWidth*0.01,),
                                         Container(
-                                            color: myFavColor.withAlpha(95),
                                             child: Text(
                                               'Managed by RMS',
                                               style: TextStyle(
-                                                  fontStyle: FontStyle.italic,
-                                                  color: Colors.white,
-                                                  fontSize: 16),
+                                                  fontStyle:
+                                                  FontStyle.italic,
+                                                  color: Colors.black,
+                                                  fontFamily:
+                                                  fontFamily,
+                                                  fontWeight:
+                                                  FontWeight.w500,
+                                                  fontSize: 14),
                                             )),
                                       ]),
                                     ),
                                   ),
                                   Spacer(),
-                                  value.wishListModel.data![index].wishlist == 0
+                                  data.wishlist == 0
                                       ? GestureDetector(
-                                          onTap: () async {
-                                            if (value.wishListModel.data![index]
-                                                    .propId !=
-                                                null) {
-                                              String response =
-                                                  await _propertyViewModel
-                                                      .addToWishlist(
-                                                          propertyId: value
-                                                                  .wishListModel
-                                                                  .data![index]
-                                                                  .propId ??
-                                                              " ");
-                                              if (response.toLowerCase() ==
-                                                  'successfully added') {
-                                                setState(() {
-                                                  value
-                                                      .wishListModel
-                                                      .data![index]
-                                                      .wishlist = 1;
-                                                });
-                                                RMSWidgets.showSnackbar(
-                                                    context: context,
-                                                    message: response,
-                                                    color:
-                                                        CustomTheme.appTheme);
-                                              }
-                                            }
-                                          },
-                                          child: const CircleAvatar(
-                                            radius: 15,
-                                            backgroundColor: Colors.white60,
-                                            child: Icon(
-                                              Icons.favorite_outline_rounded,
-                                              color: Colors.red,
-                                              size: 20,
-                                            ),
-                                          ),
-                                        )
+                                    onTap: () async {
+                                      if (data.propId !=
+                                          null) {
+                                        String response =
+                                        await _propertyViewModel
+                                            .addToWishlist(
+                                            propertyId:
+                                            data.propId ??
+                                                " ");
+                                        if (response
+                                            .toLowerCase() ==
+                                            'successfully added') {
+                                          setState(() {
+                                            data.wishlist = 1;
+                                          });
+                                          RMSWidgets.showSnackbar(
+                                              context:
+                                              context,
+                                              message:
+                                              response,
+                                              color: CustomTheme
+                                                  .appTheme);
+                                        }
+                                      }
+                                    },
+                                    child: const CircleAvatar(
+                                      radius: 15,
+                                      backgroundColor:
+                                      Colors.white60,
+                                      child: Icon(
+                                        Icons
+                                            .favorite_outline_rounded,
+                                        color: Colors.red,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  )
                                       : GestureDetector(
-                                          onTap: () async {
-                                            if (value.wishListModel.data![index]
-                                                    .propId !=
-                                                null) {
-                                              String response =
-                                                  await _propertyViewModel
-                                                      .addToWishlist(
-                                                          propertyId: value
-                                                                  .wishListModel
-                                                                  .data![index]
-                                                                  .propId ??
-                                                              " ");
-                                              if (response.toLowerCase() ==
-                                                  'successfully removed') {
-                                                setState(() {
-                                                  value
-                                                      .wishListModel
-                                                      .data![index]
-                                                      .wishlist = 0;
-                                                });
-                                                RMSWidgets.showSnackbar(
-                                                    context: context,
-                                                    message: response,
-                                                    color: CustomTheme()
-                                                        .colorError);
-                                              }
-                                            }
-                                          },
-                                          child: const CircleAvatar(
-                                            radius: 15,
-                                            backgroundColor: Colors.white60,
-                                            child: Icon(
-                                              Icons.favorite,
-                                              color: Colors.red,
-                                              size: 20,
-                                            ),
-                                          ),
-                                        ),
+                                    onTap: () async {
+                                      if (data.propId !=
+                                          null) {
+                                        String response =
+                                        await _propertyViewModel
+                                            .addToWishlist(
+                                            propertyId:
+                                            data.propId ??
+                                                " ");
+                                        if (response
+                                            .toLowerCase() ==
+                                            'successfully removed') {
+                                          setState(() {
+                                            data.wishlist = 0;
+                                          });
+                                          RMSWidgets.showSnackbar(
+                                              context:
+                                              context,
+                                              message:
+                                              response,
+                                              color: CustomTheme()
+                                                  .colorError);
+                                        }
+                                      }
+                                    },
+                                    child: const CircleAvatar(
+                                      radius: 15,
+                                      backgroundColor:
+                                      Colors.white60,
+                                      child: Icon(
+                                        Icons.favorite,
+                                        color: Colors.red,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
                     ),
                   );
                 },
-                itemCount: value.wishListModel.data?.length ?? 0,
-                separatorBuilder: (context, index) => const SizedBox(
-                  height: 15,
+                itemCount:
+                value.wishListModel.data?.length ?? 0,
+                separatorBuilder: (context, index) =>
+                SizedBox(
+                  height: _mainHeight*0.008,
                 ),
               ),
             ),

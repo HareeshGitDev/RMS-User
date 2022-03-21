@@ -28,26 +28,33 @@ class SiteVisitPage extends StatefulWidget {
   final String phoneNumber;
   final String email;
 
-
-  SiteVisitPage({Key? key, required this.propId,required this.name,required this.email,required this.phoneNumber}) : super(key: key);
+  SiteVisitPage(
+      {Key? key,
+      required this.propId,
+      required this.name,
+      required this.email,
+      required this.phoneNumber})
+      : super(key: key);
 
   @override
   State<SiteVisitPage> createState() => SiteVisitPagestate();
 }
 
 class SiteVisitPagestate extends State<SiteVisitPage> {
+  var _mainHeight;
+  var _mainWidth;
+
   @override
   void initState() {
-    _nameController.text=widget.name;
-    _phoneNumberController.text=widget.phoneNumber;
-    _emailController.text=widget.email;
+    _nameController.text = widget.name;
+    _phoneNumberController.text = widget.phoneNumber;
+    _emailController.text = widget.email;
     super.initState();
   }
 
   final _emailController = TextEditingController();
   final _nameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
-
 
   DateTime selectedDate = DateTime.now();
   String showDate = 'Select Date For Visit';
@@ -57,6 +64,7 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
     true,
     false,
   ];
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -65,113 +73,118 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
 
   @override
   Widget build(BuildContext context) {
+    _mainHeight=MediaQuery.of(context).size.height;
+    _mainWidth=MediaQuery.of(context).size.width;
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(15),
       ),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(_mainHeight*0.015),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
               const Center(
                 child: Text(
                   "Site Visit",
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w600),
                 ),
               ),
-              const SizedBox(
-                width: 20,
-              ),
-              const Center(
+              Center(
                 child: Text(
                   "Fill up to schedule a visit to a Place ",
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 14,fontWeight: FontWeight.w500,color: Colors.grey),
                 ),
               ),
-              const SizedBox(
-                width: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: EdgeInsets.all(5),
-                    child: FilterChip(
-                        selected: _selected[0],
-                        label: Text('Virtual visit'),
-                        elevation: 10,
-                        selectedColor: CustomTheme.peach,
-                        pressElevation: 5,
-                        onSelected: (bool selected) {
-                          if (selected == true) {
-                            setState(() {
 
-                              _selected[0] = true;
-                              _selected[1] = false;
-                            });
-                          }
-                        }),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(5),
-                    child: FilterChip(
-                        selected: _selected[1],
-                        selectedColor: CustomTheme.peach,
-                        label: Text('Physical visit'),
-                        elevation: 10,
-                        pressElevation: 5,
-                        onSelected: (bool selected) {
-                          if (selected == true) {
-                            setState(() {
-                              _selected[0] = false;
-                              _selected[1] = true;
-                            });
-                          }
-                        }),
-                  ),
-                  // Container(padding: EdgeInsets.all(5),decoration: BoxDecoration(border:Border.all(color: CustomTheme.skyBlue),borderRadius: BorderRadius.all(Radius.circular(20)) ),margin: EdgeInsets.all(10),child: Text("Virtual SiteVisit")),
-                  //Container(padding: EdgeInsets.all(5),decoration: BoxDecoration(border:Border.all(color: CustomTheme.skyBlue),borderRadius: BorderRadius.all(Radius.circular(20)) ),margin: EdgeInsets.all(10),child: Text("Physical SiteVisit")),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  FilterChip(
+                      selected: _selected[0],
+                      label: Container(
+                        height: _mainHeight*0.02,
+                        child: Text(
+                          'Virtual Visit',
+                          style: TextStyle(
+                              color:
+                                  _selected[0] ? Colors.white : Colors.black,fontWeight: FontWeight.w600,fontSize: 14),
+                        ),
+                      ),
+                      elevation: 2,
+                      checkmarkColor:
+                          _selected[0] ? Colors.white : Colors.black,
+                      selectedColor: CustomTheme.appTheme,
+                      backgroundColor: CustomTheme.white,
+                      pressElevation: 1,
+                      onSelected: (bool selected) {
+                        if (selected == true) {
+                          setState(() {
+                            _selected[0] = true;
+                            _selected[1] = false;
+                          });
+                        }
+                      }),
+                  FilterChip(
+                      selected: _selected[1],
+                      label: Container(
+                        height: _mainHeight*0.02,
+                        child: Text(
+                          'Physical Visit',
+                            style: TextStyle(
+                                color:
+                                _selected[1] ? Colors.white : Colors.black,fontWeight: FontWeight.w600,fontSize: 14),),
+                      ),
+                      elevation: 2,
+                      checkmarkColor:
+                          _selected[1] ? Colors.white : Colors.black,
+                      selectedColor: CustomTheme.appTheme,
+                      backgroundColor: CustomTheme.white,
+                      pressElevation: 1,
+                      onSelected: (bool selected) {
+                        if (selected == true) {
+                          setState(() {
+                            _selected[0] = false;
+                            _selected[1] = true;
+                          });
+                        }
+                      }),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Container(
-                  height: 45,
-                  margin: EdgeInsets.only(top: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    color: Colors.white,
-                  ),
-                  child: Neumorphic(
-                    style: NeumorphicStyle(
-                      depth: -10,
-                      color: Colors.white,
-                    ),
-                    child: TextFormField(
-                      controller: _nameController,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Name",
-                        prefixIcon: Icon(Icons.person_outline,
-                            color: Colors.grey, size: 20),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 15,
-              ),
+              SizedBox(height: _mainHeight*0.01,),
               Container(
-                height: 45,
+                height: _mainHeight*0.045,
+
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   color: Colors.white,
                 ),
                 child: Neumorphic(
                   style: NeumorphicStyle(
-                    depth: -10,
+                    depth: -2,
+                    color: Colors.white,
+                  ),
+                  child: TextFormField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Name",
+                      prefixIcon: Icon(Icons.person_outline,
+                          color: Colors.grey, size: 20),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: _mainHeight*0.02,),
+              Container(
+                height: _mainHeight*0.045,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  color: Colors.white,
+                ),
+                child: Neumorphic(
+                  style: NeumorphicStyle(
+                    depth: -2,
                     color: Colors.white,
                   ),
                   child: TextFormField(
@@ -185,18 +198,16 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 15,
-              ),
+              SizedBox(height: _mainHeight*0.02,),
               Container(
-                height: 45,
+                height: _mainHeight*0.045,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   color: Colors.white,
                 ),
                 child: Neumorphic(
                   style: NeumorphicStyle(
-                    depth: -10,
+                    depth: -2,
                     color: Colors.white,
                   ),
                   child: TextFormField(
@@ -211,120 +222,132 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                 ),
               ),
               SizedBox(
-                height: 15,
+                height: _mainHeight*0.02,
               ),
-              Neumorphic(
-                style: NeumorphicStyle(
-                  depth: -10,
-                  color: Colors.white,
-                ),
-                child: GestureDetector(
-                  onTap: () async {
-                    DateTime? _date = await _pickDate(context);
-                    if (_date != null) {
-                      selectedDate = _date;
-                      setState(() {
-                        showDate = yyyyMMDDformatDate(selectedDate);
-                      });
-                    }
-                  },
-                  child: Container(
-                    padding: EdgeInsets.only(left: 15),
-                    color: Colors.white,
-                    height: 45,
-                    width: MediaQuery.of(context).size.width,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.calendar_today_sharp,
-                          color: Colors.grey,
-                          size: 20,
+              Row
+                (
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Neumorphic(
+                    style: NeumorphicStyle(
+                      depth: -2,
+                      color: Colors.white,
+                    ),
+                    child: GestureDetector(
+                      onTap: () async {
+                        DateTime? _date = await _pickDate(context);
+                        if (_date != null) {
+                          selectedDate = _date;
+                          setState(() {
+                            showDate = yyyyMMDDformatDate(selectedDate);
+                          });
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.only(left: _mainWidth*0.04,right: _mainWidth*0.04),
+                        color: Colors.white,
+                        height: _mainHeight*0.045,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.calendar_today_sharp,
+                              color: Colors.grey,
+                              size: 20,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(showDate),
+                          ],
                         ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(showDate),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              Container(
-                width: 100,
-                height: 40,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: CustomTheme.peach,
+                  Container(
 
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                    height: _mainHeight*0.045,
+                    alignment: Alignment.center,
 
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      color: Colors.white,
+                    ),
 
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    icon: Container(),
-                    elevation: 10,
-                    menuMaxHeight: 300,
-                    items: getTimeList
-                        .map((type) => DropdownMenuItem(
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Text(type),
-                              ),
-                              value: type,
-                            ))
-                        .toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        typeValue = value.toString();
-                      });
-                    },
-                    value: typeValue,
+                    child: Neumorphic(
+                      style: NeumorphicStyle(
+                        depth: -2,
+                        color: Colors.white,
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          icon: Container(),
+
+                          menuMaxHeight: _mainHeight*0.8,
+                          items: getTimeList
+                              .map((type) => DropdownMenuItem(
+                                    child: Container(
+                                      padding: EdgeInsets.only(left: _mainWidth*0.04,right: _mainWidth*0.04),
+                                      alignment: Alignment.center,
+                                      child: Text(type),
+                                    ),
+                                    value: type,
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              typeValue = value.toString();
+                            });
+                          },
+                          value: typeValue,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-              SizedBox(
-                height: 10,
-              ),
-              Center(
+             SizedBox(height: _mainHeight*0.02,),
+             Center(
                 child: Container(
-                  width: 150,
-                  height: 50,
-                  margin: EdgeInsets.only(bottom: 5, top: 15),
+                  width: _mainWidth*0.3,
+                  height: _mainHeight*0.04,
+
                   child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(CustomTheme.appTheme),
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          CustomTheme.appTheme),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                       ),
                     ),
                     onPressed: () async {
-                      if(_nameController.text.isEmpty){
-                        RMSWidgets.getToast(message: 'Please Enter Your Name', color: Colors.grey);
-                      }
-                      else{
-                        if(_emailController.text.isEmpty){
-                          RMSWidgets.getToast(message: 'Please Enter Your Email Address', color: Colors.grey);
-                        }
-                        else{
-                          if(_phoneNumberController.text.isEmpty){
-                            RMSWidgets.getToast(message: 'Please Enter Your Mobile Number', color: Colors.grey);
-                          }
-                          else{
-                            if(showDate=='Select Date For Visit' || typeValue=='HH:MM')
-                              {
-                                RMSWidgets.getToast(message: 'Please Select Date And Time', color: Colors.grey);
-                              }
-                            else{
-                              RMSWidgets.showLoaderDialog(context: context, message: 'Please wait...');
-                              SharedPreferenceUtil _shared = SharedPreferenceUtil();
-                              String? token =
-                              await _shared.getString(rms_registeredUserToken);
+                      if (_nameController.text.isEmpty) {
+                        RMSWidgets.getToast(
+                            message: 'Please Enter Your Name',
+                            color: Colors.grey);
+                      } else {
+                        if (_emailController.text.isEmpty) {
+                          RMSWidgets.getToast(
+                              message: 'Please Enter Your Email Address',
+                              color: Colors.grey);
+                        } else {
+                          if (_phoneNumberController.text.isEmpty) {
+                            RMSWidgets.getToast(
+                                message: 'Please Enter Your Mobile Number',
+                                color: Colors.grey);
+                          } else {
+                            if (showDate == 'Select Date For Visit' ||
+                                typeValue == 'HH:MM') {
+                              RMSWidgets.getToast(
+                                  message: 'Please Select Date And Time',
+                                  color: Colors.grey);
+                            } else {
+                              RMSWidgets.showLoaderDialog(
+                                  context: context, message: 'Please wait...');
+                              SharedPreferenceUtil _shared =
+                                  SharedPreferenceUtil();
+                              String? token = await _shared
+                                  .getString(rms_registeredUserToken);
 
                               Map<String, dynamic> scheduleVisitData = {
                                 'email': _emailController.text,
@@ -337,25 +360,27 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                                     ? 'Virtual Visit'
                                     : 'Physical Visit',
                               };
-                              final viewModel = Provider.of<PropertyDetailsViewModel>(
-                                  context,
-                                  listen: false);
-                              String response = await viewModel.scheduleSiteVisit(
-                                  scheduleVisitData: scheduleVisitData);
+                              final viewModel =
+                                  Provider.of<PropertyDetailsViewModel>(context,
+                                      listen: false);
+                              String response =
+                                  await viewModel.scheduleSiteVisit(
+                                      scheduleVisitData: scheduleVisitData);
 
                               Navigator.of(context).pop();
-                              if(response.toLowerCase() =='success'){
+                              if (response.toLowerCase() == 'success') {
                                 Navigator.of(context).pop();
-                                RMSWidgets.showSnackbar(context: context, message: 'Congratulations,Your Site Visit is Scheduled.', color: CustomTheme.appTheme);
+                                RMSWidgets.showSnackbar(
+                                    context: context,
+                                    message:
+                                        'Congratulations,Your Site Visit is Scheduled.',
+                                    color: CustomTheme.appTheme);
                                 log('Response From Site Visit is :: $response');
                               }
                             }
-
                           }
                         }
                       }
-
-
                     },
                     child: Center(child: Text("Confirm Visit")),
                   ),

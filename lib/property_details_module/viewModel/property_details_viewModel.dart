@@ -9,8 +9,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 class PropertyDetailsViewModel extends ChangeNotifier {
   final PropertyDetailsApiService _detailsApiService =
       PropertyDetailsApiService();
-  BookingAmountsResponseModel bookingAmountsResponseModel =
-      BookingAmountsResponseModel();
+  BookingAmountsResponseModel? bookingAmountsResponseModel ;
 
   PropertyDetailsModel? propertyDetailsModel;
 
@@ -50,6 +49,7 @@ class PropertyDetailsViewModel extends ChangeNotifier {
 
   Future<void> getBookingDetails(
       {required BookingAmountRequestModel model}) async {
+
     final response = await _detailsApiService.fetchBookingAmounts(model: model);
     bookingAmountsResponseModel = response;
     notifyListeners();

@@ -20,8 +20,8 @@ class RefundSplitUpModel {
 }
 
 class Data {
-  String? depositReceived;
-  String? depositRefund;
+  dynamic depositReceived;
+  dynamic depositRefund;
   List<Adjustments>? adjustments;
 
   Data({this.depositReceived, this.depositRefund, this.adjustments});
