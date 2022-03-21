@@ -304,7 +304,7 @@ class Data {
     data['rms_rent'] = this.rmsRent;
     data['org_rms_rent'] = this.orgRmsRent;
     data['rms_deposit'] = this.rmsDeposit;
-    data['monthly_rent'] = this.monthlyRent;
+    data['monthly_rent'] = monthlyRent;
     data['org_month_rent'] = this.orgMonthRent;
     data['weekly_rent'] = this.weeklyRent;
     data['rent'] = this.rent;

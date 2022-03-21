@@ -39,7 +39,8 @@ class _RefundSplitPageState extends State<RefundSplitPage> {
           title: Text('Refund SplitUp '),
         ),
         body: Consumer<MyStayViewModel>(
-          builder: (context, value, child) {
+          builder: (context, value, child)
+          {
             return value.refundSplitUpModel != null &&
                     value.refundSplitUpModel?.data != null
                 ? Container(

@@ -170,7 +170,7 @@ class _MyStayPageState extends State<MyStayPage> {
                                       margin:
                                           EdgeInsets.only(left: 10, right: 10),
                                       child: Text(
-                                        '${value.myStayDetailsModel?.data?.title} hshhs dhbxhhbxshx xxsxsx xsjxnsjnx xsxsjnx xk ',
+                                        '${value.myStayDetailsModel?.data?.title}',
                                         maxLines: 3,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
@@ -555,7 +555,8 @@ class _MyStayPageState extends State<MyStayPage> {
                               hint: "Monthly Invoice(s)",
                               icon: Icons.line_weight_outlined,
                               callBack: () => Navigator.pushNamed(
-                                  context, AppRoutes.invoicePage)),
+                                  context, AppRoutes.invoicePage,
+                                  arguments: widget.bookingId)),
                           _gridInput(
                               hint: "Agreement Sign",
                               icon: Icons.assignment_turned_in_outlined,

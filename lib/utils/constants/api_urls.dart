@@ -21,4 +21,5 @@ class AppUrls{
   static const String filterSortPropsUrl='/v2/matchProps';
   static const String myBookingDetails='/v2/bookingDetails';
   static const String refundDetailsUrl='/v2/refundSplitup';
+  static const String invoiceDetailsUrl='/v2/invoiceDetails';
 }

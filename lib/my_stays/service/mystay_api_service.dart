@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:RentMyStay_user/my_stays/model/Invoice_Details_Model.dart';
+
 import '../../utils/constants/api_urls.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/rms_user_api_service.dart';
@@ -71,4 +73,21 @@ class MyStayApiService {
       );
     }
   }
+
+  Future<InvoiceDetailsModel> fetchInvoiceDetails(
+      {required String bookingId}) async {
+    String url = AppUrls.invoiceDetailsUrl;
+    final response = await _apiService.getApiCallWithQueryParams(
+        endPoint: url, queryParams: {'booking_id': base64Encode(utf8.encode(bookingId))});
+    final data = response as Map<String, dynamic>;
+
+    if (data['msg'].toString().toLowerCase() == 'success') {
+      return InvoiceDetailsModel.fromJson(data);
+    } else {
+      return InvoiceDetailsModel(
+        msg: 'failure',
+      );
+    }
+  }
+
 }

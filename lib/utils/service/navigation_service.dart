@@ -110,7 +110,14 @@ class NavigationService {
                 ));
 
       case AppRoutes.invoicePage:
-        return MaterialPageRoute(builder: (context) => InvoicePage());
+        final data = settings.arguments as String;
+        return MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider(
+              create: (_) =>MyStayViewModel(),
+              child: InvoicePage(
+                bookingId: data,),
+            )
+        );
 
       case AppRoutes.refundSplitPage:
         final data = settings.arguments as String;
