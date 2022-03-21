@@ -113,11 +113,11 @@ class NavigationService {
         final data = settings.arguments as String;
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
-              create: (_) =>MyStayViewModel(),
-              child: InvoicePage(
-                bookingId: data,),
-            )
-        );
+                  create: (_) => MyStayViewModel(),
+                  child: InvoicePage(
+                    bookingId: data,
+                  ),
+                ));
 
       case AppRoutes.refundSplitPage:
         final data = settings.arguments as String;
@@ -143,20 +143,24 @@ class NavigationService {
                 ));
 
       case AppRoutes.profilePage:
+        final data = settings.arguments as Map<String, dynamic>;
+        bool fromBottom = data['fromBottom'];
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
                   create: (_) => ProfileViewModel(),
-                  child: ProfilePage(),
+                  child: ProfilePage(fromBottom: fromBottom),
                 ));
 
       case AppRoutes.editProfilePage:
         return MaterialPageRoute(builder: (context) => EditProfile());
 
       case AppRoutes.myStayListPage:
+        final data = settings.arguments as Map<String, dynamic>;
+        bool fromBottom = data['fromBottom'];
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
                   create: (_) => MyStayViewModel(),
-                  child: MyStayListPage(),
+                  child: MyStayListPage(fromBottom: fromBottom),
                 ));
 
       case AppRoutes.propertyListingPage:
@@ -176,9 +180,14 @@ class NavigationService {
         );
 
       case AppRoutes.wishListPage:
+        final data = settings.arguments as Map<String, dynamic>;
+        bool fromBottom = data['fromBottom'];
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
-              create: (_) => PropertyViewModel(), child: WishListPage()),
+              create: (_) => PropertyViewModel(),
+              child: WishListPage(
+                fromBottom: fromBottom,
+              )),
         );
       case AppRoutes.propertyDetailsPage:
         String propId = settings.arguments as String;
@@ -191,9 +200,14 @@ class NavigationService {
               )),
         );
       case AppRoutes.searchPage:
+        final data = settings.arguments as Map<String, dynamic>;
+        bool fromBottom = data['fromBottom'];
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
-              create: (_) => PropertyViewModel(), child: SearchPage()),
+              create: (_) => PropertyViewModel(),
+              child: SearchPage(
+                fromBottom: fromBottom,
+              )),
         );
       case AppRoutes.dashboardPage:
         return MaterialPageRoute(

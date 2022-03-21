@@ -19,9 +19,10 @@ class CalenderPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Select Moving/MoveOut Date'),
         titleSpacing: 0,
-        backgroundColor: CustomTheme.peach,
+        backgroundColor: CustomTheme.appTheme,
       ),
       body: Container(
+        color: Colors.white,
         child: _getDates(context: context),
       ),
     );
@@ -33,8 +34,8 @@ class CalenderPage extends StatelessWidget {
       child: SfDateRangePicker(
         enableMultiView: true,
         enablePastDates: false,
-        endRangeSelectionColor: CustomTheme.peach,
-        startRangeSelectionColor: CustomTheme.peach,
+        endRangeSelectionColor: CustomTheme.appTheme,
+        startRangeSelectionColor: CustomTheme.appTheme,
         confirmText: 'SELECT',
         onCancel: () => Navigator.pop(context),
         onSubmit: (dynamic data) {
@@ -50,7 +51,8 @@ class CalenderPage extends StatelessWidget {
           }
         },
         initialSelectedRange: initialDatesRange,
-        todayHighlightColor: myFavColor,
+        todayHighlightColor: CustomTheme.myFavColor,
+        backgroundColor: Colors.white,
         selectionShape: DateRangePickerSelectionShape.rectangle,
         showActionButtons: true,
         headerStyle: DateRangePickerHeaderStyle(

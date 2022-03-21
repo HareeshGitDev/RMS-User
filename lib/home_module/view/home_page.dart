@@ -48,7 +48,6 @@ class _HomePageState extends State<HomePage> {
   final _searchController = TextEditingController();
   bool shouldClearText = true;
 
-
   @override
   void initState() {
     _homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
@@ -85,7 +84,10 @@ class _HomePageState extends State<HomePage> {
         bottom: PreferredSize(
           preferredSize: Size(20, 50),
           child: GestureDetector(
-            onTap: () => Navigator.of(context).pushNamed(AppRoutes.searchPage),
+            onTap: () => Navigator.of(context)
+                .pushNamed(AppRoutes.searchPage, arguments: {
+              'fromBottom': false,
+            }),
             child: Container(
               height: 40,
               padding: EdgeInsets.only(
@@ -179,8 +181,6 @@ class _HomePageState extends State<HomePage> {
                                             shape: BoxShape.circle,
                                             color: Colors.grey,
                                           ),
-
-
                                         ),
                                         baseColor: Colors.grey[200] as Color,
                                         highlightColor:
@@ -204,35 +204,32 @@ class _HomePageState extends State<HomePage> {
                 child: CarouselSlider(
                   items: _homeViewModel
                       .getAdsImageList()
-                      .map((imageUrl) =>  CachedNetworkImage(
-                        imageUrl: imageUrl,
-                        imageBuilder: (context, imageProvider) =>
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
-                                ),
+                      .map(
+                        (imageUrl) => CachedNetworkImage(
+                          imageUrl: imageUrl,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
                               ),
                             ),
-                        placeholder: (context, url) =>
-                            Shimmer.fromColors(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey,
-                                    borderRadius: BorderRadius.circular(15),
-
-                                  ),
-                                  height: 180,
-
+                          ),
+                          placeholder: (context, url) => Shimmer.fromColors(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(15),
                                 ),
-                                baseColor: Colors.grey[200] as Color,
-                                highlightColor:
-                                Colors.grey[350] as Color),
-                        errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                      ),)
+                                height: 180,
+                              ),
+                              baseColor: Colors.grey[200] as Color,
+                              highlightColor: Colors.grey[350] as Color),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
+                      )
                       .toList(),
                   options: CarouselOptions(
                       height: 180,
@@ -470,7 +467,6 @@ class _HomePageState extends State<HomePage> {
               clipBehavior: Clip.antiAliasWithSaveLayer,
               color: theme.scaffoldBackgroundColor,
               child: Drawer(
-
                   child: Container(
                 color: theme.scaffoldBackgroundColor,
                 child: Column(
@@ -481,42 +477,38 @@ class _HomePageState extends State<HomePage> {
                       padding: FxSpacing.only(
                           left: 20, bottom: 10, top: 20, right: 20),
                       child: Column(
-                      //
+                        //
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           CircleAvatar(
-                           child: Container(
-
-                             child: CachedNetworkImage(
-                               imageUrl: (snapshot.data!['pic']).toString(),
-                               imageBuilder: (context, imageProvider) =>
-                                   Container(
-                                     decoration: BoxDecoration(
-                                       shape: BoxShape.circle,
-                                       image: DecorationImage(
-                                         image: imageProvider,
-                                         fit: BoxFit.cover,
-                                       ),
-                                     ),
-                                   ),
-                               placeholder: (context, url) =>
-                                   Shimmer.fromColors(
-                                       child: Container(
-
-                                         decoration: BoxDecoration(
-                                           shape: BoxShape.circle,
-                                           color: Colors.grey,
-                                         ),
-
-
-                                       ),
-                                       baseColor: Colors.grey[200] as Color,
-                                       highlightColor:
-                                       Colors.grey[350] as Color),
-                               errorWidget: (context, url, error) =>
-                               const Icon(Icons.error),
-                             ),
-                           ),
+                            child: Container(
+                              child: CachedNetworkImage(
+                                imageUrl: (snapshot.data!['pic']).toString(),
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                placeholder: (context, url) =>
+                                    Shimmer.fromColors(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        baseColor: Colors.grey[200] as Color,
+                                        highlightColor:
+                                            Colors.grey[350] as Color),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              ),
+                            ),
                             radius: 45,
                           ),
                           FxSpacing.height(12),
@@ -556,7 +548,9 @@ class _HomePageState extends State<HomePage> {
                             onTap: () {
                               Navigator.pushNamed(
                                 context,
-                                AppRoutes.profilePage,
+                                AppRoutes.profilePage,arguments: {
+                                  'fromBottom':false,
+                              }
                               );
                             },
                             highlightColor: Colors.transparent,
@@ -592,9 +586,10 @@ class _HomePageState extends State<HomePage> {
                           InkWell(
                             onTap: () {
                               Navigator.pushNamed(
-                                context,
-                                AppRoutes.myStayListPage,
-                              );
+                                  context, AppRoutes.myStayListPage,
+                                  arguments: {
+                                    'fromBottom': false,
+                                  });
                             },
                             highlightColor: Colors.transparent,
                             splashColor: Colors.transparent,
@@ -629,7 +624,10 @@ class _HomePageState extends State<HomePage> {
                           InkWell(
                             onTap: () {
                               Navigator.pushNamed(
-                                  context, AppRoutes.wishListPage);
+                                  context, AppRoutes.wishListPage,
+                                  arguments: {
+                                    'fromBottom': false,
+                                  });
                             },
                             highlightColor: Colors.transparent,
                             splashColor: Colors.transparent,

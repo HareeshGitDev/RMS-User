@@ -11,10 +11,14 @@ import 'package:provider/provider.dart';
 import '../../Web_View_Container.dart';
 import '../../home_module/viewModel/home_viewModel.dart';
 import '../../theme/custom_theme.dart';
+import '../../utils/service/bottom_navigation_provider.dart';
 import '../model/profile_model.dart';
 import '../viewmodel/profile_view_model.dart';
 
 class ProfilePage extends StatefulWidget {
+  final bool fromBottom;
+  ProfilePage({required this.fromBottom});
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -251,18 +255,27 @@ class _ProfilePageState extends State<ProfilePage> {
 
   AppBar _getAppBar({required BuildContext context}) {
     return AppBar(
-      leading: BackButton(
-        color: CustomTheme.appTheme,
-      ),
+      leading:widget.fromBottom
+          ? WillPopScope(
+          child: Container(),
+          onWillPop: () async {
+            Provider.of<BottomNavigationProvider>(context, listen: false)
+                .shiftBottom(index: 0);
+            return false;
+          })
+          :const BackButton(),
       actions: [
         GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, AppRoutes.editProfilePage);
+            Navigator.pushNamed(context, AppRoutes.editProfilePage,arguments:  {
+              'fromBottom':false,
+            });
           },
+
           child: Container(
             child: Text(
               "EDIT",
-              style: TextStyle(color: Colors.black45, fontSize: 16),
+              style: TextStyle(color: Colors.white, fontSize: 16),
               textAlign: TextAlign.center,
             ),
             margin: EdgeInsets.only(right: 20, top: 16),
@@ -272,9 +285,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
       titleSpacing: 0,
       elevation: 0,
-      backgroundColor: Colors.white,
+      backgroundColor: CustomTheme.appTheme,
       // centerTitle: true,
-      title: Text('Profile', style: TextStyle(color: Colors.black45,fontSize: 16)),
+      title: Text('Profile', style: TextStyle(color: Colors.white,fontSize: 16)),
     );
   }
 

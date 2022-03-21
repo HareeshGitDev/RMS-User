@@ -26,17 +26,17 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   late BottomNavigationProvider _bottomNavigationProvider;
+
   @override
   void initState() {
     super.initState();
-    _bottomNavigationProvider = Provider.of<BottomNavigationProvider>(context, listen: false);
+    _bottomNavigationProvider =
+        Provider.of<BottomNavigationProvider>(context, listen: false);
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: Consumer<BottomNavigationProvider>(
         builder: (context, value, child) {
           switch (value.selectedIndex) {
@@ -48,66 +48,71 @@ class _DashboardPageState extends State<DashboardPage> {
             case 1:
               return ChangeNotifierProvider(
                   create: (_) => PropertyViewModel(),
-                  child:  SearchPage());
+                  child: SearchPage(
+                    fromBottom: true,
+                  ));
             case 2:
               return ChangeNotifierProvider(
                 create: (_) => PropertyViewModel(),
-                child:  WishListPage(),
+                child: WishListPage(fromBottom: true),
               );
             case 3:
               return ChangeNotifierProvider(
                 create: (_) => MyStayViewModel(),
-                child:  MyStayListPage(),
+                child: MyStayListPage(fromBottom: true),
               );
             case 4:
               return ChangeNotifierProvider(
                 create: (_) => ProfileViewModel(),
-                child: ProfilePage(),
+                child: ProfilePage(fromBottom: true),
               );
             default:
               return Container();
           }
         },
       ),
-      bottomNavigationBar: CurvedNavigationBar(
-        onTap: (value) {
-          log('ONTAp :: $value');
-          _bottomNavigationProvider.shiftBottom(index: value);
-  },
-
-        height: 50,
-        backgroundColor: Colors.white,
-        buttonBackgroundColor: CustomTheme.appTheme,
-        color: CustomTheme.appTheme,
-        animationDuration: Duration(milliseconds: 50),
-        items:  <Widget>[
-          Icon(
-            Icons.home_rounded,
-            size: 30,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.search_rounded,
-            size: 30,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.favorite_outline_rounded,
-            size: 30,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.house_outlined,
-            size: 30,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.person_outline_rounded,
-            size: 30,
-            color: Colors.white,
-          )
-        ],
-
+      bottomNavigationBar: Consumer<BottomNavigationProvider>(
+        builder: (context, value, child) {
+          return CurvedNavigationBar(
+            onTap: (value) {
+              log('ONTAp :: $value');
+              _bottomNavigationProvider.shiftBottom(index: value);
+            },
+            index: _bottomNavigationProvider.selectedIndex,
+            height: 50,
+            backgroundColor: Colors.white,
+            buttonBackgroundColor: CustomTheme.appTheme,
+            color: CustomTheme.appTheme,
+            animationDuration: const Duration(milliseconds: 100),
+            items: const <Widget>[
+              Icon(
+                Icons.home_rounded,
+                size: 30,
+                color: Colors.white,
+              ),
+              Icon(
+                Icons.search_rounded,
+                size: 30,
+                color: Colors.white,
+              ),
+              Icon(
+                Icons.favorite_outline_rounded,
+                size: 30,
+                color: Colors.white,
+              ),
+              Icon(
+                Icons.house_outlined,
+                size: 30,
+                color: Colors.white,
+              ),
+              Icon(
+                Icons.person_outline_rounded,
+                size: 30,
+                color: Colors.white,
+              )
+            ],
+          );
+        },
       ),
     );
   }

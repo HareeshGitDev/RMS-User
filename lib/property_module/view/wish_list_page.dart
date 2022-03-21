@@ -18,10 +18,13 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../images.dart';
+import '../../utils/service/bottom_navigation_provider.dart';
 import '../../utils/service/navigation_service.dart';
 
 class WishListPage extends StatefulWidget {
-  const WishListPage({Key? key}) : super(key: key);
+  final bool fromBottom;
+
+  const WishListPage({Key? key, required this.fromBottom}) : super(key: key);
 
   @override
   _WishListPageState createState() => _WishListPageState();
@@ -45,7 +48,8 @@ class _WishListPageState extends State<WishListPage> {
     _mainWidth = MediaQuery.of(context).size.width;
     return Consumer<PropertyViewModel>(
       builder: (context, value, child) {
-        if (value.wishListModel.data != null && value.wishListModel.data!.isNotEmpty) {
+        if (value.wishListModel.data != null &&
+            value.wishListModel.data!.isNotEmpty) {
           return Scaffold(
             appBar: _getAppBar(context: context),
             body: Container(
@@ -58,8 +62,7 @@ class _WishListPageState extends State<WishListPage> {
                   return GestureDetector(
                     onTap: () => Navigator.of(context).pushNamed(
                         AppRoutes.propertyDetailsPage,
-                        arguments:
-                        value.wishListModel.data![index].propId),
+                        arguments: value.wishListModel.data![index].propId),
                     child: Container(
                       height: _mainHeight * 0.48,
                       child: Card(
@@ -144,9 +147,7 @@ class _WishListPageState extends State<WishListPage> {
                                         ),
                                         Expanded(
                                           child: Text(
-                                            value
-                                                    .wishListModel
-                                                    .data![index]
+                                            value.wishListModel.data![index]
                                                     .buildingName ??
                                                 " ",
                                             overflow: TextOverflow.ellipsis,
@@ -158,8 +159,8 @@ class _WishListPageState extends State<WishListPage> {
                                           ),
                                         ),
                                         Text(
-                                          value.wishListModel
-                                                  .data![index].unitType ??
+                                          value.wishListModel.data![index]
+                                                  .unitType ??
                                               " ",
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
@@ -275,103 +276,106 @@ class _WishListPageState extends State<WishListPage> {
                                 ),
                                 Container(
                                     height: 25,
-                                    margin: EdgeInsets.only(left: 15,right: 15),
+                                    margin:
+                                        EdgeInsets.only(left: 15, right: 15),
                                     //  color: Colors.blue,
-                                    child:Row(
-
+                                    child: Row(
                                       children: [
                                         Text('Rent Per Day'),
                                         RichText(
                                           text: TextSpan(children: [
                                             TextSpan(
                                                 text:
-                                                'Rs ${value.wishListModel.data![index].orgRent ?? " "}',
+                                                    'Rs ${value.wishListModel.data![index].orgRent ?? " "}',
                                                 style: TextStyle(
                                                     color: Colors.grey,
                                                     fontSize: 12,
                                                     fontFamily:
-                                                    "HKGrotest-Light",
+                                                        "HKGrotest-Light",
                                                     decoration: TextDecoration
                                                         .lineThrough)),
                                             TextSpan(
                                                 text:
-                                                ' Rs ${value.wishListModel.data![index].rent ?? " "}',
+                                                    ' Rs ${value.wishListModel.data![index].rent ?? " "}',
                                                 style: TextStyle(
                                                     color: myFavColor,
                                                     fontFamily:
-                                                    "HKGrotest-Light",
+                                                        "HKGrotest-Light",
                                                     fontSize: 14)),
                                           ]),
                                         ),
-                                      ],mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    )
-                                ),
+                                      ],
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                    )),
                                 Container(
                                     height: 25,
-                                    margin: EdgeInsets.only(left: 15,right: 15),
+                                    margin:
+                                        EdgeInsets.only(left: 15, right: 15),
                                     //  color: Colors.amber,
-                                    child:Row(
-
+                                    child: Row(
                                       children: [
                                         Text('Rent (Stay < 3 Month)'),
                                         RichText(
                                           text: TextSpan(children: [
                                             TextSpan(
                                                 text:
-                                                'Rs ${value.wishListModel.data![index].orgMonthRent ?? " "}',
+                                                    'Rs ${value.wishListModel.data![index].orgMonthRent ?? " "}',
                                                 style: TextStyle(
                                                     color: Colors.grey,
                                                     fontFamily:
-                                                    "HKGrotest-Light",
+                                                        "HKGrotest-Light",
                                                     decoration: TextDecoration
                                                         .lineThrough,
                                                     fontSize: 12)),
                                             TextSpan(
                                                 text:
-                                                ' Rs ${value.wishListModel.data![index].monthlyRent ?? " "}',
+                                                    ' Rs ${value.wishListModel.data![index].monthlyRent ?? " "}',
                                                 style: TextStyle(
                                                     color: myFavColor,
                                                     fontFamily:
-                                                    "HKGrotest-Light",
+                                                        "HKGrotest-Light",
                                                     fontSize: 14)),
                                           ]),
                                         ),
-                                      ],mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    )
-                                ),
+                                      ],
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                    )),
                                 Container(
                                     height: 25,
-                                    margin: EdgeInsets.only(left: 15,right: 15),
+                                    margin:
+                                        EdgeInsets.only(left: 15, right: 15),
                                     //   color: Colors.pink,
-                                    child:Row(
-
+                                    child: Row(
                                       children: [
                                         Text('Rent (Stay > 3 Month)'),
                                         RichText(
                                           text: TextSpan(children: [
                                             TextSpan(
                                                 text:
-                                                'Rs ${value.wishListModel.data![index].orgRmsRent ?? " "}',
+                                                    'Rs ${value.wishListModel.data![index].orgRmsRent ?? " "}',
                                                 style: TextStyle(
                                                     color: Colors.grey,
                                                     fontFamily:
-                                                    "HKGrotest-Light",
+                                                        "HKGrotest-Light",
                                                     fontSize: 12,
                                                     decoration: TextDecoration
                                                         .lineThrough)),
                                             TextSpan(
                                                 text:
-                                                ' Rs ${value.wishListModel.data![index].rmsRent ?? " "}',
+                                                    ' Rs ${value.wishListModel.data![index].rmsRent ?? " "}',
                                                 style: TextStyle(
                                                     color: myFavColor,
                                                     fontFamily:
-                                                    "HKGrotest-Light",
+                                                        "HKGrotest-Light",
                                                     fontSize: 14)),
                                           ]),
                                         ),
-                                      ],mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    )
-                                ),
+                                      ],
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                    )),
                               ],
                             ),
                             Container(
@@ -438,7 +442,8 @@ class _WishListPageState extends State<WishListPage> {
                                                 RMSWidgets.showSnackbar(
                                                     context: context,
                                                     message: response,
-                                                    color: CustomTheme.appTheme);
+                                                    color:
+                                                        CustomTheme.appTheme);
                                               }
                                             }
                                           },
@@ -507,11 +512,12 @@ class _WishListPageState extends State<WishListPage> {
               ),
             ),
           );
-        } else if(value.wishListModel.data != null && value.wishListModel.data!.isEmpty){
+        } else if (value.wishListModel.data != null &&
+            value.wishListModel.data!.isEmpty) {
           return Scaffold(
               appBar: _getAppBar(context: context),
               body: Center(child: Text('No Any Wishlisted Property Found.')));
-        }else {
+        } else {
           return Scaffold(
               appBar: _getAppBar(context: context),
               body: Center(child: CircularProgressIndicator()));
@@ -522,9 +528,15 @@ class _WishListPageState extends State<WishListPage> {
 
   AppBar _getAppBar({required BuildContext context}) {
     return AppBar(
-      leading: BackButton(
-        color: Colors.white,
-      ),
+      leading: widget.fromBottom
+          ? WillPopScope(
+              child: Container(),
+              onWillPop: () async {
+                Provider.of<BottomNavigationProvider>(context, listen: false)
+                    .shiftBottom(index: 0);
+                return false;
+              })
+          :BackButton(),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(15),

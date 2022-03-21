@@ -13,9 +13,11 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../theme/app_theme.dart';
 import '../../theme/custom_theme.dart';
+import '../../utils/service/bottom_navigation_provider.dart';
 
 class MyStayListPage extends StatefulWidget {
-  const MyStayListPage({Key? key}) : super(key: key);
+  final bool fromBottom;
+  const MyStayListPage({Key? key,required this.fromBottom}) : super(key: key);
 
   @override
   _MyStayListPageState createState() => _MyStayListPageState();
@@ -43,7 +45,15 @@ class _MyStayListPageState extends State<MyStayListPage> {
       initialIndex: 0,
       child: Scaffold(
           appBar: AppBar(
-            leading: BackButton(),
+            leading: widget.fromBottom
+                ? WillPopScope(
+                child: Container(),
+                onWillPop: () async {
+                  Provider.of<BottomNavigationProvider>(context, listen: false)
+                      .shiftBottom(index: 0);
+                  return false;
+                })
+                :const BackButton(),
             backgroundColor: CustomTheme.appTheme,
             toolbarHeight: _mainHeight * 0.05,
             title: Text(
