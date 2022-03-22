@@ -37,6 +37,8 @@ class _RefundSplitPageState extends State<RefundSplitPage> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Refund SplitUp '),
+          titleSpacing: 0,
+          backgroundColor: CustomTheme.appTheme,
         ),
         body: Consumer<MyStayViewModel>(
           builder: (context, value, child)

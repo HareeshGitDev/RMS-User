@@ -17,7 +17,6 @@ class MyStayViewModel extends ChangeNotifier {
   RefundSplitUpModel? refundSplitUpModel;
   InvoiceDetailsModel? invoiceDetailsModel;
 
-
   Future<void> getMyStayList() async {
     final MyStayListModel response = await _myStayApiService.fetchMyStayList();
     myStayListModel = response;
@@ -44,17 +43,44 @@ class MyStayViewModel extends ChangeNotifier {
     myStayDetailsModel = response;
     notifyListeners();
   }
+
   Future<void> getRefundSplitUpDetails({required String bookingId}) async {
     final RefundSplitUpModel response =
-    await _myStayApiService.fetchRefundSplitUpDetails(bookingId: bookingId);
-     refundSplitUpModel = response;
+        await _myStayApiService.fetchRefundSplitUpDetails(bookingId: bookingId);
+    refundSplitUpModel = response;
     notifyListeners();
   }
 
   Future<void> getInvoiceDetails({required String bookingId}) async {
     final InvoiceDetailsModel response =
-    await _myStayApiService.fetchInvoiceDetails(bookingId: bookingId);
+        await _myStayApiService.fetchInvoiceDetails(bookingId: bookingId);
     invoiceDetailsModel = response;
     notifyListeners();
+  }
+
+  Future<int> submitFeedbackAndBankDetails(
+      {required String bookingId,
+      required String email,
+      required String ratings,
+      String? bankDetails,
+      required String buildingRatings,
+      required String suggestions,
+      required String friendRecommendation}) async {
+    final int response = await _myStayApiService.submitFeedbackAndBankDetails(
+        bookingId: bookingId,
+        email: email,
+        ratings: ratings,
+        bankDetails: bankDetails,
+        buildingRatings: buildingRatings,
+        suggestions: suggestions,
+        friendRecommendation: friendRecommendation);
+    return response;
+  }
+
+  Future<int> checkInAndCheckOut(
+      {required String bookingId, required bool checkIn}) async {
+    final int response = await _myStayApiService.checkInAndCheckOut(
+        bookingId: bookingId, checkIn: checkIn);
+    return response;
   }
 }

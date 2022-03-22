@@ -96,7 +96,6 @@ class NavigationService {
             builder: (context) => PaymentStatusPage(
                   status: data['status'],
                   title: data['title'],
-                  buildingName: data['buildingName'],
                   amount: data['amount'],
                   paymentId: data['paymentId'],
                 ));
@@ -106,7 +105,7 @@ class NavigationService {
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
                   create: (_) => MyStayViewModel(),
-                  child: MyStayPage(bookingId: bookingId),
+                  child: MyStayDetailsPage(bookingId: bookingId),
                 ));
 
       case AppRoutes.invoicePage:
@@ -130,7 +129,18 @@ class NavigationService {
                 ));
 
       case AppRoutes.refundForm:
-        return MaterialPageRoute(builder: (context) => FeedbackPage());
+        final data = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+            create: (_) => MyStayViewModel(),
+            child: FeedbackPage(
+              bookingId: data['bookingId'],
+              title: data['title'],
+              email: data['email'],
+              name: data['name'],
+            ),
+          ),
+        );
 
       case AppRoutes.bookingPage:
         final data = settings.arguments as PropertyDetailsUtilModel;

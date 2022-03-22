@@ -22,4 +22,7 @@ class AppUrls{
   static const String myBookingDetails='/v2/bookingDetails';
   static const String refundDetailsUrl='/v2/refundSplitup';
   static const String invoiceDetailsUrl='/v2/invoiceDetails';
+  static const String feedbackAndBankDetailsUrl='v2/moveoutForm';
+  static const String checkInUrl='v2/cInStatus';
+  static const String checkOutUrl='v2/cOutStatus';
 }

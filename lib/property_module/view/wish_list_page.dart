@@ -682,6 +682,7 @@ class _WishListPageState extends State<WishListPage> {
                 return false;
               })
           :BackButton(),
+      centerTitle: widget.fromBottom,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(15),
@@ -689,7 +690,7 @@ class _WishListPageState extends State<WishListPage> {
       titleSpacing: 0,
       backgroundColor: CustomTheme.appTheme,
       title: Container(
-        child: Text('My WishList'),
+        child: Text('My WishList', style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w700)),
       ),
     );
   }

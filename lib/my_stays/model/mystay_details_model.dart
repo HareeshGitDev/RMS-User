@@ -61,8 +61,9 @@ class Data {
   String? addressDisplay;
   String? glat;
   String? glng;
-  String? agreementStatus;
+  dynamic agreementStatus;
   String? agreementLink;
+  String? pendingAmount;
 
   Data(
       {this.bookingId,
@@ -107,7 +108,8 @@ class Data {
         this.glat,
         this.glng,
         this.agreementStatus,
-        this.agreementLink});
+        this.agreementLink,
+        this.pendingAmount});
 
   Data.fromJson(Map<String, dynamic> json) {
     bookingId = json['booking_id'];
@@ -153,6 +155,7 @@ class Data {
     glng = json['glng'];
     agreementStatus = json['agreement_status'];
     agreementLink = json['agreement_link'];
+    pendingAmount = json['pending_amount'];
   }
 
   Map<String, dynamic> toJson() {
@@ -200,6 +203,7 @@ class Data {
     data['glng'] = this.glng;
     data['agreement_status'] = this.agreementStatus;
     data['agreement_link'] = this.agreementLink;
+    data['pending_amount'] = this.pendingAmount;
     return data;
   }
 }

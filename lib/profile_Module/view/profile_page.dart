@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:RentMyStay_user/utils/constants/app_consts.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,11 +26,9 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late ProfileViewModel _profileViewModel ;
-  late String update_kyc =
-      "https://www.rentmystay.com/dashboard/userVerify/" ;
+
   String? userid="";
   String?token="";
- //+user_id.trim()+"/"+token+"?app=1");
 
   @override
   void initState() {
@@ -46,6 +45,7 @@ class _ProfilePageState extends State<ProfilePage> {
        return Scaffold(
         appBar: _getAppBar(context: context),
         backgroundColor: Colors.white,
+
         body: value.profileModel.result != null && value.profileModel.result!.isNotEmpty &&
                 value.profileModel.profileCompletion != null
             ? Container(
@@ -187,6 +187,13 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             //row for each deatails
             ListTile(
+              onTap: () {
+                Navigator.pushNamed(
+                    context, AppRoutes.myStayListPage,
+                    arguments: {
+                      'fromBottom': false,
+                    });
+              },
               leading: Icon(
                 Icons.home_outlined,
                 color: CustomTheme.appTheme,
@@ -200,7 +207,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             GestureDetector(onTap: () =>
                 _handleURLButtonPress(
-                context, update_kyc, 'Update Your kyc'),
+                context, updateKYCLink, 'Update Your kyc'),
               child: ListTile(
                 //onTap: () => _handleURLButtonPress(context, , title),
                 leading: Icon(
@@ -264,6 +271,7 @@ class _ProfilePageState extends State<ProfilePage> {
             return false;
           })
           :const BackButton(),
+      centerTitle: widget.fromBottom,
       actions: [
         GestureDetector(
           onTap: () {
@@ -287,7 +295,7 @@ class _ProfilePageState extends State<ProfilePage> {
       elevation: 0,
       backgroundColor: CustomTheme.appTheme,
       // centerTitle: true,
-      title: Text('Profile', style: TextStyle(color: Colors.white,fontSize: 16)),
+      title: Text('Profile', style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w700)),
     );
   }
 

@@ -14,6 +14,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/custom_theme.dart';
 import '../../utils/service/bottom_navigation_provider.dart';
+import '../../utils/service/date_time_service.dart';
 
 class MyStayListPage extends StatefulWidget {
   final bool fromBottom;
@@ -45,6 +46,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
       initialIndex: 0,
       child: Scaffold(
           appBar: AppBar(
+            elevation: 5,
             leading: widget.fromBottom
                 ? WillPopScope(
                 child: Container(),
@@ -56,13 +58,13 @@ class _MyStayListPageState extends State<MyStayListPage> {
                 :const BackButton(),
             backgroundColor: CustomTheme.appTheme,
             toolbarHeight: _mainHeight * 0.05,
+            centerTitle: widget.fromBottom,
             title: Text(
-              'My Stays',
-              style: TextStyle(fontFamily: fontFamily),
+              'My Stays',style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w700),
             ),
             titleSpacing: 0,
             bottom: TabBar(
-              indicatorColor: CustomTheme.peach,
+              indicatorColor: CustomTheme.white,
               tabs: const [
                 Tab(
                   child: Text(
@@ -82,8 +84,6 @@ class _MyStayListPageState extends State<MyStayListPage> {
               ],
             ),
           ),
-
-          /*--------------- Build Tab body here -------------------*/
           body: Consumer<MyStayViewModel>(
             builder: (context, value, child) {
               return Container(
@@ -194,7 +194,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
                               ),
                               Spacer(),
                               Text(
-                                checkDateFormat(data.travelFromDate) ?? '',
+                                DateTimeService.checkDateFormat(data.travelFromDate) ?? '',
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w400,
@@ -204,7 +204,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
                                 width: 10,
                               ),
                               Text(
-                                checkDateFormat(data.travelToDate) ?? '',
+                                DateTimeService.checkDateFormat(data.travelToDate) ?? '',
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w400,
@@ -269,7 +269,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
                   arguments: data.bookingId),
               child: Card(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.0),
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
                 color: Colors.blueGrey.shade100,
                 child: Row(
@@ -336,7 +336,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
                               ),
                               Spacer(),
                               Text(
-                                checkDateFormat(data.travelFromDate) ?? '',
+                                DateTimeService.checkDateFormat(data.travelFromDate) ?? '',
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w400,
@@ -346,7 +346,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
                                 width: 10,
                               ),
                               Text(
-                                checkDateFormat(data.travelToDate) ?? '',
+                                DateTimeService.checkDateFormat(data.travelToDate) ?? '',
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w400,
@@ -397,12 +397,5 @@ class _MyStayListPageState extends State<MyStayListPage> {
     );
   }
 
-  String? checkDateFormat(String? travelFromDate) {
-    DateTime date = DateTime.now();
-    if (travelFromDate != null) {
-      date = DateTime.parse(travelFromDate);
-    }
 
-    return '${date.monthName} ${date.day},${date.year}';
-  }
 }

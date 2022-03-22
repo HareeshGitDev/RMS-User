@@ -120,358 +120,379 @@ class _BookingPageState extends State<BookingPage> {
             titleSpacing: 0,
             backgroundColor: CustomTheme.appTheme,
           ),
-          body: value.bookingAmountsResponseModel != null ? Container(
-            height: _mainHeight,
-            width: _mainWidth,
-            padding: EdgeInsets.only(
-              top: 20,
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Text(
-                    "You Are almost Done !",
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontFamily: fontFamily,
-                        fontWeight: FontWeight.w500),
+          body: value.bookingAmountsResponseModel != null
+              ? Container(
+                  height: _mainHeight,
+                  width: _mainWidth,
+                  padding: EdgeInsets.only(
+                    top: 20,
                   ),
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: 10,
-                      bottom: 10,
-                    ),
+                  child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 10),
-                          child: Text(
-                            widget.propertyDetailsUtilModel.title ?? '',
-                            style: const TextStyle(
+                        Text(
+                          "You Are almost Done !",
+                          style: TextStyle(
+                              fontSize: 24,
                               fontFamily: fontFamily,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
+                              fontWeight: FontWeight.w500),
                         ),
                         Container(
-                          // color: Colors.amber,
-                          // height: _mainHeight*0.55,
-                          margin: EdgeInsets.only(top: 10, bottom: 10),
-                          child: Stepper(
-                            controlsBuilder: (context, details) {
-                              if (details.stepIndex == 5) {
-                                return Container();
-                              } else {
-                                return Container(
-                                  height: 40,
-                                  //  color: Colors.green,
-                                  margin: EdgeInsets.only(top: 5, bottom: 0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _currentStep += 1;
-                                          });
-                                        },
-                                        child: Text('Continue'),
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all<
-                                                        Color>(
-                                                    CustomTheme.appTheme),
-                                            shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                              RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                            )),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          if (_currentStep <= 0) return;
-                                          setState(() {
-                                            _currentStep -= 1;
-                                          });
-                                        },
-                                        child: Text('Cancel'),
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all<
-                                                        Color>(
-                                                    CustomTheme.appTheme),
-                                            shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                              RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                            )),
-                                      ),
-                                    ],
+                          margin: EdgeInsets.only(
+                            top: 10,
+                            bottom: 10,
+                          ),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 10),
+                                child: Text(
+                                  widget.propertyDetailsUtilModel.title ?? '',
+                                  style: const TextStyle(
+                                    fontFamily: fontFamily,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                );
-                              }
-                            },
-                            currentStep: _currentStep,
-                            onStepContinue: () {
-                              log('Continue Called');
-                              if (_currentStep >= 5) return;
-                              setState(() {
-                                _currentStep += 1;
-                              });
-                            },
-                            onStepCancel: () {
-                              log('Cancel Called');
-                              if (_currentStep <= 0) return;
-                              setState(() {
-                                _currentStep -= 1;
-                              });
-                            },
-                            onStepTapped: (pos) {
-                              log('Tapped Called');
-                              setState(() {
-                                _currentStep = pos;
-                              });
-                            },
-                            physics: const NeverScrollableScrollPhysics(),
-                            steps: <Step>[
-                              Step(
-                                isActive: true,
-                                title: Text(
-                                  'Select Date',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: fontFamily,
-                                      color: Colors.grey),
-                                ),
-                                state: StepState.complete,
-                                content: _getSelectDateView(
-                                    context: context,
-                                    model: value.bookingAmountsResponseModel ?? BookingAmountsResponseModel()),
-                              ),
-                              Step(
-                                isActive: true,
-                                state: StepState.complete,
-                                title: Text(
-                                  'Guest Name* (As per Aadhar)',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: fontFamily,
-                                      color: Colors.grey),
-                                ),
-                                content: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
-                                  ),
-                                  child: Neumorphic(
-                                    style: NeumorphicStyle(
-                                      depth: -3,
-                                      color: Colors.white,
-                                    ),
-                                    child: TextFormField(
-                                      /*validator: (value) {
-                                    if (value != null && value.length < 6) {
-                                      return "Enter proper email";
-                                    }
-                                    return null;
-                                  },*/
-                                      style: TextStyle(fontFamily: fontFamily),
-                                      controller: _nameController,
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        prefixIcon: Icon(
-                                            Icons.drive_file_rename_outline),
-                                      ),
-                                    ),
-                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                              Step(
-                                isActive: true,
-                                state: StepState.complete,
-                                title: Text(
-                                  'Guest Mobile*',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: fontFamily,
-                                      color: Colors.grey),
-                                ),
-                                content: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
-                                  ),
-                                  child: Neumorphic(
-                                    style: NeumorphicStyle(
-                                      depth: -3,
-                                      color: Colors.white,
-                                    ),
-                                    child: TextFormField(
-                                      /*validator: (value) {
-                                    if (value != null && value.length < 6) {
-                                      return "Enter proper email";
-                                    }
-                                    return null;
-                                  },*/
-
-                                      keyboardType: TextInputType.phone,
-                                      controller: _phoneNumberController,
-                                      style: TextStyle(fontFamily: fontFamily),
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none,
-
-                                        //hintText: 'Email',
-                                        prefixIcon: Icon(Icons.mobile_friendly),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Step(
-                                isActive: true,
-                                state: StepState.complete,
-                                title: Text(
-                                  'Guest Email*',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: fontFamily,
-                                      color: Colors.grey),
-                                ),
-                                content: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
-                                  ),
-                                  child: Neumorphic(
-                                    style: NeumorphicStyle(
-                                      depth: -3,
-                                      color: Colors.white,
-                                    ),
-                                    child: TextFormField(
-                                      /*validator: (value) {
-                                    if (value != null && value.length < 6) {
-                                      return "Enter proper email";
-                                    }
-                                    return null;
-                                  },*/
-                                      enabled: false,
-                                      keyboardType: TextInputType.emailAddress,
-                                      controller: _emailController,
-                                      style: TextStyle(fontFamily: fontFamily),
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        //hintText: 'Email',
-                                        prefixIcon: Icon(Icons.email_outlined),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Step(
-                                isActive: true,
-                                title: Text(
-                                  '${widget.propertyDetailsUtilModel.maxGuest} Guests',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: fontFamily,
-                                      color: Colors.grey),
-                                ),
-                                state: StepState.editing,
-                                content: Container(
-                                  margin: EdgeInsets.only(left: 8),
-                                ),
-                              ),
-                              Step(
-                                isActive: true,
-                                title: const Text(
-                                  'Coupan Code',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: fontFamily,
-                                      color: Colors.grey),
-                                ),
-                                state: StepState.editing,
-                                content: Column(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20)),
-                                      ),
-                                      child: Neumorphic(
-                                        style: NeumorphicStyle(
-                                          depth: -3,
-                                          color: Colors.white,
+                              Container(
+                                // color: Colors.amber,
+                                // height: _mainHeight*0.55,
+                                margin: EdgeInsets.only(top: 10, bottom: 10),
+                                child: Stepper(
+                                  controlsBuilder: (context, details) {
+                                    if (details.stepIndex == 5) {
+                                      return Container();
+                                    } else {
+                                      return Container(
+                                        height: 40,
+                                        //  color: Colors.green,
+                                        margin:
+                                            EdgeInsets.only(top: 5, bottom: 0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  _currentStep += 1;
+                                                });
+                                              },
+                                              child: Text('Continue'),
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all<
+                                                              Color>(
+                                                          CustomTheme.appTheme),
+                                                  shape:
+                                                      MaterialStateProperty.all<
+                                                          RoundedRectangleBorder>(
+                                                    RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                  )),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                if (_currentStep <= 0) return;
+                                                setState(() {
+                                                  _currentStep -= 1;
+                                                });
+                                              },
+                                              child: Text('Cancel'),
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all<
+                                                              Color>(
+                                                          CustomTheme.appTheme),
+                                                  shape:
+                                                      MaterialStateProperty.all<
+                                                          RoundedRectangleBorder>(
+                                                    RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                  )),
+                                            ),
+                                          ],
                                         ),
-                                        child: TextFormField(
-                                          controller: _coupanController,
-                                          decoration: InputDecoration(
-                                            border: InputBorder.none,
-                                            hintText: 'Enter coupan code here',
-                                            prefixIcon: Icon(
-                                                Icons.monetization_on_outlined),
+                                      );
+                                    }
+                                  },
+                                  currentStep: _currentStep,
+                                  onStepContinue: () {
+                                    log('Continue Called');
+                                    if (_currentStep >= 5) return;
+                                    setState(() {
+                                      _currentStep += 1;
+                                    });
+                                  },
+                                  onStepCancel: () {
+                                    log('Cancel Called');
+                                    if (_currentStep <= 0) return;
+                                    setState(() {
+                                      _currentStep -= 1;
+                                    });
+                                  },
+                                  onStepTapped: (pos) {
+                                    log('Tapped Called');
+                                    setState(() {
+                                      _currentStep = pos;
+                                    });
+                                  },
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  steps: <Step>[
+                                    Step(
+                                      isActive: true,
+                                      title: Text(
+                                        'Select Date',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: fontFamily,
+                                            color: Colors.grey),
+                                      ),
+                                      state: StepState.complete,
+                                      content: _getSelectDateView(
+                                          context: context,
+                                          model: value
+                                                  .bookingAmountsResponseModel ??
+                                              BookingAmountsResponseModel()),
+                                    ),
+                                    Step(
+                                      isActive: true,
+                                      state: StepState.complete,
+                                      title: Text(
+                                        'Guest Name* (As per Aadhar)',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: fontFamily,
+                                            color: Colors.grey),
+                                      ),
+                                      content: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20)),
+                                        ),
+                                        child: Neumorphic(
+                                          style: NeumorphicStyle(
+                                            depth: -3,
+                                            color: Colors.white,
+                                          ),
+                                          child: TextFormField(
+                                            /*validator: (value) {
+                                    if (value != null && value.length < 6) {
+                                      return "Enter proper email";
+                                    }
+                                    return null;
+                                  },*/
+                                            style: TextStyle(
+                                                fontFamily: fontFamily),
+                                            controller: _nameController,
+                                            decoration: InputDecoration(
+                                              border: InputBorder.none,
+                                              prefixIcon: Icon(Icons
+                                                  .drive_file_rename_outline),
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                    ElevatedButton(
-                                      onPressed: () async {
-                                        RMSWidgets.showLoaderDialog(
-                                            context: context,
-                                            message: 'Loading...');
+                                    Step(
+                                      isActive: true,
+                                      state: StepState.complete,
+                                      title: Text(
+                                        'Guest Mobile*',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: fontFamily,
+                                            color: Colors.grey),
+                                      ),
+                                      content: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20)),
+                                        ),
+                                        child: Neumorphic(
+                                          style: NeumorphicStyle(
+                                            depth: -3,
+                                            color: Colors.white,
+                                          ),
+                                          child: TextFormField(
+                                            /*validator: (value) {
+                                    if (value != null && value.length < 6) {
+                                      return "Enter proper email";
+                                    }
+                                    return null;
+                                  },*/
 
-                                        await _viewModel.getBookingDetails(
-                                            model: BookingAmountRequestModel(
-                                          propId: (widget
-                                                  .propertyDetailsUtilModel
-                                                  .propId)
-                                              .toString(),
-                                          token: (widget
-                                                  .propertyDetailsUtilModel
-                                                  .token)
-                                              .toString(),
-                                          numOfGuests: (widget
-                                                  .propertyDetailsUtilModel
-                                                  .maxGuest)
-                                              .toString(),
-                                          couponCode: _coupanController.text,
-                                          fromDate: checkInDate,
-                                          toDate: checkOutDate,
-                                        ));
-                                        FocusScope.of(context)
-                                            .requestFocus(FocusNode());
-                                        Navigator.of(context).pop();
+                                            keyboardType: TextInputType.phone,
+                                            controller: _phoneNumberController,
+                                            style: TextStyle(
+                                                fontFamily: fontFamily),
+                                            decoration: InputDecoration(
+                                              border: InputBorder.none,
 
-                                        RMSWidgets.showSnackbar(
-                                            context: context,
-                                            message: '${value
-                                                .bookingAmountsResponseModel?.message}',
-                                            color: Colors.green);
-                                      },
-                                      child: Text('Apply'),
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all<Color>(
-                                                  CustomTheme.appTheme),
-                                          shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                          )),
+                                              //hintText: 'Email',
+                                              prefixIcon:
+                                                  Icon(Icons.mobile_friendly),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Step(
+                                      isActive: true,
+                                      state: StepState.complete,
+                                      title: Text(
+                                        'Guest Email*',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: fontFamily,
+                                            color: Colors.grey),
+                                      ),
+                                      content: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20)),
+                                        ),
+                                        child: Neumorphic(
+                                          style: NeumorphicStyle(
+                                            depth: -3,
+                                            color: Colors.white,
+                                          ),
+                                          child: TextFormField(
+                                            /*validator: (value) {
+                                    if (value != null && value.length < 6) {
+                                      return "Enter proper email";
+                                    }
+                                    return null;
+                                  },*/
+                                            enabled: false,
+                                            keyboardType:
+                                                TextInputType.emailAddress,
+                                            controller: _emailController,
+                                            style: TextStyle(
+                                                fontFamily: fontFamily),
+                                            decoration: InputDecoration(
+                                              border: InputBorder.none,
+                                              //hintText: 'Email',
+                                              prefixIcon:
+                                                  Icon(Icons.email_outlined),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Step(
+                                      isActive: true,
+                                      title: Text(
+                                        '${widget.propertyDetailsUtilModel.maxGuest} Guests',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: fontFamily,
+                                            color: Colors.grey),
+                                      ),
+                                      state: StepState.editing,
+                                      content: Container(
+                                        margin: EdgeInsets.only(left: 8),
+                                      ),
+                                    ),
+                                    Step(
+                                      isActive: true,
+                                      title: const Text(
+                                        'Coupan Code',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: fontFamily,
+                                            color: Colors.grey),
+                                      ),
+                                      state: StepState.editing,
+                                      content: Column(
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20)),
+                                            ),
+                                            child: Neumorphic(
+                                              style: NeumorphicStyle(
+                                                depth: -3,
+                                                color: Colors.white,
+                                              ),
+                                              child: TextFormField(
+                                                controller: _coupanController,
+                                                decoration: InputDecoration(
+                                                  border: InputBorder.none,
+                                                  hintText:
+                                                      'Enter coupan code here',
+                                                  prefixIcon: Icon(Icons
+                                                      .monetization_on_outlined),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () async {
+                                              RMSWidgets.showLoaderDialog(
+                                                  context: context,
+                                                  message: 'Loading...');
+
+                                              await _viewModel.getBookingDetails(
+                                                  model: BookingAmountRequestModel(
+                                                propId: (widget
+                                                        .propertyDetailsUtilModel
+                                                        .propId)
+                                                    .toString(),
+                                                token: (widget
+                                                        .propertyDetailsUtilModel
+                                                        .token)
+                                                    .toString(),
+                                                numOfGuests: (widget
+                                                        .propertyDetailsUtilModel
+                                                        .maxGuest)
+                                                    .toString(),
+                                                couponCode:
+                                                    _coupanController.text,
+                                                fromDate: checkInDate,
+                                                toDate: checkOutDate,
+                                              ));
+                                              FocusScope.of(context)
+                                                  .requestFocus(FocusNode());
+                                              Navigator.of(context).pop();
+
+                                              RMSWidgets.showSnackbar(
+                                                  context: context,
+                                                  message:
+                                                      '${value.bookingAmountsResponseModel?.message}',
+                                                  color: Colors.green);
+                                            },
+                                            child: Text('Apply'),
+                                            style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all<
+                                                            Color>(
+                                                        CustomTheme.appTheme),
+                                                shape:
+                                                    MaterialStateProperty.all<
+                                                        RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                )),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -482,21 +503,24 @@ class _BookingPageState extends State<BookingPage> {
                       ],
                     ),
                   ),
-                ],
-              ),
-            ),
-          ):Center(child: CircularProgressIndicator(),),
+                )
+              : Center(
+                  child: CircularProgressIndicator(),
+                ),
           bottomNavigationBar: Container(
             height: 100,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap:value.bookingAmountsResponseModel != null? () async {
-                    _showBreakdownBottomSheet(
-                        context: context,
-                        model: value.bookingAmountsResponseModel ?? BookingAmountsResponseModel() );
-                  }:(){},
+                  onTap: value.bookingAmountsResponseModel != null
+                      ? () async {
+                          _showBreakdownBottomSheet(
+                              context: context,
+                              model: value.bookingAmountsResponseModel ??
+                                  BookingAmountsResponseModel());
+                        }
+                      : () {},
                   child: Container(
                     height: 30,
                     color: Colors.blueGrey.shade50,
@@ -553,43 +577,51 @@ class _BookingPageState extends State<BookingPage> {
                         height: _mainHeight * 0.06,
                         width: MediaQuery.of(context).size.width * 0.68,
                         child: ElevatedButton(
-                          onPressed: value.bookingAmountsResponseModel != null ?() async {
-                            RMSWidgets.showLoaderDialog(
-                                context: context, message: 'Loading');
-                            BookingCredentialResponseModel response =
-                                await _viewModel.getBookingCredentials(
-                                    model: BookingAmountRequestModel(
-                              propId: (widget.propertyDetailsUtilModel.propId)
-                                  .toString(),
-                              token: (widget.propertyDetailsUtilModel.token)
-                                  .toString(),
-                              numOfGuests:
-                                  (widget.propertyDetailsUtilModel.maxGuest)
-                                      .toString(),
-                              couponCode: '',
-                              fromDate: checkInDate,
-                              toDate: checkOutDate,
-                              email: _emailController.text,
-                              name: _nameController.text,
-                              phone: _phoneNumberController.text,
-                              depositAmount: value.bookingAmountsResponseModel != null && value.bookingAmountsResponseModel
-                                          ?.amountPayable !=
-                                      null
-                                  ? value
-                                      .bookingAmountsResponseModel?.amountPayable
-                                      .toString()
-                                  : '',
-                            ));
+                          onPressed: value.bookingAmountsResponseModel != null
+                              ? () async {
+                                  RMSWidgets.showLoaderDialog(
+                                      context: context, message: 'Loading');
+                                  BookingCredentialResponseModel response =
+                                      await _viewModel.getBookingCredentials(
+                                          model: BookingAmountRequestModel(
+                                    propId:
+                                        (widget.propertyDetailsUtilModel.propId)
+                                            .toString(),
+                                    token:
+                                        (widget.propertyDetailsUtilModel.token)
+                                            .toString(),
+                                    numOfGuests: (widget
+                                            .propertyDetailsUtilModel.maxGuest)
+                                        .toString(),
+                                    couponCode: '',
+                                    fromDate: checkInDate,
+                                    toDate: checkOutDate,
+                                    email: _emailController.text,
+                                    name: _nameController.text,
+                                    phone: _phoneNumberController.text,
+                                    depositAmount:
+                                        value.bookingAmountsResponseModel !=
+                                                    null &&
+                                                value.bookingAmountsResponseModel
+                                                        ?.amountPayable !=
+                                                    null
+                                            ? value.bookingAmountsResponseModel
+                                                ?.amountPayable
+                                                .toString()
+                                            : '',
+                                  ));
 
-                            Navigator.pop(context);
+                                  Navigator.pop(context);
 
-                            if (response.status?.toLowerCase() == 'success' &&
-                                response.data != null &&
-                                response.data?.redirect_api != null) {
-                              _bookingCredentialResponseModel = response;
-                              await openCheckout(model: response);
-                            }
-                          }:(){},
+                                  if (response.status?.toLowerCase() ==
+                                          'success' &&
+                                      response.data != null &&
+                                      response.data?.redirect_api != null) {
+                                    _bookingCredentialResponseModel = response;
+                                    await openCheckout(model: response);
+                                  }
+                                }
+                              : () {},
                           child: Text(
                             'Proceed Booking',
                             style: TextStyle(
@@ -599,7 +631,9 @@ class _BookingPageState extends State<BookingPage> {
                           ),
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
-                                  value.bookingAmountsResponseModel != null?CustomTheme.appTheme:Colors.grey),
+                                  value.bookingAmountsResponseModel != null
+                                      ? CustomTheme.appTheme
+                                      : Colors.grey),
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
@@ -671,8 +705,9 @@ class _BookingPageState extends State<BookingPage> {
               'status': 'success',
               'paymentId': response.paymentId,
               'amount': _bookingCredentialResponseModel.data?.amount.toString(),
-              'buildingName': widget.propertyDetailsUtilModel.buildingName,
-              'title': widget.propertyDetailsUtilModel.title,
+              'title':
+              '${widget.propertyDetailsUtilModel.buildingName} \n ${widget.propertyDetailsUtilModel.title}',
+
             });
       }).catchError(
         (error) {
@@ -689,8 +724,8 @@ class _BookingPageState extends State<BookingPage> {
         arguments: {
           'status': 'failed',
           'amount': _bookingCredentialResponseModel.data?.amount.toString(),
-          'buildingName': widget.propertyDetailsUtilModel.buildingName,
-          'title': widget.propertyDetailsUtilModel.title,
+          'title':
+              '${widget.propertyDetailsUtilModel.buildingName} \n ${widget.propertyDetailsUtilModel.title}',
         });
   }
 

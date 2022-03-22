@@ -11,13 +11,11 @@ class PaymentStatusPage extends StatefulWidget {
   final String amount;
   final String title;
   String? paymentId;
-  final String buildingName;
   final String status;
 
   PaymentStatusPage(
       {Key? key,
       required this.title,
-      required this.buildingName,
       required this.amount,
       required this.status,
       this.paymentId})
@@ -73,7 +71,6 @@ class _PaymentStatusPageState extends State<PaymentStatusPage> {
               (double.parse(widget.amount) / 100).toString() +
               ' Failed '),
           Text('For'),
-          Text(widget.buildingName + ' ,'),
           Text(widget.title),
         ],
       ),
@@ -102,7 +99,7 @@ class _PaymentStatusPageState extends State<PaymentStatusPage> {
               (double.parse(widget.amount) / 100).toString() +
               'Success '),
           Text('For'),
-          Text(widget.buildingName),
+
           Text(widget.title),
           Text('Payment Id : ' + widget.paymentId.toString()),
         ],

@@ -22,13 +22,7 @@ class _EditProfilestate extends State<EditProfile>  {
       appBar: AppBar(title: Text("Edit Your Profile",style: TextStyle(fontFamily: 'HKGrotesk-Light'),),
         elevation: 0.0,
         backgroundColor: CustomTheme.appTheme,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () {},
-        ),
+       titleSpacing: 0,
       ),
       body: SingleChildScrollView(
         child: Column(

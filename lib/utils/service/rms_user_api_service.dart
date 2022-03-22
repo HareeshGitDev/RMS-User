@@ -64,14 +64,14 @@ class RMSUserApiService {
   }
 
   Future<dynamic> getApiCallWithURL(
-      {required String endPoint, Map<String, String>? headers}) async {
-    log('URL :: $endPoint --headers $headers');
+      {required String endPoint, }) async {
+    log('URL :: $endPoint ');
     try {
       final response = await http.get(
           Uri.parse(
             endPoint,
           ),
-          headers: headers);
+          headers: await getHeaders);
 
       return await _response(response);
     } on SocketException {
@@ -96,6 +96,7 @@ class RMSUserApiService {
       final response = await http.post(
         Uri.https(_baseURL, endPoint),
         body: bodyParams,
+        headers: await getHeaders,
       );
       return await _response(response);
     } on SocketException {
@@ -119,7 +120,7 @@ class RMSUserApiService {
     try {
       final response = await http.put(
         Uri.https(_baseURL, endPoint),
-        //headers: await getHeaders(),
+        headers: await getHeaders,
         body: jsonEncode(bodyParams),
       );
 
@@ -137,7 +138,7 @@ class RMSUserApiService {
     try {
       final response = await http.delete(
         Uri.https(_baseURL, endPoint),
-        // headers: await getHeaders(),
+        headers: await getHeaders,
       );
 
       if (response.statusCode == 200) {
