@@ -87,7 +87,13 @@ class _SearchPageState extends State<SearchPage> {
                               child: Row(
                                 children: [
                                   IconButton(
-                                      onPressed: () => Navigator.pop(context),
+                                      onPressed: widget.fromBottom
+                                          ? () => Provider.of<
+                                                      BottomNavigationProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .shiftBottom(index: 0)
+                                          : () => Navigator.pop(context),
                                       icon: Icon(
                                         Icons.arrow_back,
                                         size: 20,
