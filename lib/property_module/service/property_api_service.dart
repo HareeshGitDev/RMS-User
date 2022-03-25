@@ -30,7 +30,7 @@ class PropertyApiService {
   }) async {
     String url = AppUrls.propertyListingUrl;
     String searchUrl = AppUrls.searchPropertyUrl;
-  log('DDDD $property');
+
     Map<String, dynamic> queryParams = {
       'addr': address,
       'app_token': registeredToken ?? await _getRegisteredToken(),

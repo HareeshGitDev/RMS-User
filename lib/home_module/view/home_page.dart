@@ -624,6 +624,42 @@ class _HomePageState extends State<HomePage> {
                           InkWell(
                             onTap: () {
                               Navigator.pushNamed(
+                                  context, AppRoutes.ticketListPage,
+                                  );
+                            },
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            child: Row(
+                              children: [
+                                FxContainer(
+                                  paddingAll: 12,
+                                  borderRadiusAll: 4,
+                                  child: Icon(
+                                    Icons.house_outlined,
+                                    color: CustomTheme.appTheme,
+                                    size: 20,
+                                  ),
+                                  color: CustomTheme.appTheme.withAlpha(20),
+                                ),
+                                FxSpacing.width(16),
+                                Expanded(
+                                  child: FxText.b1(
+                                    'My Tickets'.trim(),
+                                  ),
+                                ),
+                                FxSpacing.width(16),
+                                Icon(
+                                  FeatherIcons.chevronRight,
+                                  size: 18,
+                                  color: theme.colorScheme.onBackground,
+                                ).autoDirection(),
+                              ],
+                            ),
+                          ),
+                          FxSpacing.height(20),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
                                   context, AppRoutes.wishListPage,
                                   arguments: {
                                     'fromBottom': false,

@@ -18,7 +18,7 @@ class AppUrls{
   static const String bookingCredentialsUrl = '/m/process_via_payumoney';
   static const String profileUrl='/m/getprofile';
   static const String myStayListUrl='/m/get_booking_history';
-  static const String filterSortPropsUrl='/v2/matchProps';
+  static const String filterSortPropsUrl='/m/match_props';
   static const String myBookingDetails='/v2/bookingDetails';
   static const String refundDetailsUrl='/v2/refundSplitup';
   static const String invoiceDetailsUrl='/v2/invoiceDetails';

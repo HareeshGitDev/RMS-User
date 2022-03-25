@@ -6,7 +6,10 @@ import 'package:RentMyStay_user/login_module/view/login_page.dart';
 import 'package:RentMyStay_user/login_module/view/firebase_registration_page.dart';
 import 'package:RentMyStay_user/login_module/view/success_page.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
+import 'package:RentMyStay_user/my_stays/view/raise_ticket_page.dart';
 import 'package:RentMyStay_user/my_stays/view/refund_splitup_view_page.dart';
+import 'package:RentMyStay_user/my_stays/view/ticket_details_page.dart';
+import 'package:RentMyStay_user/my_stays/view/ticket_list_page.dart';
 import 'package:RentMyStay_user/my_stays/viewmodel/mystay_viewmodel.dart';
 import 'package:RentMyStay_user/property_details_module/model/property_details_util_model.dart';
 import 'package:RentMyStay_user/property_details_module/view/property_details_page.dart';
@@ -14,6 +17,8 @@ import 'package:RentMyStay_user/property_details_module/viewModel/property_detai
 import 'package:RentMyStay_user/property_module/view/property_listing_page.dart';
 import 'package:RentMyStay_user/property_module/view/wish_list_page.dart';
 import 'package:RentMyStay_user/property_module/viewModel/property_viewModel.dart';
+import 'package:RentMyStay_user/utils/service/picture_screen.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +28,7 @@ import '../../home_module/view/home_page.dart';
 import '../../login_module/view/forgot_password_page.dart';
 import '../../login_module/view/mobile_otp_page.dart';
 import '../../login_module/view/registration_page.dart';
-import '../../my_stays/view/feedback_form_viewPage.dart';
+import '../../my_stays/view/feedback_form_view_page.dart';
 import '../../my_stays/view/invoices_view_page.dart';
 import '../../my_stays/view/mystay_details_page.dart';
 import '../../my_stays/view/mystay_listing_page.dart';
@@ -62,7 +67,10 @@ class NavigationService {
                   create: (_) => LoginViewModel(),
                   child: RegistrationPage(),
                 ));
-
+      case AppRoutes.pictureScreenPage:
+        return MaterialPageRoute(
+            builder: (_) =>
+                PictureScreen(camera: settings.arguments as CameraDescription));
       case AppRoutes.forgotPassword:
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
@@ -107,6 +115,28 @@ class NavigationService {
                   create: (_) => MyStayViewModel(),
                   child: MyStayDetailsPage(bookingId: bookingId),
                 ));
+      case AppRoutes.raiseTicketPage:
+        //String bookingId = settings.arguments as String;
+        return MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider(
+              create: (_) => MyStayViewModel(),
+              child: RaiseTicketPage(),
+            ));
+
+      case AppRoutes.ticketListPage:
+      //String bookingId = settings.arguments as String;
+        return MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider(
+              create: (_) => MyStayViewModel(),
+              child: TicketListPage(),
+            ));
+      case AppRoutes.ticketDetailsPage:
+      final data= settings.arguments as Map<String,dynamic>;
+        return MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider(
+              create: (_) => MyStayViewModel(),
+              child: TicketDetailsPage(ticketId: data['ticketId']),
+            ));
 
       case AppRoutes.invoicePage:
         final data = settings.arguments as String;
@@ -256,4 +286,8 @@ class AppRoutes {
   static const String refundSplitPage = 'refundSplitPage';
   static const String refundForm = 'refund_form_page';
   static const String dashboardPage = 'dashboardPage';
+  static const String pictureScreenPage = 'pictureScreenPage';
+  static const String raiseTicketPage = 'raiseTicketPage';
+  static const String ticketListPage = 'ticketListPage';
+  static const String ticketDetailsPage = 'ticketDetailsPage';
 }

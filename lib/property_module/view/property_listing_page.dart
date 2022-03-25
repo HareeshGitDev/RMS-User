@@ -9,6 +9,7 @@ import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/color.dart';
 import 'package:RentMyStay_user/utils/constants/enum_consts.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
+import 'package:RentMyStay_user/utils/service/rms_user_api_service.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:RentMyStay_user/utils/service/system_service.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
@@ -20,6 +21,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutx/flutx.dart';
 import 'package:flutx/widgets/star_rating/star_rating.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -72,16 +75,15 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
   final _searchController = TextEditingController();
   late double _lowerValue = 500;
   late double _upperValue = 10000;
-  bool fullyFurnishedSelected=false;
-  bool semiFurnishedSelected=false;
-  bool entireHouseSelected=false;
-  bool privateRoomSelected=false;
-  bool sharedRoomSelected=false;
-  bool studioSelected=false;
-  bool oneBHKSelected=false;
-  bool twoBHKSelected=false;
-  bool threeBHKSelected=false;
-
+  bool fullyFurnishedSelected = false;
+  bool semiFurnishedSelected = false;
+  bool entireHouseSelected = false;
+  bool privateRoomSelected = false;
+  bool sharedRoomSelected = false;
+  bool studioSelected = false;
+  bool oneBHKSelected = false;
+  bool twoBHKSelected = false;
+  bool threeBHKSelected = false;
 
   @override
   void initState() {
@@ -105,10 +107,27 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
     }
     theme = AppTheme.theme;
     customTheme = AppTheme.customTheme;
+
+  }
+
+  hello() async {
+    final val1=await Permission.manageExternalStorage.request();
+    //final val2=await Permission.accessMediaLocation.request();
+    final val3=await Permission.storage.request();
+
+    if(val1.isGranted && val3.isGranted){
+      await RMSUserApiService().downloadFile(
+          url: 'https://www.gnu.org/software/hello/manual/hello.pdf',
+          fileName: 'hello.pdf',);
+    }
+    else{
+      log('dd');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -196,7 +215,11 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                       color: Colors.white,
                       height: _mainHeight,
                       width: _mainWidth,
-                      padding: EdgeInsets.only(left: _mainWidth*0.03, right: _mainWidth*0.03, top: _mainHeight*0.01, bottom: 0),
+                      padding: EdgeInsets.only(
+                          left: _mainWidth * 0.03,
+                          right: _mainWidth * 0.03,
+                          top: _mainHeight * 0.01,
+                          bottom: 0),
                       child: Stack(
                         children: [
                           ListView.separated(
@@ -218,78 +241,81 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                       children: [
                                         Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             CarouselSlider(
                                               items: data.propPics
-                                                  ?.map((e) =>
-                                                  CachedNetworkImage(
-                                                    imageUrl: e.picLink
-                                                        .toString(),
-                                                    imageBuilder: (context,
-                                                        imageProvider) =>
-                                                        Container(
-
-                                                          decoration:
-                                                          BoxDecoration(
-                                                            borderRadius: BorderRadius.only(
-                                                                topLeft: Radius
-                                                                    .circular(
-                                                                    10),
-                                                                topRight: Radius
-                                                                    .circular(
-                                                                    10)),
-                                                            image:
-                                                            DecorationImage(
-                                                              image:
-                                                              imageProvider,
-                                                              fit: BoxFit
-                                                                  .cover,
+                                                      ?.map((e) =>
+                                                          CachedNetworkImage(
+                                                            imageUrl: e.picLink
+                                                                .toString(),
+                                                            imageBuilder: (context,
+                                                                    imageProvider) =>
+                                                                Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius: BorderRadius.only(
+                                                                    topLeft: Radius
+                                                                        .circular(
+                                                                            10),
+                                                                    topRight: Radius
+                                                                        .circular(
+                                                                            10)),
+                                                                image:
+                                                                    DecorationImage(
+                                                                  image:
+                                                                      imageProvider,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                              ),
                                                             ),
-                                                          ),
-                                                        ),
-                                                    placeholder: (context, url) => Shimmer
-                                                        .fromColors(
-                                                        child:
-                                                        Container(
-                                                          height:
-                                                          _mainHeight*0.27,
-                                                          color: Colors
-                                                              .grey,
-                                                        ),
-                                                        baseColor: Colors
-                                                            .grey[200]
-                                                        as Color,
-                                                        highlightColor:
-                                                        Colors.grey[350]
-                                                        as Color),
-                                                    errorWidget:
-                                                        (context, url,
-                                                        error) =>
-                                                        Icon(Icons
-                                                            .error),
-                                                  ))
-                                                  .toList() ??
+                                                            placeholder: (context, url) => Shimmer
+                                                                .fromColors(
+                                                                    child:
+                                                                        Container(
+                                                                      height:
+                                                                          _mainHeight *
+                                                                              0.27,
+                                                                      color: Colors
+                                                                          .grey,
+                                                                    ),
+                                                                    baseColor: Colors
+                                                                            .grey[200]
+                                                                        as Color,
+                                                                    highlightColor:
+                                                                        Colors.grey[350]
+                                                                            as Color),
+                                                            errorWidget:
+                                                                (context, url,
+                                                                        error) =>
+                                                                    Icon(Icons
+                                                                        .error),
+                                                          ))
+                                                      .toList() ??
                                                   [],
                                               options: CarouselOptions(
-                                                  height: _mainHeight*0.27,
+                                                  height: _mainHeight * 0.27,
                                                   enlargeCenterPage: true,
-
                                                   autoPlay: true,
-                                                  aspectRatio: 16 / 9,autoPlayInterval: const Duration(milliseconds: 1500),
+                                                  aspectRatio: 16 / 9,
+                                                  autoPlayInterval:
+                                                      const Duration(
+                                                          milliseconds: 1500),
                                                   autoPlayCurve:
-                                                  Curves.fastOutSlowIn,
+                                                      Curves.fastOutSlowIn,
                                                   enableInfiniteScroll: true,
                                                   viewportFraction: 1),
                                             ),
                                             SizedBox(
-                                              height: _mainHeight*0.01,
+                                              height: _mainHeight * 0.01,
                                             ),
                                             Visibility(
                                               child: Container(
                                                 height: _mainHeight * 0.025,
                                                 padding: EdgeInsets.only(
-                                                    left: _mainWidth*0.02, right: _mainWidth*0.02),
+                                                    left: _mainWidth * 0.02,
+                                                    right: _mainWidth * 0.02),
                                                 child: Row(
                                                   children: [
                                                     Icon(
@@ -311,28 +337,28 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                           fontSize: 14,
                                                           color: Colors.black87,
                                                           fontFamily:
-                                                          fontFamily,
+                                                              fontFamily,
                                                           fontWeight:
-                                                          FontWeight.w500,
+                                                              FontWeight.w500,
                                                         ),
                                                       ),
                                                     ),
                                                     Text(
                                                       data.unitType ?? " ",
                                                       overflow:
-                                                      TextOverflow.ellipsis,
+                                                          TextOverflow.ellipsis,
                                                       maxLines: 1,
                                                       style: TextStyle(
                                                           fontSize: 12,
                                                           fontFamily:
-                                                          fontFamily,
+                                                              fontFamily,
                                                           fontWeight:
-                                                          FontWeight.w700),
+                                                              FontWeight.w700),
                                                     ),
                                                   ],
                                                   mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                 ),
                                               ),
                                               visible: data.rmsProp != null &&
@@ -347,19 +373,19 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                   style: TextStyle(
                                                       color: Colors.grey,
                                                       fontWeight:
-                                                      FontWeight.w700,
+                                                          FontWeight.w700,
                                                       fontSize: 12,
                                                       fontFamily: fontFamily),
                                                 ),
                                                 alignment:
-                                                Alignment.centerRight,
-                                                padding:
-                                                EdgeInsets.only(right: _mainWidth*0.02),
+                                                    Alignment.centerRight,
+                                                padding: EdgeInsets.only(
+                                                    right: _mainWidth * 0.02),
                                               ),
                                             ),
-
                                             Container(
-                                              margin: EdgeInsets.only(left: _mainWidth*0.02),
+                                              margin: EdgeInsets.only(
+                                                  left: _mainWidth * 0.02),
                                               width: _mainWidth * 0.75,
                                               child: Text(
                                                 data.title ?? " ",
@@ -370,7 +396,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                     fontFamily: fontFamily,
                                                     color: Colors.black,
                                                     fontWeight:
-                                                    FontWeight.w600),
+                                                        FontWeight.w600),
                                               ),
                                             ),
                                             GestureDetector(
@@ -378,13 +404,13 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                 if ((data.glat != null) &&
                                                     (data.glng != null)) {
                                                   var latitude =
-                                                  (data.glat).toString();
+                                                      (data.glat).toString();
                                                   var longitude =
-                                                  (data.glng).toString();
+                                                      (data.glng).toString();
                                                   await SystemService
                                                       .launchGoogleMaps(
-                                                      latitude: latitude,
-                                                      longitude: longitude);
+                                                          latitude: latitude,
+                                                          longitude: longitude);
                                                 }
                                               },
                                               child: Container(
@@ -392,16 +418,20 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                 color: Colors.white,
                                                 child: Row(
                                                   crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     Padding(
                                                       padding: EdgeInsets.only(
-                                                          left: _mainWidth*0.02, top: _mainHeight*0.005),
+                                                          left:
+                                                              _mainWidth * 0.02,
+                                                          top: _mainHeight *
+                                                              0.005),
                                                       child: Icon(
                                                         Icons
                                                             .my_location_outlined,
                                                         color: myFavColor,
-                                                        size: _mainHeight*0.02,
+                                                        size:
+                                                            _mainHeight * 0.02,
                                                       ),
                                                     ),
                                                     SizedBox(
@@ -413,25 +443,26 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                       child: Wrap(
                                                         children: [
                                                           Padding(
-                                                            padding:
-                                                            EdgeInsets.only(
-                                                                top: _mainHeight*0.007),
+                                                            padding: EdgeInsets.only(
+                                                                top:
+                                                                    _mainHeight *
+                                                                        0.007),
                                                             child: Text(
                                                               (data.areas ??
-                                                                  data.city) ??
+                                                                      data.city) ??
                                                                   " ",
                                                               maxLines: 1,
                                                               overflow:
-                                                              TextOverflow
-                                                                  .ellipsis,
+                                                                  TextOverflow
+                                                                      .ellipsis,
                                                               style: TextStyle(
                                                                   color: Colors
                                                                       .black,
                                                                   fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
+                                                                      FontWeight
+                                                                          .w600,
                                                                   fontFamily:
-                                                                  fontFamily,
+                                                                      fontFamily,
                                                                   fontSize: 12),
                                                             ),
                                                           ),
@@ -443,21 +474,21 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                               ),
                                             ),
                                             SizedBox(
-                                              height: _mainHeight*0.007,
+                                              height: _mainHeight * 0.007,
                                             ),
                                             Divider(
                                               color: CustomTheme.appTheme,
                                               height: 1,
                                             ),
                                             SizedBox(
-                                              height: _mainHeight*0.007,
+                                              height: _mainHeight * 0.007,
                                             ),
                                             Container(
-                                              //color: Colors.amber,
-                                                height: _mainHeight*0.02,
+                                                //color: Colors.amber,
+                                                height: _mainHeight * 0.02,
                                                 margin: EdgeInsets.only(
-                                                    left: _mainWidth*0.02, right:  _mainWidth*0.02),
-
+                                                    left: _mainWidth * 0.02,
+                                                    right: _mainWidth * 0.02),
                                                 child: Row(
                                                   children: [
                                                     Text(
@@ -466,62 +497,63 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                         fontFamily: fontFamily,
                                                         fontSize: 14,
                                                         fontWeight:
-                                                        FontWeight.w500,
+                                                            FontWeight.w500,
                                                       ),
                                                     ),
                                                     data.orgRent == data.rent
                                                         ? Text(
-                                                        ' $rupee ${data.rent ?? " "}',
-                                                        style: TextStyle(
-                                                            color:
-                                                            myFavColor,
-                                                            fontFamily:
-                                                            fontFamily,
-                                                            fontWeight:
-                                                            FontWeight
-                                                                .w500,
-                                                            fontSize: 14))
-                                                        : RichText(
-                                                      text: TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                                text:
-                                                                '$rupee ${data.orgRent ?? " "}',
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .grey,
-                                                                    fontSize:
-                                                                    12,
-                                                                    fontWeight: FontWeight
-                                                                        .w500,
-                                                                    fontFamily:
-                                                                    fontFamily,
-                                                                    decoration:
-                                                                    TextDecoration.lineThrough)),
-                                                            TextSpan(
-                                                                text:
-                                                                ' $rupee ${data.rent ?? " "}',
-                                                                style: TextStyle(
-                                                                    color:
+                                                            ' $rupee ${data.rent ?? " "}',
+                                                            style: TextStyle(
+                                                                color:
                                                                     myFavColor,
-                                                                    fontFamily:
+                                                                fontFamily:
                                                                     fontFamily,
-                                                                    fontWeight: FontWeight
+                                                                fontWeight:
+                                                                    FontWeight
                                                                         .w500,
-                                                                    fontSize:
-                                                                    14)),
-                                                          ]),
-                                                    ),
+                                                                fontSize: 14))
+                                                        : RichText(
+                                                            text: TextSpan(
+                                                                children: [
+                                                                  TextSpan(
+                                                                      text:
+                                                                          '$rupee ${data.orgRent ?? " "}',
+                                                                      style: TextStyle(
+                                                                          color: Colors
+                                                                              .grey,
+                                                                          fontSize:
+                                                                              12,
+                                                                          fontWeight: FontWeight
+                                                                              .w500,
+                                                                          fontFamily:
+                                                                              fontFamily,
+                                                                          decoration:
+                                                                              TextDecoration.lineThrough)),
+                                                                  TextSpan(
+                                                                      text:
+                                                                          ' $rupee ${data.rent ?? " "}',
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              myFavColor,
+                                                                          fontFamily:
+                                                                              fontFamily,
+                                                                          fontWeight: FontWeight
+                                                                              .w500,
+                                                                          fontSize:
+                                                                              14)),
+                                                                ]),
+                                                          ),
                                                   ],
                                                   mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                 )),
                                             Container(
-                                              //color: Colors.amber,
-                                                height: _mainHeight*0.02,
+                                                //color: Colors.amber,
+                                                height: _mainHeight * 0.02,
                                                 margin: EdgeInsets.only(
-                                                    left: _mainWidth*0.02, right:  _mainWidth*0.02),
+                                                    left: _mainWidth * 0.02,
+                                                    right: _mainWidth * 0.02),
                                                 child: Row(
                                                   children: [
                                                     Text(
@@ -530,254 +562,256 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                         fontFamily: fontFamily,
                                                         fontSize: 14,
                                                         fontWeight:
-                                                        FontWeight.w500,
+                                                            FontWeight.w500,
                                                       ),
                                                     ),
                                                     data.orgMonthRent ==
-                                                        data.monthlyRent
+                                                            data.monthlyRent
                                                         ? Text(
-                                                        ' $rupee ${data.monthlyRent ?? " "}',
-                                                        style: TextStyle(
-                                                            color:
-                                                            myFavColor,
-                                                            fontFamily:
-                                                            fontFamily,
-                                                            fontWeight:
-                                                            FontWeight
-                                                                .w500,
-                                                            fontSize: 14))
-                                                        : RichText(
-                                                      text: TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                                text:
-                                                                '$rupee ${data.orgMonthRent ?? " "}',
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .grey,
-                                                                    fontSize:
-                                                                    12,
-                                                                    fontWeight: FontWeight
-                                                                        .w500,
-                                                                    fontFamily:
-                                                                    fontFamily,
-                                                                    decoration:
-                                                                    TextDecoration.lineThrough)),
-                                                            TextSpan(
-                                                                text:
-                                                                ' $rupee ${data.monthlyRent ?? " "}',
-                                                                style: TextStyle(
-                                                                    color:
+                                                            ' $rupee ${data.monthlyRent ?? " "}',
+                                                            style: TextStyle(
+                                                                color:
                                                                     myFavColor,
-                                                                    fontFamily:
+                                                                fontFamily:
                                                                     fontFamily,
-                                                                    fontWeight: FontWeight
+                                                                fontWeight:
+                                                                    FontWeight
                                                                         .w500,
-                                                                    fontSize:
-                                                                    14)),
-                                                          ]),
-                                                    ),
+                                                                fontSize: 14))
+                                                        : RichText(
+                                                            text: TextSpan(
+                                                                children: [
+                                                                  TextSpan(
+                                                                      text:
+                                                                          '$rupee ${data.orgMonthRent ?? " "}',
+                                                                      style: TextStyle(
+                                                                          color: Colors
+                                                                              .grey,
+                                                                          fontSize:
+                                                                              12,
+                                                                          fontWeight: FontWeight
+                                                                              .w500,
+                                                                          fontFamily:
+                                                                              fontFamily,
+                                                                          decoration:
+                                                                              TextDecoration.lineThrough)),
+                                                                  TextSpan(
+                                                                      text:
+                                                                          ' $rupee ${data.monthlyRent ?? " "}',
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              myFavColor,
+                                                                          fontFamily:
+                                                                              fontFamily,
+                                                                          fontWeight: FontWeight
+                                                                              .w500,
+                                                                          fontSize:
+                                                                              14)),
+                                                                ]),
+                                                          ),
                                                   ],
                                                   mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                 )),
                                             Container(
-                                              //   color: Colors.amber,
-                                                height: _mainHeight*0.02,
+                                                //   color: Colors.amber,
+                                                height: _mainHeight * 0.02,
                                                 margin: EdgeInsets.only(
-                                                    left: _mainWidth*0.02, right:  _mainWidth*0.02),
+                                                    left: _mainWidth * 0.02,
+                                                    right: _mainWidth * 0.02),
                                                 child: Row(
                                                   children: [
                                                     Text(
                                                         'Rent (Stay > 3 Month)',
                                                         style: TextStyle(
                                                           fontFamily:
-                                                          fontFamily,
+                                                              fontFamily,
                                                           fontSize: 14,
                                                           fontWeight:
-                                                          FontWeight.w500,
+                                                              FontWeight.w500,
                                                         )),
                                                     data.orgRmsRent ==
-                                                        data.rmsRent
+                                                            data.rmsRent
                                                         ? Text(
-                                                        ' $rupee ${data.rmsRent ?? " "}',
-                                                        style: TextStyle(
-                                                            color:
-                                                            myFavColor,
-                                                            fontFamily:
-                                                            fontFamily,
-                                                            fontWeight:
-                                                            FontWeight
-                                                                .w500,
-                                                            fontSize: 14))
-                                                        : RichText(
-                                                      text: TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                                text:
-                                                                '$rupee ${data.orgRmsRent ?? " "}',
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .grey,
-                                                                    fontSize:
-                                                                    12,
-                                                                    fontWeight: FontWeight
-                                                                        .w500,
-                                                                    fontFamily:
-                                                                    fontFamily,
-                                                                    decoration:
-                                                                    TextDecoration.lineThrough)),
-                                                            TextSpan(
-                                                                text:
-                                                                ' $rupee ${data.rmsRent ?? " "}',
-                                                                style: TextStyle(
-                                                                    color:
+                                                            ' $rupee ${data.rmsRent ?? " "}',
+                                                            style: TextStyle(
+                                                                color:
                                                                     myFavColor,
-                                                                    fontFamily:
+                                                                fontFamily:
                                                                     fontFamily,
-                                                                    fontWeight: FontWeight
+                                                                fontWeight:
+                                                                    FontWeight
                                                                         .w500,
-                                                                    fontSize:
-                                                                    14)),
-                                                          ]),
-                                                    ),
+                                                                fontSize: 14))
+                                                        : RichText(
+                                                            text: TextSpan(
+                                                                children: [
+                                                                  TextSpan(
+                                                                      text:
+                                                                          '$rupee ${data.orgRmsRent ?? " "}',
+                                                                      style: TextStyle(
+                                                                          color: Colors
+                                                                              .grey,
+                                                                          fontSize:
+                                                                              12,
+                                                                          fontWeight: FontWeight
+                                                                              .w500,
+                                                                          fontFamily:
+                                                                              fontFamily,
+                                                                          decoration:
+                                                                              TextDecoration.lineThrough)),
+                                                                  TextSpan(
+                                                                      text:
+                                                                          ' $rupee ${data.rmsRent ?? " "}',
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              myFavColor,
+                                                                          fontFamily:
+                                                                              fontFamily,
+                                                                          fontWeight: FontWeight
+                                                                              .w500,
+                                                                          fontSize:
+                                                                              14)),
+                                                                ]),
+                                                          ),
                                                   ],
                                                   mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                 )),
                                           ],
                                         ),
                                         Container(
-                                          height: _mainHeight*0.04,
-
+                                          height: _mainHeight * 0.04,
                                           width: _mainWidth,
                                           padding: EdgeInsets.all(5),
                                           child: Row(
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Visibility(
-                                                visible: data.rmsProp !=
-                                                    null &&
-                                                    data.rmsProp ==
-                                                        "RMS Prop",
+                                                visible: data.rmsProp != null &&
+                                                    data.rmsProp == "RMS Prop",
                                                 child: Container(
-                                                  padding:
-                                                  EdgeInsets.only(right:_mainWidth*0.02),
+                                                  padding: EdgeInsets.only(
+                                                      right: _mainWidth * 0.02),
                                                   decoration: BoxDecoration(
                                                       color: Colors.white60,
                                                       border: Border.all(
                                                           color: CustomTheme
                                                               .appTheme),
                                                       borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
+                                                          BorderRadius.circular(
+                                                              10)),
                                                   child: Row(children: [
                                                     CircleAvatar(
-                                                        radius:_mainHeight*0.012,
+                                                        radius:
+                                                            _mainHeight * 0.012,
                                                         backgroundColor:
-                                                        myFavColor,
+                                                            myFavColor,
                                                         child: Icon(
                                                           Icons.check,
-                                                          size: _mainHeight*0.017,
+                                                          size: _mainHeight *
+                                                              0.017,
                                                           color: Colors.white,
                                                         )),
-                                                    SizedBox(width: _mainWidth*0.01,),
+                                                    SizedBox(
+                                                      width: _mainWidth * 0.01,
+                                                    ),
                                                     Container(
                                                         child: Text(
-                                                          'Managed by RMS',
-                                                          style: TextStyle(
-                                                              fontStyle:
+                                                      'Managed by RMS',
+                                                      style: TextStyle(
+                                                          fontStyle:
                                                               FontStyle.italic,
-                                                              color: Colors.black,
-                                                              fontFamily:
+                                                          color: Colors.black,
+                                                          fontFamily:
                                                               fontFamily,
-                                                              fontWeight:
+                                                          fontWeight:
                                                               FontWeight.w500,
-                                                              fontSize: 14),
-                                                        )),
+                                                          fontSize: 14),
+                                                    )),
                                                   ]),
                                                 ),
                                               ),
                                               Spacer(),
                                               data.wishlist == 0
                                                   ? GestureDetector(
-                                                onTap: () async {
-                                                  if (data.propId !=
-                                                      null) {
-                                                    String response =
-                                                    await _propertyViewModel
-                                                        .addToWishlist(
-                                                        propertyId:
-                                                        data.propId ??
-                                                            " ");
-                                                    if (response
-                                                        .toLowerCase() ==
-                                                        'successfully added') {
-                                                      setState(() {
-                                                        data.wishlist = 1;
-                                                      });
-                                                      RMSWidgets.showSnackbar(
-                                                          context:
-                                                          context,
-                                                          message:
-                                                          response,
-                                                          color: CustomTheme
-                                                              .appTheme);
-                                                    }
-                                                  }
-                                                },
-                                                child: const CircleAvatar(
-                                                  radius: 15,
-                                                  backgroundColor:
-                                                  Colors.white60,
-                                                  child: Icon(
-                                                    Icons
-                                                        .favorite_outline_rounded,
-                                                    color: Colors.red,
-                                                    size: 20,
-                                                  ),
-                                                ),
-                                              )
+                                                      onTap: () async {
+                                                        if (data.propId !=
+                                                            null) {
+                                                          String response =
+                                                              await _propertyViewModel
+                                                                  .addToWishlist(
+                                                                      propertyId:
+                                                                          data.propId ??
+                                                                              " ");
+                                                          if (response
+                                                                  .toLowerCase() ==
+                                                              'successfully added') {
+                                                            setState(() {
+                                                              data.wishlist = 1;
+                                                            });
+                                                            RMSWidgets.showSnackbar(
+                                                                context:
+                                                                    context,
+                                                                message:
+                                                                    response,
+                                                                color: CustomTheme
+                                                                    .appTheme);
+                                                          }
+                                                        }
+                                                      },
+                                                      child: const CircleAvatar(
+                                                        radius: 15,
+                                                        backgroundColor:
+                                                            Colors.white60,
+                                                        child: Icon(
+                                                          Icons
+                                                              .favorite_outline_rounded,
+                                                          color: Colors.red,
+                                                          size: 20,
+                                                        ),
+                                                      ),
+                                                    )
                                                   : GestureDetector(
-                                                onTap: () async {
-                                                  if (data.propId !=
-                                                      null) {
-                                                    String response =
-                                                    await _propertyViewModel
-                                                        .addToWishlist(
-                                                        propertyId:
-                                                        data.propId ??
-                                                            " ");
-                                                    if (response
-                                                        .toLowerCase() ==
-                                                        'successfully removed') {
-                                                      setState(() {
-                                                        data.wishlist = 0;
-                                                      });
-                                                      RMSWidgets.showSnackbar(
-                                                          context:
-                                                          context,
-                                                          message:
-                                                          response,
-                                                          color: CustomTheme()
-                                                              .colorError);
-                                                    }
-                                                  }
-                                                },
-                                                child: const CircleAvatar(
-                                                  radius: 15,
-                                                  backgroundColor:
-                                                  Colors.white60,
-                                                  child: Icon(
-                                                    Icons.favorite,
-                                                    color: Colors.red,
-                                                    size: 20,
-                                                  ),
-                                                ),
-                                              ),
+                                                      onTap: () async {
+                                                        if (data.propId !=
+                                                            null) {
+                                                          String response =
+                                                              await _propertyViewModel
+                                                                  .addToWishlist(
+                                                                      propertyId:
+                                                                          data.propId ??
+                                                                              " ");
+                                                          if (response
+                                                                  .toLowerCase() ==
+                                                              'successfully removed') {
+                                                            setState(() {
+                                                              data.wishlist = 0;
+                                                            });
+                                                            RMSWidgets.showSnackbar(
+                                                                context:
+                                                                    context,
+                                                                message:
+                                                                    response,
+                                                                color: CustomTheme()
+                                                                    .colorError);
+                                                          }
+                                                        }
+                                                      },
+                                                      child: const CircleAvatar(
+                                                        radius: 15,
+                                                        backgroundColor:
+                                                            Colors.white60,
+                                                        child: Icon(
+                                                          Icons.favorite,
+                                                          color: Colors.red,
+                                                          size: 20,
+                                                        ),
+                                                      ),
+                                                    ),
                                             ],
                                           ),
                                         ),
@@ -788,11 +822,10 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                               );
                             },
                             itemCount:
-                            value.propertyListModel.data?.length ?? 0,
-                            separatorBuilder: (context, index) =>
-                                SizedBox(
-                                  height: _mainHeight*0.008,
-                                ),
+                                value.propertyListModel.data?.length ?? 0,
+                            separatorBuilder: (context, index) => SizedBox(
+                              height: _mainHeight * 0.008,
+                            ),
                           ),
                           _getFilterSortSetting(context: context),
                         ],
@@ -952,36 +985,31 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                 padding: EdgeInsets.only(left: 15, right: 15, top: 15),
                 height: 300,
                 child: Column(
-
                   children: [
                     Row(
-
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey,width: 1),
-                              borderRadius: BorderRadius.circular(40)
-
-                          ),
+                              border: Border.all(color: Colors.grey, width: 1),
+                              borderRadius: BorderRadius.circular(40)),
                           width: 70,
                           height: 30,
                           child: GestureDetector(
-
                             onTap: () async {
-                              setState((){
-                                _sortKeys[0]=false;
-                                _sortKeys[1]=false;
-                                _sortKeys[2]=false;
+                              setState(() {
+                                _sortKeys[0] = false;
+                                _sortKeys[1] = false;
+                                _sortKeys[2] = false;
                               });
                             },
                             child: Center(
                                 child: Text(
-                                  "Reset",
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14),
-                                )),
+                              "Reset",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14),
+                            )),
                           ),
                         ),
                         Spacer(),
@@ -991,8 +1019,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                           child: ElevatedButton(
                             style: ButtonStyle(
                                 backgroundColor:
-                                MaterialStateProperty.all<Color>(
-                                    CustomTheme.appTheme),
+                                    MaterialStateProperty.all<Color>(
+                                        CustomTheme.appTheme),
                                 shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
@@ -1012,7 +1040,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                               }
 
                               FilterSortRequestModel model =
-                              FilterSortRequestModel(sortOrder: sortOrder,);
+                                  FilterSortRequestModel(
+                                sortOrder: sortOrder,
+                              );
 
                               await _propertyViewModel.filterSortPropertyList(
                                   requestModel: model);
@@ -1021,12 +1051,12 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                             },
                             child: Center(
                                 child: Text(
-                                  "Apply Sort",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14),
-                                )),
+                              "Apply Sort",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14),
+                            )),
                           ),
                         ),
                         Spacer(),
@@ -1094,7 +1124,6 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                     SizedBox(
                       height: 10,
                     ),
-
                   ],
                 ),
               );
@@ -1110,51 +1139,46 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
           borderRadius: BorderRadius.circular(20.0),
         ),
         backgroundColor: Colors.white,
-
         context: context,
         builder: (buildContext) {
           return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return Container(
-               height: _mainHeight*0.65,
+                height: _mainHeight * 0.65,
                 width: _mainWidth,
                 padding: EdgeInsets.only(left: 15, right: 15),
                 child: Column(
                   children: [
                     Row(
-
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey,width: 1),
-                            borderRadius: BorderRadius.circular(40)
-                                
-                          ),
+                              border: Border.all(color: Colors.grey, width: 1),
+                              borderRadius: BorderRadius.circular(40)),
                           width: 70,
                           height: 30,
                           child: GestureDetector(
-
                             onTap: () async {
-                              setState((){
-                                fullyFurnishedSelected=false;
-                                semiFurnishedSelected=false;
-                                entireHouseSelected=false;
-                                privateRoomSelected=false;
-                                sharedRoomSelected=false;
-                                studioSelected=false;
-                                oneBHKSelected=false;
-                                twoBHKSelected=false;
-                                threeBHKSelected=false;
+                              setState(() {
+                                fullyFurnishedSelected = false;
+                                semiFurnishedSelected = false;
+                                entireHouseSelected = false;
+                                privateRoomSelected = false;
+                                sharedRoomSelected = false;
+                                studioSelected = false;
+                                oneBHKSelected = false;
+                                twoBHKSelected = false;
+                                threeBHKSelected = false;
                               });
                             },
                             child: Center(
                                 child: Text(
-                                  "Reset",
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14),
-                                )),
+                              "Reset",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14),
+                            )),
                           ),
                         ),
                         Spacer(),
@@ -1193,7 +1217,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                             ))
                       ],
                     ),
-                    SizedBox(height: _mainHeight*0.015,),
+                    SizedBox(
+                      height: _mainHeight * 0.015,
+                    ),
                     GestureDetector(
                       onTap: () async {
                         PickerDateRange? dateRange =
@@ -1279,7 +1305,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: _mainHeight*0.01,),
+                    SizedBox(
+                      height: _mainHeight * 0.01,
+                    ),
                     Container(
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -1296,46 +1324,55 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                             max: 10000,
                             divisions: 4,
                             activeColor: CustomTheme.appTheme,
-                            inactiveColor: CustomTheme.appThemeContrast.withAlpha(50),
+                            inactiveColor:
+                                CustomTheme.appThemeContrast.withAlpha(50),
                             labels: RangeLabels(
-                                _lowerValue.toString(),_upperValue.toString()),
+                                _lowerValue.toString(), _upperValue.toString()),
                             onChanged: (RangeValues rangeValues) {
                               setState(() {
                                 _lowerValue = rangeValues.start;
                                 _upperValue = rangeValues.end;
                               });
                             },
-                            values: RangeValues( _lowerValue,_upperValue),
+                            values: RangeValues(_lowerValue, _upperValue),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Column(
                                 children: [
-                                  Text('Min Price Selected',style: TextStyle(
-                                      color: Colors.blueGrey,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14
-                                  ),),
-                                  Text('$rupee $_lowerValue',style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14
-                                  ),),
+                                  Text(
+                                    'Min Price Selected',
+                                    style: TextStyle(
+                                        color: Colors.blueGrey,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14),
+                                  ),
+                                  Text(
+                                    '$rupee $_lowerValue',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
                                 ],
                               ),
                               Column(
                                 children: [
-                                  Text('Max Price Selected',style: TextStyle(
-                                      color: Colors.blueGrey,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14
-                                  ),),
-                                  Text('$rupee $_upperValue',style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14
-                                  ),),
+                                  Text(
+                                    'Max Price Selected',
+                                    style: TextStyle(
+                                        color: Colors.blueGrey,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14),
+                                  ),
+                                  Text(
+                                    '$rupee $_upperValue',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
                                 ],
                               ),
                             ],
@@ -1343,7 +1380,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                         ],
                       ),
                     ),
-                    SizedBox(height: _mainHeight*0.02,),
+                    SizedBox(
+                      height: _mainHeight * 0.02,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -1351,27 +1390,35 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                             selected: fullyFurnishedSelected,
                             checkmarkColor: CustomTheme.white,
                             backgroundColor: CustomTheme.white,
-
-                            label: Text('Fully Furnished Home',style: getTextStyle(isSelected: fullyFurnishedSelected),),
+                            label: Text(
+                              'Fully Furnished Home',
+                              style: getTextStyle(
+                                  isSelected: fullyFurnishedSelected),
+                            ),
                             elevation: 2,
                             selectedColor: CustomTheme.appTheme,
                             pressElevation: 1,
                             onSelected: (bool selected) {
-                              setState((){
-                                fullyFurnishedSelected=!fullyFurnishedSelected;
+                              setState(() {
+                                fullyFurnishedSelected =
+                                    !fullyFurnishedSelected;
                               });
                             }),
                         FilterChip(
                             selected: semiFurnishedSelected,
                             checkmarkColor: CustomTheme.white,
                             backgroundColor: CustomTheme.white,
-                            label: Text('Semi Furnished Home',style: getTextStyle(isSelected: semiFurnishedSelected),),
+                            label: Text(
+                              'Semi Furnished Home',
+                              style: getTextStyle(
+                                  isSelected: semiFurnishedSelected),
+                            ),
                             elevation: 2,
                             selectedColor: CustomTheme.appTheme,
                             pressElevation: 1,
                             onSelected: (bool selected) {
-                              setState((){
-                                semiFurnishedSelected=!semiFurnishedSelected;
+                              setState(() {
+                                semiFurnishedSelected = !semiFurnishedSelected;
                               });
                             })
                       ],
@@ -1383,42 +1430,51 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                             selected: entireHouseSelected,
                             checkmarkColor: CustomTheme.white,
                             backgroundColor: CustomTheme.white,
-                            label: Text('Entire House',style: getTextStyle(isSelected:entireHouseSelected),),
+                            label: Text(
+                              'Entire House',
+                              style:
+                                  getTextStyle(isSelected: entireHouseSelected),
+                            ),
                             elevation: 2,
                             selectedColor: CustomTheme.appTheme,
                             pressElevation: 1,
                             onSelected: (bool selected) {
-                              setState((){
-                                entireHouseSelected=!entireHouseSelected;
+                              setState(() {
+                                entireHouseSelected = !entireHouseSelected;
                               });
                             }),
                         FilterChip(
                             selected: privateRoomSelected,
                             checkmarkColor: CustomTheme.white,
                             backgroundColor: CustomTheme.white,
-                            label: Text('Private Room',style: getTextStyle(isSelected: privateRoomSelected),),
-                            elevation: 2,
-                            selectedColor: CustomTheme.appTheme,
-                            pressElevation: 1,
-                            onSelected: (bool selected) {
-                              setState((){
-                                privateRoomSelected=!privateRoomSelected;
-                              });
-                            }),
-                        FilterChip(
-                            selected: sharedRoomSelected,
-                          checkmarkColor: CustomTheme.white,
-                          backgroundColor: CustomTheme.white,
-
-                              label: Text(
-                              'Shared Room',style: getTextStyle(isSelected: sharedRoomSelected),
+                            label: Text(
+                              'Private Room',
+                              style:
+                                  getTextStyle(isSelected: privateRoomSelected),
                             ),
                             elevation: 2,
                             selectedColor: CustomTheme.appTheme,
                             pressElevation: 1,
                             onSelected: (bool selected) {
-                              setState((){
-                                sharedRoomSelected=!sharedRoomSelected;
+                              setState(() {
+                                privateRoomSelected = !privateRoomSelected;
+                              });
+                            }),
+                        FilterChip(
+                            selected: sharedRoomSelected,
+                            checkmarkColor: CustomTheme.white,
+                            backgroundColor: CustomTheme.white,
+                            label: Text(
+                              'Shared Room',
+                              style:
+                                  getTextStyle(isSelected: sharedRoomSelected),
+                            ),
+                            elevation: 2,
+                            selectedColor: CustomTheme.appTheme,
+                            pressElevation: 1,
+                            onSelected: (bool selected) {
+                              setState(() {
+                                sharedRoomSelected = !sharedRoomSelected;
                               });
                             })
                       ],
@@ -1430,16 +1486,22 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                         label: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('For Lone Rangers(1+1) members',style: getTextStyle(isSelected: studioSelected),),
-                            Text('Studio',style: getTextStyle(isSelected: studioSelected),)
+                            Text(
+                              'For Lone Rangers(1+1) members',
+                              style: getTextStyle(isSelected: studioSelected),
+                            ),
+                            Text(
+                              'Studio',
+                              style: getTextStyle(isSelected: studioSelected),
+                            )
                           ],
                         ),
                         elevation: 2,
                         selectedColor: CustomTheme.appTheme,
                         pressElevation: 1,
                         onSelected: (bool selected) {
-                          setState((){
-                            studioSelected=!studioSelected;
+                          setState(() {
+                            studioSelected = !studioSelected;
                           });
                         }),
                     FilterChip(
@@ -1449,16 +1511,22 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                         label: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('For Small Family (2+1) members',style: getTextStyle(isSelected: oneBHKSelected),),
-                            Text('One BHK',style: getTextStyle(isSelected: oneBHKSelected),)
+                            Text(
+                              'For Small Family (2+1) members',
+                              style: getTextStyle(isSelected: oneBHKSelected),
+                            ),
+                            Text(
+                              'One BHK',
+                              style: getTextStyle(isSelected: oneBHKSelected),
+                            )
                           ],
                         ),
                         elevation: 2,
                         selectedColor: CustomTheme.appTheme,
                         pressElevation: 1,
                         onSelected: (bool selected) {
-                          setState((){
-                            oneBHKSelected=!oneBHKSelected;
+                          setState(() {
+                            oneBHKSelected = !oneBHKSelected;
                           });
                         }),
                     FilterChip(
@@ -1468,16 +1536,22 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                         label: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Fit For Friend Groups of (4+1) members',style: getTextStyle(isSelected: twoBHKSelected),),
-                            Text('Two BHK',style: getTextStyle(isSelected: twoBHKSelected),)
+                            Text(
+                              'Fit For Friend Groups of (4+1) members',
+                              style: getTextStyle(isSelected: twoBHKSelected),
+                            ),
+                            Text(
+                              'Two BHK',
+                              style: getTextStyle(isSelected: twoBHKSelected),
+                            )
                           ],
                         ),
                         elevation: 2,
                         selectedColor: CustomTheme.appTheme,
                         pressElevation: 1,
                         onSelected: (bool selected) {
-                          setState((){
-                            twoBHKSelected=!twoBHKSelected;
+                          setState(() {
+                            twoBHKSelected = !twoBHKSelected;
                           });
                         }),
                     FilterChip(
@@ -1487,19 +1561,24 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                         label: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Fit For Joint Family of (6+1) members',style: getTextStyle(isSelected: threeBHKSelected),),
-                            Text('Three BHK',style: getTextStyle(isSelected: threeBHKSelected),)
+                            Text(
+                              'Fit For Joint Family of (6+1) members',
+                              style: getTextStyle(isSelected: threeBHKSelected),
+                            ),
+                            Text(
+                              'Three BHK',
+                              style: getTextStyle(isSelected: threeBHKSelected),
+                            )
                           ],
                         ),
                         elevation: 2,
                         selectedColor: CustomTheme.appTheme,
                         pressElevation: 1,
                         onSelected: (bool selected) {
-                          setState((){
-                            threeBHKSelected=!threeBHKSelected;
+                          setState(() {
+                            threeBHKSelected = !threeBHKSelected;
                           });
                         }),
-
                   ],
                 ),
               );
@@ -1507,11 +1586,11 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
           );
         });
   }
-  TextStyle getTextStyle({required bool isSelected}){
+
+  TextStyle getTextStyle({required bool isSelected}) {
     return TextStyle(
-      color: isSelected?Colors.white:Colors.black,
-      fontSize: 14,
-      fontWeight: FontWeight.w500
-    );
+        color: isSelected ? Colors.white : Colors.black,
+        fontSize: 14,
+        fontWeight: FontWeight.w500);
   }
 }

@@ -9,9 +9,10 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 class PropertyDetailsViewModel extends ChangeNotifier {
   final PropertyDetailsApiService _detailsApiService =
       PropertyDetailsApiService();
-  BookingAmountsResponseModel? bookingAmountsResponseModel ;
+  BookingAmountsResponseModel? bookingAmountsResponseModel;
 
   PropertyDetailsModel? propertyDetailsModel;
+  List<String> amentiesKeyList = [];
 
   YoutubePlayerController youTubeController = YoutubePlayerController(
     initialVideoId: '',
@@ -26,6 +27,12 @@ class PropertyDetailsViewModel extends ChangeNotifier {
     final response =
         await _detailsApiService.fetchPropertyDetails(propId: propId);
     propertyDetailsModel = response;
+
+    if (propertyDetailsModel != null &&
+        propertyDetailsModel?.amenitiesNew != null) {
+      getAmentiesKeyList(propertyDetailsModel?.amenitiesNew);
+    }
+
     if (propertyDetailsModel != null &&
         propertyDetailsModel?.details != null &&
         propertyDetailsModel?.details?.videoLink != null) {
@@ -49,7 +56,6 @@ class PropertyDetailsViewModel extends ChangeNotifier {
 
   Future<void> getBookingDetails(
       {required BookingAmountRequestModel model}) async {
-
     final response = await _detailsApiService.fetchBookingAmounts(model: model);
     bookingAmountsResponseModel = response;
     notifyListeners();
@@ -58,11 +64,19 @@ class PropertyDetailsViewModel extends ChangeNotifier {
   Future<BookingCredentialResponseModel> getBookingCredentials(
       {required BookingAmountRequestModel model}) async {
     return await _detailsApiService.fetchBookingCredentials(model: model);
-
   }
-  Future<dynamic> submitPaymentResponse(
-      {required String paymentId,required String paymentSignature,required String redirectApi}) async {
-    return await _detailsApiService.submitPaymentResponse(paymentId: paymentId, paymentSignature: paymentSignature,redirectApi: redirectApi);
 
+  Future<dynamic> submitPaymentResponse(
+      {required String paymentId,
+      required String paymentSignature,
+      required String redirectApi}) async {
+    return await _detailsApiService.submitPaymentResponse(
+        paymentId: paymentId,
+        paymentSignature: paymentSignature,
+        redirectApi: redirectApi);
+  }
+
+  List<String> getAmentiesKeyList(AmenitiesNew? amenitiesNew) {
+    return [];
   }
 }

@@ -323,12 +323,23 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                  "Name : ${value.myStayDetailsModel?.data?.travellerName ?? ''}"),
-                              Text(
-                                "Update Your Kyc",
+                                "Name : ${value.myStayDetailsModel?.data?.travellerName ?? ''}",
                                 style: TextStyle(
-                                    backgroundColor: CustomTheme.appTheme,
-                                    color: Colors.white),
+                                  fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+
+                                    color: Colors.black ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: CustomTheme.appTheme),
+                                padding: EdgeInsets.only(left: 5,right: 5,top: 1,bottom: 1),
+                                child: Text(
+                                  "Update Your Kyc",
+                                  style: TextStyle(
+                                      color: Colors.white),
+                                ),
                               ),
                             ]),
                       ),
@@ -340,6 +351,11 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             "Phone No : ${value.myStayDetailsModel?.data?.travellerContactNum ?? ''}",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+
+                                  color: Colors.black )
                           )),
                       SizedBox(
                         height: 10,
@@ -373,23 +389,28 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                   width: _mainWidth,
                                   child: Row(
                                     children: [
-                                      Text("Booking From",style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500
-                                      ),),
+                                      Text(
+                                        "Booking From",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.blueGrey,
+                                            fontWeight: FontWeight.w500),
+                                      ),
                                       Spacer(),
-
                                       showBookingFromDate(
                                               value.myStayDetailsModel?.data)
-                                          ? Text(DateTimeService.checkDateFormat(
-                                                  value.myStayDetailsModel?.data
-                                                      ?.travelFromDate) ??
-                                              '',style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black,
-                                          fontWeight: FontWeight.w500
-                                      ),)
+                                          ? Text(
+                                              DateTimeService.checkDateFormat(
+                                                      value
+                                                          .myStayDetailsModel
+                                                          ?.data
+                                                          ?.travelFromDate) ??
+                                                  '',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500),
+                                            )
                                           : Container(),
                                     ],
                                     mainAxisAlignment:
@@ -410,8 +431,8 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.w600)),
                                         Text(
-                                          getCheckInDate(
-                                                  value.myStayDetailsModel?.data) ??
+                                          getCheckInDate(value
+                                                  .myStayDetailsModel?.data) ??
                                               '',
                                           style: TextStyle(
                                               fontSize: 12,
@@ -433,8 +454,8 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                               fontSize: 12,
                                               fontWeight: FontWeight.w600)),
                                       Text(
-                                        getCheckInBy(
-                                                value.myStayDetailsModel?.data) ??
+                                        getCheckInBy(value
+                                                .myStayDetailsModel?.data) ??
                                             '',
                                         style: TextStyle(
                                             fontSize: 12,
@@ -452,33 +473,30 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                             ),
                           ),
                           Positioned(
-                            left: _mainWidth*0.7,
-                            top: _mainHeight*0.025,
-
+                            left: _mainWidth * 0.7,
+                            top: _mainHeight * 0.025,
                             child: Visibility(
-                              visible: showCheckIn(
-                                  value.myStayDetailsModel?.data),
+                              visible:
+                                  showCheckIn(value.myStayDetailsModel?.data),
                               child: GestureDetector(
                                 onTap: () async {
                                   RMSWidgets.showLoaderDialog(
-                                      context: context,
-                                      message: 'Loading');
+                                      context: context, message: 'Loading');
                                   int response =
-                                  await _viewModel.checkInAndCheckOut(
-                                      bookingId: widget.bookingId,
-                                      checkIn: true);
-                                  if(response==200){
-                                    await _viewModel.getMyStayDetails(bookingId: widget.bookingId);
+                                      await _viewModel.checkInAndCheckOut(
+                                          bookingId: widget.bookingId,
+                                          checkIn: true);
+                                  if (response == 200) {
+                                    await _viewModel.getMyStayDetails(
+                                        bookingId: widget.bookingId);
                                   }
                                   Navigator.of(context).pop();
                                 },
                                 child: Container(
                                     margin: EdgeInsets.only(right: 10),
                                     decoration: BoxDecoration(
-                                        borderRadius:
-                                        BorderRadius.circular(5),
-                                        color: CustomTheme
-                                            .appThemeContrast
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: CustomTheme.appThemeContrast
                                             .withAlpha(50)),
                                     child: Text(" Check In ")),
                               ),
@@ -489,30 +507,36 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                       Stack(
                         children: [
                           IgnorePointer(
-                            ignoring:
-                                showBookingExpand(value.myStayDetailsModel?.data),
+                            ignoring: showBookingExpand(
+                                value.myStayDetailsModel?.data),
                             child: ExpansionTile(
-
                                 title: Container(
                                     width: _mainWidth,
                                     child: Row(
                                       children: [
-                                        Text("Booking To",style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500
-                                        ),),
+                                        Text(
+                                          "Booking To",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.blueGrey,
+                                              fontWeight: FontWeight.w500),
+                                        ),
                                         Spacer(),
                                         showBookingToDate(
                                                 value.myStayDetailsModel?.data)
-                                            ? Text(DateTimeService.checkDateFormat(
-                                                    value.myStayDetailsModel?.data
-                                                        ?.travelToDate) ??
-                                                '',style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500
-                                        ),)
+                                            ? Text(
+                                                DateTimeService.checkDateFormat(
+                                                        value
+                                                            .myStayDetailsModel
+                                                            ?.data
+                                                            ?.travelToDate) ??
+                                                    '',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              )
                                             : Container(),
                                       ],
                                       mainAxisAlignment:
@@ -520,7 +544,8 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                     )),
                                 children: [
                                   Container(
-                                      margin: EdgeInsets.only(left: 20, right: 20),
+                                      margin:
+                                          EdgeInsets.only(left: 20, right: 20),
                                       width: _mainWidth,
                                       child: Row(
                                         children: [
@@ -530,7 +555,8 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                                   fontWeight: FontWeight.w600)),
                                           Text(
                                             getCheckOutDate(value
-                                                    .myStayDetailsModel?.data) ??
+                                                    .myStayDetailsModel
+                                                    ?.data) ??
                                                 '',
                                             style: TextStyle(
                                                 fontSize: 12,
@@ -541,7 +567,8 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                             MainAxisAlignment.spaceBetween,
                                       )),
                                   Container(
-                                      margin: EdgeInsets.only(left: 20, right: 20),
+                                      margin:
+                                          EdgeInsets.only(left: 20, right: 20),
                                       width: _mainWidth,
                                       child: Row(
                                         children: [
@@ -551,7 +578,8 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                                   fontWeight: FontWeight.w600)),
                                           Text(
                                             getCheckOutBy(value
-                                                    .myStayDetailsModel?.data) ??
+                                                    .myStayDetailsModel
+                                                    ?.data) ??
                                                 '',
                                             style: TextStyle(
                                                 fontSize: 12,
@@ -567,37 +595,35 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                 ]),
                           ),
                           Positioned(
-                            left: _mainWidth*0.7,
-                            top: _mainHeight*0.025,
-                            child:
-                          Visibility(
-                            visible: showCheckOut(value.myStayDetailsModel?.data),
-                            child: GestureDetector(
-                              onTap: () async {
-                                RMSWidgets.showLoaderDialog(
-                                    context: context,
-                                    message: 'Loading');
-                                int response =
-                                await _viewModel.checkInAndCheckOut(
-                                    bookingId: widget.bookingId,
-                                    checkIn: false);
-                                if(response==200){
-                                  await _viewModel.getMyStayDetails(bookingId: widget.bookingId);
-                                }
-                                Navigator.of(context).pop();
-                              },
-
-                              child: Container(
-                                  margin: EdgeInsets.only(right: 10),
-                                  decoration: BoxDecoration(
-                                      borderRadius:
-                                      BorderRadius.circular(5),
-                                      color: CustomTheme
-                                          .appThemeContrast
-                                          .withAlpha(50)),
-                                  child: Text(" Check Out ")),
+                            left: _mainWidth * 0.7,
+                            top: _mainHeight * 0.025,
+                            child: Visibility(
+                              visible:
+                                  showCheckOut(value.myStayDetailsModel?.data),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  RMSWidgets.showLoaderDialog(
+                                      context: context, message: 'Loading');
+                                  int response =
+                                      await _viewModel.checkInAndCheckOut(
+                                          bookingId: widget.bookingId,
+                                          checkIn: false);
+                                  if (response == 200) {
+                                    await _viewModel.getMyStayDetails(
+                                        bookingId: widget.bookingId);
+                                  }
+                                  Navigator.of(context).pop();
+                                },
+                                child: Container(
+                                    margin: EdgeInsets.only(right: 10),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: CustomTheme.appThemeContrast
+                                            .withAlpha(50)),
+                                    child: Text(" Check Out ")),
+                              ),
                             ),
-                          ),),
+                          ),
                         ],
                       ),
                       Container(
@@ -664,13 +690,19 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                       value.myStayDetailsModel?.data
                                               ?.agreementStatus ==
                                           '1'
-                                  ? () {
+                                  ? () async {
                                       String agreementLink = value
                                               .myStayDetailsModel
                                               ?.data
                                               ?.agreementLink ??
                                           '';
-                                      log(agreementLink);
+                                      if (await canLaunch(agreementLink)) {
+                                        launch(agreementLink)
+                                            .catchError((error) async {
+                                          log(error.toString());
+                                          return true;
+                                        });
+                                      }
                                     }
                                   : () => _handleURLButtonPress(
                                       context,
@@ -727,7 +759,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                             color:
                                                 CustomTheme.appThemeContrast);
                                       }
-                                    : () {}),
+                                    : () =>Navigator.of(context).pushNamed(AppRoutes.raiseTicketPage)),
                           ),
                           _gridInput(
                               hint: "Refund Form",

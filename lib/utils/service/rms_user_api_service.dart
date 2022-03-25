@@ -5,6 +5,7 @@ import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 import '../constants/api_urls.dart';
 import '../constants/sp_constants.dart';
@@ -25,11 +26,25 @@ class RMSUserApiService {
             (registeredToken ?? await _getRegisteredToken()).toString()
       };
 
-  Future<dynamic> getApiCall(
-      {required String endPoint,}) async {
+  Future downloadFile({required String url, required String fileName}) async {
+    Directory appStorage = await getApplicationDocumentsDirectory();
+    final file = '${appStorage.path}/$fileName';
+
+    final Dio dio=Dio();
+    final  response=await dio.download(url,file,onReceiveProgress:(receivedBytes, totalBytes){
+      String progress = ((receivedBytes / totalBytes) * 100).toStringAsFixed(0) + "%";
+      print(progress);
+    } );
+
+
+  }
+
+  Future<dynamic> getApiCall({
+    required String endPoint,
+  }) async {
     try {
-      final response =
-          await http.get(Uri.https(_baseURL, endPoint), headers: await getHeaders);
+      final response = await http.get(Uri.https(_baseURL, endPoint),
+          headers: await getHeaders);
 
       return await _response(response);
     } on SocketException {
@@ -51,8 +66,9 @@ class RMSUserApiService {
   }) async {
     log('URL :: $_baseURL$endPoint ---- QueryParams :: ${queryParams.toString()} ');
     try {
-      final response = await http
-          .get(Uri.https(_baseURL, endPoint, queryParams), headers: await getHeaders);
+      final response = await http.get(
+          Uri.https(_baseURL, endPoint, queryParams),
+          headers: await getHeaders);
 
       return await _response(response);
     } on SocketException {
@@ -63,8 +79,9 @@ class RMSUserApiService {
     return null;
   }
 
-  Future<dynamic> getApiCallWithURL(
-      {required String endPoint, }) async {
+  Future<dynamic> getApiCallWithURL({
+    required String endPoint,
+  }) async {
     log('URL :: $endPoint ');
     try {
       final response = await http.get(
