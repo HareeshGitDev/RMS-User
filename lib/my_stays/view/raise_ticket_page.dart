@@ -26,7 +26,6 @@ class _RaiseTicketPageState extends State<RaiseTicketPage> {
   List<File> imageList = [];
 
   List<String> get getIssueList => [
-        'Select Issue',
         'Pest Control',
         'Cable Issue',
         'Cable Recharge',
@@ -70,216 +69,246 @@ class _RaiseTicketPageState extends State<RaiseTicketPage> {
           ),
         ),
       ),
-      body: Container(
-        height: _mainHeight,
-        width: _mainWidth,
-        padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-        color: Colors.white,
-        child: Column(
-          children: [
-            Text(
-              'Kindly report your issue by selecting the category and description',
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey,
-                  fontSize: 16),
-              textAlign: TextAlign.start,
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            GestureDetector(
-              onTap: () async {
-                String value = await showIssueList(
-                    context: context, issueList: getIssueList);
-                setState(() {
-                  issueType = value;
-                });
-              },
-              child: Container(
-                height: 40,
+      body: GestureDetector(
+        onTap: ()=>FocusScope.of(context).requestFocus(FocusNode()),
+        child: Container(
+          height: _mainHeight,
+          width: _mainWidth,
+          padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+          color: Colors.white,
+          child: Column(
+            children: [
+              Text(
+                'Kindly report your issue by selecting the category and description',
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey,
+                    fontSize: 16),
+                textAlign: TextAlign.start,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+
+              Container(
+
                 width: _mainWidth,
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.only(left: 15),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 1.0),
-                  borderRadius: BorderRadius.circular(6),
+                child: GestureDetector(
+                  onTap: () async {
+                    String value = await showIssueList(
+                        context: context, issueList: getIssueList);
+                    setState(() {
+                      issueType = value;
+                    });
+                  },
+                  child: Neumorphic(
+                    style: NeumorphicStyle(
+                      depth: -2,
+                      color: Colors.white
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(width: _mainWidth*0.035,),
+                        Icon(Icons.error_outline,color: Colors.grey, size: 20),
+                        Container(
+                          height: 40,
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.only(left: 15),
+                          child: Text(issueType,style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey
+                          ),),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                child: Text(issueType),
               ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              height: _mainHeight * 0.045,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: Colors.white,
+              SizedBox(
+                height: 20,
               ),
-              child: Neumorphic(
-                style: NeumorphicStyle(
-                  depth: -2,
+              Container(
+                height: _mainHeight * 0.045,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
                   color: Colors.white,
                 ),
-                child: TextFormField(
-                  controller: _descriptionController,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Enter the description...",
-                    prefixIcon: Icon(Icons.email_outlined,
-                        color: Colors.grey, size: 20),
+                child: Neumorphic(
+                  style: NeumorphicStyle(
+                    depth: -2,
+                    color: Colors.white,
+                  ),
+                  child: TextFormField(
+                    controller: _descriptionController,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      labelStyle: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black54
+                    ),
+                      hintStyle:TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey
+                    ),
+                      hintText: "Enter the description...",
+                      prefixIcon: Icon(Icons.email_outlined,
+                          color: Colors.grey, size: 20),
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              'Add Images of Your Issue',
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                  fontSize: 16),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: CustomTheme.appTheme),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                'Add Images of Your Issue',
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                    fontSize: 16),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: CustomTheme.appTheme),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                    child: TextButton.icon(
+                      onPressed: () async {
+                        final String? model =
+                            await CapturePhotoPage.captureImageByGallery(
+                          context: context,
+                          function: (imagePath) async {},
+                        );
+                        if (model != null) {
+                          setState(() {
+                            imageList.add(File(model));
+                          });
+                        }
+                      },
+                      icon: Icon(
+                        Icons.folder_open,
+                        color: CustomTheme.appThemeContrast,
+                      ),
+                      label: Container(
+                        width: _mainWidth * 0.29,
+                        child: Wrap(
+                          children: [
+                            Text(
+                              "Select from Gallery",
+                              style: TextStyle(
+                                  color: CustomTheme.appThemeContrast,
+                                  fontFamily: "Nunito",
+                                  fontSize: 14,
+                                  height: 1.1),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                  child: TextButton.icon(
-                    onPressed: () async {
-                      final String? model =
-                          await CapturePhotoPage.captureImageByGallery(
-                        context: context,
-                        function: (imagePath) async {},
-                      );
-                      if (model != null) {
-                        setState(() {
-                          imageList.add(File(model));
-                        });
-                      }
-                    },
-                    icon: Icon(
-                      Icons.folder_open,
-                      color: CustomTheme.appThemeContrast,
+                  Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: CustomTheme.appTheme),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
                     ),
-                    label: Container(
-                      width: _mainWidth * 0.29,
-                      child: Wrap(
+                    child: TextButton.icon(
+                      onPressed: () async {
+                        final String? model =
+                            await CapturePhotoPage.captureImageByCamera(
+                          context: context,
+                          function: (imagePath) async {},
+                        );
+                        if (model != null) {
+                          setState(() {
+                            imageList.add(File(model));
+                          });
+                        }
+                      },
+                      icon: Icon(
+                        Icons.camera_alt_outlined,
+                        color: CustomTheme.appThemeContrast,
+                      ),
+                      label: Container(
+                        width: _mainWidth * 0.29,
+                        child: Text(
+                          "Click Photo",
+                          style: TextStyle(
+                            color: CustomTheme.appThemeContrast,
+                            fontFamily: "Nunito",
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Visibility(
+                visible: imageList.isNotEmpty,
+                replacement: Container(),
+                child: Container(
+                  height: _mainHeight * 0.2,
+                  width: _mainWidth,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return Stack(
                         children: [
-                          Text(
-                            "Select from Gallery",
-                            style: TextStyle(
-                                color: CustomTheme.appThemeContrast,
-                                fontFamily: "Nunito",
-                                fontSize: 14,
-                                height: 1.1),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: CustomTheme.appTheme),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                  ),
-                  child: TextButton.icon(
-                    onPressed: () async {
-                      final String? model =
-                          await CapturePhotoPage.captureImageByCamera(
-                        context: context,
-                        function: (imagePath) async {},
-                      );
-                      if (model != null) {
-                        setState(() {
-                          imageList.add(File(model));
-                        });
-                      }
-                    },
-                    icon: Icon(
-                      Icons.camera_alt_outlined,
-                      color: CustomTheme.appThemeContrast,
-                    ),
-                    label: Container(
-                      width: _mainWidth * 0.29,
-                      child: Text(
-                        "Click Photo",
-                        style: TextStyle(
-                          color: CustomTheme.appThemeContrast,
-                          fontFamily: "Nunito",
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Visibility(
-              visible: imageList.isNotEmpty,
-              replacement: Container(),
-              child: Container(
-                height: _mainHeight * 0.2,
-                width: _mainWidth,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: Image.file(
-                            imageList[index],
-                            fit: BoxFit.cover,
-                            width: _mainWidth * 0.4,
-                          ),
-                        ),
-                        Positioned(
-                          child: GestureDetector(
-                            onTap: () =>
-                                setState(() => imageList.removeAt(index)),
-                            child: CircleAvatar(
-                              child: Icon(
-                                Icons.clear,
-                                color: CustomTheme.appTheme,
-                                size: 16,
-                              ),
-                              backgroundColor: CustomTheme.white.withAlpha(250),
-                              radius: 15,
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Image.file(
+                              imageList[index],
+                              fit: BoxFit.cover,
+                              width: _mainWidth * 0.4,
                             ),
                           ),
-                          right: 0,
-                        )
-                      ],
-                    );
-                  },
-                  itemCount: imageList.length,
-                  separatorBuilder: (context, index) => SizedBox(
-                    width: 10,
+                          Positioned(
+                            child: GestureDetector(
+                              onTap: () =>
+                                  setState(() => imageList.removeAt(index)),
+                              child: CircleAvatar(
+                                child: Icon(
+                                  Icons.clear,
+                                  color: CustomTheme.appTheme,
+                                  size: 16,
+                                ),
+                                backgroundColor: CustomTheme.white.withAlpha(250),
+                                radius: 15,
+                              ),
+                            ),
+                            right: 0,
+                          )
+                        ],
+                      );
+                    },
+                    itemCount: imageList.length,
+                    separatorBuilder: (context, index) => SizedBox(
+                      width: 10,
+                    ),
                   ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: Container(
@@ -314,24 +343,30 @@ class _RaiseTicketPageState extends State<RaiseTicketPage> {
           return StatefulBuilder(
             builder: (context, StateSetter setState) {
               return Container(
-                padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                padding: EdgeInsets.only(left: 15, right: 15, top: 5),
                 height: _mainHeight * 0.6,
                 child: Column(
                   children: [
                     Container(
-                      height: 50,
+                      height: 30,
+
                       width: _mainWidth,
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Issue Type'),
-                          IconButton(
-                              onPressed: () =>
-                                  Navigator.of(context).pop(issueType),
-                              icon: Icon(Icons.close)),
+                          Text('Select Issue Type',style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black,
+                            fontSize: 16
+                          ),),
+                          GestureDetector(
+                              onTap: ()=>Navigator.of(context).pop(issueType),
+                              child: Icon(Icons.close,color: Colors.black,)),
                         ],
                       ),
                     ),
+                    Divider(color: CustomTheme.appTheme),
                     Container(
                       height: _mainHeight * 0.50,
                       child: ListView.separated(
@@ -340,10 +375,14 @@ class _RaiseTicketPageState extends State<RaiseTicketPage> {
                             return GestureDetector(
                               onTap: () => Navigator.of(context).pop(data),
                               child: Container(
-                                  color: Colors.amber,
-                                  height: 50,
+                                  height: 35,
+                                  //color: Colors.amber,
                                   width: _mainWidth,
-                                  child: Text(data)),
+                                  child: Text(data,style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black54,
+                                      fontSize: 16
+                                  ),)),
                             );
                           },
                           separatorBuilder: (context, index) => SizedBox(

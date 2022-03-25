@@ -1,5 +1,6 @@
 import 'package:RentMyStay_user/my_stays/viewmodel/mystay_viewmodel.dart';
 import 'package:RentMyStay_user/theme/app_theme.dart';
+import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +22,7 @@ class _TicketListPageState extends State<TicketListPage> {
   void initState() {
     super.initState();
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
+    _viewModel.getTicketList();
   }
 
   @override
@@ -56,74 +58,82 @@ class _TicketListPageState extends State<TicketListPage> {
       ),
       body: Consumer<MyStayViewModel>(
         builder: (context, value, child) {
-          return Container(
-            height: _mainHeight,
-            width: _mainWidth,
-            padding: EdgeInsets.only(
-                left: _mainWidth * 0.03,
-                right: _mainWidth * 0.03,
-                top: _mainHeight * 0.01,
-                bottom: _mainHeight * 0.01),
-            color: Colors.white,
-            child: ListView.separated(
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () => Navigator.pushNamed(
-                      context, AppRoutes.ticketDetailsPage,
-                      arguments: {
-                        'ticketId': '123456',
-                      }),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Container(
-                        height: _mainHeight * 0.05,
-                        width: _mainWidth,
-                        padding: EdgeInsets.only(
-                          left: _mainWidth * 0.015,
-                          right: _mainWidth * 0.015,
-                        ),
-                        child: Row(
-                          children: [
-                            Text(
-                              '${index + 1}.',
-                              style: TextStyle(
-                                  color: CustomTheme.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14),
-                            ),
-                            Spacer(),
-                            Container(
-                              width: _mainWidth * 0.7,
-                              child: Text(
-                                'The issue is bascially in the water system as sdfs sdfsdfsdf sfsfsfs fsefw',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14),
+          return value.ticketResponseModel != null &&
+                  value.ticketResponseModel?.data != null
+              ? Container(
+                  height: _mainHeight,
+                  width: _mainWidth,
+                  padding: EdgeInsets.only(
+                      left: _mainWidth * 0.03,
+                      right: _mainWidth * 0.03,
+                      top: _mainHeight * 0.01,
+                      bottom: _mainHeight * 0.01),
+                  color: Colors.white,
+                  child: ListView.separated(
+                    itemBuilder: (context, index) {
+                      var data = value.ticketResponseModel?.data?[index];
+                      return GestureDetector(
+                        onTap: () => Navigator.pushNamed(
+                            context, AppRoutes.ticketDetailsPage,
+                            arguments: data ?? []),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Container(
+                              height: _mainHeight * 0.05,
+                              width: _mainWidth,
+                              padding: EdgeInsets.only(
+                                left: _mainWidth * 0.015,
+                                right: _mainWidth * 0.015,
                               ),
-                            ),
-                            Spacer(),
-                            Text(
-                              'Resolved',
-                              style: TextStyle(
-                                  color: CustomTheme.appTheme,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14),
-                            ),
-                          ],
-                        )),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '${index + 1}.',
+                                    style: TextStyle(
+                                        color: CustomTheme.black,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14),
+                                  ),
+                                  Spacer(),
+                                  Container(
+                                    width: _mainWidth * 0.7,
+                                    child: Text(
+                                      '${data?.description ?? ''}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14),
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    '${data?.status ?? ''}',
+                                    style: TextStyle(
+                                        color: data?.status?.toLowerCase() ==
+                                                'resolved'
+                                            ? CustomTheme.myFavColor
+                                            : data?.status?.toLowerCase() ==
+                                                    'open'
+                                                ? CustomTheme.appTheme
+                                                : CustomTheme.appThemeContrast,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                ],
+                              )),
+                        ),
+                      );
+                    },
+                    itemCount: value.ticketResponseModel?.data?.length ?? 0,
+                    separatorBuilder: (context, index) => SizedBox(
+                      height: _mainHeight * 0.008,
+                    ),
                   ),
-                );
-              },
-              itemCount: 15,
-              separatorBuilder: (context, index) => SizedBox(
-                height: _mainHeight * 0.008,
-              ),
-            ),
-          );
+                )
+              : Center(child: RMSWidgets.getLoader(color: CustomTheme.appTheme));
         },
       ),
     );

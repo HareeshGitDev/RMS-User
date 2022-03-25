@@ -42,6 +42,8 @@ class _HomePageState extends State<HomePage> {
   late CustomTheme customTheme;
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
   late HomeViewModel _homeViewModel;
+  var _mainHeight;
+  var _mainWidth;
 
   TextDirection textDirection = TextDirection.ltr;
   bool isDark = false;
@@ -75,6 +77,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    _mainHeight = MediaQuery.of(context).size.height;
+    _mainHeight = MediaQuery.of(context).size.width;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -443,439 +447,201 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      drawer:
-          _buildDrawer(), // This trailing comma makes auto-formatting nicer for build methods.
+      drawer: _getDrawer(
+          context:
+              context), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
-  Widget _buildDrawer() {
-    return FutureBuilder(
-      builder: (context, AsyncSnapshot<Map<String, String>> snapshot) {
-        if (snapshot.hasError) {
-          return Center(
-            child: Text('Hii'),
-          );
-        } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        } else if (snapshot.connectionState == ConnectionState.done) {
-          log('done');
-          if (snapshot.hasData) {
-            return FxContainer.none(
-              margin: FxSpacing.fromLTRB(
-                  0, FxSpacing.safeAreaTop(context) + 0, 16, 0),
-              borderRadiusAll: 4,
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              color: theme.scaffoldBackgroundColor,
-              child: Drawer(
-                  child: Container(
-                color: theme.scaffoldBackgroundColor,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Container(
-                      padding: FxSpacing.only(
-                          left: 20, bottom: 10, top: 20, right: 20),
-                      child: Column(
-                        //
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          CircleAvatar(
-                            child: Container(
-                              child: CachedNetworkImage(
-                                imageUrl: (snapshot.data!['pic']).toString(),
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.cover,
+  Widget _getDrawer({required BuildContext context}) {
+    return Drawer(
+      backgroundColor: CustomTheme.white,
+      child: Container(
+        height: _mainHeight,
+        child: ListView(
+          children: [
+            FutureBuilder<Map<String, dynamic>>(
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text('Error'),
+                  );
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasData) {
+                    return Container(
+                      color: CustomTheme.white,
+                      height: _mainHeight * 0.45,
+                      child: UserAccountsDrawerHeader(
+                        decoration: BoxDecoration(
+                          color: CustomTheme.appTheme
+                        ),
+                        accountEmail: Text('${snapshot.data!['email'] ?? ''}'),
+                        accountName: Text('${snapshot.data!['name'] ?? ''}'),
+                        currentAccountPicture: CircleAvatar(
+                          child: Container(
+                            child: CachedNetworkImage(
+                              imageUrl: (snapshot.data!['pic']).toString(),
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              placeholder: (context, url) => Shimmer.fromColors(
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.grey,
                                     ),
                                   ),
-                                ),
-                                placeholder: (context, url) =>
-                                    Shimmer.fromColors(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                        baseColor: Colors.grey[200] as Color,
-                                        highlightColor:
-                                            Colors.grey[350] as Color),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                              ),
+                                  baseColor: Colors.grey[200] as Color,
+                                  highlightColor: Colors.grey[350] as Color),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
                             ),
-                            radius: 45,
                           ),
-                          FxSpacing.height(12),
-                          FxContainer(
-                            padding: FxSpacing.fromLTRB(12, 4, 12, 4),
-                            borderRadiusAll: 4,
-                            color: theme.colorScheme.primary.withAlpha(40),
-                            child: FxText.caption(
-                                (snapshot.data!['name']).toString(),
-                                color: theme.colorScheme.primary,
-                                fontWeight: 600,
-                                letterSpacing: 0.2),
-                          ),
-                          FxSpacing.height(10),
-                          FxContainer(
-                            padding: FxSpacing.fromLTRB(12, 4, 12, 4),
-                            borderRadiusAll: 4,
-                            color: theme.colorScheme.primary.withAlpha(40),
-                            child: FxText.caption(
-                                (snapshot.data!['email']).toString(),
-                                color: theme.colorScheme.primary,
-                                fontWeight: 600,
-                                letterSpacing: 0.2),
-                          ),
-                        ],
+                          radius: 45,
+                        ),
                       ),
-                    ),
-                    Divider(
-                      thickness: 1,
-                    ),
-                    FxSpacing.height(10),
-                    Container(
-                      margin: FxSpacing.x(15),
-                      child: Column(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                AppRoutes.profilePage,arguments: {
-                                  'fromBottom':false,
-                              }
-                              );
-                            },
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            child: Row(
-                              children: [
-                                FxContainer(
-                                  paddingAll: 12,
-                                  borderRadiusAll: 4,
-                                  child: Icon(
-                                    Icons.person_outline,
-                                    color: CustomTheme.appTheme,
-                                    size: 20,
-                                  ),
-                                  color: CustomTheme.appTheme.withAlpha(20),
-                                ),
-                                FxSpacing.width(16),
-                                Expanded(
-                                  child: FxText.b1(
-                                    'Profile'.trim(),
-                                  ),
-                                ),
-                                FxSpacing.width(16),
-                                Icon(
-                                  FeatherIcons.chevronRight,
-                                  size: 18,
-                                  color: theme.colorScheme.onBackground,
-                                ).autoDirection(),
-                              ],
-                            ),
-                          ),
-                          FxSpacing.height(20),
-                          InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, AppRoutes.myStayListPage,
-                                  arguments: {
-                                    'fromBottom': false,
-                                  });
-                            },
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            child: Row(
-                              children: [
-                                FxContainer(
-                                  paddingAll: 12,
-                                  borderRadiusAll: 4,
-                                  child: Icon(
-                                    Icons.house_outlined,
-                                    color: CustomTheme.appTheme,
-                                    size: 20,
-                                  ),
-                                  color: CustomTheme.appTheme.withAlpha(20),
-                                ),
-                                FxSpacing.width(16),
-                                Expanded(
-                                  child: FxText.b1(
-                                    'My Stays'.trim(),
-                                  ),
-                                ),
-                                FxSpacing.width(16),
-                                Icon(
-                                  FeatherIcons.chevronRight,
-                                  size: 18,
-                                  color: theme.colorScheme.onBackground,
-                                ).autoDirection(),
-                              ],
-                            ),
-                          ),
-                          FxSpacing.height(20),
-                          InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, AppRoutes.ticketListPage,
-                                  );
-                            },
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            child: Row(
-                              children: [
-                                FxContainer(
-                                  paddingAll: 12,
-                                  borderRadiusAll: 4,
-                                  child: Icon(
-                                    Icons.house_outlined,
-                                    color: CustomTheme.appTheme,
-                                    size: 20,
-                                  ),
-                                  color: CustomTheme.appTheme.withAlpha(20),
-                                ),
-                                FxSpacing.width(16),
-                                Expanded(
-                                  child: FxText.b1(
-                                    'My Tickets'.trim(),
-                                  ),
-                                ),
-                                FxSpacing.width(16),
-                                Icon(
-                                  FeatherIcons.chevronRight,
-                                  size: 18,
-                                  color: theme.colorScheme.onBackground,
-                                ).autoDirection(),
-                              ],
-                            ),
-                          ),
-                          FxSpacing.height(20),
-                          InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, AppRoutes.wishListPage,
-                                  arguments: {
-                                    'fromBottom': false,
-                                  });
-                            },
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            child: Row(
-                              children: [
-                                FxContainer(
-                                  paddingAll: 12,
-                                  borderRadiusAll: 4,
-                                  child: Icon(
-                                    Icons.favorite_outline,
-                                    color: CustomTheme.appTheme,
-                                    size: 20,
-                                  ),
-                                  color: CustomTheme.appTheme.withAlpha(20),
-                                ),
-                                FxSpacing.width(16),
-                                Expanded(
-                                  child: FxText.b1(
-                                    'My Wishlist'.trim(),
-                                  ),
-                                ),
-                                FxSpacing.width(16),
-                                Icon(
-                                  FeatherIcons.chevronRight,
-                                  size: 18,
-                                  color: theme.colorScheme.onBackground,
-                                ).autoDirection(),
-                              ],
-                            ),
-                          ),
-                          FxSpacing.height(20),
-                          InkWell(
-                            onTap: () async {
-                              Navigator.of(context)
-                                  .pushNamed(AppRoutes.referAndEarn);
-                            },
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            child: Row(
-                              children: [
-                                FxContainer(
-                                  paddingAll: 12,
-                                  borderRadiusAll: 4,
-                                  child: Icon(
-                                    Icons.record_voice_over_outlined,
-                                    color: CustomTheme.appTheme,
-                                    size: 20,
-                                  ),
-                                  color: CustomTheme.appTheme.withAlpha(20),
-                                ),
-                                FxSpacing.width(16),
-                                Expanded(
-                                  child: FxText.b1(
-                                    'Refer & Earn'.trim(),
-                                  ),
-                                ),
-                                FxSpacing.width(16),
-                                Icon(
-                                  FeatherIcons.chevronRight,
-                                  size: 18,
-                                  color: theme.colorScheme.onBackground,
-                                ).autoDirection(),
-                              ],
-                            ),
-                          ),
-                          FxSpacing.height(20),
-                          InkWell(
-                            /* onTap: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      SelectLanguageDialog());
-                            }*/
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            child: Row(
-                              children: [
-                                FxContainer(
-                                  paddingAll: 12,
-                                  borderRadiusAll: 4,
-                                  child: Image(
-                                    height: 20,
-                                    width: 20,
-                                    image: AssetImage(Images.wallet),
-                                    color: CustomTheme.appTheme,
-                                  ),
-                                  color: CustomTheme.appTheme.withAlpha(20),
-                                ),
-                                FxSpacing.width(16),
-                                Expanded(
-                                  child: FxText.b1(
-                                    'language'.trim(),
-                                  ),
-                                ),
-                                FxSpacing.width(16),
-                                Icon(
-                                  FeatherIcons.chevronRight,
-                                  size: 18,
-                                  color: theme.colorScheme.onBackground,
-                                ).autoDirection(),
-                              ],
-                            ),
-                          ),
-                          FxSpacing.height(20),
-                          InkWell(
-                            onTap: () async {
-                              RMSWidgets.showLoaderDialog(
-                                  context: context, message: 'Logging out...');
-                              SharedPreferenceUtil shared =
-                                  SharedPreferenceUtil();
-                              await GoogleAuthService.logOut();
-                              await GoogleAuthService.logoutFromFirebase();
-                              bool deletedAllValues = await shared.clearAll();
-                              Navigator.of(context).pop();
-                              if (deletedAllValues) {
-                                Navigator.of(context).pushNamedAndRemoveUntil(
-                                    AppRoutes.loginPage, (route) => false);
-                              } else {
-                                log('NOT ABLE TO DELETE VALUES FROM SP');
-                              }
-                            },
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            child: Row(
-                              children: [
-                                FxContainer(
-                                  paddingAll: 12,
-                                  borderRadiusAll: 4,
-                                  child: Icon(
-                                    Icons.logout_rounded,
-                                    color: CustomTheme.appTheme,
-                                    size: 20,
-                                  ),
-                                  /* Image(
-                                  height: 20,
-                                  width: 20,
-                                  image: AssetImage(Images.languageOutline),
-                                  color: CustomTheme.skyBlue,
-                                ),
+                    );
+                  }
+                }
+                return Text('No Data');
+              },
+              future: getSharedPreferencesValues(),
+            ),
+            getTile(
+              context: context,
+              leading: Icon(
+                Icons.person_outline,
+                color: CustomTheme.appTheme,
+                size: 20,
+              ),
+              title: 'Profile',
+              onTap: () => Navigator.pushNamed(
+                context,
+                AppRoutes.profilePage,
+                arguments: {
+                  'fromBottom': false,
+                },
+              ),
+            ),
+            getTile(
+              context: context,
+              leading: Icon(
+                Icons.house_outlined,
+                color: CustomTheme.appTheme,
+                size: 20,
+              ),
+              title: 'My Stays',
+              onTap: () => Navigator.pushNamed(
+                context,
+                AppRoutes.myStayListPage,
+                arguments: {
+                  'fromBottom': false,
+                },
+              ),
+            ),
+            getTile(
+              context: context,
+              leading: Icon(
+                Icons.style,
+                color: CustomTheme.appTheme,
+                size: 20,
+              ),
+              title: 'My Tickets',
+              onTap: () => Navigator.pushNamed(
+                context,
+                AppRoutes.ticketListPage,
+              ),
+            ),
+            getTile(
+              context: context,
+              leading: Icon(
+                Icons.favorite_outline,
+                color: CustomTheme.appTheme,
+                size: 20,
+              ),
+              title: 'My WishList',
+              onTap: () => {
+                Navigator.pushNamed(context, AppRoutes.wishListPage,
+                    arguments: {
+                      'fromBottom': false,
+                    }),
+              },
+            ),
+            getTile(
+              context: context,
+              leading: Icon(
+                Icons.share,
+                color: CustomTheme.appTheme,
+                size: 20,
+              ),
+              title: 'Refer & Earn',
+              onTap: () =>
+                  Navigator.of(context).pushNamed(AppRoutes.referAndEarn),
+            ),
+            getTile(
+              context: context,
+              leading: Icon(
+                Icons.logout,
+                color: CustomTheme.appTheme,
+                size: 20,
+              ),
+              title: 'Logout',
+              onTap: () async {
+                RMSWidgets.showLoaderDialog(
+                    context: context, message: 'Logging out...');
+                SharedPreferenceUtil shared =
+                SharedPreferenceUtil();
+                await GoogleAuthService.logOut();
+                await GoogleAuthService.logoutFromFirebase();
+                bool deletedAllValues = await shared.clearAll();
+                Navigator.of(context).pop();
+                if (deletedAllValues) {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      AppRoutes.loginPage, (route) => false);
+                } else {
+                  log('NOT ABLE TO DELETE VALUES FROM SP');
+                }
+              },
+            ),
 
-                                */
-                                  color: CustomTheme.appTheme.withAlpha(20),
-                                ),
-                                FxSpacing.width(16),
-                                Expanded(
-                                  child: FxText.b1(
-                                    'Logout'.trim(),
-                                  ),
-                                ),
-                                FxSpacing.width(16),
-                                Icon(
-                                  FeatherIcons.chevronRight,
-                                  size: 18,
-                                  color: theme.colorScheme.onBackground,
-                                ).autoDirection(),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    FxSpacing.height(20),
-                    Divider(
-                      thickness: 1,
-                    ),
-                    FxSpacing.height(16),
-                    Container(
-                      margin: FxSpacing.x(20),
-                      child: Column(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, AppRoutes.myStayDetailsPage);
-                            },
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            child: Row(
-                              children: [
-                                FxContainer(
-                                  paddingAll: 12,
-                                  borderRadiusAll: 4,
-                                  child: Image(
-                                    height: 20,
-                                    width: 20,
-                                    image: AssetImage(Images.wallet),
-                                    color: CustomTheme.appTheme,
-                                  ),
-                                  color: CustomTheme.appTheme.withAlpha(20),
-                                ),
-                                FxSpacing.width(16),
-                                Expanded(
-                                  child: FxText.b1(
-                                    'FAQ'.trim(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    FxSpacing.height(20),
-                  ],
-                ),
-              )),
-            );
-          }
-        }
-        return Container();
-      },
-      future: getSharedPreferencesValues(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getTile(
+      {required BuildContext context,
+      required Icon leading,
+      required String title,
+      required Function onTap}) {
+    return Container(
+      margin: EdgeInsets.only(left: 5,right: 5,top: 5),
+
+      decoration: BoxDecoration(
+          color: CustomTheme.appTheme.withAlpha(20),
+          border: Border.all(color: Colors.white),
+          borderRadius: BorderRadius.circular(10),
+
+      ),
+
+      height: _mainHeight*0.13,
+      child: ListTile(
+        leading: leading,
+        title: Text(title),
+        onTap: () => onTap(),
+        trailing: Icon(Icons.arrow_right_outlined,color: CustomTheme.appTheme,),
+      ),
     );
   }
 }

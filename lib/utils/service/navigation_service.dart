@@ -6,6 +6,7 @@ import 'package:RentMyStay_user/login_module/view/login_page.dart';
 import 'package:RentMyStay_user/login_module/view/firebase_registration_page.dart';
 import 'package:RentMyStay_user/login_module/view/success_page.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
+import 'package:RentMyStay_user/my_stays/model/ticket_response_model.dart';
 import 'package:RentMyStay_user/my_stays/view/raise_ticket_page.dart';
 import 'package:RentMyStay_user/my_stays/view/refund_splitup_view_page.dart';
 import 'package:RentMyStay_user/my_stays/view/ticket_details_page.dart';
@@ -131,11 +132,11 @@ class NavigationService {
               child: TicketListPage(),
             ));
       case AppRoutes.ticketDetailsPage:
-      final data= settings.arguments as Map<String,dynamic>;
+      final data= settings.arguments as Data;
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
               create: (_) => MyStayViewModel(),
-              child: TicketDetailsPage(ticketId: data['ticketId']),
+              child: TicketDetailsPage(ticketModel: data),
             ));
 
       case AppRoutes.invoicePage:

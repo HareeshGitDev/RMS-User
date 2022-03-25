@@ -1,14 +1,19 @@
+import 'package:RentMyStay_user/my_stays/model/ticket_response_model.dart';
+import 'package:RentMyStay_user/utils/service/date_time_service.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../theme/custom_theme.dart';
 import '../viewmodel/mystay_viewmodel.dart';
 
 class TicketDetailsPage extends StatefulWidget {
-  final String ticketId;
+  final Data ticketModel;
 
-  const TicketDetailsPage({Key? key, required this.ticketId}) : super(key: key);
+  const TicketDetailsPage({Key? key, required this.ticketModel})
+      : super(key: key);
 
   @override
   _TicketDetailsPageState createState() => _TicketDetailsPageState();
@@ -18,6 +23,9 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
   var _mainHeight;
   var _mainWidth;
   late MyStayViewModel _viewModel;
+  late ValueNotifier<bool> showOpenButton;
+  late ValueNotifier<bool> showResolvedButton;
+  late ValueNotifier<bool> showCancelButton;
 
   TextStyle get getKeyStyle =>
       TextStyle(color: Colors.grey, fontWeight: FontWeight.w500, fontSize: 14);
@@ -29,6 +37,22 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
   void initState() {
     super.initState();
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
+    showOpenButton = ValueNotifier(false);
+    showResolvedButton = ValueNotifier(false);
+    showCancelButton = ValueNotifier(false);
+    if (widget.ticketModel.status?.toLowerCase() == 'open') {
+      showResolvedButton.value = true;
+      showCancelButton.value = true;
+      showOpenButton.value = false;
+    } else if (widget.ticketModel.status?.toLowerCase() == 'resolved') {
+      showResolvedButton.value = false;
+      showCancelButton.value = false;
+      showOpenButton.value = true;
+    } else if (widget.ticketModel.status?.toLowerCase() == 'cancelled') {
+      showResolvedButton.value = false;
+      showCancelButton.value = false;
+      showOpenButton.value = false;
+    }
   }
 
   @override
@@ -64,40 +88,63 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Issue Description : ', style: TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-              fontWeight: FontWeight.w500
-            )),
-            Text('Beds are not proper--Testing', style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-                fontWeight: FontWeight.w500
-            )),
+            Text('Issue Description : ',
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500)),
+            Text('${widget.ticketModel.description ?? ''}',
+                style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w500)),
             SizedBox(
               height: 20,
             ),
-            Container(
-              height: _mainHeight * 0.2,
-              width: _mainWidth,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: Image.network(
-                      'https://wallpaperaccess.com/full/6175572.jpg',
-                      fit: BoxFit.cover,
-                      width: _mainWidth * 0.4,
+            widget.ticketModel.issueImage != null
+                ? Container(
+                    height: _mainHeight * 0.2,
+                    width: _mainWidth,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return CachedNetworkImage(
+                          imageUrl:
+                              widget.ticketModel.issueImage?[index].imageLink ??
+                                  '',
+                          imageBuilder: (context, imageProvider) => Container(
+                            height: _mainHeight * 0.1,
+                            width: _mainWidth * 0.4,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          placeholder: (context, url) => Shimmer.fromColors(
+                              child: Container(
+                                height: _mainHeight * 0.1,
+                                width: _mainWidth * 0.4,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                              ),
+                              baseColor: Colors.grey[200] as Color,
+                              highlightColor: Colors.grey[350] as Color),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        );
+                      },
+                      itemCount: widget.ticketModel.issueImage?.length ?? 0,
+                      separatorBuilder: (context, index) => SizedBox(
+                        width: 10,
+                      ),
                     ),
-                  );
-                },
-                itemCount: 4,
-                separatorBuilder: (context, index) => SizedBox(
-                  width: 10,
-                ),
-              ),
-            ),
+                  )
+                : Container(),
             SizedBox(
               height: 25,
             ),
@@ -108,7 +155,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                   top: _mainHeight * 0.007,
                   bottom: _mainHeight * 0.007),
               decoration: BoxDecoration(
-                border: Border.all(color: CustomTheme.appTheme,width: 0),
+                border: Border.all(color: CustomTheme.appTheme, width: 0),
                 borderRadius: BorderRadius.circular(5),
               ),
               child: Table(
@@ -118,21 +165,28 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                       'Ticket Id : ',
                       style: getKeyStyle,
                     ),
-                    Text(widget.ticketId, style: getValueStyle),
+                    Text('${widget.ticketModel.id ?? ''}',
+                        style: getValueStyle),
                     Text('Status : ', style: getKeyStyle),
-                    Text('Resolved', style: getValueStyle)
+                    Text('${widget.ticketModel.status ?? ''}',
+                        style: getValueStyle)
                   ]),
                   TableRow(children: [
-                    Text('Creation Time : ', style: getKeyStyle),
-                    Text('December 24,2022', style: getValueStyle),
+                    Text('Time : ', style: getKeyStyle),
+                    Text(
+                        '${DateTimeService.checkDateFormat(widget.ticketModel.date) ?? ''}',
+                        style: getValueStyle),
                     Text('Type : ', style: getKeyStyle),
-                    Text('Furniture Type', style: getValueStyle)
+                    Text('${widget.ticketModel.category ?? ''}',
+                        style: getValueStyle)
                   ]),
                   TableRow(children: [
                     Text('Unit No. : ', style: getKeyStyle),
-                    Text('G4', style: getValueStyle),
+                    Text('${widget.ticketModel.unitNumber ?? ''}',
+                        style: getValueStyle),
                     Text('Mobile : ', style: getKeyStyle),
-                    Text('919794562047', style: getValueStyle)
+                    Text('${widget.ticketModel.mobileNumber ?? ''}',
+                        style: getValueStyle)
                   ]),
                 ],
               ),
@@ -146,69 +200,86 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            CustomTheme.appThemeContrast),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                        )),
-                    onPressed: () async {
-                      //
-                    },
-                    child: Center(
-                        child: Text(
-                      'Re-Open',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    )),
-                  ),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            CustomTheme.myFavColor),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                        )),
-                    onPressed: () async {
-                      //
-                    },
-                    child: Center(
-                        child: Text(
-                      'Resolved',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    )),
-                  ),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            CustomTheme.appTheme),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                        )),
-                    onPressed: () async {
-                      //
-                    },
-                    child: Center(
-                        child: Text(
-                      'Cancel',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    )),
-                  ),
+                  ValueListenableBuilder(
+                      valueListenable: showOpenButton,
+                      builder: (context, bool value, child) {
+                        return value
+                            ? ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            CustomTheme.appThemeContrast),
+                                    shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                    )),
+                                onPressed: () async {
+                                  String status = 'Open';
+                                  String ticket_id =
+                                      widget.ticketModel.ticketId ?? '';
+                                },
+                                child: Center(
+                                    child: Text(
+                                  'Re-Open',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                )),
+                              )
+                            : Container();
+                      }),
+                  ValueListenableBuilder(valueListenable: showResolvedButton, builder:(context,bool value,child){
+                    return value ? ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              CustomTheme.myFavColor),
+                          shape:
+                          MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                          )),
+                      onPressed: () async {
+                        String status = 'Resolved';
+
+                        String ticket_id = widget.ticketModel.ticketId ?? '';
+                      },
+                      child: Center(
+                          child: Text(
+                            'Resolved',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )),
+                    ):Container();
+                  }),
+                  ValueListenableBuilder(valueListenable: showCancelButton, builder: (context,bool value,child){
+                   return value ? ElevatedButton(
+                     style: ButtonStyle(
+                         backgroundColor: MaterialStateProperty.all<Color>(
+                             CustomTheme.appTheme),
+                         shape:
+                         MaterialStateProperty.all<RoundedRectangleBorder>(
+                           RoundedRectangleBorder(
+                               borderRadius: BorderRadius.circular(10)),
+                         )),
+                     onPressed: () async {
+                       String status = 'Cancelled';
+                       String ticket_id = widget.ticketModel.ticketId ?? '';
+                     },
+                     child: Center(
+                         child: Text(
+                           'Cancel',
+                           style: TextStyle(
+                             fontSize: 14,
+                             fontWeight: FontWeight.w500,
+                           ),
+                         )),
+                   ):Container();  
+                  })
                 ],
               ),
             ),

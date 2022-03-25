@@ -245,49 +245,6 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         SizedBox(
                           height: _mainHeight * 0.01,
                         ),
-                        /* NeumorphicButton(
-                          style: NeumorphicStyle(
-                              color: Colors.blueGrey.shade100,
-                              shadowDarkColor: Colors.blue,
-                              depth: 5,
-                              lightSource: LightSource.topLeft),
-                          padding: EdgeInsets.only(
-                              top: _mainHeight * 0.005,
-                              bottom: _mainHeight * 0.005,
-                              left: _mainWidth * 0.025),
-                          margin: EdgeInsets.only(
-                            left: _mainWidth * 0.65,
-                            right: _mainWidth * 0.015,
-                          ),
-                          child: ValueListenableBuilder(
-                            builder: (context, value, child) {
-                              if (value == true) {
-                                return const Text(
-                                  'Switch To Video Tour',
-                                  style: TextStyle(
-                                      color: Colors.black87,
-                                      fontFamily: fontFamily,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500),
-                                );
-                              } else {
-                                return const Text(
-                                  'Switch To Photo Tour',
-                                  style: TextStyle(
-                                      color: Colors.black87,
-                                      fontFamily: fontFamily,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500),
-                                );
-                              }
-                            },
-                            valueListenable: showPics,
-                          ),
-                          onPressed: () {
-                            showPics.value = !showPics.value;
-                            _youTubeController.reset();
-                          },
-                        ),*/
                         SizedBox(
                           height: _mainHeight * 0.01,
                         ),

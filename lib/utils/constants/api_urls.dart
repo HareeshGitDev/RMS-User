@@ -25,4 +25,7 @@ class AppUrls{
   static const String feedbackAndBankDetailsUrl='v2/moveoutForm';
   static const String checkInUrl='v2/cInStatus';
   static const String checkOutUrl='v2/cOutStatus';
+  static const String ticketListUrl='v2/ticket';
+  static const String generateTicketUrl='v2/ticket';
+  static const String generateTicketImageUrl='v2/ticketPic';
 }

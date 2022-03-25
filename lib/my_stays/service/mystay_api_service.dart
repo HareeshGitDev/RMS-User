@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:RentMyStay_user/my_stays/model/ticket_response_model.dart';
+
 import '../../utils/constants/api_urls.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/rms_user_api_service.dart';
@@ -131,6 +133,19 @@ class MyStayApiService {
       return 200;
     } else {
       return 404;
+    }
+  }
+  Future<TicketResponseModel> fetchTicketList() async {
+    String url = AppUrls.ticketListUrl;
+    final response = await _apiService.getApiCall(endPoint: url);
+    final data = response as Map<String, dynamic>;
+
+    if (data['msg'].toString().toLowerCase() == 'success') {
+      return TicketResponseModel.fromJson(data);
+    } else {
+      return TicketResponseModel(
+        msg: 'failure',
+      );
     }
   }
 }
