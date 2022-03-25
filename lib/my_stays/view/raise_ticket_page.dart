@@ -74,24 +74,27 @@ class _RaiseTicketPageState extends State<RaiseTicketPage> {
         child: Container(
           height: _mainHeight,
           width: _mainWidth,
-          padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+          //padding: EdgeInsets.only(left: 15, right: 15, top: 15),
           color: Colors.white,
           child: Column(
             children: [
-              Text(
-                'Kindly report your issue by selecting the category and description',
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey,
-                    fontSize: 16),
-                textAlign: TextAlign.start,
+              Container(
+                padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                child: Text(
+                  'Kindly report your issue by selecting the category and description',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey,
+                      fontSize: 16),
+                  textAlign: TextAlign.start,
+                ),
               ),
               SizedBox(
                 height: 20,
               ),
 
               Container(
-
+                padding: EdgeInsets.only(left: 15, right: 15,),
                 width: _mainWidth,
                 child: GestureDetector(
                   onTap: () async {
@@ -131,6 +134,7 @@ class _RaiseTicketPageState extends State<RaiseTicketPage> {
               ),
               Container(
                 height: _mainHeight * 0.045,
+                padding: EdgeInsets.only(left: 15, right: 15,),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   color: Colors.white,
@@ -162,102 +166,111 @@ class _RaiseTicketPageState extends State<RaiseTicketPage> {
                 ),
               ),
               SizedBox(
-                height: 20,
+                height: 30,
               ),
-              Text(
-                'Add Images of Your Issue',
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                    fontSize: 16),
+              Container(
+                padding: EdgeInsets.only(left: 15,top: 2,bottom: 2),
+                color: CustomTheme.appTheme,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Add Images of Your Issue',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                      fontSize: 16),
+                ),
               ),
               SizedBox(
                 height: 20,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    height: 40,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: CustomTheme.appTheme),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
-                      ),
-                    ),
-                    child: TextButton.icon(
-                      onPressed: () async {
-                        final String? model =
-                            await CapturePhotoPage.captureImageByGallery(
-                          context: context,
-                          function: (imagePath) async {},
-                        );
-                        if (model != null) {
-                          setState(() {
-                            imageList.add(File(model));
-                          });
-                        }
-                      },
-                      icon: Icon(
-                        Icons.folder_open,
-                        color: CustomTheme.appThemeContrast,
-                      ),
-                      label: Container(
-                        width: _mainWidth * 0.29,
-                        child: Wrap(
-                          children: [
-                            Text(
-                              "Select from Gallery",
-                              style: TextStyle(
-                                  color: CustomTheme.appThemeContrast,
-                                  fontFamily: "Nunito",
-                                  fontSize: 14,
-                                  height: 1.1),
-                            ),
-                          ],
+              Container(
+                padding: EdgeInsets.only(left: 15, right: 15,),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+
+                      height: 40,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: CustomTheme.appTheme),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
                         ),
                       ),
-                    ),
-                  ),
-                  Container(
-                    height: 40,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: CustomTheme.appTheme),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
-                      ),
-                    ),
-                    child: TextButton.icon(
-                      onPressed: () async {
-                        final String? model =
-                            await CapturePhotoPage.captureImageByCamera(
-                          context: context,
-                          function: (imagePath) async {},
-                        );
-                        if (model != null) {
-                          setState(() {
-                            imageList.add(File(model));
-                          });
-                        }
-                      },
-                      icon: Icon(
-                        Icons.camera_alt_outlined,
-                        color: CustomTheme.appThemeContrast,
-                      ),
-                      label: Container(
-                        width: _mainWidth * 0.29,
-                        child: Text(
-                          "Click Photo",
-                          style: TextStyle(
-                            color: CustomTheme.appThemeContrast,
-                            fontFamily: "Nunito",
-                            fontSize: 14,
+                      child: TextButton.icon(
+                        onPressed: () async {
+                          final String? model =
+                              await CapturePhotoPage.captureImageByGallery(
+                            context: context,
+                            function: (imagePath) async {},
+                          );
+                          if (model != null) {
+                            setState(() {
+                              imageList.add(File(model));
+                            });
+                          }
+                        },
+                        icon: Icon(
+                          Icons.folder_open,
+                          color: CustomTheme.appThemeContrast,
+                        ),
+                        label: Container(
+                          width: _mainWidth * 0.29,
+                          child: Wrap(
+                            children: [
+                              Text(
+                                "Select from Gallery",
+                                style: TextStyle(
+                                    color: CustomTheme.appThemeContrast,
+                                    fontFamily: "Nunito",
+                                    fontSize: 14,
+                                    height: 1.1),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    Container(
+                      height: 40,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: CustomTheme.appTheme),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                      ),
+                      child: TextButton.icon(
+                        onPressed: () async {
+                          final String? model =
+                              await CapturePhotoPage.captureImageByCamera(
+                            context: context,
+                            function: (imagePath) async {},
+                          );
+                          if (model != null) {
+                            setState(() {
+                              imageList.add(File(model));
+                            });
+                          }
+                        },
+                        icon: Icon(
+                          Icons.camera_alt_outlined,
+                          color: CustomTheme.appThemeContrast,
+                        ),
+                        label: Container(
+                          width: _mainWidth * 0.29,
+                          child: Text(
+                            "Click Photo",
+                            style: TextStyle(
+                              color: CustomTheme.appThemeContrast,
+                              fontFamily: "Nunito",
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               SizedBox(
                 height: 30,
@@ -266,6 +279,7 @@ class _RaiseTicketPageState extends State<RaiseTicketPage> {
                 visible: imageList.isNotEmpty,
                 replacement: Container(),
                 child: Container(
+                  padding: EdgeInsets.only(left: 15, right: 15,),
                   height: _mainHeight * 0.2,
                   width: _mainWidth,
                   child: ListView.separated(
@@ -292,7 +306,7 @@ class _RaiseTicketPageState extends State<RaiseTicketPage> {
                                   size: 16,
                                 ),
                                 backgroundColor: CustomTheme.white.withAlpha(250),
-                                radius: 15,
+                                radius: 12,
                               ),
                             ),
                             right: 0,
