@@ -27,7 +27,7 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../images.dart';
 import '../../payment_module/model/payment_request_model.dart';
-import '../../property_details_module/model/property_details_util_model.dart';
+import '../model/property_details_util_model.dart';
 import '../../utils/constants/enum_consts.dart';
 import '../../utils/date_range/blackout_date_range.dart';
 import '../../utils/service/date_time_service.dart';

@@ -27,7 +27,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
-import '../../booking_module/view/booking_view_page.dart';
+import '../../property_details_module/view/booking_view_page.dart';
 import '../../home_module/view/home_page.dart';
 import '../../login_module/view/forgot_password_page.dart';
 import '../../login_module/view/mobile_otp_page.dart';
