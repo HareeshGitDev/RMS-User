@@ -26,7 +26,9 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../images.dart';
+import '../../payment_module/model/payment_request_model.dart';
 import '../../property_details_module/model/property_details_util_model.dart';
+import '../../utils/constants/enum_consts.dart';
 import '../../utils/date_range/blackout_date_range.dart';
 import '../../utils/service/date_time_service.dart';
 import '../../utils/view/calander_page.dart';
@@ -58,17 +60,18 @@ class _BookingPageState extends State<BookingPage> {
   final _nameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
   late PropertyDetailsViewModel _viewModel;
-  late Razorpay _razorpay;
-  BookingCredentialResponseModel _bookingCredentialResponseModel =
-      BookingCredentialResponseModel();
+
+  // late Razorpay _razorpay;
+  /*BookingCredentialResponseModel _bookingCredentialResponseModel =
+      BookingCredentialResponseModel();*/
 
   @override
   void initState() {
     super.initState();
-    _razorpay = Razorpay();
+    /*_razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);*/
     _viewModel = Provider.of<PropertyDetailsViewModel>(context, listen: false);
     initMethod();
   }
@@ -97,7 +100,7 @@ class _BookingPageState extends State<BookingPage> {
 
   @override
   void dispose() {
-    _razorpay.clear();
+    //_razorpay.clear();
     super.dispose();
   }
 
@@ -616,9 +619,41 @@ class _BookingPageState extends State<BookingPage> {
                                   if (response.status?.toLowerCase() ==
                                           'success' &&
                                       response.data != null &&
+                                      response.data?.prefill != null &&
+                                      response.data?.amount != null &&
+                                      response.data?.key != null &&
+                                      response.data?.orderId != null &&
                                       response.data?.redirect_api != null) {
-                                    _bookingCredentialResponseModel = response;
-                                    await openCheckout(model: response);
+                                    // _bookingCredentialResponseModel = response;
+                                    Navigator.of(context).pushNamedAndRemoveUntil(
+                                        AppRoutes.razorpayPaymentPage, (route) => false,
+                                        arguments: PaymentRequestModel(
+                                            name: response.data?.prefill?.name ??
+                                                '',
+                                            color: response.data?.theme?.color ??
+                                                '',
+                                            email:
+                                                response.data?.prefill?.email ??
+                                                    '',
+                                            image: response.data?.image ?? '',
+                                            amount: (response.data?.amount ?? '')
+                                                .toString(),
+                                            contactNumber:
+                                                response.data?.prefill?.contact ??
+                                                    '',
+                                            description:
+                                                response.data?.description ??
+                                                    '',
+                                            orderId:
+                                                response.data?.orderId ?? '',
+                                            paymentMode:
+                                                PaymentMode.FromProperty,
+                                            razorPayKey:
+                                                response.data?.key ?? '',
+                                            redirectApi:
+                                                response.data?.redirect_api ?? '',
+                                            extraInfo: ''));
+                                    //await openCheckout(model: response);
                                   }
                                 }
                               : () {},
@@ -652,7 +687,7 @@ class _BookingPageState extends State<BookingPage> {
     );
   }
 
-  Future<void> openCheckout(
+  /*Future<void> openCheckout(
       {required BookingCredentialResponseModel model}) async {
     if (model.data == null) {
       return;
@@ -733,7 +768,7 @@ class _BookingPageState extends State<BookingPage> {
     Fluttertoast.showToast(
         msg: "EXTERNAL_WALLET: " + response.walletName!,
         toastLength: Toast.LENGTH_SHORT);
-  }
+  }*/
 
   static String showformatDate(String da) {
     var a = da.split('-');

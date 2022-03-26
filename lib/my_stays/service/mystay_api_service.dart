@@ -1,6 +1,11 @@
 import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
 
 import 'package:RentMyStay_user/my_stays/model/ticket_response_model.dart';
+import 'package:dio/dio.dart' as dio;
+import 'package:dio/dio.dart';
+import 'package:http/http.dart';
 
 import '../../utils/constants/api_urls.dart';
 import '../../utils/constants/sp_constants.dart';
@@ -25,16 +30,14 @@ class MyStayApiService {
   Future<MyStayListModel> fetchMyStayList() async {
     String url = AppUrls.myStayListUrl;
     final response = await _apiService
-        .getApiCallWithQueryParams(endPoint: url, queryParams: {
-      'token_id': await _getRegisteredToken(),
-    });
+        .getApiCall(endPoint: url);
     final data = response as Map<String, dynamic>;
 
-    if (data['status'].toString().toLowerCase() == 'success') {
+    if (data['msg'].toString().toLowerCase() == 'success' && data['data'] != [] ) {
       return MyStayListModel.fromJson(data);
     } else {
       return MyStayListModel(
-        status: 'failure',
+        msg: 'failure',
       );
     }
   }
@@ -135,6 +138,7 @@ class MyStayApiService {
       return 404;
     }
   }
+
   Future<TicketResponseModel> fetchTicketList() async {
     String url = AppUrls.ticketListUrl;
     final response = await _apiService.getApiCall(endPoint: url);
@@ -147,5 +151,66 @@ class MyStayApiService {
         msg: 'failure',
       );
     }
+  }
+
+  Future<int> updateTicketStatus(
+      {required String status, required String ticketId}) async {
+    String url = AppUrls.ticketStatusUrl;
+    final response = await _apiService.putApiCall(
+        endPoint: url, bodyParams: {"ticket_id": ticketId, "status": status});
+
+    final data = response as Map<String, dynamic>;
+
+    return data['msg'].toString().toLowerCase() == 'success' ? 200 : 404;
+  }
+
+  Future<int> generateTicket(
+      {required String bookingId,
+      required String requirements,
+      required String propertyId,
+      required String description,
+      required String address,
+      required List<File> issueImagesList}) async {
+    String url = AppUrls.generateTicketUrl;
+
+    final List<dio.MultipartFile> list = [];
+
+    for (File file in issueImagesList) {
+      dio.MultipartFile multipartFile =
+          await dio.MultipartFile.fromFile(file.path);
+      list.add(multipartFile);
+    }
+    log(list.length.toString());
+    FormData formData = FormData.fromMap({
+      'booking_id': bookingId,
+      'requirement': requirements,
+      'prop_id': propertyId,
+      'description': description,
+      'address': address,
+      'issue_img': list,
+    });
+    final response = await _apiService.postApiCallFormData(
+        endPoint: url, formData: formData);
+
+    final data = response as Map<String, dynamic>;
+
+    return data['msg'].toString().toLowerCase() == 'success' ? 200 : 404;
+  }
+
+  Future<String> downloadInvoice(
+      {required String bookingId, required String invoiceId}) async {
+    String url = AppUrls.invoiceDownloadUrl;
+    final response = await _apiService
+        .getApiCallWithQueryParams(endPoint: url, queryParams: {
+      'invoice_id': invoiceId,
+      'booking_id': bookingId,
+    });
+
+    final data = response as Map<String, dynamic>;
+
+    return data['msg'].toString().toLowerCase() == 'success' &&
+            data['data'].toString().isNotEmpty
+        ? data['data']
+        : '';
   }
 }

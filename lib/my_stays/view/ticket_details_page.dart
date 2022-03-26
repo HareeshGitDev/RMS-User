@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../theme/custom_theme.dart';
+import '../../utils/view/rms_widgets.dart';
 import '../viewmodel/mystay_viewmodel.dart';
 
 class TicketDetailsPage extends StatefulWidget {
@@ -40,7 +41,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
     showOpenButton = ValueNotifier(false);
     showResolvedButton = ValueNotifier(false);
     showCancelButton = ValueNotifier(false);
-    if (widget.ticketModel.status?.toLowerCase() == 'open') {
+    if (widget.ticketModel.status?.toLowerCase() == 'open' || widget.ticketModel.status?.toLowerCase() =='reopen') {
       showResolvedButton.value = true;
       showCancelButton.value = true;
       showOpenButton.value = false;
@@ -216,9 +217,16 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                                               BorderRadius.circular(10)),
                                     )),
                                 onPressed: () async {
-                                  String status = 'Open';
-                                  String ticket_id =
-                                      widget.ticketModel.ticketId ?? '';
+                                  String status = 'ReOpen';
+                                  String ticketId =
+                                      widget.ticketModel.id ?? '';
+                                  RMSWidgets.showLoaderDialog(context: context, message: 'Loading');
+                                 int response= await _viewModel.updateTicketStatus(status: status, ticketId: ticketId);
+                                  Navigator.of(context).pop();
+                                  if(response==200){
+                                    Navigator.of(context).pop();
+                                  }
+
                                 },
                                 child: Center(
                                     child: Text(
@@ -244,7 +252,13 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                       onPressed: () async {
                         String status = 'Resolved';
 
-                        String ticket_id = widget.ticketModel.ticketId ?? '';
+                        String ticketId = widget.ticketModel.id ?? '';
+                        RMSWidgets.showLoaderDialog(context: context, message: 'Loading');
+                       int response= await _viewModel.updateTicketStatus(status: status, ticketId: ticketId);
+                        Navigator.of(context).pop();
+                        if(response==200){
+                          Navigator.of(context).pop();
+                        }
                       },
                       child: Center(
                           child: Text(
@@ -268,7 +282,13 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                          )),
                      onPressed: () async {
                        String status = 'Cancelled';
-                       String ticket_id = widget.ticketModel.ticketId ?? '';
+                       String ticketId = widget.ticketModel.id ?? '';
+                       RMSWidgets.showLoaderDialog(context: context, message: 'Loading');
+                       int response=await _viewModel.updateTicketStatus(status: status, ticketId: ticketId);
+                       Navigator.of(context).pop();
+                       if(response==200){
+                         Navigator.of(context).pop();
+                       }
                      },
                      child: Center(
                          child: Text(

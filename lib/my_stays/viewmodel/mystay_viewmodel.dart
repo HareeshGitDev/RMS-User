@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:RentMyStay_user/my_stays/model/Invoice_Details_Model.dart';
 import 'package:RentMyStay_user/my_stays/model/mystay_details_model.dart';
@@ -22,17 +23,17 @@ class MyStayViewModel extends ChangeNotifier {
   Future<void> getMyStayList() async {
     final MyStayListModel response = await _myStayApiService.fetchMyStayList();
     myStayListModel = response;
-    log('Total Stay List :: ${myStayListModel.result?.length}');
-    if (myStayListModel.result != null) {
-      completedBookingList = myStayListModel.result!
-          .where((element) => element.checkOutStatus == '1')
-          .toList();
+    log('Total Stay List :: ${myStayListModel.data?.result?.length}');
+    if (myStayListModel.data != null && myStayListModel.data?.result != null) {
+      completedBookingList = myStayListModel.data?.result
+          ?.where((element) => element.checkOutStatus == '1')
+          .toList() ??[];
       log('Completed Stay List :: ${completedBookingList?.length}');
 
-      activeBookingList = myStayListModel.result!
-          .where((element) =>
+      activeBookingList = myStayListModel.data?.result
+          ?.where((element) =>
               element.checkOutStatus == '0' && element.earlyCout == null)
-          .toList();
+          .toList() ?? [];
       log('Active Stay List :: ${activeBookingList?.length}');
     }
 
@@ -85,10 +86,46 @@ class MyStayViewModel extends ChangeNotifier {
         bookingId: bookingId, checkIn: checkIn);
     return response;
   }
+
   Future<void> getTicketList() async {
-    final response =
-    await _myStayApiService.fetchTicketList();
+    final response = await _myStayApiService.fetchTicketList();
     ticketResponseModel = response;
     notifyListeners();
+  }
+
+  Future<int> updateTicketStatus(
+          {required String status, required String ticketId}) async =>
+      await _myStayApiService.updateTicketStatus(
+          status: status, ticketId: ticketId);
+
+  Future<void> uploadImage({
+    required String filePath,
+  }) async {
+    final response = await _myStayApiService.fetchTicketList();
+    ticketResponseModel = response;
+    notifyListeners();
+  }
+
+  Future<int> generateTicket(
+      {required String bookingId,
+      required String requirements,
+      required String propertyId,
+      required String description,
+      required String address,
+      required List<File> issueImagesList}) async {
+    return await _myStayApiService.generateTicket(
+      bookingId: bookingId,
+      requirements: requirements,
+      propertyId: propertyId,
+      description: description,
+      address: address,
+      issueImagesList: issueImagesList,
+    );
+  }
+  Future<String> downloadInvoice(
+      {required String bookingId,
+        required String invoiceId,
+        }) async {
+    return await _myStayApiService.downloadInvoice(bookingId: bookingId, invoiceId: invoiceId);
   }
 }

@@ -7,11 +7,14 @@ import 'package:RentMyStay_user/login_module/view/firebase_registration_page.dar
 import 'package:RentMyStay_user/login_module/view/success_page.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:RentMyStay_user/my_stays/model/ticket_response_model.dart';
-import 'package:RentMyStay_user/my_stays/view/raise_ticket_page.dart';
+import 'package:RentMyStay_user/my_stays/view/generate_ticket_page.dart';
 import 'package:RentMyStay_user/my_stays/view/refund_splitup_view_page.dart';
 import 'package:RentMyStay_user/my_stays/view/ticket_details_page.dart';
 import 'package:RentMyStay_user/my_stays/view/ticket_list_page.dart';
 import 'package:RentMyStay_user/my_stays/viewmodel/mystay_viewmodel.dart';
+import 'package:RentMyStay_user/payment_module/model/payment_request_model.dart';
+import 'package:RentMyStay_user/payment_module/view/razorpay_payement_page.dart';
+import 'package:RentMyStay_user/payment_module/viewModel/payment_viewModel.dart';
 import 'package:RentMyStay_user/property_details_module/model/property_details_util_model.dart';
 import 'package:RentMyStay_user/property_details_module/view/property_details_page.dart';
 import 'package:RentMyStay_user/property_details_module/viewModel/property_details_viewModel.dart';
@@ -116,28 +119,32 @@ class NavigationService {
                   create: (_) => MyStayViewModel(),
                   child: MyStayDetailsPage(bookingId: bookingId),
                 ));
-      case AppRoutes.raiseTicketPage:
+      case AppRoutes.generateTicketPage:
+        final data = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider(
+                  create: (_) => MyStayViewModel(),
+                  child: GenerateTicketPage(
+                    bookingId: data['bookingId'],
+                    propertyId: data['propertyId'],
+                    address: data['address'],
+                  ),
+                ));
+
+      case AppRoutes.ticketListPage:
         //String bookingId = settings.arguments as String;
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
-              create: (_) => MyStayViewModel(),
-              child: RaiseTicketPage(),
-            ));
-
-      case AppRoutes.ticketListPage:
-      //String bookingId = settings.arguments as String;
-        return MaterialPageRoute(
-            builder: (context) => ChangeNotifierProvider(
-              create: (_) => MyStayViewModel(),
-              child: TicketListPage(),
-            ));
+                  create: (_) => MyStayViewModel(),
+                  child: TicketListPage(),
+                ));
       case AppRoutes.ticketDetailsPage:
-      final data= settings.arguments as Data;
+        final data = settings.arguments as Data;
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
-              create: (_) => MyStayViewModel(),
-              child: TicketDetailsPage(ticketModel: data),
-            ));
+                  create: (_) => MyStayViewModel(),
+                  child: TicketDetailsPage(ticketModel: data),
+                ));
 
       case AppRoutes.invoicePage:
         final data = settings.arguments as String;
@@ -159,7 +166,7 @@ class NavigationService {
                   ),
                 ));
 
-      case AppRoutes.refundForm:
+      case AppRoutes.refundFormPage:
         final data = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
@@ -252,7 +259,14 @@ class NavigationService {
         );
       case AppRoutes.dashboardPage:
         return MaterialPageRoute(
-          builder: (context) => DashboardPage(),
+          builder: (context) => const DashboardPage(),
+        );
+      case AppRoutes.razorpayPaymentPage:
+        final data = settings.arguments as PaymentRequestModel;
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+              create: (_) => PaymentViewModel(),
+              child: RazorpayPaymentPage(paymentRequestModel: data)),
         );
 
       default:
@@ -285,10 +299,11 @@ class AppRoutes {
   static const String myStayDetailsPage = 'myStayDetailsPage';
   static const String invoicePage = 'InvoicePage';
   static const String refundSplitPage = 'refundSplitPage';
-  static const String refundForm = 'refund_form_page';
+  static const String refundFormPage = 'refundForPage';
   static const String dashboardPage = 'dashboardPage';
   static const String pictureScreenPage = 'pictureScreenPage';
-  static const String raiseTicketPage = 'raiseTicketPage';
+  static const String generateTicketPage = 'generateTicketPage';
   static const String ticketListPage = 'ticketListPage';
   static const String ticketDetailsPage = 'ticketDetailsPage';
+  static const String razorpayPaymentPage = 'razorpayPaymentPage';
 }

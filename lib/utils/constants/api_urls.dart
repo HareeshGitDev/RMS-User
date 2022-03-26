@@ -17,8 +17,8 @@ class AppUrls{
   static const String bookingDetailsUrl = "/m/calculate_booking_cost";
   static const String bookingCredentialsUrl = '/m/process_via_payumoney';
   static const String profileUrl='/m/getprofile';
-  static const String myStayListUrl='/m/get_booking_history';
   static const String filterSortPropsUrl='/m/match_props';
+  static const String myStayListUrl='/v2/bookingHistory';
   static const String myBookingDetails='/v2/bookingDetails';
   static const String refundDetailsUrl='/v2/refundSplitup';
   static const String invoiceDetailsUrl='/v2/invoiceDetails';
@@ -27,5 +27,7 @@ class AppUrls{
   static const String checkOutUrl='v2/cOutStatus';
   static const String ticketListUrl='v2/ticket';
   static const String generateTicketUrl='v2/ticket';
+  static const String ticketStatusUrl='v2/ticket';
   static const String generateTicketImageUrl='v2/ticketPic';
+  static const String invoiceDownloadUrl='v2/invoicePDF';
 }

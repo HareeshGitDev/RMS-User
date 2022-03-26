@@ -302,7 +302,8 @@ class _ProfilePageState extends State<ProfilePage> {
   void _handleURLButtonPress(BuildContext context, String url, String title) {
 
     String urlwithparams=url+base64Encode(utf8.encode(userid!.trim()))+"/"+token!+"?app=1";
-
+     log(urlwithparams);
+     log(userid.toString());
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => Web_View_Container(urlwithparams, title)),

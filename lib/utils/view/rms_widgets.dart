@@ -4,24 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class RMSWidgets {
-  late BuildContext context;
-
   static void showLoaderDialog(
       {required BuildContext context, required String message}) {
     AlertDialog alert = AlertDialog(
-      content: Row(
-        children: [
-          CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(CustomTheme.appTheme)),
-          SizedBox(
-            width: 5,
-          ),
-          Container(
-              child: Text(
-            '$message...',
-            style: TextStyle(fontFamily: 'HKGrotesk'),
-          )),
-        ],
+      content: Container(
+        width: MediaQuery.of(context).size.width,
+        child: Row(
+          children: [
+            CircularProgressIndicator(
+                valueColor:
+                    AlwaysStoppedAnimation<Color>(CustomTheme.appTheme)),
+            SizedBox(
+              width: 15,
+            ),
+            Container(
+                child: Text(
+              '$message...',
+              style: TextStyle(fontFamily: 'HKGrotesk'),
+            )),
+          ],
+        ),
       ),
     );
     showDialog(
@@ -71,8 +73,24 @@ class RMSWidgets {
   }
 
   static Widget getLoader({required Color color}) {
-   return  CircularProgressIndicator(
+    return CircularProgressIndicator(
         valueColor: AlwaysStoppedAnimation<Color>(color));
+  }
+
+  static Widget noData(
+      {required BuildContext context,
+      required String message,
+      Color? fontColor,
+      double? fontSize,
+      FontWeight? fontWeight}) {
+    FontWeight.w600;
+    return Center(
+      child: Text(
+        message,
+        style: TextStyle(
+            fontSize: fontSize ?? 20, fontWeight: fontWeight, color: fontColor),
+      ),
+    );
   }
 
   static void showSnackbar(

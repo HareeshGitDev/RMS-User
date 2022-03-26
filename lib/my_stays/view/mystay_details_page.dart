@@ -325,20 +325,26 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                               Text(
                                 "Name : ${value.myStayDetailsModel?.data?.travellerName ?? ''}",
                                 style: TextStyle(
-                                  fontSize: 14,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.w600,
-
-                                    color: Colors.black ),
+                                    color: Colors.black),
                               ),
-                              Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: CustomTheme.appTheme),
-                                padding: EdgeInsets.only(left: 5,right: 5,top: 1,bottom: 1),
-                                child: Text(
-                                  "Update Your Kyc",
-                                  style: TextStyle(
-                                      color: Colors.white),
+                              GestureDetector(
+                                onTap: () => _updateKyc(
+                                    context,
+                                    updateKYCLink,
+                                    'Update Your kyc',
+                                    '${value.myStayDetailsModel?.data?.userId ?? ''}'),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: CustomTheme.appTheme),
+                                  padding: EdgeInsets.only(
+                                      left: 5, right: 5, top: 1, bottom: 1),
+                                  child: Text(
+                                    "Update Your Kyc",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
                               ),
                             ]),
@@ -350,13 +356,11 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                               right: _mainWidth * 0.04),
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            "Phone No : ${value.myStayDetailsModel?.data?.travellerContactNum ?? ''}",
+                              "Phone No : ${value.myStayDetailsModel?.data?.travellerContactNum ?? ''}",
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
-
-                                  color: Colors.black )
-                          )),
+                                  color: Colors.black))),
                       SizedBox(
                         height: 10,
                       ),
@@ -759,7 +763,25 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                             color:
                                                 CustomTheme.appThemeContrast);
                                       }
-                                    : () =>Navigator.of(context).pushNamed(AppRoutes.raiseTicketPage)),
+                                    : () => Navigator.of(context).pushNamed(
+                                            AppRoutes.generateTicketPage,
+                                            arguments: {
+                                              'bookingId': value
+                                                      .myStayDetailsModel
+                                                      ?.data
+                                                      ?.bookingId ??
+                                                  '',
+                                              'propertyId': value
+                                                      .myStayDetailsModel
+                                                      ?.data
+                                                      ?.propId ??
+                                                  '',
+                                              'address': value
+                                                      .myStayDetailsModel
+                                                      ?.data
+                                                      ?.addressDisplay ??
+                                                  ''
+                                            })),
                           ),
                           _gridInput(
                               hint: "Refund Form",
@@ -769,7 +791,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                 color: CustomTheme.appTheme,
                               ),
                               callBack: () => Navigator.of(context).pushNamed(
-                                      AppRoutes.refundForm,
+                                      AppRoutes.refundFormPage,
                                       arguments: {
                                         'name': value.myStayDetailsModel?.data
                                                 ?.travellerName ??
@@ -854,12 +876,25 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
   void _handleURLButtonPress(
       BuildContext context, String url, String title, String params) {
     String urlwithparams = url + params;
-    log('URLPARAMS  :: $urlwithparams');
 
     Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => Web_View_Container(urlwithparams, title)),
+    );
+  }
+
+  void _updateKyc(
+      BuildContext context, String url, String title, String params) async {
+    log(params);
+    SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+    String? token = await preferenceUtil.getToken();
+    String kycUrl = '${url + base64Encode(utf8.encode(params))}/$token?app=1';
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => Web_View_Container(kycUrl, title)),
     );
   }
 

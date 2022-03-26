@@ -1,11 +1,30 @@
 class MyStayListModel {
-  String? status;
-  List<Result>? result;
+  String? msg;
+  Data? data;
 
-  MyStayListModel({this.status, this.result});
+  MyStayListModel({this.msg, this.data});
 
   MyStayListModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
+    msg = json['msg'];
+    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['msg'] = this.msg;
+    if (this.data != null) {
+      data['data'] = this.data!.toJson();
+    }
+    return data;
+  }
+}
+
+class Data {
+  List<Result>? result;
+
+  Data({this.result});
+
+  Data.fromJson(Map<String, dynamic> json) {
     if (json['result'] != null) {
       result = <Result>[];
       json['result'].forEach((v) {
@@ -16,7 +35,6 @@ class MyStayListModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
     if (this.result != null) {
       data['result'] = this.result!.map((v) => v.toJson()).toList();
     }
@@ -34,7 +52,7 @@ class Result {
   String? nights;
   String? checkInStatus;
   String? checkOutStatus;
-  String? earlyCout;
+  Null? earlyCout;
   String? travelFromDate;
   String? travelToDate;
   String? orderStatus;

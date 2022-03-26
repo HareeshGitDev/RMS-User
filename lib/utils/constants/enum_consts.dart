@@ -3,3 +3,8 @@ enum Property{
   FromBHK,
   FromLocation,
 }
+
+enum PaymentMode{
+  FromProperty,
+  FromInvoice,
+}

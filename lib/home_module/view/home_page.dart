@@ -475,41 +475,65 @@ class _HomePageState extends State<HomePage> {
                       color: CustomTheme.white,
                       height: _mainHeight * 0.45,
                       child: UserAccountsDrawerHeader(
-                        decoration: BoxDecoration(
-                          color: CustomTheme.appTheme
-                        ),
-                        accountEmail: Text('${snapshot.data!['email'] ?? ''}'),
-                        accountName: Text('${snapshot.data!['name'] ?? ''}'),
-                        currentAccountPicture: CircleAvatar(
-                          child: Container(
-                            child: CachedNetworkImage(
-                              imageUrl: (snapshot.data!['pic']).toString(),
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              placeholder: (context, url) => Shimmer.fromColors(
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.grey,
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                            colors: [
+                              CustomTheme.appTheme,
+                              CustomTheme.appTheme.withAlpha(150),
+                              CustomTheme.appTheme.withAlpha(50),
+
+                            ],
+                          )),
+                          accountEmail: Text(
+                            '${snapshot.data!['email'] ?? ''}',
+                            style: TextStyle(
+                                color: CustomTheme.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14),
+                          ),
+                          accountName: Text(
+                            '${snapshot.data!['name'] ?? ''}',
+                            style: TextStyle(
+                                color: CustomTheme.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14),
+                          ),
+                          currentAccountPicture: CircleAvatar(
+                            child: Container(
+                              child: CachedNetworkImage(
+                                imageUrl: (snapshot.data!['pic']).toString(),
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
-                                  baseColor: Colors.grey[200] as Color,
-                                  highlightColor: Colors.grey[350] as Color),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
+                                ),
+                                placeholder: (context, url) =>
+                                    Shimmer.fromColors(
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        baseColor: Colors.grey[200] as Color,
+                                        highlightColor:
+                                            Colors.grey[350] as Color),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              ),
                             ),
+                            radius: 45,
+                          ) /*,otherAccountsPictures: [
+                         Image.asset(Images.brandLogo,color: CustomTheme.white,),
+
+                      ],*/
+
                           ),
-                          radius: 45,
-                        ),
-                      ),
                     );
                   }
                 }
@@ -599,8 +623,7 @@ class _HomePageState extends State<HomePage> {
               onTap: () async {
                 RMSWidgets.showLoaderDialog(
                     context: context, message: 'Logging out...');
-                SharedPreferenceUtil shared =
-                SharedPreferenceUtil();
+                SharedPreferenceUtil shared = SharedPreferenceUtil();
                 await GoogleAuthService.logOut();
                 await GoogleAuthService.logoutFromFirebase();
                 bool deletedAllValues = await shared.clearAll();
@@ -613,7 +636,6 @@ class _HomePageState extends State<HomePage> {
                 }
               },
             ),
-
           ],
         ),
       ),
@@ -626,21 +648,24 @@ class _HomePageState extends State<HomePage> {
       required String title,
       required Function onTap}) {
     return Container(
-      margin: EdgeInsets.only(left: 5,right: 5,top: 5),
+      margin: EdgeInsets.only(left: 5, right: 5, top: 5),
 
-      decoration: BoxDecoration(
+      /*decoration: BoxDecoration(
           color: CustomTheme.appTheme.withAlpha(20),
           border: Border.all(color: Colors.white),
           borderRadius: BorderRadius.circular(10),
 
-      ),
+      ),*/
 
-      height: _mainHeight*0.13,
+      height: _mainHeight * 0.13,
       child: ListTile(
         leading: leading,
         title: Text(title),
         onTap: () => onTap(),
-        trailing: Icon(Icons.arrow_right_outlined,color: CustomTheme.appTheme,),
+        trailing: Icon(
+          Icons.arrow_right_outlined,
+          color: Colors.grey,
+        ),
       ),
     );
   }

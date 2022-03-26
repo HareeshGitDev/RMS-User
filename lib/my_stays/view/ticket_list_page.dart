@@ -74,8 +74,14 @@ class _TicketListPageState extends State<TicketListPage> {
                       var data = value.ticketResponseModel?.data?[index];
                       return GestureDetector(
                         onTap: () => Navigator.pushNamed(
-                            context, AppRoutes.ticketDetailsPage,
-                            arguments: data ?? []),
+                                context, AppRoutes.ticketDetailsPage,
+                                arguments: data ?? [])
+                            .then((value) async {
+                          RMSWidgets.showLoaderDialog(
+                              context: context, message: 'Loading');
+                          await _viewModel.getTicketList();
+                          Navigator.of(context).pop();
+                        }),
                         child: Card(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
@@ -133,7 +139,8 @@ class _TicketListPageState extends State<TicketListPage> {
                     ),
                   ),
                 )
-              : Center(child: RMSWidgets.getLoader(color: CustomTheme.appTheme));
+              : Center(
+                  child: RMSWidgets.getLoader(color: CustomTheme.appTheme));
         },
       ),
     );

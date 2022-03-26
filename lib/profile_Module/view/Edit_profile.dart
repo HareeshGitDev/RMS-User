@@ -2,137 +2,206 @@ import 'package:RentMyStay_user/images.dart';
 import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+
 class EditProfile extends StatefulWidget {
   static const routeName = "/editprofile";
 
   @override
   _EditProfilestate createState() => _EditProfilestate();
 }
-class _EditProfilestate extends State<EditProfile>  {
+
+class _EditProfilestate extends State<EditProfile> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
-  final _panController = TextEditingController();
-
+   var _mainHeight;
+  var _mainWidth;
 
 
   @override
   Widget build(BuildContext context) {
+    _mainHeight=MediaQuery.of(context).size.height;
+    _mainWidth=MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(title: Text("Edit Your Profile",style: TextStyle(fontFamily: 'HKGrotesk-Light'),),
+      appBar: AppBar(
+        title: Text(
+          "Edit Your Profile",
+          style: TextStyle(fontFamily: 'HKGrotesk-Light'),
+        ),
         elevation: 0.0,
         backgroundColor: CustomTheme.appTheme,
-       titleSpacing: 0,
+        titleSpacing: 0,
       ),
       body: SingleChildScrollView(
-        child: Column(
-          //alignment: Alignment.center,
-          children: [
-            Column(
-              //mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Stack(
-                    children: [
-                      CustomPaint(
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height*0.1,
-                        ),
-                        painter: HeaderCurvedContainer(),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Text(
-                              "Profile",
-                              style: TextStyle(
-                                  fontSize: 25,
-                                  letterSpacing: 1.5,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'HKGrotest-Light'
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 20,),
-                          _getHeader(),
-                          /*  Container(
-                  padding: EdgeInsets.all(10.0),
-                  width: MediaQuery.of(context).size.width / 2,
-                  height: MediaQuery.of(context).size.width / 2,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white, width: 5),
-                    shape: BoxShape.circle,
-                    color: Colors.white,
+        child: Container(
+          color: Colors.white,
+          child: Column(
+            //mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Stack(children: [
+                CustomPaint(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.1,
                   ),
-                  child: CircleAvatar(radius: 10,
-                  )
-                ), */
-                        ],
+                  painter: HeaderCurvedContainer(),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Text(
+                        "Profile",
+                        style: TextStyle(
+                            fontSize: 25,
+                            letterSpacing: 1.5,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'HKGrotest-Light'),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 230, left: 230),
-                        child: CircleAvatar(
-                          backgroundColor: CustomTheme.appTheme.withAlpha(20),radius: 15,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.edit,
-                              color: CustomTheme.appTheme,size: 15,
-                            ),
-                            onPressed: () {},
-                          ),
-                        ),
-                      )
-                    ]),
-                Container(
-                  height: MediaQuery.of(context).size.height*0.5,
-                  width: double.infinity,
-                  margin: EdgeInsets.only(left: 20,right: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _textInput(hint: "Name",
-                        icon: Icons.person_outline,
-                        controller: _nameController,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _getHeader(),
+                    /*  Container(
+                padding: EdgeInsets.all(10.0),
+                width: MediaQuery.of(context).size.width / 2,
+                height: MediaQuery.of(context).size.width / 2,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white, width: 5),
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                ),
+                child: CircleAvatar(radius: 10,
+                )
+              ), */
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 230, left: 230),
+                  child: CircleAvatar(
+                    backgroundColor: CustomTheme.appTheme.withAlpha(20),
+                    radius: 15,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.edit,
+                        color: CustomTheme.appTheme,
+                        size: 15,
                       ),
-                  _textInput(hint: "Email",
-                    icon: Icons.email_outlined,
-                    controller: _emailController,),
-                    _textInput(hint: "Mobile NUmber",
-                      icon: Icons.phone_android_outlined,
-                      controller: _phoneController,),
-                      _textInput(hint: "Pan Number",
-                        icon: Icons.credit_card_outlined,
-                        controller: _panController,),
-                      Container(
-                        height: 55,
-                        width: double.infinity,
-                        child: ElevatedButton(onPressed: (){},
-                          child: Text('Update'),
-                          style: ButtonStyle(
-                              backgroundColor:
-                              MaterialStateProperty.all<Color>(
-                                  CustomTheme.appTheme),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(10)),
-                              )),),
-                      )
-                    ],
+                      onPressed: () {},
+                    ),
                   ),
                 )
-              ],
-            ),
+              ]),
+              SizedBox(height: 20),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.5,
+                width: _mainWidth,
+                margin: EdgeInsets.only(left: 20, right: 20),
+                child: Column(
+                 children: [
 
-          ],
+                    Container(
+                      height: _mainHeight*0.045,
+
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        color: Colors.white,
+                      ),
+                      child: Neumorphic(
+                        style: NeumorphicStyle(
+                          depth: -2,
+                          color: Colors.white,
+                        ),
+                        child: TextFormField(
+                          controller: _nameController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Name",
+                            prefixIcon: Icon(Icons.person_outline,
+                                color: Colors.grey, size: 20),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Container(
+                      height: _mainHeight*0.045,
+
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        color: Colors.white,
+                      ),
+                      child: Neumorphic(
+                        style: NeumorphicStyle(
+                          depth: -2,
+                          color: Colors.white,
+                        ),
+                        child: TextFormField(
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Email",
+                            prefixIcon: Icon(Icons.email_outlined,
+                                color: Colors.grey, size: 20),
+                          ),
+                        ),
+                      ),
+                    ),
+                   SizedBox(height: 20),
+                    Container(
+                      height: _mainHeight*0.045,
+
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        color: Colors.white,
+                      ),
+                      child: Neumorphic(
+                        style: NeumorphicStyle(
+                          depth: -2,
+                          color: Colors.white,
+                        ),
+                        child: TextFormField(
+                          controller: _phoneController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Mobile Number',
+                            prefixIcon: Icon(Icons.phone_android_outlined,
+                                color: Colors.grey, size: 20),
+                          ),
+                        ),
+                      ),
+                    ),
+                   SizedBox(height: 30),
+
+                    Container(
+                      height: 40,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: Text('Update'),
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                CustomTheme.appTheme),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                            )),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
   }
+
   Widget _getHeader() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -143,43 +212,17 @@ class _EditProfilestate extends State<EditProfile>  {
             height: 150,
             width: 150,
             decoration: BoxDecoration(
-              //borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                //borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 shape: BoxShape.circle,
                 image: DecorationImage(
                     fit: BoxFit.fill,
                     image: NetworkImage(
                         "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/rms_home.png?alt=media&token=77f8c180-2d7b-47f5-a0bb-d60bdb49d03b"))
-              // color: Colors.orange[100],
-            ),
+                // color: Colors.orange[100],
+                ),
           ),
         ),
       ],
-    );
-  }
-  Widget _textInput(
-      {required TextEditingController controller,
-        required String hint,
-        required IconData icon}) {
-    return Container(
-      margin: EdgeInsets.only(top: 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        color: Colors.white,
-      ),
-      child: Neumorphic(
-        style: NeumorphicStyle(
-          depth: -10,
-          color: Colors.white,
-        ),
-        child: TextFormField(
-          controller: controller,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: hint,
-            prefixIcon: Icon(icon),
-          ),
-        ),
-      ),
     );
   }
 }

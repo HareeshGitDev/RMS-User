@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
+import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -30,13 +31,35 @@ class RMSUserApiService {
     Directory appStorage = await getApplicationDocumentsDirectory();
     final file = '${appStorage.path}/$fileName';
 
-    final Dio dio=Dio();
-    final  response=await dio.download(url,file,onReceiveProgress:(receivedBytes, totalBytes){
-      String progress = ((receivedBytes / totalBytes) * 100).toStringAsFixed(0) + "%";
+    final Dio dio = Dio();
+    final response = await dio.download(url, file,
+        onReceiveProgress: (receivedBytes, totalBytes) {
+      String progress =
+          ((receivedBytes / totalBytes) * 100).toStringAsFixed(0) + "%";
       print(progress);
-    } );
+    });
+  }
 
+  Future<dynamic> uploadFile(
+      {required String url, required Map<String, dynamic> fileData}) async {
+    final Dio dio = Dio();
+    FormData formData = FormData.fromMap(fileData);
+    try {
+      final response = await dio.post(Uri.https(_baseURL, url).toString(),
+          options: Options(headers: await getHeaders), data: formData);
+      if (response.statusCode == 200 && response.data.toString().isNotEmpty) {
+        return response.data;
+      } else {
+        return {'msg': 'failure'};
+      }
+    } on SocketException {
+      log('SocketException Happened');
+      return {'msg': 'failure'};
+    } catch (e) {
+      log('Error : ${e.toString()}');
 
+      return {'msg': 'failure'};
+    }
   }
 
   Future<dynamic> getApiCall({
@@ -46,7 +69,7 @@ class RMSUserApiService {
       final response = await http.get(Uri.https(_baseURL, endPoint),
           headers: await getHeaders);
 
-      return await _response(response);
+      return await _response(response,url:Uri.https(_baseURL, endPoint).toString() );
     } on SocketException {
       log('SocketException Happened');
       //throw FetchDataException('No Internet connection');
@@ -70,7 +93,7 @@ class RMSUserApiService {
           Uri.https(_baseURL, endPoint, queryParams),
           headers: await getHeaders);
 
-      return await _response(response);
+      return await _response(response,url:Uri.https(_baseURL, endPoint).toString());
     } on SocketException {
       log('SocketException Happened');
     } catch (e) {
@@ -90,7 +113,7 @@ class RMSUserApiService {
           ),
           headers: await getHeaders);
 
-      return await _response(response);
+      return await _response(response,url:Uri.https(_baseURL, endPoint).toString());
     } on SocketException {
       log('SocketException Happened');
       //throw FetchDataException('No Internet connection');
@@ -115,40 +138,56 @@ class RMSUserApiService {
         body: bodyParams,
         headers: await getHeaders,
       );
-      return await _response(response);
+      return await _response(response,url:Uri.https(_baseURL, endPoint).toString());
     } on SocketException {
       log('SocketException Happened');
-      // throw FetchDataException('No Internet connection');
-
+      return {'msg': 'failure'};
     } catch (e) {
       log('Error : ${e.toString()}');
-      /*CustomWidgets.getToast(
-        message: 'Error : ${e.toString()}',
-        color: Color(0xffF40909),
-      );*/
+      return {'msg': 'failure'};
     }
-    return null;
+  }
+
+  Future<dynamic> postApiCallFormData(
+      {required String endPoint, required FormData formData}) async {
+    log('URL :: $_baseURL/$endPoint ---- Model :: ${formData.toString()}');
+
+    try {
+      Dio dio = Dio();
+      final response = await dio.post(Uri.https(_baseURL, endPoint).toString(),
+          options: Options(headers: await getHeaders), data: formData);
+      print(response.data);
+      return response.statusCode ==200 ? {'msg': 'success'}:{'msg': 'failure'};
+    } on SocketException {
+      log('SocketException Happened');
+      return {'msg': 'failure'};
+    } catch (e) {
+      log('Error : ${e.toString()}');
+      return {'msg': 'failure'};
+    }
   }
 
   Future<dynamic> putApiCall({
     required String endPoint,
     required Map<String, dynamic> bodyParams,
   }) async {
+    log('URL :: $_baseURL/$endPoint ---- Model :: ${bodyParams.toString()}');
     try {
       final response = await http.put(
         Uri.https(_baseURL, endPoint),
         headers: await getHeaders,
-        body: jsonEncode(bodyParams),
+        body: bodyParams,
       );
 
-      return await _response(response);
+      return await _response(response,url:Uri.https(_baseURL, endPoint).toString());
     } on SocketException {
       log('SocketException Happened');
-      // throw FetchDataException('No Internet connection');
+      return {'msg': 'failure'};
     } catch (e) {
       log('Error : ${e.toString()}');
+
+      return {'msg': 'failure'};
     }
-    return null;
   }
 
   dynamic deleteApiCall({required String endPoint}) async {
@@ -173,85 +212,44 @@ class RMSUserApiService {
     return null;
   }
 
-  dynamic _response(http.Response response, {BuildContext? context}) async {
+  dynamic _response(http.Response response, {String? url,BuildContext? context}) async {
+    log('Status Code :: ${response.statusCode} -- $url');
     switch (response.statusCode) {
       case 200:
-        if (response.body != null) {
-          log('Response Data :::: ${jsonDecode(response.body)}');
-
-          return json.decode(response.body);
-        } else {
-          return null;
-        }
-
+        log('Response Data :: ' + response.body);
+        return response.body.isNotEmpty
+            ? json.decode(response.body)
+            : {'msg': 'failure'};
       case 400:
-        Map<String, dynamic> res = jsonDecode(response.body);
-        if (res['message'] != null) {
-          /* CustomWidgets.getToast(
-              message: res['message'], color: AppResources.errorColor);*/
-        }
-        return null;
-
+        return _getErrorResponse(json.decode(response.body));
       case 401:
-        Map<String, dynamic> res = jsonDecode(response.body);
-
-        if (res['message'] != null) {
-          /*CustomWidgets.getToast(
-              message: res['message'], color: AppResources.errorColor);*/
-        }
-
-        return null;
-
+        return _getErrorResponse(json.decode(response.body));
+      case 402:
+        return _getErrorResponse(json.decode(response.body));
+      case 403:
+        return _getErrorResponse(json.decode(response.body));
       case 404:
-        Map<String, dynamic> res = jsonDecode(response.body);
-        if (res['message'] != null) {
-          /* CustomWidgets.getToast(
-              message: res['message'], color: AppResources.errorColor);*/
-        }
-        return null;
+        return _getErrorResponse(json.decode(response.body));
       case 405:
-        Map<String, dynamic> res = jsonDecode(response.body);
-        if (res['message'] != null) {
-          /* CustomWidgets.getToast(
-              message: res['message'], color: AppResources.errorColor);*/
-        }
-        return null;
+        return _getErrorResponse(json.decode(response.body));
       case 415:
-        Map<String, dynamic> res = jsonDecode(response.body);
-        if (res['message'] != null) {
-          /*CustomWidgets.getToast(
-              message: res['message'], color: AppResources.errorColor)*/
-          ;
-        }
-        return null;
-
+        return _getErrorResponse(json.decode(response.body));
       case 500:
-        Map<String, dynamic> res = jsonDecode(response.body);
-        if (res['message'] != null) {
-          /* CustomWidgets.getToast(
-              message: res['message'], color: AppResources.errorColor);*/
-        }
-        return null;
+        return _getErrorResponse(json.decode(response.body));
       case 501:
-        Map<String, dynamic> res = jsonDecode(response.body);
-        if (res['message'] != null) {
-          /*CustomWidgets.getToast(
-              message: res['message'], color: AppResources.errorColor);*/
-        }
-        return null;
+        return _getErrorResponse(json.decode(response.body));
       case 502:
-        Map<String, dynamic> res = jsonDecode(response.body);
-        if (res['message'] != null) {
-          /* CustomWidgets.getToast(
-              message: res['message'], color: AppResources.errorColor);*/
-        }
-        return null;
+        return _getErrorResponse(json.decode(response.body));
       default:
-        Map<String, dynamic> res = jsonDecode(response.body);
-        if (res['message'] != null) {
-          /* CustomWidgets.getToast(
-              message: res['message'], color: AppResources.errorColor);*/
-        }
+        return _getErrorResponse(json.decode(response.body));
     }
+  }
+
+  Map<String, dynamic> _getErrorResponse(decode) {
+    final error = decode as Map<String, dynamic>;
+    RMSWidgets.getToast(
+        message: error['msg'] ?? 'failure', color: Color(0xffFF0000));
+
+    return {'msg': 'failure'};
   }
 }

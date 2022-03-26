@@ -128,7 +128,8 @@ class PropertyDetailsApiService {
       'razorpay_signature':paymentSignature,
       'app_token': await _getRegisteredToken() ?? '',
     });
-
+    final data = response as Map<String, dynamic>;
+    log('PAYMENT :: ${data.toString()} -- ZZ $response');
     //final data = response as Map<String, dynamic>;
 
     /*if (data['status'].toString().toLowerCase() == 'success') {
