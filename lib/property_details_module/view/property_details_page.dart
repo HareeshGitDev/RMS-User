@@ -262,7 +262,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                           ),
                           child: RichText(
                               text: const TextSpan(
-                                  text: 'Disclaimer : ',
+                                  text: 'Please note: ',
                                   style: TextStyle(
                                       fontWeight: FontWeight.w700,
                                       fontSize: 12,
@@ -271,7 +271,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   children: <TextSpan>[
                                 TextSpan(
                                   text:
-                                      'A disclaimer is generally any statement intended to specify or delimit the scope of rights and obligations that may be exercised and enforced by parties in a legally recognized relationship.',
+                                      'The furniture and furnishings may appear different from what’s shown in the pictures. Dewan/sofa may be provided as available.',
                                   style: TextStyle(
                                     color: Color(0xff56596A),
                                     fontSize: 10,
@@ -878,7 +878,8 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                   )),
-                            )),
+                            )
+                        ),
                         Container(
                             width: _mainWidth * 0.4,
                             height: _mainHeight * 0.05,

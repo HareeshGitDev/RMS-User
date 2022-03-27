@@ -27,6 +27,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
+import '../../my_stays/view/update_Invoice_UTR.dart';
 import '../../property_details_module/view/booking_view_page.dart';
 import '../../home_module/view/home_page.dart';
 import '../../login_module/view/forgot_password_page.dart';
@@ -155,6 +156,16 @@ class NavigationService {
                     bookingId: data,
                   ),
                 ));
+
+      case AppRoutes.updateInvoiceUTRPage:
+        final data = settings.arguments as String;
+        return MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider(
+              create: (_) => MyStayViewModel(),
+              child: UpdateInvoiceUTRPage(
+                bookingId: data,
+              ),
+            ));
 
       case AppRoutes.refundSplitPage:
         final data = settings.arguments as String;
@@ -298,6 +309,7 @@ class AppRoutes {
   static const String searchPage = 'searchPage';
   static const String myStayDetailsPage = 'myStayDetailsPage';
   static const String invoicePage = 'InvoicePage';
+  static const String updateInvoiceUTRPage = 'UpdateInvoiceUTR';
   static const String refundSplitPage = 'refundSplitPage';
   static const String refundFormPage = 'refundForPage';
   static const String dashboardPage = 'dashboardPage';

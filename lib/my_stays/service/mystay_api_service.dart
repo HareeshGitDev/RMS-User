@@ -19,13 +19,6 @@ import '../model/refund_splitup_model.dart';
 class MyStayApiService {
   final RMSUserApiService _apiService = RMSUserApiService();
 
-  String? registeredToken;
-  final SharedPreferenceUtil _shared = SharedPreferenceUtil();
-
-  Future<String?> _getRegisteredToken() async {
-    registeredToken = await _shared.getString(rms_registeredUserToken);
-    return registeredToken;
-  }
 
   Future<MyStayListModel> fetchMyStayList() async {
     String url = AppUrls.myStayListUrl;
@@ -189,12 +182,16 @@ class MyStayApiService {
       'address': address,
       'issue_img': list,
     });
+   list.forEach((element) =>log(element.filename.toString()));
+   formData.files.forEach((element) =>print(element.toString()));
+    formData.fields.forEach((element) =>print(element.toString()));
     final response = await _apiService.postApiCallFormData(
         endPoint: url, formData: formData);
 
     final data = response as Map<String, dynamic>;
 
-    return data['msg'].toString().toLowerCase() == 'success' ? 200 : 404;
+     return data['msg'].toString().toLowerCase() == 'success' ? 200 : 404;
+
   }
 
   Future<String> downloadInvoice(

@@ -23,7 +23,6 @@ class PaymentApiService {
     final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
       'razorpay_payment_id': paymentId,
       'razorpay_signature': paymentSignature,
-      'app_token': await _getRegisteredToken ?? '',
     });
     final data = response as Map<String, dynamic>;
     log('PAYMENT :: ${data.toString()} -- ZZ $response');

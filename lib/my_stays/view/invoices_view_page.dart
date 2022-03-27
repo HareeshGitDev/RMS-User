@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../theme/custom_theme.dart';
 import '../../utils/constants/app_consts.dart';
+import '../../utils/service/navigation_service.dart';
 import '../../utils/view/rms_widgets.dart';
 import '../model/Invoice_Details_Model.dart';
 import '../viewmodel/mystay_viewmodel.dart';
@@ -229,7 +230,7 @@ class _InvoiceState extends State<InvoicePage> {
               ),
             ),
             content: Container(
-              height: _mainHeight * 0.15,
+              height: _mainHeight * 0.16,
               width: MediaQuery.of(context).size.width,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -243,8 +244,8 @@ class _InvoiceState extends State<InvoicePage> {
                       style: NeumorphicStyle(
                           depth: 2,
                           color: Colors.white,
-                          shadowDarkColor: CustomTheme.appTheme.withAlpha(100),
-                          shadowLightColor: Colors.blueGrey.shade400),
+                          //shadowDarkColor: CustomTheme.appTheme.withAlpha(100),
+                          shadowLightColor: Colors.blueGrey.shade200),
                       child: Container(
                         width: _mainWidth,
                         alignment: Alignment.centerLeft,
@@ -274,34 +275,38 @@ class _InvoiceState extends State<InvoicePage> {
                   SizedBox(
                     height: 20,
                   ),
-                  Neumorphic(
-                    style: NeumorphicStyle(
-                        depth: 2,
-                        color: Colors.white,
-                        shadowDarkColor: CustomTheme.appTheme.withAlpha(100),
-                        shadowLightColor: Colors.blueGrey.shade400),
-                    child: Container(
-                      width: _mainWidth,
-                      padding: EdgeInsets.only(left: 10, right: 10, top: 5),
-                      height: 50,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Pay by Bank / Update Transaction',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: Colors.black87),
-                          ),
-                          Text(
-                            'No Convenience fee',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                                color: Colors.grey),
-                          ),
-                        ],
+                  GestureDetector(onTap: () => Navigator.pushNamed(
+                    context, AppRoutes.updateInvoiceUTRPage,
+                    arguments: widget.bookingId,),
+                    child: Neumorphic(
+                      style: NeumorphicStyle(
+                          depth: 2,
+                          color: Colors.white,
+                         // shadowDarkColor: CustomTheme.appTheme.withAlpha(100),
+                          shadowLightColor: Colors.blueGrey.shade200),
+                      child: Container(
+                        width: _mainWidth,
+                        padding: EdgeInsets.only(left: 10, right: 10, top: 5),
+                        height: 50,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children:const [
+                            Text(
+                              'Pay by Bank / Update Transaction',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                  color: Colors.black87),
+                            ),
+                            Text(
+                              'No Convenience fee',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                  color: Colors.grey),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

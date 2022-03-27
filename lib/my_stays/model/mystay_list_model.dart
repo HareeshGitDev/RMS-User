@@ -52,7 +52,7 @@ class Result {
   String? nights;
   String? checkInStatus;
   String? checkOutStatus;
-  Null? earlyCout;
+  String? earlyCout;
   String? travelFromDate;
   String? travelToDate;
   String? orderStatus;

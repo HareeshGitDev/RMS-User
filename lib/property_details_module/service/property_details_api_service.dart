@@ -48,21 +48,6 @@ class PropertyDetailsApiService {
     return data['response'];
   }
 
-  Future<WishListModel> fetchWishList() async {
-    String url = AppUrls.fetchWishListPropertyUrl;
-    final response = await _apiService
-        .getApiCallWithQueryParams(endPoint: url, queryParams: {
-      'app_token': await _getRegisteredToken(),
-    });
-
-    final data = response as Map<String, dynamic>;
-
-    if (data['status'].toString().toLowerCase() == 'success') {
-      return WishListModel.fromJson(data);
-    } else {
-      return WishListModel(status: 'failure', data: []);
-    }
-  }
 
   Future<String> scheduleSiteVisit({required Map<String, dynamic> data}) async {
     String url = AppUrls.scheduleSiteVisitUrl;

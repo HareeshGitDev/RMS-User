@@ -404,7 +404,7 @@ class _BookingPageState extends State<BookingPage> {
                                             fontFamily: fontFamily,
                                             color: Colors.grey),
                                       ),
-                                      state: StepState.editing,
+                                      state: StepState.complete,
                                       content: Container(
                                         margin: EdgeInsets.only(left: 8),
                                       ),
@@ -419,7 +419,7 @@ class _BookingPageState extends State<BookingPage> {
                                             fontFamily: fontFamily,
                                             color: Colors.grey),
                                       ),
-                                      state: StepState.editing,
+                                      state: StepState.complete,
                                       content: Column(
                                         children: [
                                           Container(
