@@ -115,7 +115,7 @@ class Prefill {
 
 class Notes {
   bool? address;
-  int? merchantOrderId;
+  dynamic merchantOrderId;
 
   Notes({this.address, this.merchantOrderId});
 

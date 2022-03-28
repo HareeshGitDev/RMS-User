@@ -7,6 +7,8 @@ import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
 import 'package:http/http.dart';
 
+import '../../property_details_module/model/booking_amount_request_model.dart';
+import '../../property_details_module/model/booking_credential_response_model.dart';
 import '../../utils/constants/api_urls.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/rms_user_api_service.dart';
@@ -209,5 +211,29 @@ class MyStayApiService {
             data['data'].toString().isNotEmpty
         ? data['data']
         : '';
+  }
+  Future<BookingCredentialResponseModel> fetchInvoicePaymentCredentials(
+      {required BookingAmountRequestModel model}) async {
+    String url = AppUrls.invoicePaymentUrl;
+    final response = await _apiService
+        .postApiCall(endPoint: url, bodyParams: {
+      "invoice_id":model.invoiceId,
+      'id': model.propId,
+      "booking_id":model.bookingId,
+      "billing_tel": model.phone,
+      "traveller_name": model.name,
+      "contact_email": model.email,
+      "amount": 1.toString(),
+      "traveller_address": model.address,
+      "payment_gatway": model.paymentGateway,
+    });
+    final data = response as Map<String, dynamic>;
+
+    if (data['status'].toString().toLowerCase() == 'success') {
+      return BookingCredentialResponseModel.fromJson(data);
+    } else {
+      return BookingCredentialResponseModel(
+          status: 'failure');
+    }
   }
 }

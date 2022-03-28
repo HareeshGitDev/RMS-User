@@ -11,8 +11,11 @@ import 'package:provider/provider.dart';
 
 import '../../Web_View_Container.dart';
 import '../../home_module/viewModel/home_viewModel.dart';
+import '../../login_module/service/google_auth_service.dart';
 import '../../theme/custom_theme.dart';
 import '../../utils/service/bottom_navigation_provider.dart';
+import '../../utils/service/shared_prefrences_util.dart';
+import '../../utils/view/rms_widgets.dart';
 import '../model/profile_model.dart';
 import '../viewmodel/profile_view_model.dart';
 
@@ -153,7 +156,52 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     _settingsCard(),
                     Spacer(),
-                    logoutButton()
+                    Container(
+                      height: 45,
+                      margin: EdgeInsets.only(left: 15,right: 15,bottom: 15),
+                      child: InkWell(
+                        onTap: ()async {
+                          RMSWidgets.showLoaderDialog(
+                              context: context, message: 'Logging out...');
+                          SharedPreferenceUtil shared = SharedPreferenceUtil();
+                          await GoogleAuthService.logOut();
+                          await GoogleAuthService.logoutFromFirebase();
+                          bool deletedAllValues = await shared.clearAll();
+
+                          Navigator.of(context).pop();
+                          if (deletedAllValues) {
+                            Provider.of<BottomNavigationProvider>(context,listen: false).shiftBottom(index: 0);
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                AppRoutes.loginPage, (route) => false);
+                          } else {
+                            log('NOT ABLE TO DELETE VALUES FROM SP');
+                          }
+                        },
+                        child: Container(
+                            
+                            decoration: BoxDecoration(
+                              color: CustomTheme.appTheme,
+                              borderRadius: BorderRadius.circular(10)
+                            ),
+                            child: Container(
+                           //   padding: const EdgeInsets.all(10.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.logout,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    "Logout",
+                                    style: TextStyle(color: Colors.white, fontSize: 18),
+                                  )
+                                ],
+                              ),
+                            )),
+                      ),
+                    ),
                   ],
                 ),
               )
@@ -235,30 +283,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget logoutButton() {
-    return InkWell(
-      onTap: () {},
-      child: Container(
-          color: CustomTheme.peach.withAlpha(99),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.logout,
-                  color: Colors.white,
-                ),
-                SizedBox(width: 10),
-                Text(
-                  "Logout",
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                )
-              ],
-            ),
-          )),
-    );
-  }
+
 
   AppBar _getAppBar({required BuildContext context}) {
     return AppBar(

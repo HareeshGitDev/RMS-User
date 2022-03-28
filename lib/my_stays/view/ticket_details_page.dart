@@ -102,7 +102,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
             SizedBox(
               height: 20,
             ),
-            widget.ticketModel.issueImage != null
+            widget.ticketModel.images != null
                 ? Container(
                     height: _mainHeight * 0.2,
                     width: _mainWidth,
@@ -111,7 +111,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                       itemBuilder: (context, index) {
                         return CachedNetworkImage(
                           imageUrl:
-                              widget.ticketModel.issueImage?[index].imageLink ??
+                              widget.ticketModel.images?[index]??
                                   '',
                           imageBuilder: (context, imageProvider) => Container(
                             height: _mainHeight * 0.1,
@@ -139,7 +139,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                               const Icon(Icons.error),
                         );
                       },
-                      itemCount: widget.ticketModel.issueImage?.length ?? 0,
+                      itemCount: widget.ticketModel.images?.length ?? 0,
                       separatorBuilder: (context, index) => SizedBox(
                         width: 10,
                       ),

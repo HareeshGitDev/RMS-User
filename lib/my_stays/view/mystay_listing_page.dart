@@ -141,7 +141,10 @@ class _MyStayListPageState extends State<MyStayListPage> {
                           Container(
                             height: _mainHeight * 0.085,
                             width: _mainWidth * 0.20,
-                            padding: EdgeInsets.only(right: _mainWidth * 0.02),
+                            padding: EdgeInsets.only(
+                                right: _mainWidth * 0.02,
+                                bottom: _mainHeight * 0.005,
+                                left: _mainWidth * 0.02),
                             child: CachedNetworkImage(
                               imageUrl: data.picThumbnail.toString(),
                               imageBuilder: (context, imageProvider) =>
@@ -266,8 +269,12 @@ class _MyStayListPageState extends State<MyStayListPage> {
                 itemCount: activeBookingList.length),
           )
         : activeBookingList != null && activeBookingList.isEmpty
-        ? RMSWidgets.noData(context: context, message: 'No Any Active Bookings Found.')
-        : Center(child: RMSWidgets.getLoader(color: CustomTheme.appTheme,));
+            ? RMSWidgets.noData(
+                context: context, message: 'No Any Active Bookings Found.')
+            : Center(
+                child: RMSWidgets.getLoader(
+                color: CustomTheme.appTheme,
+              ));
   }
 
   Widget getCompletedTab(
@@ -418,7 +425,8 @@ class _MyStayListPageState extends State<MyStayListPage> {
                 itemCount: completedBookingList.length),
           )
         : completedBookingList != null && completedBookingList.isEmpty
-            ? RMSWidgets.noData(context: context, message: 'No Any Completed Bookings Found.')
+            ? RMSWidgets.noData(
+                context: context, message: 'No Any Completed Bookings Found.')
             : Center(child: RMSWidgets.getLoader(color: CustomTheme.appTheme));
   }
 }

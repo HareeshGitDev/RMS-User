@@ -148,12 +148,17 @@ class NavigationService {
                 ));
 
       case AppRoutes.invoicePage:
-        final data = settings.arguments as String;
+        final data = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
                   create: (_) => MyStayViewModel(),
                   child: InvoicePage(
-                    bookingId: data,
+                    bookingId: data['bookingId'],
+                    propertyId: data['propertyId'],
+                    name: data['name'],
+                    email: data['email'],
+                    mobile: data['mobile'],
+                    address: data['address'],
                   ),
                 ));
 
@@ -161,11 +166,11 @@ class NavigationService {
         final data = settings.arguments as String;
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
-              create: (_) => MyStayViewModel(),
-              child: UpdateInvoiceUTRPage(
-                bookingId: data,
-              ),
-            ));
+                  create: (_) => MyStayViewModel(),
+                  child: UpdateInvoiceUTRPage(
+                    bookingId: data,
+                  ),
+                ));
 
       case AppRoutes.refundSplitPage:
         final data = settings.arguments as String;

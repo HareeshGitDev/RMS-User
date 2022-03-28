@@ -67,16 +67,14 @@ class PropertyApiService {
     }
   }
 
-  Future<String> addToWishList({required String propertyId}) async {
+  Future<int> addToWishList({required String propertyId}) async {
     String url = AppUrls.addWishListPropertyUrl;
     final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
-      'apptoken': await _getRegisteredToken(),
       'prop_id': base64Encode(utf8.encode(propertyId)),
     });
 
     final data = response as Map<String, dynamic>;
-
-    return data['response'];
+    return data['msg'].toString().toLowerCase() == 'success' ? 200 : 404;
   }
 
   Future<WishListModel> fetchWishList() async {
@@ -94,18 +92,18 @@ class PropertyApiService {
       return WishListModel(status: 'failure', data: []);
     }
   }
+
   Future<PropertyListModel> filterSortPropertyList({
     required FilterSortRequestModel requestModel,
   }) async {
     String url = AppUrls.filterSortPropsUrl;
 
     final response = await _apiService.getApiCallWithQueryParams(
-        endPoint: url,
-        queryParams: requestModel.toJson());
+        endPoint: url, queryParams: requestModel.toJson());
     final data = response as Map<String, dynamic>;
 
     if (data['success'].toString().toLowerCase() == 'true') {
-      data['status']='success';
+      data['status'] = 'success';
       return PropertyListModel.fromJson(data);
     } else {
       return PropertyListModel(status: 'failure');

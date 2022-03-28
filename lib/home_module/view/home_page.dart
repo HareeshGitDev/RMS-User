@@ -21,6 +21,8 @@ import 'package:flutx/utils/spacing.dart';
 import 'package:flutx/widgets/button/button.dart';
 import 'package:flutx/widgets/container/container.dart';
 import 'package:flutx/widgets/text/text.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../images.dart';
@@ -28,6 +30,7 @@ import '../../theme/app_notifier.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/theme_type.dart';
 import '../../utils/constants/enum_consts.dart';
+import '../../utils/service/location_service.dart';
 import '../../utils/service/navigation_service.dart';
 
 class HomePage extends StatefulWidget {
@@ -44,41 +47,31 @@ class _HomePageState extends State<HomePage> {
   late HomeViewModel _homeViewModel;
   var _mainHeight;
   var _mainWidth;
-
-  TextDirection textDirection = TextDirection.ltr;
-  bool isDark = false;
-  final _searchController = TextEditingController();
-  bool shouldClearText = true;
+  SharedPreferenceUtil preferenceUtil=SharedPreferenceUtil();
 
   @override
   void initState() {
-    _homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
-
     super.initState();
-    isDark = AppTheme.themeType == ThemeType.dark;
-    textDirection = AppTheme.textDirection;
-    theme = AppTheme.theme;
-    customTheme = AppTheme.customTheme;
+    _homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
   }
 
   Future<Map<String, String>> getSharedPreferencesValues() async {
-    SharedPreferenceUtil sharedPreferenceUtil = SharedPreferenceUtil();
-    await sharedPreferenceUtil.getString(rms_gmapKey);
+
 
     return {
-      'email': (await sharedPreferenceUtil.getString(rms_email)).toString(),
-      'name': (await sharedPreferenceUtil.getString(rms_name)).toString(),
+      'email': (await preferenceUtil.getString(rms_email)).toString(),
+      'name': (await preferenceUtil.getString(rms_name)).toString(),
       'phone':
-          (await sharedPreferenceUtil.getString(rms_phoneNumber)).toString(),
+          (await preferenceUtil.getString(rms_phoneNumber)).toString(),
       'pic':
-          (await sharedPreferenceUtil.getString(rms_profilePicUrl)).toString(),
+          (await preferenceUtil.getString(rms_profilePicUrl)).toString(),
     };
   }
 
   @override
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
-    _mainHeight = MediaQuery.of(context).size.width;
+    _mainWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -124,8 +117,6 @@ class _HomePageState extends State<HomePage> {
             margin: EdgeInsets.only(right: 15),
           ),
         ],
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Container(
           margin: EdgeInsets.only(top: 10),
           child: Image.asset(
@@ -143,9 +134,9 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                  padding: EdgeInsets.only(top: 10),
-                  height: 110,
-                  // color: CustomTheme.peach.withAlpha(40),
+                  padding: EdgeInsets.only(
+                      top: _mainHeight * 0.015, left: _mainWidth * 0.03),
+                  height: _mainHeight * 0.12,
                   width: MediaQuery.of(context).size.width,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -153,47 +144,61 @@ class _HomePageState extends State<HomePage> {
                       var data = _homeViewModel.getCitySuggestionList(
                           context: context)[index];
                       return InkWell(
-                        onTap: () => Navigator.of(context).pushNamed(
-                            AppRoutes.propertyListingPage,
-                            arguments: {
-                              'location': data.value,
-                              'property': Property.FromLocation,
-                            }),
+                        onTap: index == 0
+                            ? () => getCurrentLocationProperties()
+                            : () => Navigator.of(context).pushNamed(
+                                    AppRoutes.propertyListingPage,
+                                    arguments: {
+                                      'location': data.value,
+                                      'property': Property.FromLocation,
+                                    }),
                         child: Column(
                           children: [
                             Container(
                               height: 60,
-                              width: 75,
-                              child: CachedNetworkImage(
-                                imageUrl: data.imageUrl.toString(),
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                placeholder: (context, url) =>
-                                    Shimmer.fromColors(
-                                        child: Container(
-                                          height: 60,
-                                          width: 75,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.grey,
+                              width: 70,
+                              child: index == 0
+                                  ? CircleAvatar(
+                                      backgroundColor: CustomTheme.appTheme,
+                                      child: Icon(
+                                        Icons.navigation_outlined,
+                                        size: 25,
+                                        color: CustomTheme.white,
+                                      ))
+                                  : CachedNetworkImage(
+                                      imageUrl: data.imageUrl.toString(),
+                                      imageBuilder: (context, imageProvider) =>
+                                          Container(
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
-                                        baseColor: Colors.grey[200] as Color,
-                                        highlightColor:
-                                            Colors.grey[350] as Color),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                              ),
+                                      ),
+                                      placeholder: (context, url) =>
+                                          Shimmer.fromColors(
+                                              child: Container(
+                                                height: 60,
+                                                width: 75,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                              baseColor:
+                                                  Colors.grey[200] as Color,
+                                              highlightColor:
+                                                  Colors.grey[350] as Color),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
+                                    ),
                             ),
-                            Text(data.cityName, style: TextStyle(fontSize: 14)),
+                            Text(
+                              data.cityName,
+                              style: TextStyle(fontSize: 14),
+                            ),
                           ],
                         ),
                       );
@@ -413,7 +418,7 @@ class _HomePageState extends State<HomePage> {
                         margin: EdgeInsets.only(left: 15, top: 10),
                         child: Neumorphic(
                           style: NeumorphicStyle(
-                            color: CustomTheme.peach,
+                            color: CustomTheme.appThemeContrast2,
                             shadowDarkColor: CustomTheme.appTheme,
                           ),
                           child: TextButton(
@@ -433,7 +438,7 @@ class _HomePageState extends State<HomePage> {
                               }
                             },
                             child: Text("Earn Now",
-                                style: TextStyle(color: Colors.black45)),
+                                style: TextStyle(color: Colors.white)),
                           ),
                         ),
                       ),
@@ -455,6 +460,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _getDrawer({required BuildContext context}) {
     return Drawer(
+      key: _drawerKey,
       backgroundColor: CustomTheme.white,
       child: Container(
         height: _mainHeight,
@@ -473,7 +479,7 @@ class _HomePageState extends State<HomePage> {
                   if (snapshot.hasData) {
                     return Container(
                       color: CustomTheme.white,
-                      height: _mainHeight * 0.45,
+                      height: _mainHeight * 0.2,
                       child: UserAccountsDrawerHeader(
                           decoration: BoxDecoration(
                               gradient: LinearGradient(
@@ -481,7 +487,6 @@ class _HomePageState extends State<HomePage> {
                               CustomTheme.appTheme,
                               CustomTheme.appTheme.withAlpha(150),
                               CustomTheme.appTheme.withAlpha(50),
-
                             ],
                           )),
                           accountEmail: Text(
@@ -657,10 +662,20 @@ class _HomePageState extends State<HomePage> {
 
       ),*/
 
-      height: _mainHeight * 0.13,
+      height: _mainHeight * 0.06,
       child: ListTile(
-        leading: leading,
-        title: Text(title),
+        leading: Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+                color: CustomTheme.appTheme.withAlpha(20),
+                borderRadius: BorderRadius.circular(5)),
+            child: leading),
+        title: Text(
+          title,
+          style: TextStyle(
+              fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
+        ),
         onTap: () => onTap(),
         trailing: Icon(
           Icons.arrow_right_outlined,
@@ -668,5 +683,16 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  void getCurrentLocationProperties() async{
+   /* bool isGranted=await LocationService.requestLocationPermission();
+    if(isGranted){
+      Position position=await LocationService.getCurrentPosition();
+      await preferenceUtil.setString(rms_user_longitude, position.latitude.toString());
+      await preferenceUtil.setString(rms_user_latitude, position.latitude.toString());
+    }
+    LocationService.getCurrentPosition().then((value) => log(
+        'Longitude :: ${value.longitude} :: Latitude :: ${value.latitude}'));*/
   }
 }

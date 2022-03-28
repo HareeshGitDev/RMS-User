@@ -70,10 +70,7 @@ class Data {
   String? snooze;
   String? handsup;
   String? ticketPoint;
-  String? requirement;
-  String? ticketMessage;
-  List<Followup>? followup;
-  List<IssueImage>? issueImage;
+  List<String>? images;
 
   Data(
       {this.id,
@@ -121,10 +118,7 @@ class Data {
         this.snooze,
         this.handsup,
         this.ticketPoint,
-        this.requirement,
-        this.ticketMessage,
-        this.followup,
-        this.issueImage});
+        this.images});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -172,20 +166,7 @@ class Data {
     snooze = json['snooze'];
     handsup = json['handsup'];
     ticketPoint = json['ticket_point'];
-    requirement = json['requirement'];
-    ticketMessage = json['ticket_message'];
-    if (json['followup'] != null) {
-      followup = <Followup>[];
-      json['followup'].forEach((v) {
-        followup!.add(new Followup.fromJson(v));
-      });
-    }
-    if (json['issue_image'] != null) {
-      issueImage = <IssueImage>[];
-      json['issue_image'].forEach((v) {
-        issueImage!.add(new IssueImage.fromJson(v));
-      });
-    }
+    images = json['images'] != null ?json['images'].cast<String>():[];
   }
 
   Map<String, dynamic> toJson() {
@@ -235,75 +216,7 @@ class Data {
     data['snooze'] = this.snooze;
     data['handsup'] = this.handsup;
     data['ticket_point'] = this.ticketPoint;
-    data['requirement'] = this.requirement;
-    data['ticket_message'] = this.ticketMessage;
-    if (this.followup != null) {
-      data['followup'] = this.followup!.map((v) => v.toJson()).toList();
-    }
-    if (this.issueImage != null) {
-      data['issue_image'] = this.issueImage!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class Followup {
-  String? followup;
-
-  Followup({this.followup});
-
-  Followup.fromJson(Map<String, dynamic> json) {
-    followup = json['followup'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['followup'] = this.followup;
-    return data;
-  }
-}
-
-class IssueImage {
-  String? id;
-  String? userTicketId;
-  String? bookingId;
-  String? imageLink;
-  String? onCloud;
-  String? type;
-  String? desc;
-  String? addedOn;
-
-  IssueImage(
-      {this.id,
-        this.userTicketId,
-        this.bookingId,
-        this.imageLink,
-        this.onCloud,
-        this.type,
-        this.desc,
-        this.addedOn});
-
-  IssueImage.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    userTicketId = json['user_ticket_id'];
-    bookingId = json['booking_id'];
-    imageLink = json['image_link'];
-    onCloud = json['on_cloud'];
-    type = json['type'];
-    desc = json['desc'];
-    addedOn = json['added_on'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['user_ticket_id'] = this.userTicketId;
-    data['booking_id'] = this.bookingId;
-    data['image_link'] = this.imageLink;
-    data['on_cloud'] = this.onCloud;
-    data['type'] = this.type;
-    data['desc'] = this.desc;
-    data['added_on'] = this.addedOn;
+    data['images'] = this.images;
     return data;
   }
 }

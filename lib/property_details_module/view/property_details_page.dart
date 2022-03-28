@@ -29,6 +29,7 @@ import '../../utils/constants/app_consts.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/navigation_service.dart';
 import '../../utils/service/shared_prefrences_util.dart';
+import '../amenities_model.dart';
 import '../model/property_details_model.dart';
 import '../model/property_details_util_model.dart';
 
@@ -51,16 +52,16 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
   bool monthlyFlag = false;
   bool moreThanThreeFlag = true;
   ValueNotifier<bool> showPics = ValueNotifier(true);
+  bool showAllAmenities = false;
 
-  late PropertyDetailsViewModel _propertyDetailsViewModel;
+  late PropertyDetailsViewModel _viewModel;
 
   @override
   void initState() {
     super.initState();
 
-    _propertyDetailsViewModel =
-        Provider.of<PropertyDetailsViewModel>(context, listen: false);
-    _propertyDetailsViewModel.getPropertyDetails(propId: widget.propId);
+    _viewModel = Provider.of<PropertyDetailsViewModel>(context, listen: false);
+    _viewModel.getPropertyDetails(propId: widget.propId);
     log('Property Id :: ${widget.propId}');
   }
 
@@ -92,22 +93,78 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         backgroundColor: CustomTheme.appTheme,
                         // pinned: true,
                         actions: [
-                          CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 15,
-                              child:
-                                  value.propertyDetailsModel?.details != null &&
-                                          value.propertyDetailsModel?.details
-                                                  ?.wishlist ==
-                                              1
-                                      ? Icon(
-                                          Icons.favorite,
-                                          color: Colors.red,
-                                        )
-                                      : Icon(
-                                          Icons.favorite_outline_rounded,
-                                          color: Colors.black54,
-                                        )),
+                          GestureDetector(
+                            onTap: () async {
+                              if (value.propertyDetailsModel?.details != null &&
+                                  value.propertyDetailsModel?.details
+                                          ?.wishlist ==
+                                      1) {
+                                if (value.propertyDetailsModel?.details !=
+                                        null &&
+                                    value.propertyDetailsModel?.details
+                                            ?.propId !=
+                                        null) {
+                                  int response = await _viewModel.addToWishlist(
+                                      propertyId: value.propertyDetailsModel
+                                              ?.details?.propId ??
+                                          '');
+                                  if (response == 200) {
+                                    setState(() {
+                                      value.propertyDetailsModel?.details
+                                          ?.wishlist = 0;
+                                    });
+                                    RMSWidgets.showSnackbar(
+                                        context: context,
+                                        message:
+                                            'Successfully Removed From Wishlist',
+                                        color: CustomTheme.appTheme);
+                                  }
+                                }
+                              } else if (value.propertyDetailsModel?.details !=
+                                      null &&
+                                  value.propertyDetailsModel?.details
+                                          ?.wishlist ==
+                                      0) {
+                                if (value.propertyDetailsModel?.details !=
+                                        null &&
+                                    value.propertyDetailsModel?.details
+                                            ?.propId !=
+                                        null) {
+                                  int response = await _viewModel.addToWishlist(
+                                      propertyId: value.propertyDetailsModel
+                                              ?.details?.propId ??
+                                          '');
+                                  if (response == 200) {
+                                    setState(() {
+                                      value.propertyDetailsModel?.details
+                                          ?.wishlist = 1;
+                                    });
+                                    RMSWidgets.showSnackbar(
+                                        context: context,
+                                        message:
+                                            'Successfully Added to Wishlist',
+                                        color: CustomTheme.appTheme);
+                                  }
+                                }
+                              }
+                            },
+                            child: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                radius: 15,
+                                child: value.propertyDetailsModel?.details !=
+                                            null &&
+                                        value.propertyDetailsModel?.details
+                                                ?.wishlist ==
+                                            1
+                                    ? Icon(
+                                        Icons.favorite,
+                                        color: Colors.red,
+                                      )
+                                    : Icon(
+                                        Icons.favorite_outline_rounded,
+                                        color: Colors.red,
+                                      )),
+                          ),
                           SizedBox(
                             width: 15,
                           ),
@@ -121,7 +178,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                 radius: 15,
                                 child: Icon(
                                   Icons.share_outlined,
-                                  color: Colors.black54,
+                                  color: CustomTheme.appTheme,
                                 )),
                           ),
                           SizedBox(
@@ -339,10 +396,22 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                               ),
                               GestureDetector(
                                 onTap: () async {
-                                  if ((value.propertyDetailsModel?.details != null && value.propertyDetailsModel?.details?.glat != null) &&
-                                      (value.propertyDetailsModel?.details != null && value.propertyDetailsModel?.details?.glng != null)) {
-                                    var latitude = (value.propertyDetailsModel?.details?.glat).toString();
-                                    var longitude =(value.propertyDetailsModel?.details?.glng).toString();
+                                  if ((value.propertyDetailsModel?.details !=
+                                              null &&
+                                          value.propertyDetailsModel?.details
+                                                  ?.glat !=
+                                              null) &&
+                                      (value.propertyDetailsModel?.details !=
+                                              null &&
+                                          value.propertyDetailsModel?.details
+                                                  ?.glng !=
+                                              null)) {
+                                    var latitude = (value.propertyDetailsModel
+                                            ?.details?.glat)
+                                        .toString();
+                                    var longitude = (value.propertyDetailsModel
+                                            ?.details?.glng)
+                                        .toString();
                                     await SystemService.launchGoogleMaps(
                                         latitude: latitude,
                                         longitude: longitude);
@@ -351,18 +420,20 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                 child: Container(
                                   width: _mainWidth * 0.08,
                                   child: Column(
-                                   children: [
+                                    children: [
                                       Icon(
                                         Icons.location_on_outlined,
                                         color: CustomTheme.appTheme,
                                         size: _mainHeight * 0.02,
                                       ),
-                                      Text('Map',
+                                      Text(
+                                        'Map',
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 14,
                                             fontFamily: fontFamily,
-                                            fontWeight: FontWeight.w500),),
+                                            fontWeight: FontWeight.w500),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -479,21 +550,32 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         SizedBox(
                           height: _mainHeight * 0.01,
                         ),
-                        _availableAmenitiesIconList(),
-                        Container(
-                          padding: EdgeInsets.only(
-                            left: _mainWidth * 0.04,
-                            top: _mainHeight * 0.01,
+
+                        getAvailableAmenities(list: value.amenitiesList),
+                            SizedBox(
+                              height: _mainHeight * 0.01,
+                            ),
+                            value.amenitiesList.length > 5?
+                            GestureDetector(
+                          onTap: () => setState(() {
+                            showAllAmenities = !showAllAmenities;
+                          }),
+                          child: Container(
+                            padding: EdgeInsets.only(
+                              left: _mainWidth * 0.04,
+                            ),
+                            child: Text(
+                              showAllAmenities
+                                  ? 'View Less Amenities'
+                                  : 'View All Amenities',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontFamily: fontFamily,
+                                  color: Colors.orange,
+                                  fontWeight: FontWeight.w700),
+                            ),
                           ),
-                          child: const Text(
-                            'View All Amenities',
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontFamily: fontFamily,
-                                color: Colors.orange,
-                                fontWeight: FontWeight.w700),
-                          ),
-                        ),
+                        ):Container(),
                         SizedBox(
                           height: _mainHeight * 0.01,
                         ),
@@ -523,10 +605,10 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                 IconButton(
                                   padding:
                                       EdgeInsets.only(left: _mainWidth * 0.08),
-                                  icon: Icon(Icons.call,
-                                      color: CustomTheme.myFavColor,
-                                      size: _mainWidth * 0.05,
-
+                                  icon: Icon(
+                                    Icons.call,
+                                    color: CustomTheme.myFavColor,
+                                    size: _mainWidth * 0.05,
                                   ),
                                   onPressed: () {
                                     if (value.propertyDetailsModel != null &&
@@ -541,12 +623,15 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   },
                                 ),
                                 SizedBox(
-                                  width: _mainWidth * 0.02 ,
+                                  width: _mainWidth * 0.02,
                                 ),
                                 IconButton(
                                   padding:
                                       EdgeInsets.only(left: _mainWidth * 0.06),
-                                  icon: Image(image: NetworkImage('https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/whatsapplogo.png?alt=media&token=41df11ff-b9e7-4f5b-a4fc-30b47cfe1435'),),
+                                  icon: Image(
+                                    image: NetworkImage(
+                                        'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/whatsapplogo.png?alt=media&token=41df11ff-b9e7-4f5b-a4fc-30b47cfe1435'),
+                                  ),
 
                                   /*Icon(Icons.email_outlined,
                                       color: CustomTheme.appTheme,
@@ -611,7 +696,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             'Details',
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
-                                fontSize: 16,
+                                fontSize: 14,
                                 fontFamily: fontFamily,
                                 color: Colors.black),
                           ),
@@ -863,11 +948,13 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   email: email,
                                 );
                               },
-                              child: Text('Site Visit',style: TextStyle(
-                                color: CustomTheme.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500
-                              ),),
+                              child: Text(
+                                'Site Visit',
+                                style: TextStyle(
+                                    color: CustomTheme.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500),
+                              ),
                               style: ButtonStyle(
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
@@ -878,8 +965,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                   )),
-                            )
-                        ),
+                            )),
                         Container(
                             width: _mainWidth * 0.4,
                             height: _mainHeight * 0.05,
@@ -943,11 +1029,13 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                     context, AppRoutes.bookingPage,
                                     arguments: model);
                               },
-                              child: Text('Book Now',style: TextStyle(
-                                  color: CustomTheme.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500
-                              ),),
+                              child: Text(
+                                'Book Now',
+                                style: TextStyle(
+                                    color: CustomTheme.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500),
+                              ),
                               style: ButtonStyle(
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
@@ -975,6 +1063,48 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                 ),
         );
       },
+    );
+  }
+
+  Widget getAvailableAmenities({required List<AmenitiesModel> list}) {
+    return ListTileTheme.merge(
+      child: GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 0,
+            crossAxisSpacing: 0,
+            mainAxisExtent: _mainHeight * 0.05),
+        itemBuilder: (context, index) {
+          return Container(
+            padding: EdgeInsets.only(
+              left: _mainWidth * 0.04,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  height: 50,
+                  width: 50,
+                  child: Image.network(list[index].imageUrl ),
+                ),
+                SizedBox(
+                  width: _mainWidth * 0.03,
+                ),
+                Text(
+                  list[index].name.toString(),
+                  style: TextStyle(
+                      color: Colors.black87,
+                      fontFamily: fontFamily,
+                      fontSize: 14),
+                ),
+              ],
+            ),
+          );
+        },
+        itemCount:showAllAmenities?list.length:list.length > 5 ? 5 : list.length,
+      ),
     );
   }
 
@@ -1133,116 +1263,6 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
         ));
   }
 
-  Widget _availableAmenitiesIconList() {
-    return Container(
-      // color: Colors.amber,
-      padding: EdgeInsets.only(
-        left: _mainWidth * 0.02,
-        right: _mainWidth * 0.3,
-      ),
-      margin: EdgeInsets.only(
-        left: _mainWidth * 0.02,
-        right: _mainWidth * 0.02,
-      ),
-      height: _mainHeight * 0.1,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: const [
-              Icon(
-                Icons.emoji_transportation,
-                size: 15,
-                color: Colors.black38,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(
-                'Transportation',
-                style: TextStyle(
-                    color: Colors.black87,
-                    fontFamily: fontFamily,
-                    fontSize: 14),
-              ),
-              Spacer(),
-              Icon(
-                Icons.phone,
-                size: 15,
-                color: Colors.black38,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(
-                'Phone',
-                style: TextStyle(
-                    color: Colors.black87,
-                    fontFamily: fontFamily,
-                    fontSize: 14),
-              ),
-            ],
-          ),
-          Spacer(),
-          Row(
-            children: const [
-              Icon(
-                Icons.lightbulb,
-                size: 15,
-                color: Colors.black38,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(
-                'Electricity',
-                style: TextStyle(
-                    color: Colors.black87,
-                    fontFamily: fontFamily,
-                    fontSize: 14),
-              ),
-              Spacer(),
-              Icon(
-                Icons.camera_alt,
-                size: 15,
-                color: Colors.black38,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(
-                'CCTV',
-                style: TextStyle(
-                    color: Colors.black87,
-                    fontFamily: fontFamily,
-                    fontSize: 14),
-              ),
-            ],
-          ),
-          Spacer(),
-          Row(
-            children: const [
-              Icon(
-                Icons.wifi,
-                size: 15,
-                color: Colors.black38,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(
-                'WiFi',
-                style: TextStyle(
-                    color: Colors.black87,
-                    fontFamily: fontFamily,
-                    fontSize: 14),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 
   String get getMoreText {
     return """

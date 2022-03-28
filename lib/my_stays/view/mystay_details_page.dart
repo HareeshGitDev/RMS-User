@@ -361,6 +361,19 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.black))),
+
+                      Container(
+                          padding: EdgeInsets.only(
+                              left: _mainWidth * 0.04,
+                              top: _mainHeight * 0.01,
+                              right: _mainWidth * 0.04),
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                              "Email : ${value.myStayDetailsModel?.data?.contactEmail ?? ''}",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black))),
                       SizedBox(
                         height: 10,
                       ),
@@ -668,7 +681,15 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                               ),
                               callBack: () => Navigator.pushNamed(
                                   context, AppRoutes.invoicePage,
-                                  arguments: widget.bookingId)),
+                                  arguments: {
+                                    'address':value.myStayDetailsModel?.data?.addressDisplay ??'',
+                                    'bookingId':widget.bookingId,
+                                    'propertyId':value.myStayDetailsModel?.data?.propId ??'0',
+                                    'name':value.myStayDetailsModel?.data?.travellerName ??'',
+                                    'mobile':value.myStayDetailsModel?.data?.travellerContactNum ??'',
+                                    'email':value.myStayDetailsModel?.data?.contactEmail ??'',
+
+                                  })),
                           _gridInput(
                               hint: value.myStayDetailsModel?.data?.agreementStatus != null &&
                                       value.myStayDetailsModel?.data?.agreementStatus ==

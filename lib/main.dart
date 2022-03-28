@@ -30,8 +30,7 @@ void main() async {
                   'https://rentmystay-new-1539065190327.firebaseio.com'));
 
   runApp(MyApp());
-  LocationService.getCurrentPosition().then((value) =>
-      log('Longitude :: ${value.longitude} :: Latitude :: ${value.latitude}'));
+
 }
 
 class MyApp extends StatelessWidget {

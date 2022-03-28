@@ -7,6 +7,8 @@ import 'package:RentMyStay_user/my_stays/model/refund_splitup_model.dart';
 import 'package:RentMyStay_user/my_stays/model/ticket_response_model.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../../property_details_module/model/booking_amount_request_model.dart';
+import '../../property_details_module/model/booking_credential_response_model.dart';
 import '../model/mystay_list_model.dart';
 import '../service/mystay_api_service.dart';
 
@@ -127,5 +129,9 @@ class MyStayViewModel extends ChangeNotifier {
         required String invoiceId,
         }) async {
     return await _myStayApiService.downloadInvoice(bookingId: bookingId, invoiceId: invoiceId);
+  }
+  Future<BookingCredentialResponseModel> fetchInvoicePaymentCredentials(
+      {required BookingAmountRequestModel model}) async {
+    return await _myStayApiService.fetchInvoicePaymentCredentials(model: model);
   }
 }

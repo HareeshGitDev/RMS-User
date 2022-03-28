@@ -35,7 +35,7 @@ class PropertyViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String> addToWishlist({
+  Future<int> addToWishlist({
     required String propertyId,
   }) async =>
       await _propertyApiService.addToWishList(propertyId: propertyId);

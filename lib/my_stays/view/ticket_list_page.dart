@@ -77,10 +77,10 @@ class _TicketListPageState extends State<TicketListPage> {
                                 context, AppRoutes.ticketDetailsPage,
                                 arguments: data ?? [])
                             .then((value) async {
-                          RMSWidgets.showLoaderDialog(
-                              context: context, message: 'Loading');
+                         /* RMSWidgets.showLoaderDialog(
+                              context: context, message: 'Loading');*/
                           await _viewModel.getTicketList();
-                          Navigator.of(context).pop();
+                         /* Navigator.of(context).pop();*/
                         }),
                         child: Card(
                           shape: RoundedRectangleBorder(

@@ -683,9 +683,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                           ],
                                         ),
                                         Container(
-                                          height: _mainHeight * 0.04,
+                                          height: _mainHeight * 0.05,
                                           width: _mainWidth,
-                                          padding: EdgeInsets.all(5),
+
                                           child: Row(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -736,82 +736,62 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                 ),
                                               ),
                                               Spacer(),
-                                              data.wishlist == 0
-                                                  ? GestureDetector(
-                                                      onTap: () async {
-                                                        if (data.propId !=
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  if (data.wishlist ==
+                                                          1) {
+                                                    if (data.propId !=
                                                             null) {
-                                                          String response =
-                                                              await _propertyViewModel
-                                                                  .addToWishlist(
-                                                                      propertyId:
-                                                                          data.propId ??
-                                                                              " ");
-                                                          if (response
-                                                                  .toLowerCase() ==
-                                                              'successfully added') {
-                                                            setState(() {
-                                                              data.wishlist = 1;
-                                                            });
-                                                            RMSWidgets.showSnackbar(
-                                                                context:
-                                                                    context,
-                                                                message:
-                                                                    response,
-                                                                color: CustomTheme
-                                                                    .appTheme);
-                                                          }
-                                                        }
-                                                      },
-                                                      child: const CircleAvatar(
-                                                        radius: 15,
-                                                        backgroundColor:
-                                                            Colors.white60,
-                                                        child: Icon(
-                                                          Icons
-                                                              .favorite_outline_rounded,
-                                                          color: Colors.red,
-                                                          size: 20,
-                                                        ),
-                                                      ),
+                                                      int response =
+                                                      await _propertyViewModel.addToWishlist(
+                                                          propertyId: data.propId ??
+                                                              '');
+                                                      if (response == 200) {
+                                                        setState(() {
+                                                          data.wishlist = 0;
+                                                        });
+                                                        RMSWidgets.showSnackbar(
+                                                            context: context,
+                                                            message:
+                                                            'Successfully Removed From Wishlist',
+                                                            color: CustomTheme.appTheme);
+                                                      }
+                                                    }
+                                                  } else if (data.wishlist ==
+                                                          0) {
+                                                    if (data.propId !=
+                                                            null) {
+                                                      int response =
+                                                      await _propertyViewModel.addToWishlist(
+                                                          propertyId: data.propId ??
+                                                              '');
+                                                      if (response ==200) {
+                                                        setState(() {
+                                                          data.wishlist = 1;
+                                                        });
+                                                        RMSWidgets.showSnackbar(
+                                                            context: context,
+                                                            message:
+                                                            'Successfully Added to Wishlist',
+                                                            color: CustomTheme.appTheme);
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                child: CircleAvatar(
+                                                    backgroundColor: Colors.white,
+                                                    radius: 15,
+                                                    child:data.wishlist ==
+                                                            1
+                                                        ? Icon(
+                                                      Icons.favorite,
+                                                      color: Colors.red,
                                                     )
-                                                  : GestureDetector(
-                                                      onTap: () async {
-                                                        if (data.propId !=
-                                                            null) {
-                                                          String response =
-                                                              await _propertyViewModel
-                                                                  .addToWishlist(
-                                                                      propertyId:
-                                                                          data.propId ??
-                                                                              " ");
-                                                          if (response
-                                                                  .toLowerCase() ==
-                                                              'successfully removed') {
-                                                            setState(() {
-                                                              data.wishlist = 0;
-                                                            });
-                                                            RMSWidgets.showSnackbar(
-                                                                context:
-                                                                    context,
-                                                                message:
-                                                                    response,
-                                                                color: CustomTheme()
-                                                                    .colorError);
-                                                          }
-                                                        }
-                                                      },
-                                                      child: const CircleAvatar(
-                                                        radius: 15,
-                                                        backgroundColor:
-                                                            Colors.white60,
-                                                        child: Icon(
-                                                          Icons.favorite,
-                                                          color: Colors.red,
-                                                          size: 20,
-                                                        ),
-                                                      ),
-                                                    ),
+                                                        : Icon(
+                                                      Icons.favorite_outline_rounded,
+                                                      color: Colors.red,
+                                                    )),
+                                              ),
                                             ],
                                           ),
                                         ),

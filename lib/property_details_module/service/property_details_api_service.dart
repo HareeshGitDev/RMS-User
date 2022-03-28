@@ -36,16 +36,15 @@ class PropertyDetailsApiService {
     return PropertyDetailsModel.fromJson(response);
   }
 
-  Future<String> addToWishList({required String propertyId}) async {
+  Future<int> addToWishList({required String propertyId}) async {
     String url = AppUrls.addWishListPropertyUrl;
     final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
-      'apptoken': await _getRegisteredToken(),
       'prop_id': base64Encode(utf8.encode(propertyId)),
     });
 
     final data = response as Map<String, dynamic>;
 
-    return data['response'];
+    return data['msg'].toString().toLowerCase() == 'success' ? 200 : 404;
   }
 
 
@@ -89,7 +88,6 @@ class PropertyDetailsApiService {
       'num_guests': model.numOfGuests,
       'coupon_code': model.couponCode,
       'app_token': model.token,
-      "billing_tel": model.phone,
       "traveller_name": model.name,
       "contact_email": model.email,
       "amount": 1.toString(),

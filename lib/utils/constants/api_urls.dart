@@ -10,7 +10,7 @@ class AppUrls{
   static const String searchPropertyUrl = "/m/home_page_search";
   static const String signInWithGoogleUrl = "/m/google_login";
   static const String registrationWithGoogleUrl = "/m/add_phone";
-  static const String addWishListPropertyUrl = "/m/add_wishlist_prop";
+  static const String addWishListPropertyUrl = "/v2/propWishlist";
   static const String fetchWishListPropertyUrl = "/m/wish_list_menu";
   static const String propertyDetailsUrl = "/m/property_all_details2";
   static const String scheduleSiteVisitUrl = "/m/schedulevisit";
@@ -22,12 +22,13 @@ class AppUrls{
   static const String myBookingDetails='/v2/bookingDetails';
   static const String refundDetailsUrl='/v2/refundSplitup';
   static const String invoiceDetailsUrl='/v2/invoiceDetails';
-  static const String feedbackAndBankDetailsUrl='v2/moveoutForm';
-  static const String checkInUrl='v2/cInStatus';
-  static const String checkOutUrl='v2/cOutStatus';
-  static const String ticketListUrl='v2/ticket';
-  static const String generateTicketUrl='v2/ticket';
-  static const String ticketStatusUrl='v2/ticket';
-  static const String generateTicketImageUrl='v2/ticketPic';
-  static const String invoiceDownloadUrl='v2/invoicePDF';
+  static const String feedbackAndBankDetailsUrl='/v2/moveoutForm';
+  static const String checkInUrl='/v2/cInStatus';
+  static const String checkOutUrl='/v2/cOutStatus';
+  static const String ticketListUrl='/v2/ticket';
+  static const String generateTicketUrl='/v2/ticket';
+  static const String ticketStatusUrl='/v2/ticket';
+  static const String generateTicketImageUrl='/v2/ticketPic';
+  static const String invoiceDownloadUrl='/v2/invoicePDF';
+  static const String invoicePaymentUrl='/v2/processInvoice';
 }

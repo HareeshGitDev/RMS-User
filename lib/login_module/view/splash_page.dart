@@ -30,12 +30,7 @@ class _SplashPageState extends State<SplashPage> {
   Future<void> initMethod() async {
     SharedPreferenceUtil preferenceUtil=SharedPreferenceUtil();
     String? token=await preferenceUtil.getToken();
-   bool isGranted=await LocationService.requestLocationPermission();
-   if(isGranted){
-    Position position=await LocationService.getCurrentPosition();
-    await preferenceUtil.setString(rms_user_longitude, position.latitude.toString());
-    await preferenceUtil.setString(rms_user_latitude, position.latitude.toString());
-    }
+
     if(token == null){
       Timer(const Duration(milliseconds: 1000), () {
         Navigator.pushNamedAndRemoveUntil(
