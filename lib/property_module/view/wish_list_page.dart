@@ -85,8 +85,7 @@ class _WishListPageState extends State<WishListPage> {
                                   items: data.pic
                                       ?.map((e) =>
                                       CachedNetworkImage(
-                                        imageUrl: e.picLink
-                                            .toString(),
+                                        imageUrl:e.picLink ?? '',
                                         imageBuilder: (context,
                                             imageProvider) =>
                                             Container(

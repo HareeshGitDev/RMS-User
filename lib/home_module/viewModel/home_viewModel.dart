@@ -11,8 +11,7 @@ import '../service/home_api_service.dart';
 
 class HomeViewModel extends ChangeNotifier {
   final HomeApiService _homeApiService = HomeApiService();
-  InviteModel inviteModel = InviteModel();
-  String name = 'Deepak';
+  ReferAndEarnModel referAndEarnModel = ReferAndEarnModel();
 
   List<CitySuggestionModel> getCitySuggestionList(
       {required BuildContext context}) {
@@ -59,7 +58,7 @@ class HomeViewModel extends ChangeNotifier {
         value: "Whitefield-Bengaluru-Karnataka-India",
       ),
       CitySuggestionModel(
-          cityName: 'Old Airport',
+          cityName: 'Old Airport Road',
           imageUrl:
               "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/old_airport_road.png?alt=media&token=3100968f-c852-4363-a805-597f8804c51c",
           value: "old-airport-road-Bengaluru-Karnataka-India"),
@@ -102,8 +101,8 @@ class HomeViewModel extends ChangeNotifier {
     ];
 
   Future<void> getInviteEarnDetails() async {
-    final InviteModel response = await _homeApiService.fetchInviteEarnDetails();
-    inviteModel = response;
+    final ReferAndEarnModel response = await _homeApiService.fetchInviteEarnDetails();
+    referAndEarnModel = response;
     notifyListeners();
   }
 }

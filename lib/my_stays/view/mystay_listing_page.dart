@@ -146,7 +146,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
                                 bottom: _mainHeight * 0.005,
                                 left: _mainWidth * 0.02),
                             child: CachedNetworkImage(
-                              imageUrl: data.picThumbnail.toString(),
+                              imageUrl: data.picThumbnail ??'',
                               imageBuilder: (context, imageProvider) =>
                                   Container(
                                 decoration: BoxDecoration(

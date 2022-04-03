@@ -1,5 +1,6 @@
-import 'dart:developer';
+import 'dart:developer' as logger;
 import 'dart:io';
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
@@ -33,6 +34,7 @@ import '../../images.dart';
 import '../../utils/constants/app_consts.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/date_time_service.dart';
+import '../../utils/service/location_service.dart';
 import '../../utils/view/calander_page.dart';
 
 class PropertyListingPage extends StatefulWidget {
@@ -56,8 +58,7 @@ class PropertyListingPage extends StatefulWidget {
 }
 
 class _PropertyListingPageState extends State<PropertyListingPage> {
-  late ThemeData theme;
-  late CustomTheme customTheme;
+
   var _mainHeight;
   var _mainWidth;
   late PropertyViewModel _propertyViewModel;
@@ -90,44 +91,44 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
     super.initState();
 
     _propertyViewModel = Provider.of<PropertyViewModel>(context, listen: false);
-    if (widget.property == Property.FromLocation) {
+    if (widget.property == Property.fromLocation) {
       _propertyViewModel.getPropertyDetailsList(
-          address: widget.locationName, property: Property.FromLocation);
-    } else if (widget.property == Property.FromBHK) {
+          address: widget.locationName, property: Property.fromLocation);
+    } else if (widget.property == Property.fromBHK) {
       _propertyViewModel.getPropertyDetailsList(
           address: widget.locationName,
           property: widget.property,
           propertyType: widget.propertyType);
-    } else if (widget.property == Property.FromSearch) {
+    } else if (widget.property == Property.fromSearch) {
       _propertyViewModel.getPropertyDetailsList(
           address: widget.locationName,
-          property: Property.FromSearch,
+          property: Property.fromSearch,
           toDate: widget.checkOutDate,
           fromDate: widget.checkInDate);
+    } else if (widget.property == Property.fromCurrentLocation) {
+      getCurrentLocationProperties().then((value) =>
+          _propertyViewModel.getPropertyDetailsList(
+              address: value, property: Property.fromLocation));
     }
-    theme = AppTheme.theme;
-    customTheme = AppTheme.customTheme;
-
   }
 
   hello() async {
-    final val1=await Permission.manageExternalStorage.request();
+    final val1 = await Permission.manageExternalStorage.request();
     //final val2=await Permission.accessMediaLocation.request();
-    final val3=await Permission.storage.request();
+    final val3 = await Permission.storage.request();
 
-    if(val1.isGranted && val3.isGranted){
+    if (val1.isGranted && val3.isGranted) {
       await RMSUserApiService().downloadFile(
-          url: 'https://www.gnu.org/software/hello/manual/hello.pdf',
-          fileName: 'hello.pdf',);
-    }
-    else{
-      log('dd');
+        url: 'https://www.gnu.org/software/hello/manual/hello.pdf',
+        fileName: 'hello.pdf',
+      );
+    } else {
+      logger.log('dd');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -157,7 +158,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                 _searchController.text = value.locations[index];
                                 await _propertyViewModel.getPropertyDetailsList(
                                     address: value.locations[index],
-                                    property: Property.FromSearch,
+                                    property: Property.fromSearch,
                                     toDate: widget.checkOutDate,
                                     fromDate: widget.checkInDate);
                                 showSearchResults = false;
@@ -299,9 +300,11 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                   enlargeCenterPage: true,
                                                   autoPlay: true,
                                                   aspectRatio: 16 / 9,
-                                                  autoPlayInterval:
-                                                      const Duration(
-                                                          milliseconds: 1500),
+                                                  autoPlayInterval: Duration(
+                                                      milliseconds:
+                                                          math.Random().nextInt(
+                                                                  6000) +
+                                                              1500),
                                                   autoPlayCurve:
                                                       Curves.fastOutSlowIn,
                                                   enableInfiniteScroll: true,
@@ -685,7 +688,6 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                         Container(
                                           height: _mainHeight * 0.05,
                                           width: _mainWidth,
-
                                           child: Row(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -738,14 +740,14 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                               Spacer(),
                                               GestureDetector(
                                                 onTap: () async {
-                                                  if (data.wishlist ==
-                                                          1) {
-                                                    if (data.propId !=
-                                                            null) {
+                                                  if (data.wishlist == 1) {
+                                                    if (data.propId != null) {
                                                       int response =
-                                                      await _propertyViewModel.addToWishlist(
-                                                          propertyId: data.propId ??
-                                                              '');
+                                                          await _propertyViewModel
+                                                              .addToWishlist(
+                                                                  propertyId:
+                                                                      data.propId ??
+                                                                          '');
                                                       if (response == 200) {
                                                         setState(() {
                                                           data.wishlist = 0;
@@ -753,44 +755,48 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                         RMSWidgets.showSnackbar(
                                                             context: context,
                                                             message:
-                                                            'Successfully Removed From Wishlist',
-                                                            color: CustomTheme.appTheme);
+                                                                'Successfully Removed From Wishlist',
+                                                            color: CustomTheme
+                                                                .appTheme);
                                                       }
                                                     }
                                                   } else if (data.wishlist ==
-                                                          0) {
-                                                    if (data.propId !=
-                                                            null) {
+                                                      0) {
+                                                    if (data.propId != null) {
                                                       int response =
-                                                      await _propertyViewModel.addToWishlist(
-                                                          propertyId: data.propId ??
-                                                              '');
-                                                      if (response ==200) {
+                                                          await _propertyViewModel
+                                                              .addToWishlist(
+                                                                  propertyId:
+                                                                      data.propId ??
+                                                                          '');
+                                                      if (response == 200) {
                                                         setState(() {
                                                           data.wishlist = 1;
                                                         });
                                                         RMSWidgets.showSnackbar(
                                                             context: context,
                                                             message:
-                                                            'Successfully Added to Wishlist',
-                                                            color: CustomTheme.appTheme);
+                                                                'Successfully Added to Wishlist',
+                                                            color: CustomTheme
+                                                                .appTheme);
                                                       }
                                                     }
                                                   }
                                                 },
                                                 child: CircleAvatar(
-                                                    backgroundColor: Colors.white,
+                                                    backgroundColor:
+                                                        Colors.white,
                                                     radius: 15,
-                                                    child:data.wishlist ==
-                                                            1
+                                                    child: data.wishlist == 1
                                                         ? Icon(
-                                                      Icons.favorite,
-                                                      color: Colors.red,
-                                                    )
+                                                            Icons.favorite,
+                                                            color: Colors.red,
+                                                          )
                                                         : Icon(
-                                                      Icons.favorite_outline_rounded,
-                                                      color: Colors.red,
-                                                    )),
+                                                            Icons
+                                                                .favorite_outline_rounded,
+                                                            color: Colors.red,
+                                                          )),
                                               ),
                                             ],
                                           ),
@@ -1176,7 +1182,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                       borderRadius: BorderRadius.circular(40)),
                                 )),
                             onPressed: () async {
-                              log('Min Price :: $_lowerValue -- Max Price :: $_upperValue');
+                              logger.log(
+                                  'Min Price :: $_lowerValue -- Max Price :: $_upperValue');
                             },
                             child: Center(
                                 child: Text(
@@ -1573,4 +1580,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
         fontSize: 14,
         fontWeight: FontWeight.w500);
   }
+
+  Future<String> getCurrentLocationProperties() async =>
+      await LocationService.getCurrentPlace();
 }

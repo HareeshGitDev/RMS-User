@@ -19,13 +19,13 @@ class PaymentApiService {
 
   Future<int> submitPaymentResponse(
       {required String paymentId, required String paymentSignature, required String redirectApi}) async {
-    String url = 'v2/$redirectApi';
+    String url = redirectApi;
     final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
       'razorpay_payment_id': paymentId,
       'razorpay_signature': paymentSignature,
     });
     final data = response as Map<String, dynamic>;
     log('PAYMENT :: ${data.toString()} -- ZZ $response');
-    return data['msg'].toString()=='success'?200:404;
+    return data['msg'].toString().toLowerCase()=='success'?200:404;
   }
 }

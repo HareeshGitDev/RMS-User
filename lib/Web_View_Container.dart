@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:RentMyStay_user/theme/app_theme.dart';
@@ -19,6 +20,8 @@ class Web_View_Container extends StatefulWidget {
 class _WebViewContainerState extends State<Web_View_Container> {
   ValueNotifier<bool> showLoader = ValueNotifier(true);
   ValueNotifier<int> progressIndicator = ValueNotifier(0);
+  late WebViewController _webViewController;
+
   var _mainHeight;
   var _mainWidth;
 
@@ -26,8 +29,8 @@ class _WebViewContainerState extends State<Web_View_Container> {
 
   @override
   Widget build(BuildContext context) {
-    _mainHeight=MediaQuery.of(context).size.height;
-    _mainWidth= MediaQuery.of(context).size.width;
+    _mainHeight = MediaQuery.of(context).size.height;
+    _mainWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: CustomTheme.appTheme,
@@ -37,7 +40,6 @@ class _WebViewContainerState extends State<Web_View_Container> {
         body: Container(
           height: _mainHeight,
           width: _mainWidth,
-
           child: Column(
             children: [
               Expanded(
@@ -45,7 +47,6 @@ class _WebViewContainerState extends State<Web_View_Container> {
                   children: [
                     WebView(
                       onProgress: (progress) {
-                        //log('XXX $progress');
                         progressIndicator.value = progress;
                       },
                       onPageStarted: (start) {
@@ -54,8 +55,9 @@ class _WebViewContainerState extends State<Web_View_Container> {
                       onPageFinished: (end) {
                         showLoader.value = false;
                       },
-
-                      onWebViewCreated: (WebViewController controller) {},
+                      onWebViewCreated: (WebViewController controller) {
+                        _webViewController = controller;
+                      },
                       backgroundColor: Colors.white,
                       key: _key,
                       javascriptMode: JavascriptMode.unrestricted,
@@ -63,7 +65,7 @@ class _WebViewContainerState extends State<Web_View_Container> {
                     ),
                     Positioned(
                       top: _mainHeight * 0.4,
-                      left:_mainWidth * 0.4,
+                      left: _mainWidth * 0.4,
                       child: ValueListenableBuilder(
                         valueListenable: showLoader,
                         builder: (context, bool value, child) {

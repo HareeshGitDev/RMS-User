@@ -1,30 +1,25 @@
-import 'package:flutter/cupertino.dart';
-
 class WishListModel {
+  String? msg;
   List<Data>? data;
-  String? userProfilePic;
-  String? status;
 
-  WishListModel({this.data, this.userProfilePic, this.status});
+  WishListModel({this.msg, this.data});
 
   WishListModel.fromJson(Map<String, dynamic> json) {
+    msg = json['msg'];
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
         data!.add(new Data.fromJson(v));
       });
     }
-    userProfilePic = json['user_profile_pic'];
-    status = json['status'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['msg'] = this.msg;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
-    data['user_profile_pic'] = this.userProfilePic;
-    data['status'] = this.status;
     return data;
   }
 }

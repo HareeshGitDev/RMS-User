@@ -329,7 +329,7 @@ class _SearchPageState extends State<SearchPage> {
                                             arguments: {
                                               'location':
                                                   _searchController.text,
-                                              'property': Property.FromSearch,
+                                              'property': Property.fromSearch,
                                               'checkInDate': checkInDate,
                                               'checkOutDate': checkOutDate,
                                             });
@@ -383,7 +383,7 @@ class _SearchPageState extends State<SearchPage> {
                                                 arguments: {
                                               'location':
                                                   'Bengaluru-Karnataka-India',
-                                              'property': Property.FromLocation,
+                                              'property': Property.fromLocation,
                                             }),
                                         child: Container(
                                           alignment: Alignment.center,
@@ -412,7 +412,7 @@ class _SearchPageState extends State<SearchPage> {
                                                 arguments: {
                                               'location':
                                                   'BTM-Layout-Bengaluru-Karnataka-India',
-                                              'property': Property.FromLocation,
+                                              'property': Property.fromLocation,
                                             }),
                                         child: Container(
                                           alignment: Alignment.center,
@@ -441,7 +441,7 @@ class _SearchPageState extends State<SearchPage> {
                                                 arguments: {
                                               'location':
                                                   'Hsr-layout-Bengaluru-Karnataka-India',
-                                              'property': Property.FromLocation,
+                                              'property': Property.fromLocation,
                                             }),
                                         child: Container(
                                           alignment: Alignment.center,
@@ -474,7 +474,7 @@ class _SearchPageState extends State<SearchPage> {
                                                 arguments: {
                                               'location':
                                                   'Kundanahalli-Gate-ITPL-Main-Road-Brookefield-Bengaluru-Karnataka-India',
-                                              'property': Property.FromLocation,
+                                              'property': Property.fromLocation,
                                             }),
                                         child: Container(
                                           alignment: Alignment.center,
@@ -503,7 +503,7 @@ class _SearchPageState extends State<SearchPage> {
                                                 arguments: {
                                               'location':
                                                   'Marathahalli-Bengaluru-Karnataka-India',
-                                              'property': Property.FromLocation,
+                                              'property': Property.fromLocation,
                                             }),
                                         child: Container(
                                           alignment: Alignment.center,
@@ -532,7 +532,7 @@ class _SearchPageState extends State<SearchPage> {
                                                 arguments: {
                                               'location':
                                                   'Whitefield-Bengaluru-Karnataka-India',
-                                              'property': Property.FromLocation,
+                                              'property': Property.fromLocation,
                                             }),
                                         child: Container(
                                           alignment: Alignment.center,
@@ -563,7 +563,7 @@ class _SearchPageState extends State<SearchPage> {
                                             arguments: {
                                           'location':
                                               'Old-airport-road-Bengaluru-Karnataka-India',
-                                          'property': Property.FromLocation,
+                                          'property': Property.fromLocation,
                                         }),
                                     child: Container(
                                       alignment: Alignment.center,
@@ -609,7 +609,7 @@ class _SearchPageState extends State<SearchPage> {
                                               'location':
                                                   'Bengaluru-Karnataka-India',
                                               'propertyType': '1BHK',
-                                              'property': Property.FromBHK,
+                                              'property': Property.fromBHK,
                                             }),
                                         child: Container(
                                           alignment: Alignment.center,
@@ -639,7 +639,7 @@ class _SearchPageState extends State<SearchPage> {
                                               'location':
                                                   'Bengaluru-Karnataka-India',
                                               'propertyType': '2BHK',
-                                              'property': Property.FromBHK,
+                                              'property': Property.fromBHK,
                                             }),
                                         child: Container(
                                           alignment: Alignment.center,
@@ -669,7 +669,7 @@ class _SearchPageState extends State<SearchPage> {
                                               'location':
                                                   'Bengaluru-Karnataka-India',
                                               'propertyType': '1BHK',
-                                              'property': Property.FromBHK,
+                                              'property': Property.fromBHK,
                                             }),
                                         child: Container(
                                           alignment: Alignment.center,
@@ -956,7 +956,7 @@ class _SearchPageState extends State<SearchPage> {
                                           AppRoutes.propertyListingPage,
                                           arguments: {
                                             'location': _searchController.text,
-                                            'property': Property.FromSearch,
+                                            'property': Property.fromSearch,
                                             'checkInDate': checkInDate,
                                             'checkOutDate': checkOutDate,
                                           });
@@ -1010,7 +1010,7 @@ class _SearchPageState extends State<SearchPage> {
                                               arguments: {
                                             'location':
                                                 'Bengaluru-Karnataka-India',
-                                            'property': Property.FromLocation,
+                                            'property': Property.fromLocation,
                                           }),
                                       child: Container(
                                         alignment: Alignment.center,
@@ -1039,7 +1039,7 @@ class _SearchPageState extends State<SearchPage> {
                                               arguments: {
                                             'location':
                                                 'BTM-Layout-Bengaluru-Karnataka-India',
-                                            'property': Property.FromLocation,
+                                            'property': Property.fromLocation,
                                           }),
                                       child: Container(
                                         alignment: Alignment.center,
@@ -1068,7 +1068,7 @@ class _SearchPageState extends State<SearchPage> {
                                               arguments: {
                                             'location':
                                                 'Hsr-layout-Bengaluru-Karnataka-India',
-                                            'property': Property.FromLocation,
+                                            'property': Property.fromLocation,
                                           }),
                                       child: Container(
                                         alignment: Alignment.center,
@@ -1101,7 +1101,7 @@ class _SearchPageState extends State<SearchPage> {
                                               arguments: {
                                             'location':
                                                 'Kundanahalli-Gate-ITPL-Main-Road-Brookefield-Bengaluru-Karnataka-India',
-                                            'property': Property.FromLocation,
+                                            'property': Property.fromLocation,
                                           }),
                                       child: Container(
                                         alignment: Alignment.center,
@@ -1130,7 +1130,7 @@ class _SearchPageState extends State<SearchPage> {
                                               arguments: {
                                             'location':
                                                 'Marathahalli-Bengaluru-Karnataka-India',
-                                            'property': Property.FromLocation,
+                                            'property': Property.fromLocation,
                                           }),
                                       child: Container(
                                         alignment: Alignment.center,
@@ -1159,7 +1159,7 @@ class _SearchPageState extends State<SearchPage> {
                                               arguments: {
                                             'location':
                                                 'Whitefield-Bengaluru-Karnataka-India',
-                                            'property': Property.FromLocation,
+                                            'property': Property.fromLocation,
                                           }),
                                       child: Container(
                                         alignment: Alignment.center,
@@ -1189,7 +1189,7 @@ class _SearchPageState extends State<SearchPage> {
                                       arguments: {
                                         'location':
                                             'Old-airport-road-Bengaluru-Karnataka-India',
-                                        'property': Property.FromLocation,
+                                        'property': Property.fromLocation,
                                       }),
                                   child: Container(
                                     alignment: Alignment.center,
@@ -1235,7 +1235,7 @@ class _SearchPageState extends State<SearchPage> {
                                             'location':
                                                 'Bengaluru-Karnataka-India',
                                             'propertyType': '1BHK',
-                                            'property': Property.FromBHK,
+                                            'property': Property.fromBHK,
                                           }),
                                       child: Container(
                                         alignment: Alignment.center,
@@ -1265,7 +1265,7 @@ class _SearchPageState extends State<SearchPage> {
                                             'location':
                                                 'Bengaluru-Karnataka-India',
                                             'propertyType': '2BHK',
-                                            'property': Property.FromBHK,
+                                            'property': Property.fromBHK,
                                           }),
                                       child: Container(
                                         alignment: Alignment.center,
@@ -1295,7 +1295,7 @@ class _SearchPageState extends State<SearchPage> {
                                             'location':
                                                 'Bengaluru-Karnataka-India',
                                             'propertyType': '1BHK',
-                                            'property': Property.FromBHK,
+                                            'property': Property.fromBHK,
                                           }),
                                       child: Container(
                                         alignment: Alignment.center,

@@ -485,34 +485,34 @@ class Amenities {
 }
 
 class AmenitiesNew {
-  String? cableTv;
-  String? kitchen;
-  String? refrigerator;
-  String? centerTable;
-  String? washingMachine;
-  String? sofaDeewan;
-  String? cotMattress;
-  String? curtains;
-  String? bucketsMugs;
-  String? dustbin;
-  String? geysers;
-  String? bikeParking;
-  String? carParking;
-  String? airConditioning;
-  String? balcony;
-  String? elevator;
-  String? pool;
-  String? powerBackup;
-  String? security;
-  String? clubhouse;
-  String? essentials;
-  String? wifi;
-  String? heating;
-  String? breakfast;
-  String? stoveCylinder;
-  String? smoking;
-  String? foodService;
-  String? housekeeping;
+  String? cableTv='1';
+  String? kitchen='1';
+  String? refrigerator='1';
+  String? centerTable='1';
+  String? washingMachine='1';
+  String? sofaDeewan='1';
+  String? cotMattress='1';
+  String? curtains='1';
+  String? bucketsMugs='1';
+  String? dustbin='1';
+  String? geysers='1';
+  String? bikeParking='1';
+  String? carParking='1';
+  String? airConditioning='1';
+  String? balcony='1';
+  String? elevator='1';
+  String? pool='1';
+  String? powerBackup='1';
+  String? security='1';
+  String? clubhouse='1';
+  String? essentials='1';
+  String? wifi='1';
+  String? heating='1';
+  String? breakfast='1';
+  String? stoveCylinder='1';
+  String? smoking='1';
+  String? foodService='1';
+  String? housekeeping='1';
 
   AmenitiesNew(
       {this.cableTv,
