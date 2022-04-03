@@ -306,7 +306,7 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                 ),
               ],
             )):value.referAndEarnModel.msg != null &&
-            value.referAndEarnModel.msg?.toLowerCase() == 'failure'?Container():RMSWidgets.getLoader(color: CustomTheme.appTheme),
+            value.referAndEarnModel.msg?.toLowerCase() == 'failure'?Container():Center(child: RMSWidgets.getLoader(color: CustomTheme.appTheme)),
       );
     });
   }

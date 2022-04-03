@@ -89,14 +89,13 @@ class PropertyApiService {
   Future<PropertyListModel> filterSortPropertyList({
     required FilterSortRequestModel requestModel,
   }) async {
-    String url = AppUrls.filterSortPropsUrl;
+    String url = AppUrls.propertyListingUrl;
 
     final response = await _apiService.getApiCallWithQueryParams(
         endPoint: url, queryParams: requestModel.toJson());
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() == 'true') {
-      data['status'] = 'success';
+    if (data['msg'].toString().toLowerCase() == 'success') {
       return PropertyListModel.fromJson(data);
     } else {
       return PropertyListModel(msg: 'failure');
