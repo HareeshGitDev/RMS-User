@@ -61,17 +61,10 @@ class _BookingPageState extends State<BookingPage> {
   final _phoneNumberController = TextEditingController();
   late PropertyDetailsViewModel _viewModel;
 
-  // late Razorpay _razorpay;
-  /*BookingCredentialResponseModel _bookingCredentialResponseModel =
-      BookingCredentialResponseModel();*/
 
   @override
   void initState() {
     super.initState();
-    /*_razorpay = Razorpay();
-    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);*/
     _viewModel = Provider.of<PropertyDetailsViewModel>(context, listen: false);
     initMethod();
   }
@@ -100,7 +93,6 @@ class _BookingPageState extends State<BookingPage> {
 
   @override
   void dispose() {
-    //_razorpay.clear();
     super.dispose();
   }
 
@@ -108,7 +100,6 @@ class _BookingPageState extends State<BookingPage> {
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
-    //return Consumer<BookingPage>(builder: (context, value, child){
     return Consumer<PropertyDetailsViewModel>(
       builder: (context, value, child) {
         return Scaffold(
@@ -446,6 +437,19 @@ class _BookingPageState extends State<BookingPage> {
                                           ),
                                           ElevatedButton(
                                             onPressed: () async {
+                                              if (_coupanController
+                                                      .text.isEmpty ||
+                                                  _coupanController
+                                                          .text.length <
+                                                      5) {
+                                                RMSWidgets.showSnackbar(
+                                                    context: context,
+                                                    message:
+                                                        'Please Enter Valid Coupon Code',
+                                                    color:
+                                                        CustomTheme.errorColor);
+                                                return;
+                                              }
                                               RMSWidgets.showLoaderDialog(
                                                   context: context,
                                                   message: 'Loading...');
@@ -481,18 +485,18 @@ class _BookingPageState extends State<BookingPage> {
                                             },
                                             child: Text('Apply'),
                                             style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateProperty.all<
-                                                            Color>(
-                                                        CustomTheme.appTheme),
-                                                shape:
-                                                    MaterialStateProperty.all<
-                                                        RoundedRectangleBorder>(
-                                                  RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10)),
-                                                )),
+                                              backgroundColor:
+                                                  MaterialStateProperty.all<
+                                                          Color>(
+                                                      CustomTheme.appTheme),
+                                              shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -616,14 +620,14 @@ class _BookingPageState extends State<BookingPage> {
 
                                   Navigator.pop(context);
 
-                                  if (response.status?.toLowerCase() ==
+                                   if (response.msg?.toLowerCase() ==
                                           'success' &&
                                       response.data != null &&
                                       response.data?.prefill != null &&
                                       response.data?.amount != null &&
                                       response.data?.key != null &&
                                       response.data?.orderId != null &&
-                                      response.data?.redirect_api != null) {
+                                      response.data?.callbackApi != null) {
                                     // _bookingCredentialResponseModel = response;
                                     Navigator.of(context).pushNamedAndRemoveUntil(
                                         AppRoutes.razorpayPaymentPage, (route) => false,
@@ -643,7 +647,7 @@ class _BookingPageState extends State<BookingPage> {
                                                     '',
                                             description:
                                                 response.data?.description ??
-                                                    '',
+                                                    'RMS Payment',
                                             orderId:
                                                 response.data?.orderId ?? '',
                                             paymentMode:
@@ -651,9 +655,8 @@ class _BookingPageState extends State<BookingPage> {
                                             razorPayKey:
                                                 response.data?.key ?? '',
                                             redirectApi:
-                                                response.data?.redirect_api ?? '',
+                                                response.data?.callbackApi ?? '',
                                             extraInfo: ''));
-                                    //await openCheckout(model: response);
                                   }
                                 }
                               : () {},
@@ -687,88 +690,6 @@ class _BookingPageState extends State<BookingPage> {
     );
   }
 
-  /*Future<void> openCheckout(
-      {required BookingCredentialResponseModel model}) async {
-    if (model.data == null) {
-      return;
-    }
-    var options = {
-      'key': model.data?.key,
-      'amount': model.data?.amount,
-      'order_id': model.data?.orderId,
-      'image': model.data?.image,
-      'name': model.data?.name,
-      'description': model.data?.description,
-      'retry': {'enabled': true, 'max_count': 1},
-      'send_sms_hash': true,
-      "theme": {
-        "color": model.data?.theme?.color,
-      },
-      'prefill': {
-        'contact': model.data?.prefill?.contact,
-        'email': model.data?.prefill?.email
-      },
-      'external': {
-        'wallets': ['paytm']
-      }
-    };
-
-    try {
-      _razorpay.open(options);
-    } catch (e) {
-      log('Error :: ' + e.toString());
-    }
-  }
-
-  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
-    if (response.orderId != null &&
-        response.signature != null &&
-        response.paymentId != null) {
-      RMSWidgets.showLoaderDialog(
-          context: context, message: 'Confirmation Pending...');
-      await _viewModel
-          .submitPaymentResponse(
-              paymentId: response.paymentId!,
-              paymentSignature: response.signature!,
-              redirectApi:
-                  _bookingCredentialResponseModel.data?.redirect_api ?? '')
-          .then((value) {
-        Navigator.of(context).pop();
-        return Navigator.pushNamedAndRemoveUntil(
-            context, AppRoutes.paymentStatusPage, (route) => false,
-            arguments: {
-              'status': 'success',
-              'paymentId': response.paymentId,
-              'amount': _bookingCredentialResponseModel.data?.amount.toString(),
-              'title':
-              '${widget.propertyDetailsUtilModel.buildingName} \n ${widget.propertyDetailsUtilModel.title}',
-
-            });
-      }).catchError(
-        (error) {
-          Navigator.of(context).pop();
-          log('Error :: ${error.toString()}');
-        },
-      );
-    }
-  }
-
-  void _handlePaymentError(PaymentFailureResponse response) {
-    Navigator.pushNamedAndRemoveUntil(
-        context, AppRoutes.paymentStatusPage, (route) => false,
-        arguments: {
-          'status': 'failed',
-          'amount': _bookingCredentialResponseModel.data?.amount.toString(),
-          'title':
-              '${widget.propertyDetailsUtilModel.buildingName} \n ${widget.propertyDetailsUtilModel.title}',
-        });
-  }
-
-  void _handleExternalWallet(ExternalWalletResponse response) {
-    Fluttertoast.showToast(
-        msg: "EXTERNAL_WALLET: " + response.walletName!,
-        toastLength: Toast.LENGTH_SHORT);
-  }*/
 
   static String showformatDate(String da) {
     var a = da.split('-');

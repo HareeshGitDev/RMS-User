@@ -163,12 +163,13 @@ class NavigationService {
                 ));
 
       case AppRoutes.updateInvoiceUTRPage:
-        final data = settings.arguments as String;
+        final data = settings.arguments as Map<String,dynamic>;
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
                   create: (_) => MyStayViewModel(),
                   child: UpdateInvoiceUTRPage(
-                    bookingId: data,
+                    bookingId: data['bookingId'],
+                    invoiceId:  data['invoiceId'],
                   ),
                 ));
 

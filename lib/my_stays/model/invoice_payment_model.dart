@@ -1,10 +1,10 @@
-class BookingCredentialResponseModel {
+class InvoicePaymentModel {
   String? msg;
   Data? data;
 
-  BookingCredentialResponseModel({this.msg, this.data});
+  InvoicePaymentModel({this.msg, this.data});
 
-  BookingCredentialResponseModel.fromJson(Map<String, dynamic> json) {
+  InvoicePaymentModel.fromJson(Map<String, dynamic> json) {
     msg = json['msg'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
@@ -110,7 +110,7 @@ class Prefill {
 }
 
 class Notes {
-  int? merchantOrderId;
+  String? merchantOrderId;
 
   Notes({this.merchantOrderId});
 

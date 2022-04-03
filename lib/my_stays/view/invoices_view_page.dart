@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:RentMyStay_user/my_stays/model/invoice_payment_model.dart';
 import 'package:RentMyStay_user/payment_module/view/razorpay_payement_page.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,7 +17,7 @@ import '../../utils/constants/app_consts.dart';
 import '../../utils/constants/enum_consts.dart';
 import '../../utils/service/navigation_service.dart';
 import '../../utils/view/rms_widgets.dart';
-import '../model/Invoice_Details_Model.dart';
+import '../model/Invoice_Details_Model.dart' as invoiceModelData;
 import '../viewmodel/mystay_viewmodel.dart';
 
 class InvoicePage extends StatefulWidget {
@@ -32,8 +35,7 @@ class InvoicePage extends StatefulWidget {
       required this.name,
       required this.email,
       required this.mobile,
-      required this.address
-      })
+      required this.address})
       : super(key: key);
 
   @override
@@ -72,8 +74,7 @@ class _InvoiceState extends State<InvoicePage> {
         body: Consumer<MyStayViewModel>(
           builder: (context, value, child) {
             return value.invoiceDetailsModel != null &&
-                    value.invoiceDetailsModel?.data != null &&
-                    value.invoiceDetailsModel?.data?.invoiceDetails != null
+                    value.invoiceDetailsModel?.data != null
                 ? Container(
                     height: _mainHeight,
                     width: _mainWidth,
@@ -82,8 +83,7 @@ class _InvoiceState extends State<InvoicePage> {
                         left: 10, right: 10, top: 10, bottom: 15),
                     child: ListView.separated(
                         itemBuilder: (context, index) {
-                          var data = value.invoiceDetailsModel?.data
-                              ?.invoiceDetails![index];
+                          var data = value.invoiceDetailsModel?.data![index];
                           return Container(
                             padding: EdgeInsets.only(left: 5, right: 5, top: 5),
                             child: Neumorphic(
@@ -142,8 +142,7 @@ class _InvoiceState extends State<InvoicePage> {
                                       ]),
                                       TableRow(children: [
                                         Text('Pay Now :', style: getKeyStyle),
-                                        Text(
-                                            '$rupee ${data?.totalAmount ?? '0'}',
+                                        Text('$rupee ${data?.amount ?? '0'}',
                                             style: getValueStyle),
                                         Text('Status :', style: getKeyStyle),
                                         Text('${data?.status ?? ''}',
@@ -173,9 +172,7 @@ class _InvoiceState extends State<InvoicePage> {
                                                 borderRadius:
                                                     BorderRadius.circular(40)),
                                           )),
-                                      onPressed: data?.status != null &&
-                                              data?.status?.toLowerCase() ==
-                                                  'closed'
+                                      onPressed: data?.pendingBalance == 0
                                           ? () async {
                                               RMSWidgets.showLoaderDialog(
                                                   context: context,
@@ -184,8 +181,7 @@ class _InvoiceState extends State<InvoicePage> {
                                                   await _viewModel
                                                       .downloadInvoice(
                                                           bookingId:
-                                                              data?.bookingId ??
-                                                                  '',
+                                                              widget.bookingId,
                                                           invoiceId:
                                                               data?.invoiceId ??
                                                                   '');
@@ -200,13 +196,11 @@ class _InvoiceState extends State<InvoicePage> {
                                           : () {
                                               choosePaymentDialog(
                                                   context: context,
-                                                  model:
-                                                      data ?? InvoiceDetails());
+                                                  model: data ??
+                                                      invoiceModelData.Data());
                                             },
                                       child: Center(
-                                          child: data?.status != null &&
-                                                  data?.status?.toLowerCase() ==
-                                                      'closed'
+                                          child: data?.pendingBalance == 0
                                               ? Text('Download Invoice')
                                               : Text('Pay Now')),
                                     ),
@@ -224,9 +218,8 @@ class _InvoiceState extends State<InvoicePage> {
                             height: 15,
                           );
                         },
-                        itemCount: value.invoiceDetailsModel?.data
-                                ?.invoiceDetails!.length ??
-                            0),
+                        itemCount:
+                            value.invoiceDetailsModel?.data!.length ?? 0),
                   )
                 : Center(child: CircularProgressIndicator());
           },
@@ -234,7 +227,7 @@ class _InvoiceState extends State<InvoicePage> {
   }
 
   void choosePaymentDialog(
-      {required BuildContext context, required InvoiceDetails model}) {
+      {required BuildContext context, required invoiceModelData.Data model}) {
     showDialog(
         context: context,
         builder: (context) {
@@ -259,56 +252,47 @@ class _InvoiceState extends State<InvoicePage> {
                 children: [
                   GestureDetector(
                     onTap: () async {
-                      RMSWidgets.showLoaderDialog(context: context, message: 'Loading');
-                     final BookingCredentialResponseModel response= await _viewModel.fetchInvoicePaymentCredentials(
-                          model: BookingAmountRequestModel(
-                              propId: widget.propertyId,
-                              depositAmount: model.totalAmount,
-                              paymentGateway: 'razorpay',
-                              invoiceId: model.invoiceId,
-                              bookingId: model.bookingId,
-                              name: widget.name,
-                              email: widget.email,
-                              address: widget.address,
-                              phone: widget.mobile));
-                     Navigator.of(context).pop();
-                     /*if (response.status?.toLowerCase() ==
-                         'success' &&
-                         response.data != null &&
-                         response.data?.prefill != null &&
-                         response.data?.amount != null &&
-                         response.data?.key != null &&
-                         response.data?.orderId != null &&
-                         response.data?.redirect_api != null) {
-                       Navigator.of(context).pushNamedAndRemoveUntil(
-                           AppRoutes.razorpayPaymentPage, (route) => false,
-                           arguments: PaymentRequestModel(
-                               name: response.data?.prefill?.name ??
-                                   '',
-                               color: response.data?.theme?.color ??
-                                   '',
-                               email:
-                               response.data?.prefill?.email ??
-                                   '',
-                               image: response.data?.image ?? '',
-                               amount: (response.data?.amount ?? '')
-                                   .toString(),
-                               contactNumber:
-                               response.data?.prefill?.contact ??
-                                   '',
-                               description:
-                               response.data?.description ??
-                                   '',
-                               orderId:
-                               response.data?.orderId ?? '',
-                               paymentMode:
-                               PaymentMode.FromInvoice,
-                               razorPayKey:
-                               response.data?.key ?? '',
-                               redirectApi:
-                               response.data?.redirect_api ?? '',
-                               extraInfo: ''));
-                     }*/
+                      RMSWidgets.showLoaderDialog(
+                          context: context, message: 'Loading');
+                      final InvoicePaymentModel response =
+                          await _viewModel.fetchInvoicePaymentCredentials(
+                              model: BookingAmountRequestModel(
+                                  propId: widget.propertyId,
+                                  depositAmount: model.amount,
+                                  paymentGateway: 'razorpay',
+                                  invoiceId: model.invoiceId,
+                                  bookingId: widget.bookingId,
+                                  name: widget.name,
+                                  email: widget.email,
+                                  address: widget.address,
+                                  phone: widget.mobile));
+                      Navigator.of(context).pop();
+                      if (response.msg?.toLowerCase() == 'success' &&
+                          response.data != null &&
+                          response.data?.prefill != null &&
+                          response.data?.amount != null &&
+                          response.data?.key != null &&
+                          response.data?.orderId != null &&
+                          response.data?.callbackApi != null) {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            AppRoutes.razorpayPaymentPage, (route) => false,
+                            arguments: PaymentRequestModel(
+                                name: response.data?.prefill?.name ?? '',
+                                color: response.data?.theme?.color ?? '',
+                                email: response.data?.prefill?.email ?? '',
+                                image: response.data?.image ?? '',
+                                amount:
+                                    (response.data?.amount ?? '').toString(),
+                                contactNumber:
+                                    response.data?.prefill?.contact ?? '',
+                                description:
+                                    response.data?.description ?? 'RMS Payment',
+                                orderId: response.data?.orderId ?? '',
+                                paymentMode: PaymentMode.FromInvoice,
+                                razorPayKey: response.data?.key ?? '',
+                                redirectApi: response.data?.callbackApi ?? '',
+                                extraInfo: ''));
+                      }
                     },
                     child: Neumorphic(
                       padding: EdgeInsets.only(left: 10, right: 10, top: 5),
@@ -347,11 +331,17 @@ class _InvoiceState extends State<InvoicePage> {
                     height: 20,
                   ),
                   GestureDetector(
-                    onTap: () => Navigator.pushNamed(
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(
                       context,
                       AppRoutes.updateInvoiceUTRPage,
-                      arguments: widget.bookingId,
-                    ),
+                      arguments: {
+                        'bookingId': widget.bookingId,
+                        'invoiceId': model.invoiceId,
+                      },
+                    );
+                    },
                     child: Neumorphic(
                       style: NeumorphicStyle(
                           depth: 2,

@@ -29,41 +29,36 @@ class PropertyApiService {
     required Property property,
   }) async {
     String url = AppUrls.propertyListingUrl;
-    String searchUrl = AppUrls.searchPropertyUrl;
 
     Map<String, dynamic> queryParams = {
       'addr': address,
-      'app_token': registeredToken ?? await _getRegisteredToken(),
     };
-    if (property == Property.FromLocation) {
+    if (property == Property.fromLocation) {
       queryParams = {
         'addr': address,
-        'app_token': registeredToken ?? await _getRegisteredToken(),
       };
-    } else if (property == Property.FromBHK) {
+    } else if (property == Property.fromBHK) {
       queryParams = {
         'addr': address,
-        'app_token': registeredToken ?? await _getRegisteredToken(),
         'roomType': propertyType,
       };
-    } else if (property == Property.FromSearch) {
+    } else if (property == Property.fromSearch) {
       queryParams = {
         'addr': address,
-        'app_token': registeredToken ?? await _getRegisteredToken(),
         'fromd': fromDate,
         'tod': toDate,
       };
     }
 
     final response = await _apiService.getApiCallWithQueryParams(
-        endPoint: property == Property.FromSearch ? searchUrl : url,
+        endPoint: url,
         queryParams: queryParams);
     final data = response as Map<String, dynamic>;
 
-    if (data['status'].toString().toLowerCase() == 'success') {
+    if (data['msg'].toString().toLowerCase() == 'success') {
       return PropertyListModel.fromJson(data);
     } else {
-      return PropertyListModel(status: 'failure');
+      return PropertyListModel(msg: 'failure');
     }
   }
 
@@ -80,16 +75,14 @@ class PropertyApiService {
   Future<WishListModel> fetchWishList() async {
     String url = AppUrls.fetchWishListPropertyUrl;
     final response = await _apiService
-        .getApiCallWithQueryParams(endPoint: url, queryParams: {
-      'app_token': await _getRegisteredToken(),
-    });
+        .getApiCall(endPoint: url,);
 
     final data = response as Map<String, dynamic>;
 
-    if (data['status'].toString().toLowerCase() == 'success') {
+    if (data['msg'].toString().toLowerCase() == 'success') {
       return WishListModel.fromJson(data);
     } else {
-      return WishListModel(status: 'failure', data: []);
+      return WishListModel(msg: 'failure', data: []);
     }
   }
 
@@ -102,11 +95,11 @@ class PropertyApiService {
         endPoint: url, queryParams: requestModel.toJson());
     final data = response as Map<String, dynamic>;
 
-    if (data['success'].toString().toLowerCase() == 'true') {
+    if (data['msg'].toString().toLowerCase() == 'true') {
       data['status'] = 'success';
       return PropertyListModel.fromJson(data);
     } else {
-      return PropertyListModel(status: 'failure');
+      return PropertyListModel(msg: 'failure');
     }
   }
 }

@@ -1,15 +1,19 @@
+import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 
 import '../../theme/custom_theme.dart';
+import '../../utils/service/navigation_service.dart';
 import '../viewmodel/mystay_viewmodel.dart';
 
 class UpdateInvoiceUTRPage extends StatefulWidget {
   final String bookingId;
+  final String invoiceId;
 
-  const UpdateInvoiceUTRPage({Key? key, required this.bookingId})
+  const UpdateInvoiceUTRPage(
+      {Key? key, required this.bookingId, required this.invoiceId})
       : super(key: key);
 
   @override
@@ -17,8 +21,7 @@ class UpdateInvoiceUTRPage extends StatefulWidget {
 }
 
 class _UpdateInvoiceUTRPageState extends State<UpdateInvoiceUTRPage> {
-  @override
-  final _updateUTRController = TextEditingController();
+  final _utrController = TextEditingController();
   var _mainHeight;
   var _mainWidth;
   late MyStayViewModel _viewModel;
@@ -27,7 +30,6 @@ class _UpdateInvoiceUTRPageState extends State<UpdateInvoiceUTRPage> {
   void initState() {
     super.initState();
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
-    // _viewModel.getRefundSplitUpDetails(bookingId: widget.bookingId);
   }
 
   TextStyle get getKeyStyle =>
@@ -51,9 +53,10 @@ class _UpdateInvoiceUTRPageState extends State<UpdateInvoiceUTRPage> {
         height: _mainHeight,
         width: _mainWidth,
         color: Colors.white,
-        padding: EdgeInsets.only(left: 15,right: 15,top: 15,bottom: 15),
+        padding: EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 15),
         child: SingleChildScrollView(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
                 'Use Netbanking/UPI ID/QR Code to transfer amount directly to bank account and update the transaction details below:'),
             SizedBox(
@@ -175,12 +178,10 @@ class _UpdateInvoiceUTRPageState extends State<UpdateInvoiceUTRPage> {
                   shape: NeumorphicShape.convex,
                 ),
                 child: TextFormField(
-                  controller: _updateUTRController,
-
+                  controller: _utrController,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.only(left: 10),
-
                     hintStyle: TextStyle(
                         //fontFamily: fontFamily,
                         fontSize: 16,
@@ -193,17 +194,33 @@ class _UpdateInvoiceUTRPageState extends State<UpdateInvoiceUTRPage> {
             SizedBox(
               height: 10,
             ),
-
           ]),
         ),
       ),
       bottomNavigationBar: Container(
         width: _mainWidth,
         height: _mainHeight * 0.06,
-        padding: EdgeInsets.only(left: 15,right: 15,bottom: 10),
-
+        padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
         child: ElevatedButton(
-          onPressed: () async {},
+          onPressed: () async {
+            if(_utrController.text.length < 6){
+              RMSWidgets.showSnackbar(context: context, message: 'Please Enter Valid UTR/Transaction Id', color: CustomTheme.errorColor);
+              return;
+            }
+            RMSWidgets.showLoaderDialog(context: context, message: 'Loading');
+            int response=await _viewModel.updateInvoiceUTRPayment(
+                invoiceId: widget.invoiceId,
+                utrNumber: _utrController.text,
+                bookingId: widget.bookingId);
+            Navigator.of(context).pop();
+           if(response ==200){
+             RMSWidgets.showSnackbar(context: context, message: 'Payment Successful.Please wait for update.', color: CustomTheme.appTheme);
+             Navigator.pushNamedAndRemoveUntil(context, AppRoutes.dashboardPage, (route) => false);
+           }else{
+             RMSWidgets.showSnackbar(context: context, message: 'Something Went Wrong.', color: CustomTheme.errorColor);
+
+           }
+          },
           child: Text(
             'Update UTR / Transaction Id',
             style: TextStyle(
@@ -213,10 +230,9 @@ class _UpdateInvoiceUTRPageState extends State<UpdateInvoiceUTRPage> {
           ),
           style: ButtonStyle(
               backgroundColor:
-              MaterialStateProperty.all<Color>(CustomTheme.appTheme),
+                  MaterialStateProperty.all<Color>(CustomTheme.appTheme),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               )),
         ),
       ),

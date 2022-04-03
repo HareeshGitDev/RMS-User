@@ -75,7 +75,6 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    log('Called::');
     _mainWidth = MediaQuery.of(context).size.width;
     _mainHeight = MediaQuery.of(context).size.height;
     return Consumer<PropertyDetailsViewModel>(
@@ -285,15 +284,20 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                           ),
                           titlePadding: EdgeInsets.all(0),
                           title: IconButton(
-                            icon: Icon(
-                              Icons.play_circle_outline,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                            onPressed: () {
-                              showPics.value = !showPics.value;
-                              value.youTubeController.reset();
-                            },
+                            icon: value.propertyDetailsModel?.shareLink != null && value.propertyDetailsModel?.shareLink?.trim() !=''
+                                ? Icon(
+                                    Icons.play_circle_outline,
+                                    color: Colors.white,
+                                    size: 20,
+                                  )
+                                : Container(),
+                            onPressed:
+                                value.propertyDetailsModel?.shareLink != null && value.propertyDetailsModel?.shareLink?.trim() !=''
+                                    ? () {
+                                        showPics.value = !showPics.value;
+                                        value.youTubeController.reset();
+                                      }
+                                    : () {},
                           ),
                         ),
                       ),
@@ -550,32 +554,32 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         SizedBox(
                           height: _mainHeight * 0.01,
                         ),
-
                         getAvailableAmenities(list: value.amenitiesList),
-                            SizedBox(
-                              height: _mainHeight * 0.01,
-                            ),
-                            value.amenitiesList.length > 5?
-                            GestureDetector(
-                          onTap: () => setState(() {
-                            showAllAmenities = !showAllAmenities;
-                          }),
-                          child: Container(
-                            padding: EdgeInsets.only(
-                              left: _mainWidth * 0.04,
-                            ),
-                            child: Text(
-                              showAllAmenities
-                                  ? 'View Less Amenities'
-                                  : 'View All Amenities',
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontFamily: fontFamily,
-                                  color: Colors.orange,
-                                  fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                        ):Container(),
+                        SizedBox(
+                          height: _mainHeight * 0.01,
+                        ),
+                        value.amenitiesList.length > 5
+                            ? GestureDetector(
+                                onTap: () => setState(() {
+                                  showAllAmenities = !showAllAmenities;
+                                }),
+                                child: Container(
+                                  padding: EdgeInsets.only(
+                                    left: _mainWidth * 0.04,
+                                  ),
+                                  child: Text(
+                                    showAllAmenities
+                                        ? 'View Less Amenities'
+                                        : 'View All Amenities',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontFamily: fontFamily,
+                                        color: Colors.orange,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                              )
+                            : Container(),
                         SizedBox(
                           height: _mainHeight * 0.01,
                         ),
@@ -1085,9 +1089,37 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
             child: Row(
               children: [
                 Container(
-                  height: 50,
-                  width: 50,
-                  child: Image.network(list[index].imageUrl ),
+                  height: _mainHeight * 0.03,
+                  width: _mainWidth * 0.08,
+                  //  padding: EdgeInsets.only(right: _mainWidth * 0.02),
+                  child: CachedNetworkImage(
+                    imageUrl: list[index].imageUrl,
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        //borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.contain,
+
+                        ),
+                      ),
+                    ),
+                    placeholder: (context, url) => Shimmer.fromColors(
+                        child: Container(
+                          height: _mainHeight * 0.03,
+                          width: _mainWidth * 0.08,
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            // borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        baseColor: Colors.grey[200] as Color,
+                        highlightColor: Colors.grey[350] as Color),
+                    errorWidget: (context, url, error) => const Icon(
+                      Icons.error,
+                      color: Colors.red,
+                    ),
+                  ),
                 ),
                 SizedBox(
                   width: _mainWidth * 0.03,
@@ -1103,7 +1135,11 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
             ),
           );
         },
-        itemCount:showAllAmenities?list.length:list.length > 5 ? 5 : list.length,
+        itemCount: showAllAmenities
+            ? list.length
+            : list.length > 5
+                ? 5
+                : list.length,
       ),
     );
   }
@@ -1262,7 +1298,6 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
           ],
         ));
   }
-
 
   String get getMoreText {
     return """

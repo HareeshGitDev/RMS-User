@@ -65,6 +65,7 @@ class RMSUserApiService {
   Future<dynamic> getApiCall({
     required String endPoint,
   }) async {
+    log('URL :: $_baseURL/$endPoint  -- ${await getHeaders}');
     try {
       final response = await http.get(Uri.https(_baseURL, endPoint),
           headers: await getHeaders);
@@ -87,7 +88,7 @@ class RMSUserApiService {
     required String endPoint,
     required Map<String, dynamic> queryParams,
   }) async {
-    log('URL :: $_baseURL$endPoint ---- QueryParams :: ${queryParams.toString()} ');
+    log('URL :: $_baseURL$endPoint ---- QueryParams :: ${queryParams.toString()} -- ${await getHeaders} ');
     try {
       final response = await http.get(
           Uri.https(_baseURL, endPoint, queryParams),
@@ -130,7 +131,7 @@ class RMSUserApiService {
   Future<dynamic> postApiCall(
       {required String endPoint,
       required Map<String, dynamic> bodyParams}) async {
-    log('URL :: $_baseURL/$endPoint ---- Model :: ${bodyParams.toString()}');
+    log('URL :: $_baseURL/$endPoint ---- Model :: ${bodyParams.toString()} -- ${await getHeaders}');
 
     try {
       final response = await http.post(
@@ -150,13 +151,13 @@ class RMSUserApiService {
 
   Future<dynamic> postApiCallFormData(
       {required String endPoint, required FormData formData}) async {
-    log('URL :: $_baseURL/$endPoint ---- Model :: ${formData.toString()}');
+    log('URL :: $_baseURL/$endPoint ---- Model :: ${formData.toString()} -- ${await getHeaders}');
 
     try {
       Dio dio = Dio();
       final response = await dio.post(Uri.https(_baseURL, endPoint).toString(),
           options: Options(headers: await getHeaders), data: formData);
-      print(response.data);
+      log(response.data);
       return response.statusCode ==200 ? {'msg': 'success'}:{'msg': 'failure'};
     } on SocketException {
       log('SocketException Happened');
@@ -171,7 +172,7 @@ class RMSUserApiService {
     required String endPoint,
     required Map<String, dynamic> bodyParams,
   }) async {
-    log('URL :: $_baseURL/$endPoint ---- Model :: ${bodyParams.toString()}');
+    log('URL :: $_baseURL/$endPoint ---- Model :: ${bodyParams.toString()} -- ${await getHeaders}');
     try {
       final response = await http.put(
         Uri.https(_baseURL, endPoint),

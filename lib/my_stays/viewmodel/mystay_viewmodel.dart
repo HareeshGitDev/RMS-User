@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:RentMyStay_user/my_stays/model/Invoice_Details_Model.dart';
+import 'package:RentMyStay_user/my_stays/model/invoice_payment_model.dart';
 import 'package:RentMyStay_user/my_stays/model/mystay_details_model.dart';
 import 'package:RentMyStay_user/my_stays/model/refund_splitup_model.dart';
 import 'package:RentMyStay_user/my_stays/model/ticket_response_model.dart';
@@ -28,14 +29,16 @@ class MyStayViewModel extends ChangeNotifier {
     log('Total Stay List :: ${myStayListModel.data?.result?.length}');
     if (myStayListModel.data != null && myStayListModel.data?.result != null) {
       completedBookingList = myStayListModel.data?.result
-          ?.where((element) => element.checkOutStatus == '1')
-          .toList() ??[];
+              ?.where((element) => element.checkOutStatus == '1')
+              .toList() ??
+          [];
       log('Completed Stay List :: ${completedBookingList?.length}');
 
       activeBookingList = myStayListModel.data?.result
-          ?.where((element) =>
-              element.checkOutStatus == '0' && element.earlyCout == null)
-          .toList() ?? [];
+              ?.where((element) =>
+                  element.checkOutStatus == '0' && element.earlyCout == null)
+              .toList() ??
+          [];
       log('Active Stay List :: ${activeBookingList?.length}');
     }
 
@@ -124,14 +127,24 @@ class MyStayViewModel extends ChangeNotifier {
       issueImagesList: issueImagesList,
     );
   }
-  Future<String> downloadInvoice(
-      {required String bookingId,
-        required String invoiceId,
-        }) async {
-    return await _myStayApiService.downloadInvoice(bookingId: bookingId, invoiceId: invoiceId);
+
+  Future<String> downloadInvoice({
+    required String bookingId,
+    required String invoiceId,
+  }) async {
+    return await _myStayApiService.downloadInvoice(
+        bookingId: bookingId, invoiceId: invoiceId);
   }
-  Future<BookingCredentialResponseModel> fetchInvoicePaymentCredentials(
+
+  Future<InvoicePaymentModel> fetchInvoicePaymentCredentials(
       {required BookingAmountRequestModel model}) async {
     return await _myStayApiService.fetchInvoicePaymentCredentials(model: model);
   }
+
+  Future<int> updateInvoiceUTRPayment({
+    required String invoiceId,
+    required String utrNumber,
+    required String bookingId,
+  }) async => await _myStayApiService.updateInvoiceUTRPayment(
+        invoiceId: invoiceId, utrNumber: utrNumber, bookingId: bookingId);
 }

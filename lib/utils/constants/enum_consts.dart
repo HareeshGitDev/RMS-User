@@ -1,7 +1,8 @@
 enum Property{
-  FromSearch,
-  FromBHK,
-  FromLocation,
+  fromSearch,
+  fromBHK,
+  fromLocation,
+  fromCurrentLocation,
 }
 
 enum PaymentMode{

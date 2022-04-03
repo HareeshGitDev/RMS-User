@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:RentMyStay_user/my_stays/model/invoice_payment_model.dart';
 import 'package:RentMyStay_user/my_stays/model/ticket_response_model.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
@@ -21,14 +22,13 @@ import '../model/refund_splitup_model.dart';
 class MyStayApiService {
   final RMSUserApiService _apiService = RMSUserApiService();
 
-
   Future<MyStayListModel> fetchMyStayList() async {
     String url = AppUrls.myStayListUrl;
-    final response = await _apiService
-        .getApiCall(endPoint: url);
+    final response = await _apiService.getApiCall(endPoint: url);
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() == 'success' && data['data'] != [] ) {
+    if (data['msg'].toString().toLowerCase() == 'success' &&
+        data['data'] != []) {
       return MyStayListModel.fromJson(data);
     } else {
       return MyStayListModel(
@@ -139,7 +139,8 @@ class MyStayApiService {
     final response = await _apiService.getApiCall(endPoint: url);
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() == 'success') {
+    if (data['msg'].toString().toLowerCase() == 'success' ||
+        data['msg'].toString().toLowerCase() == 'no ticket found') {
       return TicketResponseModel.fromJson(data);
     } else {
       return TicketResponseModel(
@@ -184,16 +185,15 @@ class MyStayApiService {
       'address': address,
       'issue_img': list,
     });
-   list.forEach((element) =>log(element.filename.toString()));
-   formData.files.forEach((element) =>print(element.toString()));
-    formData.fields.forEach((element) =>print(element.toString()));
+    list.forEach((element) => log(element.filename.toString()));
+    formData.files.forEach((element) => print(element.toString()));
+    formData.fields.forEach((element) => print(element.toString()));
     final response = await _apiService.postApiCallFormData(
         endPoint: url, formData: formData);
 
     final data = response as Map<String, dynamic>;
 
-     return data['msg'].toString().toLowerCase() == 'success' ? 200 : 404;
-
+    return data['msg'].toString().toLowerCase() == 'success' ? 200 : 404;
   }
 
   Future<String> downloadInvoice(
@@ -212,28 +212,36 @@ class MyStayApiService {
         ? data['data']
         : '';
   }
-  Future<BookingCredentialResponseModel> fetchInvoicePaymentCredentials(
+
+  Future<InvoicePaymentModel> fetchInvoicePaymentCredentials(
       {required BookingAmountRequestModel model}) async {
     String url = AppUrls.invoicePaymentUrl;
-    final response = await _apiService
-        .postApiCall(endPoint: url, bodyParams: {
-      "invoice_id":model.invoiceId,
+    final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
+      "invoice_id": model.invoiceId,
       'id': model.propId,
-      "booking_id":model.bookingId,
-      "billing_tel": model.phone,
-      "traveller_name": model.name,
-      "contact_email": model.email,
+      "booking_id": model.bookingId,
       "amount": 1.toString(),
-      "traveller_address": model.address,
-      "payment_gatway": model.paymentGateway,
+      //"payment_gatway": model.paymentGateway,
     });
     final data = response as Map<String, dynamic>;
 
-    if (data['status'].toString().toLowerCase() == 'success') {
-      return BookingCredentialResponseModel.fromJson(data);
+    if (data['msg'].toString().toLowerCase() == 'success') {
+      return InvoicePaymentModel.fromJson(data);
     } else {
-      return BookingCredentialResponseModel(
-          status: 'failure');
+      return InvoicePaymentModel(msg: 'failure');
     }
+  }
+  Future<int> updateInvoiceUTRPayment(
+      {required String invoiceId,required String utrNumber,required String bookingId,}) async {
+    String url = AppUrls.utrInvoiceUpdateUrl;
+    final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
+      "utr_no": utrNumber,
+      'invoice_id': invoiceId,
+      "booking_id": bookingId,
+    });
+    final data = response as Map<String, dynamic>;
+
+    return data['msg'].toString().toLowerCase() == 'success' ?200:404;
+
   }
 }

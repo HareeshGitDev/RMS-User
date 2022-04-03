@@ -176,27 +176,29 @@ class _EditProfilestate extends State<EditProfile> {
                     ),
                    SizedBox(height: 30),
 
-                    Container(
-                      height: 40,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        child: Text('Update'),
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                CustomTheme.appTheme),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                            )),
-                      ),
-                    )
+
                   ],
                 ),
               )
             ],
           ),
+        ),
+      ),
+      bottomNavigationBar:  Container(
+        height: 40,
+        margin: EdgeInsets.only(left: 20,right: 20,bottom: 15),
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: () {},
+          child: Text('Update'),
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(
+                  CustomTheme.appTheme),
+              shape: MaterialStateProperty.all<
+                  RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              )),
         ),
       ),
     );

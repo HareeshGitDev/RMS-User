@@ -80,26 +80,24 @@ class PropertyDetailsApiService {
   Future<BookingCredentialResponseModel> fetchBookingCredentials(
       {required BookingAmountRequestModel model}) async {
     String url = AppUrls.bookingCredentialsUrl;
-    final response = await _apiService
-        .getApiCallWithQueryParams(endPoint: url, queryParams: {
-      'id': base64Encode(utf8.encode(model.propId.toString())),
+    final response = await _apiService.postApiCall(endPoint: url, bodyParams:  {
+      'id': model.propId,
       'travel_from_date': model.fromDate,
       'travel_to_date': model.toDate,
       'num_guests': model.numOfGuests,
-      'coupon_code': model.couponCode,
-      'app_token': model.token,
       "traveller_name": model.name,
       "contact_email": model.email,
       "amount": 1.toString(),
-      "payment_gatway": model.paymentGateway,
+      "contact_num":model.phone,
+      "payment_gateway": model.paymentGateway,
     });
     final data = response as Map<String, dynamic>;
 
-    if (data['status'].toString().toLowerCase() == 'success') {
+    if (data['msg'].toString().toLowerCase() == 'success') {
       return BookingCredentialResponseModel.fromJson(data);
     } else {
       return BookingCredentialResponseModel(
-          status: 'failure');
+          msg: 'failure');
     }
   }
 

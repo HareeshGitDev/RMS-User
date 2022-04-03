@@ -59,7 +59,7 @@ class _TicketListPageState extends State<TicketListPage> {
       body: Consumer<MyStayViewModel>(
         builder: (context, value, child) {
           return value.ticketResponseModel != null &&
-                  value.ticketResponseModel?.data != null
+                  value.ticketResponseModel?.data != null && value.ticketResponseModel?.data != []
               ? Container(
                   height: _mainHeight,
                   width: _mainWidth,
@@ -139,7 +139,8 @@ class _TicketListPageState extends State<TicketListPage> {
                     ),
                   ),
                 )
-              : Center(
+              :value.ticketResponseModel != null &&
+              value.ticketResponseModel?.data != null && value.ticketResponseModel?.data == [] ?RMSWidgets.noData(context: context, message: 'No Tickets Found.',): Center(
                   child: RMSWidgets.getLoader(color: CustomTheme.appTheme));
         },
       ),
