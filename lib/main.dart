@@ -15,7 +15,7 @@ void main() async {
       name: 'rentmystay_user',
       options: Platform.isMacOS || Platform.isIOS
           ? const FirebaseOptions(
-              appId: 'IOS KEY',
+              appId: '1:172037116875:ios:742a1cb9248d4eb634dc4e',
               apiKey: 'AIzaSyCE-KLe5oa_Gcou-WQHiTeqHpw1RV1-Ouo',
               projectId: 'rentmystay-new-1539065190327',
               messagingSenderId: '172037116875',
