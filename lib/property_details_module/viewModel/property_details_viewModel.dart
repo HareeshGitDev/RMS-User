@@ -31,16 +31,16 @@ class PropertyDetailsViewModel extends ChangeNotifier {
         await _detailsApiService.fetchPropertyDetails(propId: propId);
     propertyDetailsModel = response;
 
-    if (propertyDetailsModel != null &&
-        propertyDetailsModel?.amenitiesNew != null) {
-      getAmenitiesList(propertyDetailsModel?.amenitiesNew);
+    if (propertyDetailsModel != null && propertyDetailsModel?.data != null &&
+        propertyDetailsModel?.data?.amenities != null) {
+      getAmenitiesList(propertyDetailsModel?.data?.amenities);
     }
 
-    if (propertyDetailsModel != null &&
-        propertyDetailsModel?.details != null &&
-        propertyDetailsModel?.details?.videoLink != null) {
+    if (propertyDetailsModel != null && propertyDetailsModel?.data != null &&
+        propertyDetailsModel?.data?.details != null &&
+        propertyDetailsModel?.data?.details?.videoLink != null) {
       youTubeController = YoutubePlayerController(
-        initialVideoId: (propertyDetailsModel?.details?.videoLink).toString(),
+        initialVideoId: (propertyDetailsModel?.data?.details?.videoLink).toString(),
         flags: const YoutubePlayerFlags(
           autoPlay: true,
           mute: false,
@@ -84,7 +84,7 @@ class PropertyDetailsViewModel extends ChangeNotifier {
         redirectApi: redirectApi);
   }
 
-  void getAmenitiesList(AmenitiesNew? amenitiesNew) {
+  void getAmenitiesList(Amenities? amenitiesNew) {
     if (amenitiesNew?.wifi == '1') {
       amenitiesList.add(AmenitiesModel(
           name: 'WiFi',

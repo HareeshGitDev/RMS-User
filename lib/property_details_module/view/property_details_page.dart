@@ -81,7 +81,8 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
       builder: (context, value, child) {
         //value.propertyDetailsModel.
         return SafeArea(
-          child: value.propertyDetailsModel != null
+          child: value.propertyDetailsModel != null &&
+                  value.propertyDetailsModel?.data != null
               ? Scaffold(
                   resizeToAvoidBottomInset: true,
                   body: CustomScrollView(
@@ -94,22 +95,22 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         actions: [
                           GestureDetector(
                             onTap: () async {
-                              if (value.propertyDetailsModel?.details != null &&
-                                  value.propertyDetailsModel?.details
+                              if (value.propertyDetailsModel?.data?.details != null &&
+                                  value.propertyDetailsModel?.data?.details
                                           ?.wishlist ==
                                       1) {
-                                if (value.propertyDetailsModel?.details !=
+                                if (value.propertyDetailsModel?.data?.details !=
                                         null &&
-                                    value.propertyDetailsModel?.details
+                                    value.propertyDetailsModel?.data?.details
                                             ?.propId !=
                                         null) {
                                   int response = await _viewModel.addToWishlist(
                                       propertyId: value.propertyDetailsModel
-                                              ?.details?.propId ??
+                                              ?.data?.details?.propId ??
                                           '');
                                   if (response == 200) {
                                     setState(() {
-                                      value.propertyDetailsModel?.details
+                                      value.propertyDetailsModel?.data?.details
                                           ?.wishlist = 0;
                                     });
                                     RMSWidgets.showSnackbar(
@@ -119,23 +120,23 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                         color: CustomTheme.appTheme);
                                   }
                                 }
-                              } else if (value.propertyDetailsModel?.details !=
+                              } else if (value.propertyDetailsModel?.data?.details !=
                                       null &&
-                                  value.propertyDetailsModel?.details
+                                  value.propertyDetailsModel?.data?.details
                                           ?.wishlist ==
                                       0) {
-                                if (value.propertyDetailsModel?.details !=
+                                if (value.propertyDetailsModel?.data?.details !=
                                         null &&
-                                    value.propertyDetailsModel?.details
+                                    value.propertyDetailsModel?.data?.details
                                             ?.propId !=
                                         null) {
                                   int response = await _viewModel.addToWishlist(
                                       propertyId: value.propertyDetailsModel
-                                              ?.details?.propId ??
+                                              ?.data?.details?.propId ??
                                           '');
                                   if (response == 200) {
                                     setState(() {
-                                      value.propertyDetailsModel?.details
+                                      value.propertyDetailsModel?.data?.details
                                           ?.wishlist = 1;
                                     });
                                     RMSWidgets.showSnackbar(
@@ -150,9 +151,9 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             child: CircleAvatar(
                                 backgroundColor: Colors.white,
                                 radius: 15,
-                                child: value.propertyDetailsModel?.details !=
+                                child: value.propertyDetailsModel?.data?.details !=
                                             null &&
-                                        value.propertyDetailsModel?.details
+                                        value.propertyDetailsModel?.data?.details
                                                 ?.wishlist ==
                                             1
                                     ? Icon(
@@ -170,7 +171,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                           GestureDetector(
                             onTap: () async {
                               await Share.share(
-                                  value.propertyDetailsModel!.shareLink ?? " ");
+                                  value.propertyDetailsModel!.data?.shareLink ?? " ");
                             },
                             child: CircleAvatar(
                                 backgroundColor: Colors.white,
@@ -216,12 +217,12 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   },
                                 ),
                                 child: CarouselSlider(
-                                  items: value.propertyDetailsModel?.details !=
+                                  items: value.propertyDetailsModel?.data?.details !=
                                               null &&
-                                          value.propertyDetailsModel?.details
+                                          value.propertyDetailsModel?.data?.details
                                                   ?.pic !=
                                               null
-                                      ? value.propertyDetailsModel?.details?.pic
+                                      ? value.propertyDetailsModel?.data?.details?.pic
                                               ?.map((e) => CachedNetworkImage(
                                                     imageUrl:
                                                         e.picWp.toString(),
@@ -284,15 +285,22 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                           ),
                           titlePadding: EdgeInsets.all(0),
                           title: IconButton(
-                            icon: value.propertyDetailsModel?.shareLink != null && value.propertyDetailsModel?.shareLink?.trim() !=''
-                                ? Icon(
-                                    Icons.play_circle_outline,
-                                    color: Colors.white,
-                                    size: 20,
-                                  )
-                                : Container(),
+                            icon:
+                                value.propertyDetailsModel?.data?.shareLink != null &&
+                                        value.propertyDetailsModel?.data?.shareLink
+                                                ?.trim() !=
+                                            ''
+                                    ? Icon(
+                                        Icons.play_circle_outline,
+                                        color: Colors.white,
+                                        size: 20,
+                                      )
+                                    : Container(),
                             onPressed:
-                                value.propertyDetailsModel?.shareLink != null && value.propertyDetailsModel?.shareLink?.trim() !=''
+                                value.propertyDetailsModel?.data?.shareLink != null &&
+                                        value.propertyDetailsModel?.data?.shareLink
+                                                ?.trim() !=
+                                            ''
                                     ? () {
                                         showPics.value = !showPics.value;
                                         value.youTubeController.reset();
@@ -359,12 +367,12 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                 child: Column(
                                   children: [
                                     Text(
-                                      value.propertyDetailsModel?.details !=
+                                      value.propertyDetailsModel?.data?.details !=
                                                   null &&
                                               value.propertyDetailsModel
-                                                      ?.details?.title !=
+                                                      ?.data?.details?.title !=
                                                   null
-                                          ? (value.propertyDetailsModel?.details
+                                          ? (value.propertyDetailsModel?.data?.details
                                                   ?.title)
                                               .toString()
                                           : '',
@@ -377,12 +385,12 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     Text(
-                                      value.propertyDetailsModel?.details !=
+                                      value.propertyDetailsModel?.data?.details !=
                                                   null &&
                                               value.propertyDetailsModel
-                                                      ?.details?.bname !=
+                                                      ?.data?.details?.bname !=
                                                   null
-                                          ? (value.propertyDetailsModel?.details
+                                          ? (value.propertyDetailsModel?.data?.details
                                                   ?.bname)
                                               .toString()
                                           : '',
@@ -400,21 +408,21 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                               ),
                               GestureDetector(
                                 onTap: () async {
-                                  if ((value.propertyDetailsModel?.details !=
+                                  if ((value.propertyDetailsModel?.data?.details !=
                                               null &&
-                                          value.propertyDetailsModel?.details
+                                          value.propertyDetailsModel?.data?.details
                                                   ?.glat !=
                                               null) &&
-                                      (value.propertyDetailsModel?.details !=
+                                      (value.propertyDetailsModel?.data?.details !=
                                               null &&
-                                          value.propertyDetailsModel?.details
+                                          value.propertyDetailsModel?.data?.details
                                                   ?.glng !=
                                               null)) {
                                     var latitude = (value.propertyDetailsModel
-                                            ?.details?.glat)
+                                            ?.data?.details?.glat)
                                         .toString();
                                     var longitude = (value.propertyDetailsModel
-                                            ?.details?.glng)
+                                            ?.data?.details?.glng)
                                         .toString();
                                     await SystemService.launchGoogleMaps(
                                         latitude: latitude,
@@ -466,11 +474,11 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   color: Colors.black38,
                                 ),
                                 Text(
-                                  value.propertyDetailsModel?.details != null &&
-                                          value.propertyDetailsModel?.details
+                                  value.propertyDetailsModel?.data?.details != null &&
+                                          value.propertyDetailsModel?.data?.details
                                                   ?.maxGuests !=
                                               null
-                                      ? (value.propertyDetailsModel?.details
+                                      ? (value.propertyDetailsModel?.data?.details
                                                   ?.maxGuests)
                                               .toString() +
                                           ' Guest'
@@ -491,11 +499,11 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   color: Colors.black38,
                                 ),
                                 Text(
-                                  value.propertyDetailsModel?.details != null &&
-                                          value.propertyDetailsModel?.details
+                                  value.propertyDetailsModel?.data?.details != null &&
+                                          value.propertyDetailsModel?.data?.details
                                                   ?.bedrooms !=
                                               null
-                                      ? (value.propertyDetailsModel?.details
+                                      ? (value.propertyDetailsModel?.data?.details
                                                   ?.bedrooms)
                                               .toString() +
                                           ' BedRoom'
@@ -516,11 +524,11 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   color: Colors.black38,
                                 ),
                                 Text(
-                                  value.propertyDetailsModel?.details != null &&
-                                          value.propertyDetailsModel?.details
+                                  value.propertyDetailsModel?.data?.details != null &&
+                                          value.propertyDetailsModel?.data?.details
                                                   ?.bathrooms !=
                                               null
-                                      ? (value.propertyDetailsModel?.details
+                                      ? (value.propertyDetailsModel?.data?.details
                                                   ?.bathrooms)
                                               .toString() +
                                           ' BathRoom'
@@ -616,13 +624,13 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   ),
                                   onPressed: () {
                                     if (value.propertyDetailsModel != null &&
-                                        value.propertyDetailsModel?.details !=
+                                        value.propertyDetailsModel?.data?.details !=
                                             null &&
-                                        value.propertyDetailsModel?.details
+                                        value.propertyDetailsModel?.data?.details
                                                 ?.salesNumber !=
                                             null) {
                                       launch(
-                                          'tel:${value.propertyDetailsModel?.details?.salesNumber}');
+                                          'tel:${value.propertyDetailsModel?.data?.details?.salesNumber}');
                                     }
                                   },
                                 ),
@@ -644,13 +652,13 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                    */
                                   onPressed: () {
                                     if (value.propertyDetailsModel != null &&
-                                        value.propertyDetailsModel?.details !=
+                                        value.propertyDetailsModel?.data?.details !=
                                             null &&
-                                        value.propertyDetailsModel?.details
+                                        value.propertyDetailsModel?.data?.details
                                                 ?.salesNumber !=
                                             null) {
                                       launch(
-                                          'https://wa.me/${value.propertyDetailsModel?.details?.salesNumber}?text=${value.propertyDetailsModel?.shareLink ?? 'Hello'}');
+                                          'https://wa.me/${value.propertyDetailsModel?.data?.details?.salesNumber}?text=${value.propertyDetailsModel?.data?.shareLink ?? 'Hello'}');
                                     }
                                   },
                                 ),
@@ -714,11 +722,11 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             right: _mainWidth * 0.04,
                           ),
                           child: Html(
-                            data: value.propertyDetailsModel?.details != null &&
-                                    value.propertyDetailsModel?.details
+                            data: value.propertyDetailsModel?.data?.details != null &&
+                                    value.propertyDetailsModel?.data?.details
                                             ?.description !=
                                         null
-                                ? (value.propertyDetailsModel?.details
+                                ? (value.propertyDetailsModel?.data?.details
                                         ?.description)
                                     .toString()
                                 : ' ',
@@ -787,11 +795,11 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             ),
                             child: Html(
                               data:
-                                  value.propertyDetailsModel?.details != null &&
-                                          value.propertyDetailsModel?.details
+                                  value.propertyDetailsModel?.data?.details != null &&
+                                          value.propertyDetailsModel?.data?.details
                                                   ?.things2note !=
                                               null
-                                      ? (value.propertyDetailsModel?.details
+                                      ? (value.propertyDetailsModel?.data?.details
                                               ?.things2note)
                                           .toString()
                                       : ' ',
@@ -944,7 +952,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                     .toString();
                                 Navigator.of(context).pop();
                                 _showDialog(
-                                  propId: value.propertyDetailsModel?.details
+                                  propId: value.propertyDetailsModel?.data?.details
                                           ?.propId ??
                                       ' ',
                                   name: name,
@@ -976,7 +984,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             child: ElevatedButton(
                               onPressed: () async {
                                 if (value.propertyDetailsModel == null ||
-                                    value.propertyDetailsModel?.details ==
+                                    value.propertyDetailsModel?.data?.details ==
                                         null) {
                                   return;
                                 }
@@ -1009,22 +1017,22 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   mobile: phone,
                                   token: token,
                                   propId: int.parse((value.propertyDetailsModel
-                                          ?.details?.propId)
+                                          ?.data?.details?.propId)
                                       .toString()),
                                   buildingName: (value
-                                          .propertyDetailsModel?.details?.bname)
+                                          .propertyDetailsModel?.data?.details?.bname)
                                       .toString(),
                                   title: (value
-                                          .propertyDetailsModel?.details?.title)
+                                          .propertyDetailsModel?.data?.details?.title)
                                       .toString(),
                                   freeGuest: int.parse((value
                                           .propertyDetailsModel
-                                          ?.details
+                                          ?.data?.details
                                           ?.freeGuests)
                                       .toString()),
                                   maxGuest: int.parse((value
                                           .propertyDetailsModel
-                                          ?.details
+                                          ?.data?.details
                                           ?.maxGuests)
                                       .toString()),
                                 );
@@ -1100,7 +1108,6 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         image: DecorationImage(
                           image: imageProvider,
                           fit: BoxFit.contain,
-
                         ),
                       ),
                     ),
@@ -1325,7 +1332,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
       child: ListView.builder(
         itemBuilder: (context, index) {
           final data =
-              model.propertyDetailsModel?.similarProp![index] ?? SimilarProp();
+              model.propertyDetailsModel?.data?.similarProp![index] ?? SimilarProp();
           return InkWell(
             onTap: () => Navigator.of(context).pushNamed(
                 AppRoutes.propertyDetailsPage,
@@ -1429,7 +1436,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
             ),
           );
         },
-        itemCount: model.propertyDetailsModel?.similarProp?.length ?? 0,
+        itemCount: model.propertyDetailsModel?.data?.similarProp?.length ?? 0,
         scrollDirection: Axis.horizontal,
       ),
     );
@@ -1450,8 +1457,8 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                 fontWeight: FontWeight.w500),
           ),
           Text(
-            model?.details != null && model?.details?.rent != null
-                ? '$rupee ${model?.details?.rent}'
+            model?.data?.details != null && model?.data?.details?.rent != null
+                ? '$rupee ${model?.data?.details?.rent}'
                 : ' ',
             style: TextStyle(
                 fontSize: 14,
@@ -1477,8 +1484,8 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                     fontWeight: FontWeight.w500),
               ),
               Text(
-                model?.details != null && model?.details?.monthlyRent != null
-                    ? '$rupee ${model?.details?.monthlyRent}'
+                model?.data != null && model?.data?.details != null && model?.data?.details?.monthlyRent != null
+                    ? '$rupee ${model?.data?.details?.monthlyRent}'
                     : ' ',
                 style: TextStyle(
                     fontSize: 14,
@@ -1526,8 +1533,8 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                     fontWeight: FontWeight.w500),
               ),
               Text(
-                model?.details != null && model?.details?.rmsRent != null
-                    ? '$rupee ${model?.details?.rmsRent}'
+                model?.data != null && model?.data?.details != null && model?.data != null && model?.data?.details?.rmsRent != null
+                    ? '$rupee ${model?.data?.details?.rmsRent}'
                     : ' ',
                 style: TextStyle(
                     fontSize: 14,
@@ -1551,8 +1558,8 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                       fontWeight: FontWeight.w500),
                 ),
                 Text(
-                  model?.details != null && model?.details?.rmsDeposit != null
-                      ? '$rupee ${model?.details?.rmsDeposit}'
+                  model?.data != null && model?.data?.details != null && model?.data?.details?.rmsDeposit != null
+                      ? '$rupee ${model?.data?.details?.rmsDeposit}'
                       : ' ',
                   style: TextStyle(
                       fontSize: 14,

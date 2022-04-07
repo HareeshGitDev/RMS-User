@@ -32,7 +32,13 @@ class PropertyDetailsApiService {
         .getApiCallWithQueryParams(endPoint: url, queryParams: {
       'id': propId,
     });
-    return PropertyDetailsModel.fromJson(response);
+    final data = response as Map<String, dynamic>;
+
+    return data['msg'].toString().toLowerCase() == 'success'
+        ? PropertyDetailsModel.fromJson(data)
+        : PropertyDetailsModel(
+            msg: 'failure',
+          );
   }
 
   Future<int> addToWishList({required String propertyId}) async {
@@ -45,7 +51,6 @@ class PropertyDetailsApiService {
 
     return data['msg'].toString().toLowerCase() == 'success' ? 200 : 404;
   }
-
 
   Future<String> scheduleSiteVisit({required Map<String, dynamic> data}) async {
     String url = AppUrls.scheduleSiteVisitUrl;
@@ -79,7 +84,7 @@ class PropertyDetailsApiService {
   Future<BookingCredentialResponseModel> fetchBookingCredentials(
       {required BookingAmountRequestModel model}) async {
     String url = AppUrls.bookingCredentialsUrl;
-    final response = await _apiService.postApiCall(endPoint: url, bodyParams:  {
+    final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
       'id': model.propId,
       'travel_from_date': model.fromDate,
       'travel_to_date': model.toDate,
@@ -87,7 +92,7 @@ class PropertyDetailsApiService {
       "traveller_name": model.name,
       "contact_email": model.email,
       "amount": 1.toString(),
-      "contact_num":model.phone,
+      "contact_num": model.phone,
       "payment_gateway": model.paymentGateway,
     });
     final data = response as Map<String, dynamic>;
@@ -95,17 +100,18 @@ class PropertyDetailsApiService {
     if (data['msg'].toString().toLowerCase() == 'success') {
       return BookingCredentialResponseModel.fromJson(data);
     } else {
-      return BookingCredentialResponseModel(
-          msg: 'failure');
+      return BookingCredentialResponseModel(msg: 'failure');
     }
   }
 
   Future<dynamic> submitPaymentResponse(
-      {required String paymentId,required String paymentSignature,required String redirectApi}) async {
+      {required String paymentId,
+      required String paymentSignature,
+      required String redirectApi}) async {
     String url = 'v2/$redirectApi';
     final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
       'razorpay_payment_id': paymentId,
-      'razorpay_signature':paymentSignature,
+      'razorpay_signature': paymentSignature,
       'app_token': await _getRegisteredToken() ?? '',
     });
     final data = response as Map<String, dynamic>;

@@ -70,15 +70,11 @@ class RMSUserApiService {
       final response = await http.get(Uri.https(_baseURL, endPoint),
           headers: await getHeaders);
 
-      return await _response(response,url:Uri.https(_baseURL, endPoint).toString() );
+      return await _response(response,
+          url: Uri.https(_baseURL, endPoint).toString());
     } on SocketException {
       log('SocketException Happened');
-      //throw FetchDataException('No Internet connection');
     } catch (e) {
-      /*  CustomWidgets.getToast(
-        message: 'Error : ${e.toString()}',
-        color: Color(0xffF40909),
-      );*/
       log('Error : ${e.toString()}');
     }
     return null;
@@ -94,13 +90,14 @@ class RMSUserApiService {
           Uri.https(_baseURL, endPoint, queryParams),
           headers: await getHeaders);
 
-      return await _response(response,url:Uri.https(_baseURL, endPoint).toString());
+      return await _response(response,
+          url: Uri.https(_baseURL, endPoint).toString());
     } on SocketException {
       log('SocketException Happened');
     } catch (e) {
       log('Error : ${e.toString()}');
     }
-    return null;
+    return {'msg': 'failure'};
   }
 
   Future<dynamic> getApiCallWithURL({
@@ -114,18 +111,14 @@ class RMSUserApiService {
           ),
           headers: await getHeaders);
 
-      return await _response(response,url:Uri.https(_baseURL, endPoint).toString());
+      return await _response(response,
+          url: Uri.https(_baseURL, endPoint).toString());
     } on SocketException {
       log('SocketException Happened');
-      //throw FetchDataException('No Internet connection');
     } catch (e) {
-      /*  CustomWidgets.getToast(
-        message: 'Error : ${e.toString()}',
-        color: Color(0xffF40909),
-      );*/
       log('Error : ${e.toString()}');
     }
-    return null;
+    return {'msg': 'failure'};
   }
 
   Future<dynamic> postApiCall(
@@ -139,14 +132,14 @@ class RMSUserApiService {
         body: bodyParams,
         headers: await getHeaders,
       );
-      return await _response(response,url:Uri.https(_baseURL, endPoint).toString());
+      return await _response(response,
+          url: Uri.https(_baseURL, endPoint).toString());
     } on SocketException {
       log('SocketException Happened');
-      return {'msg': 'failure'};
     } catch (e) {
       log('Error : ${e.toString()}');
-      return {'msg': 'failure'};
     }
+    return {'msg': 'failure'};
   }
 
   Future<dynamic> postApiCallFormData(
@@ -158,14 +151,15 @@ class RMSUserApiService {
       final response = await dio.post(Uri.https(_baseURL, endPoint).toString(),
           options: Options(headers: await getHeaders), data: formData);
       log(response.data);
-      return response.statusCode ==200 ? {'msg': 'success'}:{'msg': 'failure'};
+      return response.statusCode == 200
+          ? {'msg': 'success'}
+          : {'msg': 'failure'};
     } on SocketException {
       log('SocketException Happened');
-      return {'msg': 'failure'};
     } catch (e) {
       log('Error : ${e.toString()}');
-      return {'msg': 'failure'};
     }
+    return {'msg': 'failure'};
   }
 
   Future<dynamic> putApiCall({
@@ -180,15 +174,14 @@ class RMSUserApiService {
         body: bodyParams,
       );
 
-      return await _response(response,url:Uri.https(_baseURL, endPoint).toString());
+      return await _response(response,
+          url: Uri.https(_baseURL, endPoint).toString());
     } on SocketException {
       log('SocketException Happened');
-      return {'msg': 'failure'};
     } catch (e) {
       log('Error : ${e.toString()}');
-
-      return {'msg': 'failure'};
     }
+    return {'msg': 'failure'};
   }
 
   dynamic deleteApiCall({required String endPoint}) async {
@@ -206,14 +199,14 @@ class RMSUserApiService {
       }
     } on SocketException {
       log('SocketException Happened');
-      //  throw FetchDataException('No Internet connection');
     } catch (e) {
       log('Error : ${e.toString()}');
     }
-    return null;
+    return {'msg': 'failure'};
   }
 
-  dynamic _response(http.Response response, {String? url,BuildContext? context}) async {
+  dynamic _response(http.Response response,
+      {String? url, BuildContext? context}) async {
     log('Status Code :: ${response.statusCode} -- $url');
     switch (response.statusCode) {
       case 200:
