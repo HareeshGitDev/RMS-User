@@ -31,7 +31,6 @@ class PropertyDetailsApiService {
     final response = await _apiService
         .getApiCallWithQueryParams(endPoint: url, queryParams: {
       'id': propId,
-      'app_token': registeredToken ?? await _getRegisteredToken(),
     });
     return PropertyDetailsModel.fromJson(response);
   }

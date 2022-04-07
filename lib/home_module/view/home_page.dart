@@ -50,11 +50,13 @@ class _HomePageState extends State<HomePage> {
   var _mainHeight;
   var _mainWidth;
   SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+  late Future<Map<String, String>> userDetails;
 
   @override
   void initState() {
     super.initState();
     _homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
+    userDetails=getSharedPreferencesValues();
   }
 
   Future<Map<String, String>> getSharedPreferencesValues() async {
@@ -547,7 +549,7 @@ class _HomePageState extends State<HomePage> {
                 }
                 return Text('No Data');
               },
-              future: getSharedPreferencesValues(),
+              future: userDetails,
             ),
             getTile(
               context: context,
