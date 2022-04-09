@@ -10,6 +10,7 @@ class BookingAmountRequestModel {
   String? address;
   String? paymentGateway;
   String? phone;
+  String? cartId;
   String? depositAmount;
   String? invoiceId;
   String? bookingId;
@@ -23,10 +24,11 @@ class BookingAmountRequestModel {
       this.toDate,
       this.phone,
       this.email,
-        this.address,
+      this.address,
+      this.cartId,
       this.name,
       this.depositAmount,
       this.invoiceId,
-        this.bookingId,
+      this.bookingId,
       this.paymentGateway = 'razorpay'});
 }

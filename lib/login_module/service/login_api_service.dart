@@ -57,8 +57,7 @@ class LoginApiService {
 
   Future<Map<String, dynamic>?> resetPassword({required String email}) async {
     String url = AppUrls.forgotPasswordUrl;
-    final Map<String, dynamic>? response = await _apiService
-        .getApiCallWithQueryParams(endPoint: url, queryParams: {
+    final Map<String, dynamic>? response = await _apiService.postApiCall(endPoint: url, bodyParams:{
       'email': email,
     });
 

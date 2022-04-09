@@ -22,10 +22,13 @@ class RMSUserApiService {
     return registeredToken;
   }
 
-  Future<Map<String, String>> get getHeaders async => {
+  Future<Map<String, String>> get getHeaders async {
+
+    return {
         'authorization':
-            (registeredToken ?? await _getRegisteredToken()).toString()
+        (registeredToken ?? await _getRegisteredToken()).toString()
       };
+  }
 
   Future downloadFile({required String url, required String fileName}) async {
     Directory appStorage = await getApplicationDocumentsDirectory();

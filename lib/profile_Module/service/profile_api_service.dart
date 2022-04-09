@@ -19,16 +19,14 @@ class ProfileApiService{
   Future<ProfileModel> fetchProfileDetails() async {
     String url = AppUrls.profileUrl;
     final response = await _apiService
-        .getApiCallWithQueryParams(endPoint: url, queryParams: {
-      'token_id': await _getRegisteredToken(),
-    });
+        .getApiCall(endPoint: url,);
     final data = response as Map<String, dynamic>;
 
-    if (data['status'].toString().toLowerCase() == 'success') {
+    if (data['msg'].toString().toLowerCase() == 'success') {
       return ProfileModel.fromJson(data);
     } else {
       return ProfileModel(
-        status: 'failure', );
+        msg: 'failure', );
     }
   }
 

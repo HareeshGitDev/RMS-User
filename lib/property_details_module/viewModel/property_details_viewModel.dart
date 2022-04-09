@@ -31,16 +31,19 @@ class PropertyDetailsViewModel extends ChangeNotifier {
         await _detailsApiService.fetchPropertyDetails(propId: propId);
     propertyDetailsModel = response;
 
-    if (propertyDetailsModel != null && propertyDetailsModel?.data != null &&
+    if (propertyDetailsModel != null &&
+        propertyDetailsModel?.data != null &&
         propertyDetailsModel?.data?.amenities != null) {
       getAmenitiesList(propertyDetailsModel?.data?.amenities);
     }
 
-    if (propertyDetailsModel != null && propertyDetailsModel?.data != null &&
+    if (propertyDetailsModel != null &&
+        propertyDetailsModel?.data != null &&
         propertyDetailsModel?.data?.details != null &&
         propertyDetailsModel?.data?.details?.videoLink != null) {
       youTubeController = YoutubePlayerController(
-        initialVideoId: (propertyDetailsModel?.data?.details?.videoLink).toString(),
+        initialVideoId:
+            (propertyDetailsModel?.data?.details?.videoLink).toString(),
         flags: const YoutubePlayerFlags(
           autoPlay: true,
           mute: false,
@@ -52,9 +55,20 @@ class PropertyDetailsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String> scheduleSiteVisit(
-      {required Map<String, dynamic> scheduleVisitData}) async {
-    return await _detailsApiService.scheduleSiteVisit(data: scheduleVisitData);
+  Future<int> scheduleSiteVisit(
+      {required String email,
+      required String propId,
+      required String name,
+      required String phoneNumber,
+      required String date,
+      required String visitType}) async {
+    return await _detailsApiService.scheduleSiteVisit(
+        email: email,
+        name: name,
+        propId: propId,
+        phoneNumber: phoneNumber,
+        date: date,
+        visitType: visitType);
   }
 
   Future<int> addToWishlist({

@@ -61,7 +61,6 @@ class _BookingPageState extends State<BookingPage> {
   final _phoneNumberController = TextEditingController();
   late PropertyDetailsViewModel _viewModel;
 
-
   @override
   void initState() {
     super.initState();
@@ -114,7 +113,8 @@ class _BookingPageState extends State<BookingPage> {
             titleSpacing: 0,
             backgroundColor: CustomTheme.appTheme,
           ),
-          body: value.bookingAmountsResponseModel != null
+          body: value.bookingAmountsResponseModel != null &&
+                  value.bookingAmountsResponseModel?.data != null
               ? Container(
                   height: _mainHeight,
                   width: _mainWidth,
@@ -480,7 +480,7 @@ class _BookingPageState extends State<BookingPage> {
                                               RMSWidgets.showSnackbar(
                                                   context: context,
                                                   message:
-                                                      '${value.bookingAmountsResponseModel?.message}',
+                                                      '${value.bookingAmountsResponseModel?.data?.userMsg}',
                                                   color: Colors.green);
                                             },
                                             child: Text('Apply'),
@@ -568,7 +568,7 @@ class _BookingPageState extends State<BookingPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '$rupee ${value.bookingAmountsResponseModel?.amountPayable ?? 0}',
+                            '$rupee ${value.bookingAmountsResponseModel?.data?.advanceAmount ?? 0}',
                             style: TextStyle(
                               fontSize: 20,
                               fontFamily: fontFamily,
@@ -584,7 +584,10 @@ class _BookingPageState extends State<BookingPage> {
                         height: _mainHeight * 0.06,
                         width: MediaQuery.of(context).size.width * 0.68,
                         child: ElevatedButton(
-                          onPressed: value.bookingAmountsResponseModel != null
+                          onPressed: value.bookingAmountsResponseModel !=
+                                      null &&
+                                  value.bookingAmountsResponseModel?.data !=
+                                      null
                               ? () async {
                                   RMSWidgets.showLoaderDialog(
                                       context: context, message: 'Loading');
@@ -603,6 +606,7 @@ class _BookingPageState extends State<BookingPage> {
                                     couponCode: '',
                                     fromDate: checkInDate,
                                     toDate: checkOutDate,
+                                    cartId:value.bookingAmountsResponseModel?.data?.cartId.toString(),
                                     email: _emailController.text,
                                     name: _nameController.text,
                                     phone: _phoneNumberController.text,
@@ -610,17 +614,17 @@ class _BookingPageState extends State<BookingPage> {
                                         value.bookingAmountsResponseModel !=
                                                     null &&
                                                 value.bookingAmountsResponseModel
-                                                        ?.amountPayable !=
+                                                        ?.data?.advanceAmount !=
                                                     null
                                             ? value.bookingAmountsResponseModel
-                                                ?.amountPayable
+                                                ?.data?.advanceAmount
                                                 .toString()
                                             : '',
                                   ));
 
                                   Navigator.pop(context);
 
-                                   if (response.msg?.toLowerCase() ==
+                                  if (response.msg?.toLowerCase() ==
                                           'success' &&
                                       response.data != null &&
                                       response.data?.prefill != null &&
@@ -630,7 +634,8 @@ class _BookingPageState extends State<BookingPage> {
                                       response.data?.callbackApi != null) {
                                     // _bookingCredentialResponseModel = response;
                                     Navigator.of(context).pushNamedAndRemoveUntil(
-                                        AppRoutes.razorpayPaymentPage, (route) => false,
+                                        AppRoutes.razorpayPaymentPage,
+                                        (route) => false,
                                         arguments: PaymentRequestModel(
                                             name: response.data?.prefill?.name ??
                                                 '',
@@ -652,10 +657,8 @@ class _BookingPageState extends State<BookingPage> {
                                                 response.data?.orderId ?? '',
                                             paymentMode:
                                                 PaymentMode.FromProperty,
-                                            razorPayKey:
-                                                response.data?.key ?? '',
-                                            redirectApi:
-                                                response.data?.callbackApi ?? '',
+                                            razorPayKey: response.data?.key ?? '',
+                                            redirectApi: response.data?.callbackApi ?? '',
                                             extraInfo: ''));
                                   }
                                 }
@@ -689,7 +692,6 @@ class _BookingPageState extends State<BookingPage> {
       },
     );
   }
-
 
   static String showformatDate(String da) {
     var a = da.split('-');
@@ -818,7 +820,7 @@ class _BookingPageState extends State<BookingPage> {
                           indent: 5,
                         )),
                     Text(
-                        '${model.nights != null ? model.nights.toString() : 0} Nights'),
+                        '${model.data?.nights != null ? model.data?.nights.toString() : 0} Nights'),
                     SizedBox(
                         height: 40,
                         child: VerticalDivider(
@@ -904,7 +906,7 @@ class _BookingPageState extends State<BookingPage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text("Unit Rent"),
-                                  Text(model.totalAmount.toString()),
+                                  Text('${model.data?.totalAmount}'),
                                 ],
                               ),
                               SizedBox(
@@ -915,7 +917,7 @@ class _BookingPageState extends State<BookingPage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text("Deposite (Fully Refunded)"),
-                                  Text(model.deposit.toString()),
+                                  Text('${model.data?.deposit}'),
                                 ],
                               ),
                               SizedBox(
@@ -926,7 +928,7 @@ class _BookingPageState extends State<BookingPage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text("Refferal discount"),
-                                  Text(model.refferalDiscount.toString()),
+                                  Text('${model.data?.refferalDiscount}'),
                                 ],
                               ),
                               SizedBox(
@@ -937,7 +939,7 @@ class _BookingPageState extends State<BookingPage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text("coupon discount"),
-                                  Text(model.couponDiscount.toString()),
+                                  Text('${model.data?.couponDiscount}'),
                                 ],
                               ),
                               SizedBox(
@@ -953,7 +955,7 @@ class _BookingPageState extends State<BookingPage> {
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Text(
-                          'Pay ${model.amountPayable ?? 0} to Book the Property',
+                          'Pay ${model.data?.advanceAmount ?? 0} to Book the Property',
                         ),
                       ),
                       SizedBox(
@@ -962,7 +964,7 @@ class _BookingPageState extends State<BookingPage> {
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Text(
-                          'Pay ${model.amountRemaining ?? 0} Before CheckIn',
+                          'Pay ${model.data?.advanceAmount ?? 0} Before CheckIn',
                         ),
                       ),
                     ],
