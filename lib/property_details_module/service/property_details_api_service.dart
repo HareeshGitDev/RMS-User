@@ -106,7 +106,7 @@ class PropertyDetailsApiService {
       'num_guests': model.numOfGuests,
       "billing_name": model.name,
       "billing_email": model.email,
-      "amount": 1.toString(),
+      "amount":model.depositAmount,
       "billing_tel": model.phone,
       "cart_id":model.cartId,
       "payment_gateway": model.paymentGateway,

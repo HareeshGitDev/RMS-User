@@ -218,10 +218,10 @@ class MyStayApiService {
     String url = AppUrls.invoicePaymentUrl;
     final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
       "invoice_id": model.invoiceId,
-      'id': model.propId,
-      "booking_id": model.bookingId,
-      "amount": 1.toString(),
-      //"payment_gatway": model.paymentGateway,
+      "amount": model.depositAmount,
+      "billing_tel": model.phone,
+      "billing_name": model.name,
+      "billing_email": model.email,
     });
     final data = response as Map<String, dynamic>;
 
