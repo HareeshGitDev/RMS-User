@@ -7,12 +7,11 @@ class AppUrls {
   static const String forgotPasswordUrl = "/m/forgot_password";
   static const String signInWithGoogleUrl = "/m/google_login";
   static const String registrationWithGoogleUrl = "/m/add_phone";
-  static const String propertyDetailsUrl = "/m/property_all_details2";
-  static const String scheduleSiteVisitUrl = "/m/schedulevisit";
-  static const String bookingDetailsUrl = "/m/calculate_booking_cost";
-  static const String profileUrl = '/m/getprofile';
-  static const String filterSortPropsUrl = '/m/match_props';
 
+  static const String profileUrl = '/v2/userProfile';
+  static const String bookingDetailsUrl = "/v2/bookingCost";
+  static const String scheduleSiteVisitUrl = "/v2/scheduleVisit";
+  static const String propertyDetailsUrl = "/v2/propDetails";
   static const String propertyListingUrl = "/v2/searchProps";
   static const String referUrl = "/v2/refferal";
   static const String bookingCredentialsUrl = '/v2/processBooking';

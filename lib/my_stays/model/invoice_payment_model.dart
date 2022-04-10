@@ -110,7 +110,7 @@ class Prefill {
 }
 
 class Notes {
-  String? merchantOrderId;
+  dynamic merchantOrderId;
 
   Notes({this.merchantOrderId});
 

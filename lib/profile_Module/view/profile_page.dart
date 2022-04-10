@@ -21,6 +21,7 @@ import '../viewmodel/profile_view_model.dart';
 
 class ProfilePage extends StatefulWidget {
   final bool fromBottom;
+
   ProfilePage({required this.fromBottom});
 
   @override
@@ -28,10 +29,10 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late ProfileViewModel _profileViewModel ;
+  late ProfileViewModel _profileViewModel;
 
-  String? userid="";
-  String?token="";
+  String? userid = "";
+  String? token = "";
 
   @override
   void initState() {
@@ -43,14 +44,19 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ProfileViewModel>(builder: (context, value, child) {
-     userid=value.profileModel.result != null?value.profileModel.result![0].userId.toString():"";
-     token=value.profileModel.result  != null && value.profileModel.result![0].appToken != null?value.profileModel.result![0].appToken.toString():"";
-       return Scaffold(
+      userid = value.profileModel.data != null
+          ? value.profileModel.data?.result![0].userId.toString()
+          : "";
+      token = value.profileModel.data != null &&
+              value.profileModel.data?.result![0].appToken != null
+          ? value.profileModel.data?.result![0].appToken.toString()
+          : "";
+      return Scaffold(
         appBar: _getAppBar(context: context),
         backgroundColor: Colors.white,
-
-        body: value.profileModel.result != null && value.profileModel.result!.isNotEmpty &&
-                value.profileModel.profileCompletion != null
+        body: value.profileModel.data != null &&
+                value.profileModel.data?.result != null &&
+                value.profileModel.data?.profileCompletion != null
             ? Container(
                 child: Column(
                   children: [
@@ -67,8 +73,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
                                     fit: BoxFit.fill,
-                                    image:NetworkImage(value.profileModel
-                                            .result![0].picture.toString()))
+                                    image: NetworkImage(
+                                        '${value.profileModel.data?.result![0].picture}'))
                                 // color: Colors.orange[100],
                                 ),
                           ),
@@ -78,8 +84,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     SizedBox(
                       height: 10,
                     ),
-                    _profileName(
-                        value.profileModel.result!.isNotEmpty && value.profileModel.result![0].firstname != null?value.profileModel.result![0].firstname.toString():"" ),
+                    _profileName(value.profileModel.data?.result != null &&
+                            value.profileModel.data?.result![0] != null &&
+                            value.profileModel.data?.result![0].firstname !=
+                                null
+                        ? '${value.profileModel.data?.result![0].firstname}'
+                        : ""),
                     SizedBox(
                       height: 14,
                     ),
@@ -107,8 +117,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                 color: CustomTheme.appTheme,
                               ),
                               title: Text(
-                                   value.profileModel.result!.isNotEmpty && value.profileModel.result![0].email != null ?
-                                   value.profileModel.result![0].email.toString():"",style: TextStyle(fontSize: 14),),
+                                value.profileModel.data?.result != null &&
+                                        value.profileModel.data?.result![0] !=
+                                            null &&
+                                        value.profileModel.data?.result![0]
+                                                .email !=
+                                            null
+                                    ? '${value.profileModel.data?.result![0].email}'
+                                    : "",
+                                style: TextStyle(fontSize: 14),
+                              ),
                             ),
                             Divider(
                               height: 0.6,
@@ -120,8 +138,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                 color: CustomTheme.appTheme,
                               ),
                               title: Text(
-                                  value.profileModel.result![0].contactNo ??
-                                      "",style: TextStyle(fontSize: 14),),
+                                value.profileModel.data?.result != null &&
+                                        value.profileModel.data?.result![0] !=
+                                            null &&
+                                        value.profileModel.data?.result![0]
+                                                .contactNo !=
+                                            null
+                                    ? '${value.profileModel.data?.result![0].contactNo}'
+                                    : "",
+                                style: TextStyle(fontSize: 14),
+                              ),
                             ),
                             Divider(
                               height: 0.6,
@@ -132,9 +158,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Icons.location_on_outlined,
                                 color: CustomTheme.appTheme,
                               ),
-                              title: Text(value.profileModel.result![0]
-                                      .permanentAddress ??
-                                  " ",style: TextStyle(fontSize: 14),),
+                              title: Text(
+                                value.profileModel.data?.result != null &&
+                                        value.profileModel.data?.result![0] !=
+                                            null &&
+                                        value.profileModel.data?.result![0]
+                                                .permanentAddress !=
+                                            null
+                                    ? '${value.profileModel.data?.result![0].permanentAddress}'
+                                    : "",
+                                style: TextStyle(fontSize: 14),
+                              ),
                             )
                           ],
                         ),
@@ -158,9 +192,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     Spacer(),
                     Container(
                       height: 45,
-                      margin: EdgeInsets.only(left: 15,right: 15,bottom: 15),
+                      margin: EdgeInsets.only(left: 15, right: 15, bottom: 15),
                       child: InkWell(
-                        onTap: ()async {
+                        onTap: () async {
                           RMSWidgets.showLoaderDialog(
                               context: context, message: 'Logging out...');
                           SharedPreferenceUtil shared = SharedPreferenceUtil();
@@ -170,7 +204,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
                           Navigator.of(context).pop();
                           if (deletedAllValues) {
-                            Provider.of<BottomNavigationProvider>(context,listen: false).shiftBottom(index: 0);
+                            Provider.of<BottomNavigationProvider>(context,
+                                    listen: false)
+                                .shiftBottom(index: 0);
                             Navigator.of(context).pushNamedAndRemoveUntil(
                                 AppRoutes.loginPage, (route) => false);
                           } else {
@@ -178,13 +214,11 @@ class _ProfilePageState extends State<ProfilePage> {
                           }
                         },
                         child: Container(
-                            
                             decoration: BoxDecoration(
-                              color: CustomTheme.appTheme,
-                              borderRadius: BorderRadius.circular(10)
-                            ),
+                                color: CustomTheme.appTheme,
+                                borderRadius: BorderRadius.circular(10)),
                             child: Container(
-                           //   padding: const EdgeInsets.all(10.0),
+                              //   padding: const EdgeInsets.all(10.0),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -195,7 +229,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   SizedBox(width: 10),
                                   Text(
                                     "Logout",
-                                    style: TextStyle(color: Colors.white, fontSize: 18),
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 18),
                                   )
                                 ],
                               ),
@@ -205,8 +240,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
               )
-            : Center(child:  CircularProgressIndicator(
-            valueColor:AlwaysStoppedAnimation<Color>(CustomTheme.appTheme))),
+            : Center(
+                child: CircularProgressIndicator(
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(CustomTheme.appTheme))),
       );
     });
   }
@@ -236,8 +273,7 @@ class _ProfilePageState extends State<ProfilePage> {
             //row for each deatails
             ListTile(
               onTap: () {
-                Navigator.pushNamed(
-                    context, AppRoutes.myStayListPage,
+                Navigator.pushNamed(context, AppRoutes.myStayListPage,
                     arguments: {
                       'fromBottom': false,
                     });
@@ -246,23 +282,29 @@ class _ProfilePageState extends State<ProfilePage> {
                 Icons.home_outlined,
                 color: CustomTheme.appTheme,
               ),
-              title: Text("My Stays",style: TextStyle(fontSize: 14),),
+              title: Text(
+                "My Stays",
+                style: TextStyle(fontSize: 14),
+              ),
             ),
 
             Divider(
               height: 0.6,
               color: Colors.black87,
             ),
-            GestureDetector(onTap: () =>
-                _handleURLButtonPress(
-                context, updateKYCLink, 'Update Your kyc'),
+            GestureDetector(
+              onTap: () => _handleURLButtonPress(
+                  context, updateKYCLink, 'Update Your kyc'),
               child: ListTile(
                 //onTap: () => _handleURLButtonPress(context, , title),
                 leading: Icon(
                   Icons.topic,
                   color: CustomTheme.appTheme,
                 ),
-                title: Text("Update KYC",style: TextStyle(fontSize: 14),),
+                title: Text(
+                  "Update KYC",
+                  style: TextStyle(fontSize: 14),
+                ),
               ),
             ),
 
@@ -275,7 +317,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 Icons.camera_alt_outlined,
                 color: CustomTheme.appTheme,
               ),
-              title: Text("Upload ID-proof",style: TextStyle(fontSize: 14),),
+              title: Text(
+                "Upload ID-proof",
+                style: TextStyle(fontSize: 14),
+              ),
             ),
           ],
         ),
@@ -283,28 +328,25 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-
-
   AppBar _getAppBar({required BuildContext context}) {
     return AppBar(
-      leading:widget.fromBottom
+      leading: widget.fromBottom
           ? WillPopScope(
-          child: Container(),
-          onWillPop: () async {
-            Provider.of<BottomNavigationProvider>(context, listen: false)
-                .shiftBottom(index: 0);
-            return false;
-          })
-          :const BackButton(),
+              child: Container(),
+              onWillPop: () async {
+                Provider.of<BottomNavigationProvider>(context, listen: false)
+                    .shiftBottom(index: 0);
+                return false;
+              })
+          : const BackButton(),
       centerTitle: widget.fromBottom,
       actions: [
         GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, AppRoutes.editProfilePage,arguments:  {
-              'fromBottom':false,
+            Navigator.pushNamed(context, AppRoutes.editProfilePage, arguments: {
+              'fromBottom': false,
             });
           },
-
           child: Container(
             child: Text(
               "EDIT",
@@ -320,18 +362,24 @@ class _ProfilePageState extends State<ProfilePage> {
       elevation: 0,
       backgroundColor: CustomTheme.appTheme,
       // centerTitle: true,
-      title: Text('Profile', style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w700)),
+      title: Text('Profile',
+          style: TextStyle(
+              color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700)),
     );
   }
 
   void _handleURLButtonPress(BuildContext context, String url, String title) {
-
-    String urlwithparams=url+base64Encode(utf8.encode(userid!.trim()))+"/"+token!+"?app=1";
-     log(urlwithparams);
-     log(userid.toString());
+    String urlwithparams = url +
+        base64Encode(utf8.encode(userid!.trim())) +
+        "/" +
+        token! +
+        "?app=1";
+    log(urlwithparams);
+    log(userid.toString());
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Web_View_Container(urlwithparams, title)),
+      MaterialPageRoute(
+          builder: (context) => Web_View_Container(urlwithparams, title)),
     );
   }
 }
