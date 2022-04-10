@@ -20,6 +20,8 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+    	<true/>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSApplicationQueriesSchemes</key>
@@ -28,22 +30,39 @@
 		<string>http</string>
 		<string>tel</string>
 		<string>mailto</string>
+		<string>googlechromes</string>
+        <string>comgooglemaps</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Allow Camera Permission</string>
+	<string>Rent My Stay requires camera access to capture photos</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Allow Microphone Permission</string>
+	<string>Rent My Stay requires Microphone Permission to record audio and video</string>
+    	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    	<string>Enabling this helps Rent My Stay find and recommend property near you</string>
+    	<key>NSLocationAlwaysUsageDescription</key>
+    	<string>Enabling this helps Rent My Stay find and recommend property near you</string>
+    	<key>NSLocationWhenInUseUsageDescription</key>
+    	<string>Enabling this helps Rent My Stay find and recommend property near you</string>
+    	<key>NSPhotoLibraryUsageDescription</key>
+    	<string>Rent My Stay requires access to the photo library  to let you upload pictures</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>UIBackgroundModes</key>
+    	<array>
+    		<string>fetch</string>
+    		<string>remote-notification</string>
+    	</array>
+    	<key>UILaunchStoryboardName</key>
+    	<string>LaunchScreen</string>
+    	<key>UIMainStoryboardFile</key>
+    	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
@@ -54,5 +73,14 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>io.flutter.embedded_views_preview</key>
+    	<string>YES</string>
+
 </dict>
 </plist>
+
+
+
+
+
+

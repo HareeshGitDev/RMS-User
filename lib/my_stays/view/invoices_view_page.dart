@@ -160,10 +160,7 @@ class _InvoiceState extends State<InvoicePage> {
                                       style: ButtonStyle(
                                           backgroundColor:
                                               MaterialStateProperty.all<
-                                                  Color>(data?.status != null &&
-                                                      data?.status
-                                                              ?.toLowerCase() ==
-                                                          'closed'
+                                                  Color>(data?.pendingBalance == 0
                                                   ? Color(0xff7AB02A)
                                                   : Color(0xffFF0000)),
                                           shape: MaterialStateProperty.all<

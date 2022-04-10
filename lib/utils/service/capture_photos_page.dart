@@ -21,11 +21,11 @@ class CapturePhotoPage {
       if (image != null &&
           image.path != null &&
           image.path.toString().length > 5) {
-        RMSWidgets.showLoaderDialog(context: context, message: "Uploading");
-        dynamic response = await function(image.path);
-        Navigator.of(context).pop();
+        // RMSWidgets.showLoaderDialog(context: context, message: "Uploading");
+        // dynamic response = await function(image.path);
+        // Navigator.of(context).pop();
 
-        return response;
+        return image.path;
       } else {
         return null;
       }
@@ -135,11 +135,11 @@ class CapturePhotoPage {
           .toString();
 
       if (filePath != null && filePath.toString().length > 5) {
-        RMSWidgets.showLoaderDialog(context: context, message: "Uploading");
-        dynamic response = await function(filePath);
-        Navigator.of(context).pop();
+        // RMSWidgets.showLoaderDialog(context: context, message: "Uploading");
+        // dynamic response = await function(filePath);
+        // Navigator.of(context).pop();
 
-        return response;
+        return filePath;
       } else {
         return null;
       }
