@@ -9,7 +9,6 @@ import 'package:RentMyStay_user/my_stays/model/ticket_response_model.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../property_details_module/model/booking_amount_request_model.dart';
-import '../../property_details_module/model/booking_credential_response_model.dart';
 import '../model/mystay_list_model.dart';
 import '../service/mystay_api_service.dart';
 

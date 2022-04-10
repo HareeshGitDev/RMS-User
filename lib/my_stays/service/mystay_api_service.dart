@@ -186,7 +186,9 @@ class MyStayApiService {
       'issue_img': list,
     });
     list.forEach((element) => log(element.filename.toString()));
-    formData.files.forEach((element) => print(element.toString()));
+    for (var element in formData.files) {
+      print(element.toString());
+    }
     formData.fields.forEach((element) => print(element.toString()));
     final response = await _apiService.postApiCallFormData(
         endPoint: url, formData: formData);

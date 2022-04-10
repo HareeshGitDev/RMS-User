@@ -9,14 +9,14 @@ class InvoiceDetailsModel {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['msg'] = this.msg;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['msg'] = msg;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -65,18 +65,18 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['booking_id'] = this.bookingId;
-    data['invoice_id'] = this.invoiceId;
-    data['Transaction_Type'] = this.transactionType;
-    data['duration_period'] = this.durationPeriod;
-    data['amount'] = this.amount;
-    data['amount_recieved'] = this.amountRecieved;
-    data['pending_balance'] = this.pendingBalance;
-    data['from_date'] = this.fromDate;
-    data['till_date'] = this.tillDate;
-    data['status'] = this.status;
-    data['refferal_discount'] = this.refferalDiscount;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['booking_id'] = bookingId;
+    data['invoice_id'] = invoiceId;
+    data['Transaction_Type'] = transactionType;
+    data['duration_period'] = durationPeriod;
+    data['amount'] = amount;
+    data['amount_recieved'] = amountRecieved;
+    data['pending_balance'] = pendingBalance;
+    data['from_date'] = fromDate;
+    data['till_date'] = tillDate;
+    data['status'] = status;
+    data['refferal_discount'] = refferalDiscount;
     return data;
   }
 }
