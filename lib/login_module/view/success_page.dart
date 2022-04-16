@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/constants/app_consts.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -44,7 +45,7 @@ class _PaymentStatusPageState extends State<PaymentStatusPage> {
     );
   }
 
-  void _goToHome() => Timer(const Duration(seconds: 4),
+  void _goToHome() => Timer(const Duration(seconds: 5),
       () => Navigator.pushNamedAndRemoveUntil(
         context,AppRoutes.dashboardPage,(route) => false,));
 
@@ -56,53 +57,119 @@ class _PaymentStatusPageState extends State<PaymentStatusPage> {
       child: Column(
         children: [
           SizedBox(
-            height: _mainHeight * 0.1,
+            height: _mainHeight * 0.15,
           ),
           Container(
-            color: Colors.amber,
-            child: Image.network(
-              'https://www.kindpng.com/picc/m/4-47511_red-cross-red-circle-and-cross-clipart-free.png',
-              height: _mainHeight * 0.3,
-              width: _mainWidth * 0.7,
-              fit: BoxFit.cover,
+
+            child: Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 24.0),
+                  child: Card(shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                    margin: EdgeInsets.all(20),
+                    elevation: 10,
+                    child: SizedBox(
+                      height: _mainHeight*0.45,
+                      child: Column(
+                        children: [
+                          SizedBox(height: 10,),
+                          Container(child: Text('Payment Failed',style: TextStyle(fontSize: 30,fontWeight: FontWeight.w600,color:Colors.red ),)),
+                          SizedBox(height: 20,),
+                          Container(child: Text('A Receipt with your payment Id has been emailed to you ',style: TextStyle(fontSize: 18),textAlign: TextAlign.center,)),
+                          SizedBox(height: 20,),
+                          Container(
+                            height: _mainHeight * 0.18,
+                            width: _mainWidth * 0.8,
+                            child:Image.asset(Images.failedIcon)
+                           // Image.network('https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/payment_failed.png?alt=media&token=3af294f9-0876-49f1-9866-250a0332d694',),
+                          ),
+                          SizedBox(height: 10,),
+                          Text('Payment of $rupee ' +
+                              (double.parse(widget.amount) / 100).toString() +
+                              '   Success ',style: TextStyle(fontSize: 18)),
+                          SizedBox(height: 5,),
+                          Text('For',style: TextStyle(fontSize: 18)),
+                          SizedBox(height: 5,),
+                          Text(widget.title,style: TextStyle(fontSize: 18)),
+                          SizedBox(height: 10,),],),
+                    ),
+                  ),
+                ),
+
+              ],
             ),
           ),
-          Text('Payment of $rupee ' +
-              (double.parse(widget.amount) / 100).toString() +
-              ' Failed '),
-          Text('For'),
-          Text(widget.title),
         ],
       ),
     );
   }
 
   Widget getSuccessStatus() {
-    return Container(
+    return
+      Container(
       color: Colors.white,
       height: _mainHeight,
       width: _mainWidth,
       child: Column(
         children: [
-          SizedBox(
-            height: _mainHeight * 0.1,
-          ),
-          Container(
-            child: Image.asset(
-              Images.successfulIcon,
-              height: _mainHeight * 0.3,
-              width: _mainWidth * 0.8,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Text('Payment of $rupee ' +
-              (double.parse(widget.amount) / 100).toString() +
-              'Success '),
-          Text('For'),
+        SizedBox(
+          height: _mainHeight * 0.15,
+        ),
+        Container(
 
-          Text(widget.title),
-          Text('Payment Id : ' + widget.paymentId.toString()),
-        ],
+          child: Stack(
+            alignment: Alignment.bottomRight,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 24.0),
+              child: Card(shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+                margin: EdgeInsets.all(20),
+                elevation: 10,
+                child: SizedBox(
+                  height: _mainHeight*0.51,
+                  child: Column(
+                    children: [
+                      SizedBox(height: 10,),
+                      Container(child: Text('Payment Received',style: TextStyle(fontSize: 30,fontWeight: FontWeight.w600,color:CustomTheme.myFavColor ),)),
+                      SizedBox(height: 20,),
+                      Container(child: Text('A Receipt with your transaction Id has been emailed to you ',style: TextStyle(fontSize: 18),textAlign: TextAlign.center,)),
+                      SizedBox(height: 20,),
+                      Container(
+                        height: _mainHeight * 0.2,
+                        width: _mainWidth * 0.8,
+                        child: Image.asset(Images.successfulIcon)
+                      ),
+                      SizedBox(height: 10,),
+                      Text('Payment of $rupee ' +
+                          (double.parse(widget.amount) / 100).toString() +
+                          '   Success ',style: TextStyle(fontSize: 18)),
+                      SizedBox(height: 5,),
+                      Text('For',style: TextStyle(fontSize: 18)),
+                      SizedBox(height: 5,),
+                      Text(widget.title,style: TextStyle(fontSize: 18)),
+                      SizedBox(height: 5,),
+                      Text('Payment Id : ' + widget.paymentId.toString(),style: TextStyle(fontSize: 18)),
+                      SizedBox(height: 20,),],),
+                ),
+              ),
+            ),
+            SizedBox(height: 40,),
+            Positioned(top: 420,right: 2,
+              child: Container(alignment: Alignment.bottomRight,
+                margin: EdgeInsets.only(right: 10,),
+                height: _mainHeight * 0.12,
+                width: _mainWidth * 0.8,
+                child:Image.asset(Images.paidIcon)
+                //Image.network('https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/paid.webp?alt=media&token=e5a2f509-4c48-4502-bee7-faf88d5f9bf4',),
+              ),
+            ),
+          ],
+      ),
+        ),
+      ],
       ),
     );
   }

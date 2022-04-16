@@ -24,7 +24,7 @@ class Data {
   dynamic rent;
   dynamic deposit;
   dynamic couponDiscount;
-  String? refferalCode;
+  dynamic refferalCode;
   dynamic refferalDiscount;
   dynamic totalAmount;
   dynamic advanceAmount;

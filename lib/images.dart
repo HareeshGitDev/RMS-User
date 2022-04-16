@@ -16,11 +16,6 @@ class Images {
   static String onebhk_img = 'assets/estate/onebhk_image.webp';
   static String twobhk_img = 'assets/estate/twobhk_image.webp';
   static String studio_img = 'assets/estate/stadioroomimg.webp';
-  static String img1 = 'assets/estate/estate2.jpg';
-  static String img2 = 'assets/estate/estate3.jpg';
-  static String img3 = 'assets/estate/estate4.jpg';
-  static String img4 = 'assets/estate/estate4.jpg';
-  static String img5 = 'assets/estate/estate5.jgp';
 
 
   //------ Place Holder ------------------//
@@ -30,9 +25,7 @@ class Images {
 
   ///-------------------------------- Icons ---------------------------------//
 
-  // ------- Home -----------//
-  static String appIcon = 'assets/icons/apps.svg';
-  static String app2Icon = 'assets/icons/apps_2.svg';
+
 
 
 
@@ -53,7 +46,10 @@ class Images {
   static String settingIcon = 'assets/icons/setting_outline.png';
   static String referIconHome = 'assets/icons/refer_icon_home.webp';
   static const String resetPasswordIcon='assets/icons/reset_password.png';
-  static const String successfulIcon='assets/icons/Check.gif';
+  //static const String successfulIcon='assets/icons/Check.gif';
+  static const String successfulIcon='assets/icons/checkCircle.gif';
+  static const String failedIcon='assets/icons/payment_failed_icon.png';
+  static const String paidIcon='assets/icons/paid_Icon.webp';
 
 
 }

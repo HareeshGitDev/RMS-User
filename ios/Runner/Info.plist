@@ -20,10 +20,21 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>FirebaseAppDelegateProxyEnabled</key>
-    	<true/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.172037116875-q4huk45khcfats0iup9ren2819kc4tv0</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<true/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>https</string>
@@ -31,35 +42,31 @@
 		<string>tel</string>
 		<string>mailto</string>
 		<string>googlechromes</string>
-        <string>comgooglemaps</string>
+		<string>comgooglemaps</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Rent My Stay requires camera access to capture photos</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Enabling this helps Rent My Stay find and recommend property near you</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Enabling this helps Rent My Stay find and recommend property near you</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Enabling this helps Rent My Stay find and recommend property near you</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Rent My Stay requires Microphone Permission to record audio and video</string>
-    	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    	<string>Enabling this helps Rent My Stay find and recommend property near you</string>
-    	<key>NSLocationAlwaysUsageDescription</key>
-    	<string>Enabling this helps Rent My Stay find and recommend property near you</string>
-    	<key>NSLocationWhenInUseUsageDescription</key>
-    	<string>Enabling this helps Rent My Stay find and recommend property near you</string>
-    	<key>NSPhotoLibraryUsageDescription</key>
-    	<string>Rent My Stay requires access to the photo library  to let you upload pictures</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Rent My Stay requires access to the photo library  to let you upload pictures</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
-	<key>UIBackgroundModes</key>
-    	<array>
-    		<string>fetch</string>
-    		<string>remote-notification</string>
-    	</array>
-    	<key>UILaunchStoryboardName</key>
-    	<string>LaunchScreen</string>
-    	<key>UIMainStoryboardFile</key>
-    	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -74,13 +81,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
-    	<string>YES</string>
-
+	<string>YES</string>
 </dict>
 </plist>
-
-
-
-
-
-

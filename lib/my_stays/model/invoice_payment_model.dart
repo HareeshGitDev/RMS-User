@@ -21,7 +21,7 @@ class InvoicePaymentModel {
 
 class Data {
   String? key;
-  int? amount;
+  dynamic amount;
   String? currency;
   String? name;
   String? image;

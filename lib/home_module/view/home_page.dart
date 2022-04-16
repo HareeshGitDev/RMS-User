@@ -625,6 +625,24 @@ class _HomePageState extends State<HomePage> {
             getTile(
               context: context,
               leading: Icon(
+                Icons.share,
+                color: CustomTheme.appTheme,
+                size: 20,
+              ),
+              title: 'Success',
+              onTap: () =>
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, AppRoutes.paymentStatusPage, (route) => false,
+                      arguments: {
+                        'status': 'succes',
+                        'paymentId': '1111',
+                        'amount': '1000',
+                        'title': 'shuhham kumar',
+                      }),
+            ),
+            getTile(
+              context: context,
+              leading: Icon(
                 Icons.logout,
                 color: CustomTheme.appTheme,
                 size: 20,

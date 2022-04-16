@@ -11,9 +11,10 @@ import '../viewmodel/mystay_viewmodel.dart';
 class UpdateInvoiceUTRPage extends StatefulWidget {
   final String bookingId;
   final String invoiceId;
+  final String amount;
 
   const UpdateInvoiceUTRPage(
-      {Key? key, required this.bookingId, required this.invoiceId})
+      {Key? key, required this.bookingId, required this.invoiceId,required this.amount})
       : super(key: key);
 
   @override
@@ -153,7 +154,7 @@ class _UpdateInvoiceUTRPageState extends State<UpdateInvoiceUTRPage> {
             SizedBox(
               height: 10,
             ),
-            Text('Payable Amount : ${widget.bookingId} ',
+            Text('Payable Amount : ${widget.amount} ',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 textAlign: TextAlign.left),
             SizedBox(
