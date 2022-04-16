@@ -86,12 +86,13 @@ class RMSUserApiService {
   Future<dynamic> getApiCallWithQueryParams({
     required String endPoint,
     required Map<String, dynamic> queryParams,
+    bool fromLogin=false
   }) async {
-    log('URL :: $_baseURL$endPoint ---- QueryParams :: ${queryParams.toString()} -- ${await getHeaders} ');
+    log('URL :: $_baseURL$endPoint ---- QueryParams :: ${queryParams.toString()} -- ${fromLogin?{}:await getHeaders} ');
     try {
       final response = await http.get(
           Uri.https(_baseURL, endPoint, queryParams),
-          headers: await getHeaders);
+          headers: fromLogin?{}:await getHeaders);
 
       return await _response(response,
           url: Uri.https(_baseURL, endPoint).toString());
@@ -126,14 +127,14 @@ class RMSUserApiService {
 
   Future<dynamic> postApiCall(
       {required String endPoint,
-      required Map<String, dynamic> bodyParams}) async {
-    log('URL :: $_baseURL/$endPoint ---- Model :: ${bodyParams.toString()} -- ${await getHeaders}');
+      required Map<String, dynamic> bodyParams,bool fromLogin=false}) async {
+    log('URL :: $_baseURL/$endPoint ---- Model :: ${bodyParams.toString()} -- ${fromLogin?'':await getHeaders}');
 
     try {
       final response = await http.post(
         Uri.https(_baseURL, endPoint),
         body: bodyParams,
-        headers: await getHeaders,
+        headers: fromLogin?{}:await getHeaders,
       );
       return await _response(response,
           url: Uri.https(_baseURL, endPoint).toString());
@@ -153,7 +154,6 @@ class RMSUserApiService {
       Dio dio = Dio();
       final response = await dio.post(Uri.https(_baseURL, endPoint).toString(),
           options: Options(headers: await getHeaders), data: formData);
-      log(response.data);
       return response.statusCode == 200
           ? {'msg': 'success'}
           : {'msg': 'failure'};

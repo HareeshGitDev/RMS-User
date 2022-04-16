@@ -17,18 +17,20 @@ class LoginApiService {
   Future<LoginResponseModel> fetchLoginDetails(
       {required String email, required String password}) async {
     String url = AppUrls.loginUrl;
-    final response = await _apiService
-        .getApiCallWithQueryParams(endPoint: url, queryParams: {
-      'email': email,
-      'password': password,
-    });
+    final response = await _apiService.postApiCall(
+        endPoint: url,
+        bodyParams: {
+          'email': email,
+          'password': password,
+        },
+        fromLogin: true);
     final data = response as Map<String, dynamic>;
 
-    if (data['status'].toString().toLowerCase() == 'success') {
+    if (data['msg'].toString().toLowerCase() ==
+        'you have successfully logged in') {
       return LoginResponseModel.fromJson(data);
     } else {
-      return LoginResponseModel(
-          status: 'failure', message: data['message'].toString());
+      return LoginResponseModel(msg: 'failure');
     }
   }
 
@@ -44,7 +46,7 @@ class LoginApiService {
       "phonenumber": model.phonenumber,
       "city": model.city,
       "referal": model.referal,
-    });
+    },fromLogin: true);
     final data = response as Map<String, dynamic>;
 
     if (data['status'].toString().toLowerCase() == 'success') {
@@ -55,27 +57,30 @@ class LoginApiService {
     }
   }
 
-  Future<Map<String, dynamic>?> resetPassword({required String email}) async {
+  Future<int> resetPassword({required String email}) async {
     String url = AppUrls.forgotPasswordUrl;
-    final Map<String, dynamic>? response = await _apiService.postApiCall(endPoint: url, bodyParams:{
-      'email': email,
-    });
+    final  response = await _apiService.postApiCall(
+        endPoint: url,
+        bodyParams: {
+          'email': email,
+        },
+        fromLogin: true);
+    final data = response as Map<String, dynamic>;
 
-    return response;
+    return data['msg'].toString().toLowerCase() != 'failure' ?200:400;
   }
 
   Future<LoginResponseModel> registerAfterGmail(
       {required GmailSignInRequestModel model}) async {
     String url = AppUrls.signInWithGoogleUrl;
     final response = await _apiService.postApiCall(
-        endPoint: url, bodyParams: model.toJson());
+        endPoint: url, bodyParams: model.toJson(), fromLogin: true);
     final data = response as Map<String, dynamic>;
 
-    if (data['status'].toString().toLowerCase() == 'success') {
+    if (data['msg'].toString().toLowerCase() != 'failure') {
       return LoginResponseModel.fromJson(data);
     } else {
-      return LoginResponseModel(
-          status: 'failure', message: data['message'].toString());
+      return LoginResponseModel(msg: 'failure');
     }
   }
 
@@ -86,14 +91,14 @@ class LoginApiService {
         endPoint: url, bodyParams: model.toJson());
     final data = response as Map<String, dynamic>;
 
-    return data['status'].toString().toLowerCase() == 'success' ? 200 : 404;
+    return data['msg'].toString().toLowerCase() != 'failure' ? 200 : 404;
   }
 
   Future<OtpRegistrationResponseModel> verifyOTP(
       {required String mobileNumber, String? uid}) async {
     String url = AppUrls.loginOtpUrl;
     final response = await _apiService.getApiCallWithQueryParams(
-        endPoint: url, queryParams: {'mobileno': mobileNumber, 'uid': uid});
+        endPoint: url, queryParams: {'mobileno': mobileNumber, 'uid': uid},fromLogin: true);
     if (response != null) {
       final data = response as Map<String, dynamic>;
       if (data['status'].toString().toLowerCase() == 'success') {
@@ -123,12 +128,10 @@ class LoginApiService {
       "city": model.city
     });
 
-
-      final data = response as Map<String, dynamic>;
-      return data['status'].toString().toLowerCase() == 'success'
-          ? SignUpResponseModel.fromJson(data)
-          : SignUpResponseModel(
-              status: 'failure', message: data['message'].toString());
-
+    final data = response as Map<String, dynamic>;
+    return data['status'].toString().toLowerCase() == 'success'
+        ? SignUpResponseModel.fromJson(data)
+        : SignUpResponseModel(
+            status: 'failure', message: data['message'].toString());
   }
 }

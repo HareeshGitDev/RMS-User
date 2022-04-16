@@ -6,6 +6,7 @@ import 'package:RentMyStay_user/utils/service/location_service.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'login_module/view/splash_page.dart';
 
@@ -28,6 +29,12 @@ void main() async {
               messagingSenderId: '172037116875',
               databaseURL:
                   'https://rentmystay-new-1539065190327.firebaseio.com'));
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    systemNavigationBarColor: Colors.white,
+    statusBarColor: CustomTheme.appTheme,
+    statusBarIconBrightness: Brightness.dark
+
+  ));
 
   runApp(MyApp());
 

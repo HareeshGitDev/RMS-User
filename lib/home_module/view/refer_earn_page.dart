@@ -30,283 +30,296 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
     _homeViewModel.getInviteEarnDetails();
     super.initState();
   }
+  Future onRefresh()async{
+     return _homeViewModel.getInviteEarnDetails();
+  }
 
   @override
   Widget build(BuildContext context) {
-    _mainHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
-    _mainWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
+    _mainHeight = MediaQuery.of(context).size.height;
+    _mainWidth = MediaQuery.of(context).size.width;
 
     return Consumer<HomeViewModel>(builder: (context, value, child) {
       return Scaffold(
         appBar: _getAppBar(context: context),
         body: value.referAndEarnModel.msg != null &&
-            value.referAndEarnModel.msg?.toLowerCase() == 'success' ? Container(
-            color: Colors.white,
-            height: _mainHeight,
-            width: _mainWidth,
-            child: Column(
-              children: [
-                Container(
-                  height: _mainHeight * 0.30,
-                  child: Stack(
+                value.referAndEarnModel.msg?.toLowerCase() == 'success'
+            ? Container(
+                color: Colors.white,
+                height: _mainHeight,
+                width: _mainWidth,
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Column(
                     children: [
                       Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              colors: [
-                                CustomTheme.appTheme.withAlpha(99),
-                                CustomTheme.peach.withAlpha(20)
-                              ],
-                              end: Alignment.topCenter,
-                              begin: Alignment.bottomCenter),
-                          /* image: DecorationImage(
-
-                            //image: AssetImage(Images.referEarn),
-                            image: NetworkImage(
-                                "https://www.cardrates.com/images/themes/cr-mobile/images/home/home-hero.jpg?width=538&height=322"),
-                            fit: BoxFit.cover,
-                          ), */
-                        ),
                         height: _mainHeight * 0.30,
-                      ),
-                      Positioned(
-                        bottom: 50,
-                        left: 0,
-                        right: 0,
-                        top: 30,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            /*   gradient: LinearGradient(
-                                colors: [
-                                  CustomTheme.skyBlue,
-                                  CustomTheme.peach
-                                ],
-                                end: Alignment.topCenter,
-                                begin: Alignment.bottomCenter),*/
-                            image: DecorationImage(
+                        child: Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    colors: [
+                                      CustomTheme.appTheme.withAlpha(99),
+                                      CustomTheme.peach.withAlpha(20)
+                                    ],
+                                    end: Alignment.topCenter,
+                                    begin: Alignment.bottomCenter),
+                                /* image: DecorationImage(
+
                               //image: AssetImage(Images.referEarn),
-                              image: AssetImage(
-                                Images.rmscard_background,
-                              ),
-                              colorFilter: ColorFilter.mode(
-                                  Color(0xff226e79), BlendMode.colorBurn),
+                              image: NetworkImage(
+                                  "https://www.cardrates.com/images/themes/cr-mobile/images/home/home-hero.jpg?width=538&height=322"),
                               fit: BoxFit.cover,
+                            ), */
+                              ),
+                              height: _mainHeight * 0.30,
                             ),
-
-                            //color: [CustomTheme.skyBlue.withAlpha(50), CustomTheme.skyBlue],
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          margin: EdgeInsets.symmetric(horizontal: 40),
-                          height: _mainHeight * 0.30,
-                          child: Container(
-                            margin: EdgeInsets.only(
-                              left: 15,
-                            ),
-                            child: Column(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(children: [
-                                      Image.asset(
-                                        Images.brandLogo_Transparent,
-                                        height: 70,
-                                      ),
-                                      Text(
-                                        "Monies",
-                                        style: TextStyle(color: Colors.white),
-                                      )
-                                    ]),
-                                    Container(
-                                      margin:
-                                      EdgeInsets.only(right: 15, top: 15),
-                                      child: Image.asset(
-                                        Images.rupeeSilverIcon,
-                                        height: 60,
-                                        // color: CustomTheme.skyBlue,
-                                      ),
-                                    )
+                            Positioned(
+                              bottom: 50,
+                              left: 0,
+                              right: 0,
+                              top: 30,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  /*   gradient: LinearGradient(
+                                  colors: [
+                                    CustomTheme.skyBlue,
+                                    CustomTheme.peach
                                   ],
+                                  end: Alignment.topCenter,
+                                  begin: Alignment.bottomCenter),*/
+                                  image: DecorationImage(
+                                    //image: AssetImage(Images.referEarn),
+                                    image: AssetImage(
+                                      Images.rmscard_background,
+                                    ),
+                                    colorFilter: ColorFilter.mode(
+                                        Color(0xff226e79), BlendMode.colorBurn),
+                                    fit: BoxFit.cover,
+                                  ),
+
+                                  //color: [CustomTheme.skyBlue.withAlpha(50), CustomTheme.skyBlue],
+                                  borderRadius: BorderRadius.circular(15),
                                 ),
-                                Container(
-                                  alignment: Alignment.center,
-                                  height: 28,
-                                  width: MediaQuery
-                                      .of(context)
-                                      .size
-                                      .width *
-                                      0.20,
-                                  margin: EdgeInsets.all(20),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius:
-                                      BorderRadius.circular(35)),
-                                  child: Text(
-                                      '$rupee ${value.referAndEarnModel.data
-                                          ?.refferalMoney ?? " 0 "}'),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: _mainHeight * 0.5,
-                  child: Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage(Images.referEarn),
-                              fit: BoxFit.cover),
-                        ),
-                        height: _mainHeight * 0.30,
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        top: 220,
-                        child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15),
-                                boxShadow: [
-                                  BoxShadow(
-                                      offset: Offset(1, 1),
-                                      blurStyle: BlurStyle.outer,
-                                      blurRadius: 6,
-                                      color: CustomTheme.appTheme),
-                                ]),
-                            margin: EdgeInsets.symmetric(horizontal: 15),
-                            height: _mainHeight * 0.20,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                    margin: EdgeInsets.only(top: 10),
-                                    child: Text(
-                                      "Your Invite Code",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.black45),
-                                    )),
-                                Container(
-                                  margin: EdgeInsets.only(top: 5),
-                                  child: Row(
+                                margin: EdgeInsets.symmetric(horizontal: 40),
+                                height: _mainHeight * 0.30,
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                    left: 15,
+                                  ),
+                                  child: Column(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.center,
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(6.0),
-                                        child: Text(
-                                            value.referAndEarnModel.data?.refferalCode ??
-                                                " ",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(fontSize: 20)),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(children: [
+                                            Image.asset(
+                                              Images.brandLogo_Transparent,
+                                              height: 70,
+                                            ),
+                                            Text(
+                                              "Monies",
+                                              style:
+                                                  TextStyle(color: Colors.white),
+                                            )
+                                          ]),
+                                          Container(
+                                            margin: EdgeInsets.only(
+                                                right: 15, top: 15),
+                                            child: Image.asset(
+                                              Images.rupeeSilverIcon,
+                                              height: 60,
+                                              // color: CustomTheme.skyBlue,
+                                            ),
+                                          )
+                                        ],
                                       ),
-                                      value.referAndEarnModel.data
-                                          ?.refferalCode != null?GestureDetector(
-                                        onTap: () async {
-                                          await Clipboard.setData(
-                                              ClipboardData(
-                                                  text: value.referAndEarnModel.data
-                                                      ?.refferalCode ??
-                                                      " "));
-                                          RMSWidgets.getToast(
-                                              message: 'Invite Code Copied ',
-                                              color: Colors.black12);
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(6.0),
-                                          child: Text(
-                                            "COPY",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                backgroundColor: CustomTheme
-                                                    .peach
-                                                    .withAlpha(60)),
-                                          ),
-                                        ),
-                                      ):Container(),
+                                      Container(
+                                        alignment: Alignment.center,
+                                        height: 28,
+                                        width: MediaQuery.of(context).size.width *
+                                            0.20,
+                                        margin: EdgeInsets.all(20),
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(35)),
+                                        child: Text(
+                                            '$rupee ${value.referAndEarnModel.data?.refferalMoney ?? " 0 "}'),
+                                      )
                                     ],
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Text(
-                                    "Invite You Friend and Get 1000 to your account once he/she books a flats using your Invite Code. ",
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                Container(
-                                  alignment: Alignment.center,
-                                  margin: EdgeInsets.only(
-                                      left: 15, right: 15, bottom: 15),
-                                  height: _mainHeight * 0.08,
-                                  width: MediaQuery
-                                      .of(context)
-                                      .size
-                                      .width,
-                                  child: Neumorphic(
-                                      style: NeumorphicStyle(
-                                        color: Colors.green,
-                                      ),
-                                      child: TextButton(
-                                        onPressed: () async {
-                                          await Share.share(value
-                                              .referAndEarnModel.data?.refferalText ??
-                                              " ");
-                                        },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: _mainHeight * 0.5,
+                        child: Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: AssetImage(Images.referEarn),
+                                    fit: BoxFit.cover),
+                              ),
+                              height: _mainHeight * 0.30,
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              top: 220,
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            offset: Offset(1, 1),
+                                            blurStyle: BlurStyle.outer,
+                                            blurRadius: 6,
+                                            color: CustomTheme.appTheme),
+                                      ]),
+                                  margin: EdgeInsets.symmetric(horizontal: 15),
+                                  height: _mainHeight * 0.20,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                          margin: EdgeInsets.only(top: 10),
+                                          child: Text(
+                                            "Your Invite Code",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.black45),
+                                          )),
+                                      Container(
+                                        margin: EdgeInsets.only(top: 5),
                                         child: Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                              MainAxisAlignment.center,
                                           children: [
-                                            Icon(
-                                              Icons.share_outlined,
-                                              color: Colors.white,
+                                            Padding(
+                                              padding: const EdgeInsets.all(6.0),
+                                              child: Text(
+                                                  value.referAndEarnModel.data
+                                                          ?.refferalCode ??
+                                                      " ",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(fontSize: 20)),
                                             ),
-                                            Text(
-                                              "   Invite Your Friends  ",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            )
+                                            value.referAndEarnModel.data
+                                                        ?.refferalCode !=
+                                                    null
+                                                ? GestureDetector(
+                                                    onTap: () async {
+                                                      await Clipboard.setData(
+                                                          ClipboardData(
+                                                              text: value
+                                                                      .referAndEarnModel
+                                                                      .data
+                                                                      ?.refferalCode ??
+                                                                  " "));
+                                                      RMSWidgets.getToast(
+                                                          message:
+                                                              'Invite Code Copied ',
+                                                          color: Colors.black12);
+                                                    },
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              6.0),
+                                                      child: Text(
+                                                        "COPY",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            backgroundColor:
+                                                                CustomTheme.peach
+                                                                    .withAlpha(
+                                                                        60)),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Container(),
                                           ],
                                         ),
-                                      )),
-                                )
-                              ],
-                            )),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(16),
+                                        child: Text(
+                                          "Invite You Friend and Get 1000 to your account once he/she books a flats using your Invite Code. ",
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      Container(
+                                        alignment: Alignment.center,
+                                        margin: EdgeInsets.only(
+                                            left: 15, right: 15, bottom: 15),
+                                        height: _mainHeight * 0.08,
+                                        width: MediaQuery.of(context).size.width,
+                                        child: Neumorphic(
+                                            style: NeumorphicStyle(
+                                              color: Colors.green,
+                                            ),
+                                            child: TextButton(
+                                              onPressed: () async {
+                                                await Share.share(value
+                                                        .referAndEarnModel
+                                                        .data
+                                                        ?.refferalText ??
+                                                    " ");
+                                              },
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    Icons.share_outlined,
+                                                    color: Colors.white,
+                                                  ),
+                                                  Text(
+                                                    "   Invite Your Friends  ",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  )
+                                                ],
+                                              ),
+                                            )),
+                                      )
+                                    ],
+                                  )),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 50),
+                        alignment: Alignment.center,
+                        child: GestureDetector(
+                            onTap: _showDialog,
+                            child: Text("Terms and Conditions",
+                                style: TextStyle(color: CustomTheme.appTheme))),
                       ),
                     ],
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 50),
-                  alignment: Alignment.center,
-                  child: GestureDetector(
-                      onTap: _showDialog,
-                      child: Text("Terms and Conditions",
-                          style: TextStyle(color: CustomTheme.appTheme))),
-                ),
-              ],
-            )):value.referAndEarnModel.msg != null &&
-            value.referAndEarnModel.msg?.toLowerCase() == 'failure'?Container():RMSWidgets.getLoader(color: CustomTheme.appTheme),
+                ))
+            : value.referAndEarnModel.msg != null &&
+                    value.referAndEarnModel.msg?.toLowerCase() == 'failure'
+                ? Center(
+            child: RMSWidgets.someError(context: context,))
+                : Center(
+                    child: RMSWidgets.getLoader(color: CustomTheme.appTheme)),
       );
     });
   }

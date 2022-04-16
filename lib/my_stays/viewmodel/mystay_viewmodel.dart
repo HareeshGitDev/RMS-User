@@ -117,14 +117,14 @@ class MyStayViewModel extends ChangeNotifier {
       required String propertyId,
       required String description,
       required String address,
-      required List<File> issueImagesList}) async {
+      String? imagePath}) async {
     return await _myStayApiService.generateTicket(
       bookingId: bookingId,
       requirements: requirements,
       propertyId: propertyId,
       description: description,
       address: address,
-      issueImagesList: issueImagesList,
+      imagePath: imagePath,
     );
   }
 
@@ -145,6 +145,7 @@ class MyStayViewModel extends ChangeNotifier {
     required String invoiceId,
     required String utrNumber,
     required String bookingId,
-  }) async => await _myStayApiService.updateInvoiceUTRPayment(
-        invoiceId: invoiceId, utrNumber: utrNumber, bookingId: bookingId);
+  }) async =>
+      await _myStayApiService.updateInvoiceUTRPayment(
+          invoiceId: invoiceId, utrNumber: utrNumber, bookingId: bookingId);
 }

@@ -59,7 +59,8 @@ class _TicketListPageState extends State<TicketListPage> {
       body: Consumer<MyStayViewModel>(
         builder: (context, value, child) {
           return value.ticketResponseModel != null &&
-                  value.ticketResponseModel?.data != null && value.ticketResponseModel?.data != []
+                  value.ticketResponseModel?.data != null &&
+                  value.ticketResponseModel?.data?.length != 0
               ? Container(
                   height: _mainHeight,
                   width: _mainWidth,
@@ -69,79 +70,96 @@ class _TicketListPageState extends State<TicketListPage> {
                       top: _mainHeight * 0.01,
                       bottom: _mainHeight * 0.01),
                   color: Colors.white,
-                  child: ListView.separated(
-                    itemBuilder: (context, index) {
-                      var data = value.ticketResponseModel?.data?[index];
-                      return GestureDetector(
-                        onTap: () => Navigator.pushNamed(
-                                context, AppRoutes.ticketDetailsPage,
-                                arguments: data ?? [])
-                            .then((value) async {
-                         /* RMSWidgets.showLoaderDialog(
-                              context: context, message: 'Loading');*/
-                          await _viewModel.getTicketList();
-                         /* Navigator.of(context).pop();*/
-                        }),
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Container(
-                              height: _mainHeight * 0.05,
-                              width: _mainWidth,
-                              padding: EdgeInsets.only(
-                                left: _mainWidth * 0.015,
-                                right: _mainWidth * 0.015,
-                              ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    '${index + 1}.',
-                                    style: TextStyle(
-                                        color: CustomTheme.black,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 14),
-                                  ),
-                                  Spacer(),
-                                  Container(
-                                    width: _mainWidth * 0.7,
-                                    child: Text(
-                                      '${data?.description ?? ''}',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14),
+                  child: Column(
+                    
+                    children: [
+                      Text('data'),
+                      Expanded(
+                        child: ListView.separated(
+                          itemBuilder: (context, index) {
+                            var data = value.ticketResponseModel?.data?[index];
+                            return GestureDetector(
+                              onTap: () => Navigator.pushNamed(
+                                      context, AppRoutes.ticketDetailsPage,
+                                      arguments: data ?? [])
+                                  .then((value) async {
+                                /* RMSWidgets.showLoaderDialog(
+                                    context: context, message: 'Loading');*/
+                                await _viewModel.getTicketList();
+                                /* Navigator.of(context).pop();*/
+                              }),
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Container(
+                                    height: _mainHeight * 0.05,
+                                    width: _mainWidth,
+                                    padding: EdgeInsets.only(
+                                      left: _mainWidth * 0.015,
+                                      right: _mainWidth * 0.015,
                                     ),
-                                  ),
-                                  Spacer(),
-                                  Text(
-                                    '${data?.status ?? ''}',
-                                    style: TextStyle(
-                                        color: data?.status?.toLowerCase() ==
-                                                'resolved'
-                                            ? CustomTheme.myFavColor
-                                            : data?.status?.toLowerCase() ==
-                                                    'open'
-                                                ? CustomTheme.appTheme
-                                                : CustomTheme.appThemeContrast,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14),
-                                  ),
-                                ],
-                              )),
+                                    child: Row(
+
+                                      children: [
+
+                                        Text(
+                                          '${index + 1}.',
+                                          style: TextStyle(
+                                              color: CustomTheme.black,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 14),
+                                        ),
+                                        Spacer(),
+                                        Container(
+                                          width: _mainWidth * 0.7,
+                                          child: Text(
+                                            '${data?.description ?? ''}',
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 14),
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        Text(
+                                          '${data?.status ?? ''}',
+                                          style: TextStyle(
+                                              color: data?.status?.toLowerCase() ==
+                                                      'resolved'
+                                                  ? CustomTheme.myFavColor
+                                                  : data?.status?.toLowerCase() ==
+                                                          'open'
+                                                      ? CustomTheme.appTheme
+                                                      : CustomTheme.appThemeContrast,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14),
+                                        ),
+                                      ],
+                                    )),
+                              ),
+                            );
+                          },
+                          itemCount: value.ticketResponseModel?.data?.length ?? 0,
+                          separatorBuilder: (context, index) => SizedBox(
+                            height: _mainHeight * 0.008,
+                          ),
                         ),
-                      );
-                    },
-                    itemCount: value.ticketResponseModel?.data?.length ?? 0,
-                    separatorBuilder: (context, index) => SizedBox(
-                      height: _mainHeight * 0.008,
-                    ),
+                      ),
+                    ],
                   ),
                 )
-              :value.ticketResponseModel != null &&
-              value.ticketResponseModel?.data != null && value.ticketResponseModel?.data == [] ?RMSWidgets.noData(context: context, message: 'No Tickets Found.',): Center(
-                  child: RMSWidgets.getLoader(color: CustomTheme.appTheme));
+              : value.ticketResponseModel != null &&
+                      value.ticketResponseModel?.data != null &&
+                      value.ticketResponseModel?.data?.length == 0
+                  ? Center(
+                      child: RMSWidgets.noData(
+                      context: context,
+                      message: 'No Tickets Found.',
+                    ))
+                  : Center(
+                      child: RMSWidgets.getLoader(color: CustomTheme.appTheme));
         },
       ),
     );

@@ -123,7 +123,7 @@ class _OtpState extends State<MobileOtpPage> {
                 highlightAnimationEndColor: Colors.white12,
                 controller: _pinCodeController,
                 onTextChanged: (data) {
-                  log(data.toString());
+
                 },
               ),
               SizedBox(

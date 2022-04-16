@@ -58,7 +58,6 @@ class PropertyListingPage extends StatefulWidget {
 }
 
 class _PropertyListingPageState extends State<PropertyListingPage> {
-
   var _mainHeight;
   var _mainWidth;
   late PropertyViewModel _propertyViewModel;
@@ -137,7 +136,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         child: Consumer<PropertyViewModel>(
           builder: (context, value, child) {
-            return value.propertyListModel.data != null
+            return value.propertyListModel.msg != null &&
+                    value.propertyListModel.msg?.toLowerCase() == 'success'
                 ? Visibility(
                     visible: !showSearchResults,
                     replacement: Container(
@@ -818,9 +818,93 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                       ),
                     ),
                   )
-                : Center(
-                    child: CircularProgressIndicator(),
-                  );
+                : value.propertyListModel.msg != null &&
+                        value.propertyListModel.msg?.toLowerCase() == 'failure'
+                    ? Visibility(
+                        visible: !showSearchResults,
+                        replacement: Container(
+                            padding: EdgeInsets.only(
+                                left: _mainWidth * 0.03,
+                                right: _mainWidth * 0.03,
+                                top: _mainHeight * 0.02),
+                            height: _mainHeight,
+                            color: Colors.white,
+                            child: ListView.separated(
+                              padding: EdgeInsets.zero,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () async {
+                                    RMSWidgets.showLoaderDialog(
+                                        context: context, message: 'Loading');
+
+                                    _searchController.text =
+                                        value.locations[index];
+                                    await _propertyViewModel
+                                        .getPropertyDetailsList(
+                                            address: value.locations[index],
+                                            property: Property.fromSearch,
+                                            toDate: widget.checkOutDate,
+                                            fromDate: widget.checkInDate);
+                                    showSearchResults = false;
+                                    FocusScope.of(context)
+                                        .requestFocus(FocusNode());
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.only(
+                                      left: _mainWidth * 0.03,
+                                    ),
+                                    height: _mainHeight * 0.045,
+                                    alignment: Alignment.centerLeft,
+                                    decoration: BoxDecoration(
+                                        //  color: Colors.white,//CustomTheme.appTheme.withAlpha(20),
+                                        border: Border.all(
+                                            color: CustomTheme.appTheme
+                                                .withAlpha(100)),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Icon(
+                                          Icons.location_on_outlined,
+                                          size: 20,
+                                          color: CustomTheme.appTheme,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Container(
+                                          width: _mainWidth * 0.8,
+                                          child: Text(
+                                            value.locations[index],
+                                            style: TextStyle(
+                                                fontFamily: fontFamily,
+                                                fontSize: 14,
+                                                color: Colors.black54,
+                                                fontWeight: FontWeight.w600),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                              itemCount: value.locations.length,
+                              separatorBuilder: (context, index) => SizedBox(
+                                height: 10,
+                              ),
+                            )),
+                        child: Center(
+                            child: RMSWidgets.someError(
+                          context: context,
+                        )))
+                    : Center(
+                        child:
+                            RMSWidgets.getLoader(color: CustomTheme.appTheme));
           },
         ),
       ),
