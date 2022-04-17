@@ -37,29 +37,33 @@ class LoginApiService {
   Future<SignUpResponseModel> signUpUser(
       {required SignUpRequestModel model}) async {
     String url = AppUrls.signUpUrl;
-    final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
-      "fname": model.fname,
-      "email": model.email,
-      "source_rms": model.sourceRms,
-      "iam": model.iam,
-      "password": model.password,
-      "phonenumber": model.phonenumber,
-      "city": model.city,
-      "referal": model.referal,
-    },fromLogin: true);
+    final response = await _apiService.postApiCall(
+        endPoint: url,
+        bodyParams: {
+          "fname": model.fname,
+          "email": model.email,
+          "source_rms": model.sourceRms,
+          "iam": model.iam,
+          "password": model.password,
+          "phonenumber": model.phonenumber,
+          "city": model.city,
+          "referal": model.referal,
+        },
+        fromLogin: true);
     final data = response as Map<String, dynamic>;
 
-    if (data['status'].toString().toLowerCase() == 'success') {
+    if (data['msg'].toString().toLowerCase() != 'failure') {
       return SignUpResponseModel.fromJson(data);
     } else {
       return SignUpResponseModel(
-          status: 'failure', message: data['message'].toString());
+        msg: 'failure',
+      );
     }
   }
 
   Future<int> resetPassword({required String email}) async {
     String url = AppUrls.forgotPasswordUrl;
-    final  response = await _apiService.postApiCall(
+    final response = await _apiService.postApiCall(
         endPoint: url,
         bodyParams: {
           'email': email,
@@ -67,7 +71,7 @@ class LoginApiService {
         fromLogin: true);
     final data = response as Map<String, dynamic>;
 
-    return data['msg'].toString().toLowerCase() != 'failure' ?200:400;
+    return data['msg'].toString().toLowerCase() != 'failure' ? 200 : 400;
   }
 
   Future<LoginResponseModel> registerAfterGmail(
@@ -98,20 +102,16 @@ class LoginApiService {
       {required String mobileNumber, String? uid}) async {
     String url = AppUrls.loginOtpUrl;
     final response = await _apiService.getApiCallWithQueryParams(
-        endPoint: url, queryParams: {'mobileno': mobileNumber, 'uid': uid},fromLogin: true);
-    if (response != null) {
-      final data = response as Map<String, dynamic>;
-      if (data['status'].toString().toLowerCase() == 'success') {
-        if (data['action'].toString() == 'sign-up') {
-          return OtpRegistrationResponseModel(
-              status: 'success', action: 'sign-up');
-        } else if (data['action'].toString() == 'sign-in') {
-          return OtpRegistrationResponseModel.fromJson(data);
-        }
-      }
-      return OtpRegistrationResponseModel(status: 'failure');
+        endPoint: url,
+        queryParams: {'mobileno': mobileNumber, 'uid': uid},
+        fromLogin: true);
+
+    final data = response as Map<String, dynamic>;
+    if (data['msg'].toString().toLowerCase() != 'failure') {
+      return OtpRegistrationResponseModel.fromJson(data);
+    } else {
+      return OtpRegistrationResponseModel(msg: 'failure');
     }
-    return OtpRegistrationResponseModel(status: 'failure');
   }
 
   Future<SignUpResponseModel> detailsValidationAfterOTP(
@@ -129,9 +129,10 @@ class LoginApiService {
     });
 
     final data = response as Map<String, dynamic>;
-    return data['status'].toString().toLowerCase() == 'success'
+    return data['msg'].toString().toLowerCase() != 'failure'
         ? SignUpResponseModel.fromJson(data)
         : SignUpResponseModel(
-            status: 'failure', message: data['message'].toString());
+            msg: 'failure',
+          );
   }
 }

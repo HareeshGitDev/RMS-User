@@ -174,74 +174,91 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(
                           height: 40,
                         ),
-                        Container(
-                          width: _mainWidth * 0.4,
-                          height: 35,
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor:
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: _mainWidth * 0.4,
+                              height: 35,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            CustomTheme.appTheme),
+                                    shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(40)),
+                                    )),
+                                onPressed: () async {
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
+                                  if (_formKey.currentState != null &&
+                                      !_formKey.currentState!.validate()) {}
+                                  if (_emailController.text.isEmpty) {
+                                    Fluttertoast.showToast(
+                                        msg: 'Please Enter E-mail Address',
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.CENTER);
+                                  } else {
+                                    if (_passwordController.text.isEmpty) {
+                                      RMSWidgets.getToast(
+                                          message: 'Please Enter Password',
+                                          color: CustomTheme().colorError);
+                                    } else {
+                                      RMSWidgets.showLoaderDialog(
+                                          context: context,
+                                          message: 'Please wait...');
+                                      final LoginResponseModel response =
+                                          await _loginViewModel.getLoginDetails(
+                                              email: _emailController.text,
+                                              password: _passwordController.text);
+                                      Navigator.pop(context);
+                                      if (response.msg?.toLowerCase() !=
+                                              'failure' &&
+                                          response.data != null) {
+                                        await setSPValues(response: response);
+
+                                        Navigator.pushNamedAndRemoveUntil(
+                                          context,
+                                          AppRoutes.dashboardPage,
+                                          (route) => false,
+                                        );
+                                      }
+                                    }
+                                    //
+                                  }
+                                },
+                                child: Center(child: Text("LOGIN")),
+                              ),
+                            ),
+                            Container(
+                              width: _mainWidth * 0.4,
+                              height: 35,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor:
                                     MaterialStateProperty.all<Color>(
                                         CustomTheme.appTheme),
-                                shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
+                                    shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
                                           BorderRadius.circular(40)),
-                                )),
-                            onPressed: () async {
-                              FocusScope.of(context)
-                                  .requestFocus(FocusNode());
-                              if (_formKey.currentState != null &&
-                                  !_formKey.currentState!.validate()) {}
-                              if (_emailController.text.isEmpty) {
-                                Fluttertoast.showToast(
-                                    msg: 'Please Enter E-mail Address',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.CENTER);
-                              } else {
-                                if (_passwordController.text.isEmpty) {
-                                  RMSWidgets.getToast(
-                                      message: 'Please Enter Password',
-                                      color: CustomTheme().colorError);
-                                } else {
-                                  RMSWidgets.showLoaderDialog(
-                                      context: context,
-                                      message: 'Please wait...');
-                                  final LoginResponseModel response =
-                                      await _loginViewModel.getLoginDetails(
-                                          email: _emailController.text,
-                                          password: _passwordController.text);
-                                  Navigator.pop(context);
-                                  if (response.msg?.toLowerCase() !=
-                                          'failure' &&
-                                      response.data != null) {
-                                    await setSPValues(response: response);
-
-                                    Navigator.pushNamedAndRemoveUntil(
-                                      context,
-                                      AppRoutes.dashboardPage,
-                                      (route) => false,
-                                    );
-                                  }
-                                }
-                                //
-                              }
-                            },
-                            child: Center(child: Text("LOGIN")),
-                          ),
+                                    )),
+                                onPressed: () async {
+                                  showForgotPasswordDialog(context: context);
+                                },
+                                child: Text('Forgot Password?'),
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(
                           height: 15,
                         ),
-                        GestureDetector(
-                          onTap: () =>
-                              showForgotPasswordDialog(context: context),
-                          child: Container(
-                            color: Colors.white,
-                            alignment: Alignment.centerLeft,
-                            child: Text('Forgot Password?'),
-                          ),
-                        ),
+
                         SizedBox(
                           height: 40,
                         ),
@@ -254,7 +271,7 @@ class _LoginPageState extends State<LoginPage> {
                           height: 20,
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(

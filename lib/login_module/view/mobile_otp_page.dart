@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:RentMyStay_user/images.dart';
 import 'package:RentMyStay_user/login_module/model/otp_registration_otp_model.dart';
-import 'package:RentMyStay_user/login_module/service/google_auth_service.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:RentMyStay_user/theme/app_theme.dart';
+import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
@@ -13,7 +13,6 @@ import 'package:provider/provider.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/navigation_service.dart';
 import '../../utils/service/shared_prefrences_util.dart';
-import '../service/login_api_service.dart';
 
 class MobileOtpPage extends StatefulWidget {
   //const MobileOtpPage({Key? key}) : super(key: key);
@@ -39,7 +38,8 @@ class _OtpState extends State<MobileOtpPage> {
 
   Future initMethod() async {
     _loginViewModel = Provider.of<LoginViewModel>(context, listen: false);
-    await verifyOTP(context: context, phoneNumber: widget.number);
+    WidgetsBinding.instance!.addPostFrameCallback(
+            (_) => verifyOTP(context: context, phoneNumber: widget.number));
   }
 
   @override
@@ -207,15 +207,15 @@ class _OtpState extends State<MobileOtpPage> {
           final response = await _loginViewModel.verifyOTP(
               mobileNumber: phoneNumber,
               uid: (userCredential.user?.uid).toString());
-          if (response.status?.toLowerCase() == 'success' &&
-              response.action == 'sign-up') {
+          if (response.msg?.toLowerCase() != 'failure' &&
+              response.data?.action?.toLowerCase() == 'sign-up') {
             Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.firebaseRegistrationPage,(r)=>false,arguments: {
               'uid':userCredential.user?.uid,
               'from':'OTP',
               'mobile':phoneNumber,
             },);
-          } else if (response.status?.toLowerCase() == 'success' &&
-              response.action == 'sign-in') {
+          } else if (response.msg?.toLowerCase() != 'failure' &&
+              response.data?.action?.toLowerCase() == 'sign-in') {
             await setSPValues(response: response);
             Navigator.pushNamedAndRemoveUntil(
               context,AppRoutes.dashboardPage,(route) => false,);
@@ -250,6 +250,7 @@ class _OtpState extends State<MobileOtpPage> {
       required String smsCode,
       required BuildContext context}) async {
     try {
+      RMSWidgets.showLoaderDialog(context: context,message: 'Loading');
       final data = PhoneAuthProvider.credential(
           verificationId: verificationId, smsCode: smsCode);
       UserCredential userCredential =
@@ -260,20 +261,24 @@ class _OtpState extends State<MobileOtpPage> {
         final response = await _loginViewModel.verifyOTP(
             mobileNumber: widget.number,
             uid: (userCredential.user?.uid).toString());
-        if (response.status?.toLowerCase() == 'success' &&
-            response.action == 'sign-up') {
+        if (response.msg?.toLowerCase() != 'failure' &&
+            response.data?.action?.toLowerCase() == 'sign-up') {
+          Navigator.pop(context);
           Navigator.of(context)
               .pushNamed(AppRoutes.firebaseRegistrationPage, arguments: {
             'from': 'OTP',
             'uid':userCredential.user?.uid,
             'mobile':widget.number,
           });
-        } else if (response.status?.toLowerCase() == 'success' &&
-            response.action == 'sign-in') {
+        } else if (response.msg?.toLowerCase() != 'failure' &&
+            response.data?.action?.toLowerCase() == 'sign-in') {
           await setSPValues(response: response);
+          Navigator.pop(context);
           Navigator.pushNamedAndRemoveUntil(
             context,AppRoutes.dashboardPage,(route) => false,);
         }
+      }else{
+        Navigator.pop(context);
       }
     } catch (e) {
       log('Error while OTP Login :: ${e.toString()}');
@@ -284,12 +289,12 @@ class _OtpState extends State<MobileOtpPage> {
       {required OtpRegistrationResponseModel response}) async {
     SharedPreferenceUtil shared = SharedPreferenceUtil();
     await shared.setString(
-        rms_registeredUserToken, response.appToken.toString());
-    await shared.setString(rms_profilePicUrl, response.pic.toString());
-    await shared.setString(rms_phoneNumber, response.contactNum.toString());
-    await shared.setString(rms_name, response.name.toString());
-    await shared.setString(rms_email, response.email.toString());
-    await shared.setString(rms_gmapKey, response.gmapKey.toString());
-    await shared.setString(rms_userId, response.id.toString());
+        rms_registeredUserToken, '${response.data?.appToken}');
+    await shared.setString(rms_profilePicUrl, '${response.data?.pic}');
+    await shared.setString(rms_phoneNumber, '${response.data?.contactNum}');
+    await shared.setString(rms_name,  '${response.data?.name}');
+    await shared.setString(rms_email,  '${response.data?.email}');
+    await shared.setString(rms_gmapKey,  '${response.data?.gmapKey}');
+    await shared.setString(rms_userId,  '${response.data?.id}');
   }
 }

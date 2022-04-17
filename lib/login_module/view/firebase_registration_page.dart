@@ -461,13 +461,13 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
   Future<void> setSPValuesForOTP({required SignUpResponseModel response}) async {
     SharedPreferenceUtil shared = SharedPreferenceUtil();
     await shared.setString(
-        rms_registeredUserToken, response.appToken.toString());
-    await shared.setString(rms_profilePicUrl,response.pic.toString());
-    await shared.setString(rms_phoneNumber, response.contactNum.toString());
-    await shared.setString(rms_name, response.name.toString());
-    await shared.setString(rms_email, response.email.toString());
-    await shared.setString(rms_gmapKey, response.gmapKey.toString());
-    await shared.setString(rms_userId, response.id.toString());
+        rms_registeredUserToken, '${response.data?.appToken}');
+    await shared.setString(rms_profilePicUrl, '${response.data?.pic}');
+    await shared.setString(rms_phoneNumber, '${response.data?.contactNum}');
+    await shared.setString(rms_name,  '${response.data?.name}');
+    await shared.setString(rms_email,  '${response.data?.email}');
+    await shared.setString(rms_gmapKey,  '${response.data?.gmapKey}');
+    await shared.setString(rms_userId,  '${response.data?.id}');
   }
 
   Future<void> calledFromGmailPage() async {
@@ -552,7 +552,7 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
       ));
       Navigator.of(context).pop();
 
-      if (response.status?.toLowerCase()=='success') {
+      if (response.msg?.toLowerCase() !='failure') {
         log('Called For OTP Registration');
         await setSPValuesForOTP(response: response);
         Navigator.pushNamedAndRemoveUntil(

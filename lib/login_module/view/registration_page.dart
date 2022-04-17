@@ -299,22 +299,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                       iam: typeValue,
                                       city: selectedCity,
                                       fname: _nameController.text,
-                                     // imei: '',
-                                     // lname: '',
-                                      //budget: ''
                                        ));
                           Navigator.of(context).pop();
 
-                          if (response.status?.toLowerCase() == 'success') {
+                          if (response.msg?.toLowerCase() != 'failure') {
                             await setSPValues(response: response);
                             RMSWidgets.getToast(
-                                message:response.message.toString(),
+                                message:'You have been Successfully registered',
                                 color: myFavColor);
                             Navigator.pushNamedAndRemoveUntil(
                               context,AppRoutes.dashboardPage,(route) => false,);
-                          } else {
-                            RMSWidgets.getToast(message: response.message.toString(), color: CustomTheme().colorError);
-
                           }
                         }
                         },
@@ -401,13 +395,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Future<void> setSPValues({required SignUpResponseModel response}) async {
     SharedPreferenceUtil shared = SharedPreferenceUtil();
     await shared.setString(
-        rms_registeredUserToken, response.appToken.toString());
-    await shared.setString(rms_profilePicUrl,response.pic.toString());
-    await shared.setString(rms_phoneNumber, response.contactNum.toString());
-    await shared.setString(rms_name, response.name.toString());
-    await shared.setString(rms_email, response.email.toString());
-    await shared.setString(rms_gmapKey, response.gmapKey.toString());
-    await shared.setString(rms_gmapKey, response.id.toString());
+        rms_registeredUserToken, '${response.data?.appToken}');
+    await shared.setString(rms_profilePicUrl, '${response.data?.pic}');
+    await shared.setString(rms_phoneNumber, '${response.data?.contactNum}');
+    await shared.setString(rms_name,  '${response.data?.name}');
+    await shared.setString(rms_email,  '${response.data?.email}');
+    await shared.setString(rms_gmapKey,  '${response.data?.gmapKey}');
+    await shared.setString(rms_userId,  '${response.data?.id}');
 
   }
 }

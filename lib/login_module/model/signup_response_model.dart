@@ -1,6 +1,27 @@
 class SignUpResponseModel {
+  String? msg;
+  Data? data;
+
+  SignUpResponseModel({this.msg, this.data});
+
+  SignUpResponseModel.fromJson(Map<String, dynamic> json) {
+    msg = json['msg'];
+    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['msg'] = this.msg;
+    if (this.data != null) {
+      data['data'] = this.data!.toJson();
+    }
+    return data;
+  }
+}
+
+class Data {
+  int? id;
   String? status;
-  String? message;
   String? appToken;
   String? username;
   String? email;
@@ -9,15 +30,13 @@ class SignUpResponseModel {
   String? pic;
   String? isAdmin;
   String? team;
-  String? id;
   String? gmapKey;
 
-  SignUpResponseModel(
-      {this.status,
-        this.message,
+  Data(
+      {this.id,
+        this.status,
         this.appToken,
         this.username,
-        this.id,
         this.email,
         this.contactNum,
         this.name,
@@ -26,9 +45,9 @@ class SignUpResponseModel {
         this.team,
         this.gmapKey});
 
-  SignUpResponseModel.fromJson(Map<String, dynamic> json) {
+  Data.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     status = json['status'];
-    message = json['message'];
     appToken = json['app_token'];
     username = json['username'];
     email = json['email'];
@@ -37,14 +56,13 @@ class SignUpResponseModel {
     pic = json['pic'];
     isAdmin = json['is_admin'];
     team = json['team'];
-    id = json['id'];
     gmapKey = json['gmap_key'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
     data['status'] = this.status;
-    data['message'] = this.message;
     data['app_token'] = this.appToken;
     data['username'] = this.username;
     data['email'] = this.email;
@@ -53,7 +71,6 @@ class SignUpResponseModel {
     data['pic'] = this.pic;
     data['is_admin'] = this.isAdmin;
     data['team'] = this.team;
-    data['id'] = this.id;
     data['gmap_key'] = this.gmapKey;
     return data;
   }

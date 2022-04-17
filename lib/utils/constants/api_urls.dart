@@ -2,12 +2,11 @@ class AppUrls {
   static const String baseUrl = "www.rentmystay.com";
 
   static const String loginUrl = "/v2/signIn";
-  static const String loginOtpUrl = "/v2/signInOtp";
+  static const String loginOtpUrl = "/v2/signInOTP";
   static const String signUpUrl = "/v2/signUp";
   static const String forgotPasswordUrl = "/v2/forgotPassword";
   static const String signInWithGoogleUrl = "/v2/googleLogin";
   static const String registrationWithGoogleUrl = "/v2/addPhone";
-
   static const String profileUrl = '/v2/userProfile';
   static const String bookingDetailsUrl = "/v2/bookingCost";
   static const String scheduleSiteVisitUrl = "/v2/scheduleVisit";
