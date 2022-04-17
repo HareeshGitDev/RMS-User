@@ -417,11 +417,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                 }
                                               },
                                               child: Container(
-                                                width: _mainWidth * 0.40,
+                                                width: _mainWidth,
                                                 color: Colors.white,
                                                 child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     Padding(
                                                       padding: EdgeInsets.only(
@@ -429,50 +427,60 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                               _mainWidth * 0.02,
                                                           top: _mainHeight *
                                                               0.005),
-                                                      child: Icon(
-                                                        Icons
-                                                            .my_location_outlined,
-                                                        color: myFavColor,
-                                                        size:
-                                                            _mainHeight * 0.02,
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    Container(
-                                                      //    color: Colors.amber,
-                                                      width: _mainWidth * 0.30,
-                                                      child: Wrap(
-                                                        children: [
-                                                          Padding(
-                                                            padding: EdgeInsets.only(
-                                                                top:
-                                                                    _mainHeight *
-                                                                        0.007),
-                                                            child: Text(
-                                                              (data.areas ??
-                                                                      data.city) ??
-                                                                  " ",
-                                                              maxLines: 1,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  fontFamily:
-                                                                      fontFamily,
-                                                                  fontSize: 12),
+                                                      child: RichText(
+                                                        text:
+                                                            TextSpan(children: [
+                                                          WidgetSpan(
+                                                            child: Icon(
+                                                              Icons
+                                                                  .my_location_outlined,
+                                                              color: myFavColor,
+                                                              size:
+                                                                  _mainHeight *
+                                                                      0.02,
                                                             ),
                                                           ),
-                                                        ],
+                                                          TextSpan(
+                                                            text: (data.areas ??
+                                                                    data.city) ??
+                                                                " ",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontFamily:
+                                                                    fontFamily,
+                                                                fontSize: 12),
+                                                          ),
+                                                        ]),
                                                       ),
                                                     ),
+                                                    data.avl?.toLowerCase() ==
+                                                            'booked'
+                                                        ? Padding(
+                                                     padding: EdgeInsets.only(
+                                                          right:
+                                                          _mainWidth * 0.02,
+                                                          top: _mainHeight *
+                                                              0.005),
+                                                          child: Text(
+                                                              'Booked',
+                                                              style: TextStyle(
+                                                                  color: Color(
+                                                                      0xffFF0000),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700,
+                                                                  fontSize: 14),
+                                                            ),
+                                                        )
+                                                        : Text('')
                                                   ],
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                 ),
                                               ),
                                             ),

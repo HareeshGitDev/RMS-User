@@ -17,25 +17,32 @@ class LocationService {
     return position;
   }
 
-  static Future<bool> requestLocationPermission() async {
+  static Future<PermissionStatus> requestInitialLocationPermission() async {
     PermissionStatus status = await Permission.location.request();
-    return status.isGranted;
+    return status;
+  }
+
+  static Future<bool?> checkPermission() async {
+    await requestInitialLocationPermission();
+    PermissionWithService location =Permission.location;
+    if (await location.isGranted) {
+      return true;
+    }else if(await location.isDenied) {
+      await openAppSettings();
+    }
+    return null;
   }
 
   static Future<String> getCurrentPlace() async {
-    bool isGranted = await requestLocationPermission();
-    if (isGranted) {
-      Position position = await LocationService.getCurrentPosition();
-      await preferenceUtil.setString(
-          rms_user_longitude, position.latitude.toString());
-      await preferenceUtil.setString(
-          rms_user_latitude, position.latitude.toString());
-      List<Placemark> placeMarks =
-          await placemarkFromCoordinates(position.latitude, position.longitude);
-      String currentAddress =
-          '${placeMarks[0].subLocality?.replaceAll(' ', '-')}-${placeMarks[0].locality?.replaceAll(' ', '-')}-${placeMarks[0].administrativeArea?.replaceAll(' ', '-')}-${placeMarks[0].country?.replaceAll(' ', '-')}';
-      return currentAddress;
-    }
-    return '';
+    Position position = await LocationService.getCurrentPosition();
+    await preferenceUtil.setString(
+        rms_user_longitude, position.latitude.toString());
+    await preferenceUtil.setString(
+        rms_user_latitude, position.latitude.toString());
+    List<Placemark> placeMarks =
+    await placemarkFromCoordinates(position.latitude, position.longitude);
+    String currentAddress =
+        '${placeMarks[0].subLocality?.replaceAll(' ', '-')}-${placeMarks[0].locality?.replaceAll(' ', '-')}-${placeMarks[0].administrativeArea?.replaceAll(' ', '-')}-${placeMarks[0].country?.replaceAll(' ', '-')}';
+    return currentAddress;
   }
 }

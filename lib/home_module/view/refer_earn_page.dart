@@ -95,7 +95,7 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                       Images.rmscard_background,
                                     ),
                                     colorFilter: ColorFilter.mode(
-                                        Color(0xff226e79), BlendMode.colorBurn),
+                                        CustomTheme.appTheme, BlendMode.colorBurn),
                                     fit: BoxFit.cover,
                                   ),
 

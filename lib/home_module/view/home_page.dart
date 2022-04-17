@@ -157,13 +157,19 @@ class _HomePageState extends State<HomePage> {
                             context: context)[index];
                         return InkWell(
                           onTap: index == 0
-                              ? () => Navigator.of(context).pushNamed(
-                                      AppRoutes.propertyListingPage,
-                                      arguments: {
-                                        'location': data.value,
-                                        'property':
-                                            Property.fromCurrentLocation,
-                                      })
+                              ? () async{
+                              bool? granted=await LocationService.checkPermission();
+                              if(granted != null && granted){
+                                Navigator.of(context).pushNamed(
+                                    AppRoutes.propertyListingPage,
+                                    arguments: {
+                                      'location': data.value,
+                                      'property':
+                                      Property.fromCurrentLocation,
+                                    });
+                              }
+
+                              }
                               : () => Navigator.of(context).pushNamed(
                                       AppRoutes.propertyListingPage,
                                       arguments: {
