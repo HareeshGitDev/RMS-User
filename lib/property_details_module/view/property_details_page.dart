@@ -20,6 +20,7 @@ import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -27,14 +28,17 @@ import '../../Web_View_Container.dart';
 import '../../images.dart';
 import '../../utils/constants/app_consts.dart';
 import '../../utils/constants/sp_constants.dart';
+import '../../utils/service/date_time_service.dart';
 import '../../utils/service/navigation_service.dart';
 import '../../utils/service/shared_prefrences_util.dart';
+import '../../utils/view/calander_page.dart';
 import '../amenities_model.dart';
 import '../model/property_details_model.dart';
 import '../model/property_details_util_model.dart';
 
 class PropertyDetailsPage extends StatefulWidget {
   String propId;
+
 
   PropertyDetailsPage({Key? key, required this.propId}) : super(key: key);
 
@@ -43,6 +47,10 @@ class PropertyDetailsPage extends StatefulWidget {
 }
 
 class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
+  final SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+  String checkInDate = DateTimeService.ddMMYYYYformatDate(DateTime.now());
+  String checkOutDate = DateTimeService.ddMMYYYYformatDate(
+      DateTime.now().add(const Duration(days: 1)));
   String cancellationPolicy =
       'https://www.rentmystay.com/info/cancellation_policy/1';
   var _mainHeight;
@@ -667,7 +675,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         const Divider(
                           thickness: 2,
                         ),
-                        /* Container(
+                         Container(
                           // color: CustomTheme.peach,
                           padding: EdgeInsets.only(
                             left: _mainWidth * 0.04,
@@ -688,7 +696,33 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                 ),
                                 Container(
                                   child: GestureDetector(
-                                    onTap: () {},
+                                    onTap: () async {
+        PickerDateRange? dateRange =
+        await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => CalenderPage(
+        initialDatesRange: PickerDateRange(
+        DateTime.parse(checkInDate),
+        DateTime.parse(checkOutDate),
+        )),
+        ));
+        if (dateRange != null) {
+          setState(() {
+            checkInDate = DateTimeService
+                .ddMMYYYYformatDate(
+                dateRange.startDate ??
+                    DateTime.now());
+            checkOutDate = DateTimeService
+                .ddMMYYYYformatDate(dateRange
+                .endDate ??
+                DateTime.now().add(
+                    const Duration(days: 1)));
+          });
+          await preferenceUtil.setString(
+              rms_checkInDate, checkInDate);
+          await preferenceUtil.setString(
+              rms_checkOutDate, checkOutDate);
+        }
+        },
                                     child: Icon(Icons.calendar_today,
                                         color: myFavColor,
                                         size: _mainWidth * 0.06),
@@ -698,7 +732,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         ),
                         const Divider(
                           thickness: 2,
-                        ),*/
+                        ),
                         Padding(
                           padding: EdgeInsets.only(
                             left: _mainWidth * 0.04,
@@ -1036,7 +1070,6 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                           ?.maxGuests)
                                       .toString()),
                                 );
-
                                 Navigator.pushNamed(
                                     context, AppRoutes.bookingPage,
                                     arguments: model);
@@ -1457,9 +1490,9 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                 fontWeight: FontWeight.w500),
           ),
           Text(
-            model?.data?.details != null && model?.data?.details?.rent != null
+            model?.data?.details != null && model?.data?.details?.rent != null && model?.data?.details?.rent !=0
                 ? '$rupee ${model?.data?.details?.rent}'
-                : ' ',
+                : 'Unavailable',
             style: TextStyle(
                 fontSize: 14,
                 fontFamily: fontFamily,

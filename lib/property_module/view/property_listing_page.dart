@@ -478,6 +478,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                             SizedBox(
                                               height: _mainHeight * 0.007,
                                             ),
+                                            Visibility(
+                                              visible: data.rent != null &&
+                                                  data.rent != "0",child:
                                             Container(
                                                 //color: Colors.amber,
                                                 height: _mainHeight * 0.02,
@@ -542,7 +545,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,
-                                                )),
+                                                ))),
                                             Container(
                                                 //color: Colors.amber,
                                                 height: _mainHeight * 0.02,

@@ -83,7 +83,7 @@ class _PaymentStatusPageState extends State<PaymentStatusPage> {
                             height: _mainHeight * 0.18,
                             width: _mainWidth * 0.8,
                             child:Image.asset(Images.failedIcon)
-                           // Image.network('https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/payment_failed.png?alt=media&token=3af294f9-0876-49f1-9866-250a0332d694',),
+                           //Image.network('https://www.networkgeek.in/img/error.gif',),
                           ),
                           SizedBox(height: 10,),
                           Text('Payment of $rupee ' +
