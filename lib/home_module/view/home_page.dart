@@ -158,7 +158,7 @@ class _HomePageState extends State<HomePage> {
                         return InkWell(
                           onTap: index == 0
                               ? () async{
-                              bool? granted=await LocationService.checkPermission();
+                              bool? granted=await LocationService.checkPermission(context: context);
                               if(granted != null && granted){
                                 Navigator.of(context).pushNamed(
                                     AppRoutes.propertyListingPage,
