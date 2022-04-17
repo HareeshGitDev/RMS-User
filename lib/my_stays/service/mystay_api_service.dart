@@ -139,8 +139,7 @@ class MyStayApiService {
     final response = await _apiService.getApiCall(endPoint: url);
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() == 'success' ||
-        data['msg'].toString().toLowerCase() == 'no ticket found') {
+    if (data['msg'].toString().toLowerCase() != 'failure') {
       return TicketResponseModel.fromJson(data);
     } else {
       return TicketResponseModel(
@@ -166,30 +165,24 @@ class MyStayApiService {
       required String propertyId,
       required String description,
       required String address,
-      required List<File> issueImagesList}) async {
+       String? imagePath}) async {
     String url = AppUrls.generateTicketUrl;
 
-    final List<dio.MultipartFile> list = [];
-
-    for (File file in issueImagesList) {
-      dio.MultipartFile multipartFile =
-          await dio.MultipartFile.fromFile(file.path);
-      list.add(multipartFile);
-    }
-    log(list.length.toString());
-    FormData formData = FormData.fromMap({
+    FormData formData = imagePath != null? FormData.fromMap({
       'booking_id': bookingId,
       'requirement': requirements,
       'prop_id': propertyId,
       'description': description,
       'address': address,
-      'issue_img': list,
+      'issue_img': await dio.MultipartFile.fromFile(File(imagePath).path),
+    }): FormData.fromMap({
+      'booking_id': bookingId,
+      'requirement': requirements,
+      'prop_id': propertyId,
+      'description': description,
+      'address': address,
     });
-    list.forEach((element) => log(element.filename.toString()));
-    for (var element in formData.files) {
-      print(element.toString());
-    }
-    formData.fields.forEach((element) => print(element.toString()));
+
     final response = await _apiService.postApiCallFormData(
         endPoint: url, formData: formData);
 
@@ -220,13 +213,10 @@ class MyStayApiService {
     String url = AppUrls.invoicePaymentUrl;
     final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
       "invoice_id": model.invoiceId,
-     // 'id': model.propId,
-     // "booking_id": model.bookingId,
+      "amount": model.depositAmount,
       "billing_tel": model.phone,
       "billing_name": model.name,
       "billing_email": model.email,
-      "amount": 1.toString(),
-      //"payment_gatway": model.paymentGateway,
     });
     final data = response as Map<String, dynamic>;
 
@@ -236,8 +226,12 @@ class MyStayApiService {
       return InvoicePaymentModel(msg: 'failure');
     }
   }
-  Future<int> updateInvoiceUTRPayment(
-      {required String invoiceId,required String utrNumber,required String bookingId,}) async {
+
+  Future<int> updateInvoiceUTRPayment({
+    required String invoiceId,
+    required String utrNumber,
+    required String bookingId,
+  }) async {
     String url = AppUrls.utrInvoiceUpdateUrl;
     final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
       "utr_no": utrNumber,
@@ -246,7 +240,6 @@ class MyStayApiService {
     });
     final data = response as Map<String, dynamic>;
 
-    return data['msg'].toString().toLowerCase() == 'success' ?200:404;
-
+    return data['msg'].toString().toLowerCase() == 'success' ? 200 : 404;
   }
 }

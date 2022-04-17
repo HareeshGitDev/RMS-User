@@ -42,6 +42,7 @@ class _SearchPageState extends State<SearchPage> {
       color: Colors.black,
       fontFamily: fontFamily,
       fontWeight: FontWeight.w500,
+      overflow: TextOverflow.ellipsis,
       fontSize: 15);
 
   @override
@@ -59,1273 +60,472 @@ class _SearchPageState extends State<SearchPage> {
                         .shiftBottom(index: 0);
                     return false;
                   },
-                  child: Container(
-                    width: _mainWidth,
-                    color: Colors.white,
-                    padding: EdgeInsets.all(15),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 40,
-                          ),
-                          Container(
-                            height: 45,
-                            child: Neumorphic(
-                              style: NeumorphicStyle(
-                                // shadowLightColor: CustomTheme.appTheme.withAlpha(150),
-                                shadowDarkColor: Colors.blueGrey.shade100,
-                                // color: Colors.black26.withAlpha(40),
-                                color: Colors.white,
-                                border: NeumorphicBorder(
-                                    color: CustomTheme.appTheme, width: 1),
-                                lightSource: LightSource.bottom,
-                                intensity: 5,
-                                depth: 2,
-                                shape: NeumorphicShape.convex,
-                              ),
-                              child: Row(
-                                children: [
-                                  IconButton(
-                                      onPressed: widget.fromBottom
-                                          ? () => Provider.of<
-                                                      BottomNavigationProvider>(
-                                                  context,
-                                                  listen: false)
-                                              .shiftBottom(index: 0)
-                                          : () => Navigator.pop(context),
-                                      icon: Icon(
-                                        Icons.arrow_back,
-                                        size: 20,
-                                      )),
-                                  Container(
-                                    width: _mainWidth * 0.78,
-                                    height: 44,
-                                    child: TextFormField(
-                                      controller: _searchController,
-                                      onChanged: (text) async {
-                                        if (text.length < 3) {
-                                          return;
-                                        }
-                                        showSearchResults = true;
-                                        await value.getSearchedPlace(text);
-                                      },
-                                      decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          hintText:
-                                              'Search by Locality , Landmark or City',
-                                          hintStyle: TextStyle(
-                                              fontFamily: fontFamily,
-                                              fontSize: 16,
-                                              color: Colors.black54,
-                                              fontWeight: FontWeight.w500),
-                                          suffixIcon: IconButton(
-                                            icon: Icon(
-                                              Icons.clear,
-                                              color: Colors.black,
-                                            ),
-                                            onPressed: () async {
-                                              _searchController.clear();
-                                              setState(() {
-                                                showSearchResults = false;
-                                              });
-                                            },
-                                          )),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Visibility(
-                            visible: !showSearchResults,
-                            replacement: Container(
-                                padding: EdgeInsets.only(
-                                    left: 0, bottom: 10, right: 0, top: 10),
-                                height: _mainHeight,
-                                color: Colors.white,
-                                child: ListView.separated(
-                                  padding: EdgeInsets.zero,
-                                  itemBuilder: (context, index) {
-                                    return GestureDetector(
-                                      onTap: () => setState(() {
-                                        showSearchResults = false;
-                                        FocusScope.of(context)
-                                            .requestFocus(FocusNode());
-                                        _searchController.text =
-                                            value.locations[index];
-                                      }),
-                                      child: Container(
-                                        padding: EdgeInsets.only(
-                                          left: 15,
-                                        ),
-                                        height: 35,
-                                        alignment: Alignment.centerLeft,
-                                        decoration: BoxDecoration(
-                                            //  color: Colors.white,//CustomTheme.appTheme.withAlpha(20),
-                                            border: Border.all(
-                                                color: CustomTheme.appTheme
-                                                    .withAlpha(100)),
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Icon(
-                                              Icons.location_on_outlined,
-                                              size: 20,
-                                              color: CustomTheme.appTheme,
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Container(
-                                              width: _mainWidth * 0.8,
-                                              child: Text(
-                                                value.locations[index],
-                                                style: TextStyle(
-                                                    fontFamily: fontFamily,
-                                                    fontSize: 14,
-                                                    color: Colors.black54,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  itemCount: value.locations.length,
-                                  separatorBuilder: (context, index) =>
-                                      SizedBox(
-                                    height: 10,
-                                  ),
-                                )),
-                            child: Container(
-                              height: _mainHeight * 0.85,
-                              color: Colors.white,
-                              padding: EdgeInsets.only(top: 20),
-                              child: Column(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () async {
-                                      FocusScope.of(context)
-                                          .requestFocus(FocusNode());
-                                      PickerDateRange? dateRange =
-                                          await Navigator.of(context)
-                                              .push(MaterialPageRoute(
-                                        builder: (context) => CalenderPage(
-                                            initialDatesRange: PickerDateRange(
-                                          DateTime.parse(checkInDate),
-                                          DateTime.parse(checkOutDate),
-                                        )),
-                                      ));
+                  child: getView(value: value),
+                )
+              : getView(value: value),
+        );
+      },
+    );
+  }
 
-                                      if (dateRange != null) {
-                                        setState(() {
-                                          checkInDate = DateTimeService
-                                              .ddMMYYYYformatDate(
-                                                  dateRange.startDate ??
-                                                      DateTime.now());
-                                          checkOutDate = DateTimeService
-                                              .ddMMYYYYformatDate(dateRange
-                                                      .endDate ??
-                                                  DateTime.now().add(
-                                                      const Duration(days: 1)));
-                                        });
-                                        await preferenceUtil.setString(
-                                            rms_checkInDate, checkInDate);
-                                        await preferenceUtil.setString(
-                                            rms_checkOutDate, checkOutDate);
-                                      }
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: CustomTheme.appTheme,
-                                          width: 1,
-                                        ),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      height: _mainHeight * 0.05,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Text(
-                                                'CheckIn Date',
-                                                style: TextStyle(
-                                                    color: Colors.blueGrey,
-                                                    fontFamily: fontFamily,
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                              Text(
-                                                checkInDate,
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontFamily: fontFamily,
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                            ],
-                                          ),
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Text(
-                                                'CheckOut Date',
-                                                style: TextStyle(
-                                                    color: Colors.blueGrey,
-                                                    fontFamily: fontFamily,
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                              Text(
-                                                checkOutDate,
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontFamily: fontFamily,
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  SizedBox(
-                                    height: 35,
-                                    width: 80,
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        if (_searchController.text.isEmpty ||
-                                            _searchController.text.length < 3) {
-                                          return;
-                                        }
+  Widget getView({required PropertyViewModel value}) {
+    return Container(
+      width: _mainWidth,
+      color: Colors.white,
+      padding: EdgeInsets.all(_mainHeight * 0.015),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: _mainHeight*0.045,
+            ),
+            Container(
+              height: 45,
+              child: Neumorphic(
+                margin: EdgeInsets.symmetric(horizontal: 2),
+                style: NeumorphicStyle(
+                  shadowLightColor: CustomTheme.appTheme.withAlpha(150),
+                  //CustomTheme.appTheme.withAlpha(150),
+                  shadowDarkColor: CustomTheme.appTheme.withAlpha(150),
 
-                                        Navigator.of(context).pushNamed(
-                                            AppRoutes.propertyListingPage,
-                                            arguments: {
-                                              'location':
-                                                  _searchController.text,
-                                              'property': Property.fromSearch,
-                                              'checkInDate': checkInDate,
-                                              'checkOutDate': checkOutDate,
-                                            });
-                                        FocusScope.of(context).unfocus();
-                                      },
-                                      child: Text(
-                                        'Search',
-                                        style: TextStyle(
-                                            fontFamily: fontFamily,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 16),
-                                      ),
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all<Color>(
-                                            CustomTheme.appTheme,
-                                          ),
-                                          shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(30)),
-                                          )),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Frequently Searched Locations',
-                                      style: TextStyle(
-                                        //  color: CustomTheme.appTheme,
-                                        fontFamily: fontFamily,
-                                        // fontWeight: FontWeight.w500,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () => Navigator.of(context)
-                                            .pushNamed(
-                                                AppRoutes.propertyListingPage,
-                                                arguments: {
-                                              'location':
-                                                  'Bengaluru-Karnataka-India',
-                                              'property': Property.fromLocation,
-                                            }),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          height: 35,
-                                          width: 110,
-                                          decoration: BoxDecoration(
-                                            //  color: Colors.blueGrey.shade50,
-                                            border: Border.all(
-                                                color: CustomTheme.appTheme),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Text(
-                                            'Bangalore',
-                                            style: getTextStyle,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () => Navigator.of(context)
-                                            .pushNamed(
-                                                AppRoutes.propertyListingPage,
-                                                arguments: {
-                                              'location':
-                                                  'BTM-Layout-Bengaluru-Karnataka-India',
-                                              'property': Property.fromLocation,
-                                            }),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          height: 35,
-                                          width: 110,
-                                          decoration: BoxDecoration(
-                                            //  color: Colors.blueGrey.shade50,
-                                            border: Border.all(
-                                                color: CustomTheme.appTheme),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Text(
-                                            'BTM Layout',
-                                            style: getTextStyle,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () => Navigator.of(context)
-                                            .pushNamed(
-                                                AppRoutes.propertyListingPage,
-                                                arguments: {
-                                              'location':
-                                                  'Hsr-layout-Bengaluru-Karnataka-India',
-                                              'property': Property.fromLocation,
-                                            }),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          height: 35,
-                                          width: 110,
-                                          decoration: BoxDecoration(
-                                            //  color: Colors.blueGrey.shade50,
-                                            border: Border.all(
-                                                color: CustomTheme.appTheme),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Text(
-                                            'HSR Layout',
-                                            style: getTextStyle,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () => Navigator.of(context)
-                                            .pushNamed(
-                                                AppRoutes.propertyListingPage,
-                                                arguments: {
-                                              'location':
-                                                  'Kundanahalli-Gate-ITPL-Main-Road-Brookefield-Bengaluru-Karnataka-India',
-                                              'property': Property.fromLocation,
-                                            }),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          height: 35,
-                                          width: 110,
-                                          decoration: BoxDecoration(
-                                            //  color: Colors.blueGrey.shade50,
-                                            border: Border.all(
-                                                color: CustomTheme.appTheme),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Text(
-                                            'Kundlahalli',
-                                            style: getTextStyle,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () => Navigator.of(context)
-                                            .pushNamed(
-                                                AppRoutes.propertyListingPage,
-                                                arguments: {
-                                              'location':
-                                                  'Marathahalli-Bengaluru-Karnataka-India',
-                                              'property': Property.fromLocation,
-                                            }),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          height: 35,
-                                          width: 110,
-                                          decoration: BoxDecoration(
-                                            //  color: Colors.blueGrey.shade50,
-                                            border: Border.all(
-                                                color: CustomTheme.appTheme),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Text(
-                                            'Marathalli',
-                                            style: getTextStyle,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () => Navigator.of(context)
-                                            .pushNamed(
-                                                AppRoutes.propertyListingPage,
-                                                arguments: {
-                                              'location':
-                                                  'Whitefield-Bengaluru-Karnataka-India',
-                                              'property': Property.fromLocation,
-                                            }),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          height: 35,
-                                          width: 110,
-                                          decoration: BoxDecoration(
-                                            //  color: Colors.blueGrey.shade50,
-                                            border: Border.all(
-                                                color: CustomTheme.appTheme),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Text(
-                                            'Whitefield',
-                                            style: getTextStyle,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () => Navigator.of(context)
-                                        .pushNamed(
-                                            AppRoutes.propertyListingPage,
-                                            arguments: {
-                                          'location':
-                                              'Old-airport-road-Bengaluru-Karnataka-India',
-                                          'property': Property.fromLocation,
-                                        }),
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      height: 35,
-                                      width: 110,
-                                      decoration: BoxDecoration(
-                                        //  color: Colors.blueGrey.shade50,
-                                        border: Border.all(
-                                            color: CustomTheme.appTheme),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Text(
-                                        'Old Airport Road',
-                                        style: getTextStyle,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Search by Desired Property Type',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: fontFamily,
-                                        // fontWeight: FontWeight.w500,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () => Navigator.of(context)
-                                            .pushNamed(
-                                                AppRoutes.propertyListingPage,
-                                                arguments: {
-                                              'location':
-                                                  'Bengaluru-Karnataka-India',
-                                              'propertyType': '1BHK',
-                                              'property': Property.fromBHK,
-                                            }),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          height: 35,
-                                          width: 110,
-                                          decoration: BoxDecoration(
-                                            //  color: Colors.blueGrey.shade50,
-                                            border: Border.all(
-                                                color: CustomTheme.appTheme),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Text(
-                                            '1 BHK',
-                                            style: getTextStyle,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () => Navigator.of(context)
-                                            .pushNamed(
-                                                AppRoutes.propertyListingPage,
-                                                arguments: {
-                                              'location':
-                                                  'Bengaluru-Karnataka-India',
-                                              'propertyType': '2BHK',
-                                              'property': Property.fromBHK,
-                                            }),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          height: 35,
-                                          width: 110,
-                                          decoration: BoxDecoration(
-                                            //  color: Colors.blueGrey.shade50,
-                                            border: Border.all(
-                                                color: CustomTheme.appTheme),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Text(
-                                            '2 BHK',
-                                            style: getTextStyle,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () => Navigator.of(context)
-                                            .pushNamed(
-                                                AppRoutes.propertyListingPage,
-                                                arguments: {
-                                              'location':
-                                                  'Bengaluru-Karnataka-India',
-                                              'propertyType': '1BHK',
-                                              'property': Property.fromBHK,
-                                            }),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          height: 35,
-                                          width: 110,
-                                          decoration: BoxDecoration(
-                                            //  color: Colors.blueGrey.shade50,
-                                            border: Border.all(
-                                                color: CustomTheme.appTheme),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Text(
-                                            'Studio',
-                                            style: getTextStyle,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                  color: Colors.white,
+                  lightSource: LightSource.bottom,
+                  intensity: 5,
+                  depth: 2,
+                ),
+                child: Row(
+                  children: [
+                    IconButton(
+                        onPressed: widget.fromBottom
+                            ? () => Provider.of<BottomNavigationProvider>(
+                                    context,
+                                    listen: false)
+                                .shiftBottom(index: 0)
+                            : () => Navigator.pop(context),
+                        icon: Icon(
+                          Icons.arrow_back,
+                          size: 20,
+                        )),
+                    Container(
+                      width: _mainWidth * 0.78,
+                      height: 45,
+                      child: TextFormField(
+                        controller: _searchController,
+                        onChanged: (text) async {
+                          if (text.length < 3) {
+                            return;
+                          }
+                          showSearchResults = true;
+                          await value.getSearchedPlace(text);
+                        },
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Search by Locality, Landmark or City',
+                            hintStyle: TextStyle(
+                                fontFamily: fontFamily,
+                                fontSize: 16,
+                                color: Colors.black54,
+                                fontWeight: FontWeight.w500),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                Icons.clear,
+                                color: Colors.black,
                               ),
-                            ),
-                          ),
-                        ],
+                              onPressed: () async {
+                                _searchController.clear();
+                                setState(() {
+                                  showSearchResults = false;
+                                });
+                              },
+                            )),
                       ),
                     ),
-                  ),
-                )
-              : Container(
-                  width: _mainWidth,
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Visibility(
+              visible: !showSearchResults,
+              replacement: Container(
+                  padding:
+                      EdgeInsets.only(left: 0, bottom: 10, right: 0, top: 10),
+                  height: _mainHeight,
                   color: Colors.white,
-                  padding: EdgeInsets.all(15),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 40,
-                        ),
-                        Container(
-                          height: 45,
-                          child: Neumorphic(
-                            style: NeumorphicStyle(
-                              // shadowLightColor: CustomTheme.appTheme.withAlpha(150),
-                              shadowDarkColor: Colors.blueGrey.shade100,
-                              // color: Colors.black26.withAlpha(40),
-                              color: Colors.white,
-                              border: NeumorphicBorder(
-                                  color: CustomTheme.appTheme, width: 1),
-                              lightSource: LightSource.bottom,
-                              intensity: 5,
-                              depth: 2,
-                              shape: NeumorphicShape.convex,
-                            ),
-                            child: Row(
-                              children: [
-                                IconButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    icon: Icon(
-                                      Icons.arrow_back,
-                                      size: 20,
-                                    )),
-                                Container(
-                                  width: _mainWidth * 0.78,
-                                  height: 44,
-                                  child: TextFormField(
-                                    controller: _searchController,
-                                    onChanged: (text) async {
-                                      if (text.length < 3) {
-                                        return;
-                                      }
-                                      showSearchResults = true;
-                                      await value.getSearchedPlace(text);
-                                    },
-                                    decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText:
-                                            'Search by Locality , Landmark or City',
-                                        hintStyle: TextStyle(
-                                            fontFamily: fontFamily,
-                                            fontSize: 16,
-                                            color: Colors.black54,
-                                            fontWeight: FontWeight.w500),
-                                        suffixIcon: IconButton(
-                                          icon: Icon(
-                                            Icons.clear,
-                                            color: Colors.black,
-                                          ),
-                                          onPressed: () async {
-                                            _searchController.clear();
-                                            setState(() {
-                                              showSearchResults = false;
-                                            });
-                                          },
-                                        )),
-                                  ),
+                  child: ListView.separated(
+                    padding: EdgeInsets.zero,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () => setState(() {
+                          showSearchResults = false;
+                          FocusScope.of(context).requestFocus(FocusNode());
+                          _searchController.text = value.locations[index];
+                        }),
+                        child: Container(
+                          padding: EdgeInsets.only(
+                            left: 15,
+                          ),
+                          height: 35,
+                          alignment: Alignment.centerLeft,
+                          decoration: BoxDecoration(
+                              //  color: Colors.white,//CustomTheme.appTheme.withAlpha(20),
+                              border: Border.all(
+                                  color: CustomTheme.appTheme.withAlpha(100)),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.location_on_outlined,
+                                size: 20,
+                                color: CustomTheme.appTheme,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Container(
+                                width: _mainWidth * 0.8,
+                                child: Text(
+                                  value.locations[index],
+                                  style: TextStyle(
+                                      fontFamily: fontFamily,
+                                      fontSize: 14,
+                                      color: Colors.black54,
+                                      fontWeight: FontWeight.w600),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
-                        SizedBox(
-                          height: 10,
+                      );
+                    },
+                    itemCount: value.locations.length,
+                    separatorBuilder: (context, index) => SizedBox(
+                      height: 10,
+                    ),
+                  )),
+              child: Container(
+                height: _mainHeight * 0.85,
+                color: Colors.white,
+                padding: EdgeInsets.only(top: 20),
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        PickerDateRange? dateRange =
+                            await Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => CalenderPage(
+                              initialDatesRange: PickerDateRange(
+                            DateTime.parse(checkInDate),
+                            DateTime.parse(checkOutDate),
+                          )),
+                        ));
+
+                        if (dateRange != null) {
+                          setState(() {
+                            checkInDate = DateTimeService.ddMMYYYYformatDate(
+                                dateRange.startDate ?? DateTime.now());
+                            checkOutDate = DateTimeService.ddMMYYYYformatDate(
+                                dateRange.endDate ??
+                                    DateTime.now()
+                                        .add(const Duration(days: 1)));
+                          });
+                          await preferenceUtil.setString(
+                              rms_checkInDate, checkInDate);
+                          await preferenceUtil.setString(
+                              rms_checkOutDate, checkOutDate);
+                        }
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: CustomTheme.appTheme,
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        Visibility(
-                          visible: !showSearchResults,
-                          replacement: Container(
-                              padding: EdgeInsets.only(
-                                  left: 0, bottom: 10, right: 0, top: 10),
-                              height: _mainHeight,
-                              color: Colors.white,
-                              child: ListView.separated(
-                                padding: EdgeInsets.zero,
-                                itemBuilder: (context, index) {
-                                  return GestureDetector(
-                                    onTap: () => setState(() {
-                                      showSearchResults = false;
-                                      FocusScope.of(context)
-                                          .requestFocus(FocusNode());
-                                      _searchController.text =
-                                          value.locations[index];
-                                    }),
-                                    child: Container(
-                                      padding: EdgeInsets.only(
-                                        left: 15,
-                                      ),
-                                      height: 35,
-                                      alignment: Alignment.centerLeft,
-                                      decoration: BoxDecoration(
-                                          //  color: Colors.white,//CustomTheme.appTheme.withAlpha(20),
-                                          border: Border.all(
-                                              color: CustomTheme.appTheme
-                                                  .withAlpha(100)),
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Icon(
-                                            Icons.location_on_outlined,
-                                            size: 20,
-                                            color: CustomTheme.appTheme,
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Container(
-                                            width: _mainWidth * 0.8,
-                                            child: Text(
-                                              value.locations[index],
-                                              style: TextStyle(
-                                                  fontFamily: fontFamily,
-                                                  fontSize: 14,
-                                                  color: Colors.black54,
-                                                  fontWeight: FontWeight.w600),
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                                itemCount: value.locations.length,
-                                separatorBuilder: (context, index) => SizedBox(
-                                  height: 10,
-                                ),
-                              )),
-                          child: Container(
-                            height: _mainHeight * 0.85,
-                            color: Colors.white,
-                            padding: EdgeInsets.only(top: 20),
-                            child: Column(
+                        height: _mainHeight * 0.05,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                GestureDetector(
-                                  onTap: () async {
-                                    FocusScope.of(context)
-                                        .requestFocus(FocusNode());
-                                    PickerDateRange? dateRange =
-                                        await Navigator.of(context)
-                                            .push(MaterialPageRoute(
-                                      builder: (context) => CalenderPage(
-                                          initialDatesRange: PickerDateRange(
-                                        DateTime.parse(checkInDate),
-                                        DateTime.parse(checkOutDate),
-                                      )),
-                                    ));
-
-                                    if (dateRange != null) {
-                                      setState(() {
-                                        checkInDate =
-                                            DateTimeService.ddMMYYYYformatDate(
-                                                dateRange.startDate ??
-                                                    DateTime.now());
-                                        checkOutDate = DateTimeService
-                                            .ddMMYYYYformatDate(dateRange
-                                                    .endDate ??
-                                                DateTime.now().add(
-                                                    const Duration(days: 1)));
-                                      });
-                                      await preferenceUtil.setString(
-                                          rms_checkInDate, checkInDate);
-                                      await preferenceUtil.setString(
-                                          rms_checkOutDate, checkOutDate);
-                                    }
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: CustomTheme.appTheme,
-                                        width: 1,
-                                      ),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    height: _mainHeight * 0.05,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Text(
-                                              'CheckIn Date',
-                                              style: TextStyle(
-                                                  color: Colors.blueGrey,
-                                                  fontFamily: fontFamily,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                            Text(
-                                              checkInDate,
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontFamily: fontFamily,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Text(
-                                              'CheckOut Date',
-                                              style: TextStyle(
-                                                  color: Colors.blueGrey,
-                                                  fontFamily: fontFamily,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                            Text(
-                                              checkOutDate,
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontFamily: fontFamily,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                SizedBox(
-                                  height: 35,
-                                  width: 80,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      if (_searchController.text.isEmpty ||
-                                          _searchController.text.length < 3) {
-                                        return;
-                                      }
-
-                                      Navigator.of(context).pushNamed(
-                                          AppRoutes.propertyListingPage,
-                                          arguments: {
-                                            'location': _searchController.text,
-                                            'property': Property.fromSearch,
-                                            'checkInDate': checkInDate,
-                                            'checkOutDate': checkOutDate,
-                                          });
-                                      FocusScope.of(context).unfocus();
-                                    },
-                                    child: Text(
-                                      'Search',
-                                      style: TextStyle(
-                                          fontFamily: fontFamily,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 16),
-                                    ),
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all<Color>(
-                                          CustomTheme.appTheme,
-                                        ),
-                                        shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30)),
-                                        )),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Frequently Searched Locations',
-                                    style: TextStyle(
-                                      //  color: CustomTheme.appTheme,
+                                Text(
+                                  'CheckIn Date',
+                                  style: TextStyle(
+                                      color: Colors.blueGrey,
                                       fontFamily: fontFamily,
-                                      // fontWeight: FontWeight.w500,
-                                      fontSize: 16,
-                                    ),
-                                  ),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500),
                                 ),
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                Row(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () => Navigator.of(context)
-                                          .pushNamed(
-                                              AppRoutes.propertyListingPage,
-                                              arguments: {
-                                            'location':
-                                                'Bengaluru-Karnataka-India',
-                                            'property': Property.fromLocation,
-                                          }),
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        height: 35,
-                                        width: 110,
-                                        decoration: BoxDecoration(
-                                          //  color: Colors.blueGrey.shade50,
-                                          border: Border.all(
-                                              color: CustomTheme.appTheme),
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        child: Text(
-                                          'Bangalore',
-                                          style: getTextStyle,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    GestureDetector(
-                                      onTap: () => Navigator.of(context)
-                                          .pushNamed(
-                                              AppRoutes.propertyListingPage,
-                                              arguments: {
-                                            'location':
-                                                'BTM-Layout-Bengaluru-Karnataka-India',
-                                            'property': Property.fromLocation,
-                                          }),
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        height: 35,
-                                        width: 110,
-                                        decoration: BoxDecoration(
-                                          //  color: Colors.blueGrey.shade50,
-                                          border: Border.all(
-                                              color: CustomTheme.appTheme),
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        child: Text(
-                                          'BTM Layout',
-                                          style: getTextStyle,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    GestureDetector(
-                                      onTap: () => Navigator.of(context)
-                                          .pushNamed(
-                                              AppRoutes.propertyListingPage,
-                                              arguments: {
-                                            'location':
-                                                'Hsr-layout-Bengaluru-Karnataka-India',
-                                            'property': Property.fromLocation,
-                                          }),
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        height: 35,
-                                        width: 110,
-                                        decoration: BoxDecoration(
-                                          //  color: Colors.blueGrey.shade50,
-                                          border: Border.all(
-                                              color: CustomTheme.appTheme),
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        child: Text(
-                                          'HSR Layout',
-                                          style: getTextStyle,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Row(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () => Navigator.of(context)
-                                          .pushNamed(
-                                              AppRoutes.propertyListingPage,
-                                              arguments: {
-                                            'location':
-                                                'Kundanahalli-Gate-ITPL-Main-Road-Brookefield-Bengaluru-Karnataka-India',
-                                            'property': Property.fromLocation,
-                                          }),
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        height: 35,
-                                        width: 110,
-                                        decoration: BoxDecoration(
-                                          //  color: Colors.blueGrey.shade50,
-                                          border: Border.all(
-                                              color: CustomTheme.appTheme),
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        child: Text(
-                                          'Kundlahalli',
-                                          style: getTextStyle,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    GestureDetector(
-                                      onTap: () => Navigator.of(context)
-                                          .pushNamed(
-                                              AppRoutes.propertyListingPage,
-                                              arguments: {
-                                            'location':
-                                                'Marathahalli-Bengaluru-Karnataka-India',
-                                            'property': Property.fromLocation,
-                                          }),
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        height: 35,
-                                        width: 110,
-                                        decoration: BoxDecoration(
-                                          //  color: Colors.blueGrey.shade50,
-                                          border: Border.all(
-                                              color: CustomTheme.appTheme),
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        child: Text(
-                                          'Marathalli',
-                                          style: getTextStyle,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    GestureDetector(
-                                      onTap: () => Navigator.of(context)
-                                          .pushNamed(
-                                              AppRoutes.propertyListingPage,
-                                              arguments: {
-                                            'location':
-                                                'Whitefield-Bengaluru-Karnataka-India',
-                                            'property': Property.fromLocation,
-                                          }),
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        height: 35,
-                                        width: 110,
-                                        decoration: BoxDecoration(
-                                          //  color: Colors.blueGrey.shade50,
-                                          border: Border.all(
-                                              color: CustomTheme.appTheme),
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        child: Text(
-                                          'Whitefield',
-                                          style: getTextStyle,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                GestureDetector(
-                                  onTap: () => Navigator.of(context).pushNamed(
-                                      AppRoutes.propertyListingPage,
-                                      arguments: {
-                                        'location':
-                                            'Old-airport-road-Bengaluru-Karnataka-India',
-                                        'property': Property.fromLocation,
-                                      }),
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    height: 35,
-                                    width: 110,
-                                    decoration: BoxDecoration(
-                                      //  color: Colors.blueGrey.shade50,
-                                      border: Border.all(
-                                          color: CustomTheme.appTheme),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Text(
-                                      'Old Airport Road',
-                                      style: getTextStyle,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Search by Desired Property Type',
-                                    style: TextStyle(
+                                Text(
+                                  checkInDate,
+                                  style: TextStyle(
                                       color: Colors.black,
                                       fontFamily: fontFamily,
-                                      // fontWeight: FontWeight.w500,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                Row(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () => Navigator.of(context)
-                                          .pushNamed(
-                                              AppRoutes.propertyListingPage,
-                                              arguments: {
-                                            'location':
-                                                'Bengaluru-Karnataka-India',
-                                            'propertyType': '1BHK',
-                                            'property': Property.fromBHK,
-                                          }),
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        height: 35,
-                                        width: 110,
-                                        decoration: BoxDecoration(
-                                          //  color: Colors.blueGrey.shade50,
-                                          border: Border.all(
-                                              color: CustomTheme.appTheme),
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        child: Text(
-                                          '1 BHK',
-                                          style: getTextStyle,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    GestureDetector(
-                                      onTap: () => Navigator.of(context)
-                                          .pushNamed(
-                                              AppRoutes.propertyListingPage,
-                                              arguments: {
-                                            'location':
-                                                'Bengaluru-Karnataka-India',
-                                            'propertyType': '2BHK',
-                                            'property': Property.fromBHK,
-                                          }),
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        height: 35,
-                                        width: 110,
-                                        decoration: BoxDecoration(
-                                          //  color: Colors.blueGrey.shade50,
-                                          border: Border.all(
-                                              color: CustomTheme.appTheme),
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        child: Text(
-                                          '2 BHK',
-                                          style: getTextStyle,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    GestureDetector(
-                                      onTap: () => Navigator.of(context)
-                                          .pushNamed(
-                                              AppRoutes.propertyListingPage,
-                                              arguments: {
-                                            'location':
-                                                'Bengaluru-Karnataka-India',
-                                            'propertyType': '1BHK',
-                                            'property': Property.fromBHK,
-                                          }),
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        height: 35,
-                                        width: 110,
-                                        decoration: BoxDecoration(
-                                          //  color: Colors.blueGrey.shade50,
-                                          border: Border.all(
-                                              color: CustomTheme.appTheme),
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        child: Text(
-                                          'Studio',
-                                          style: getTextStyle,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500),
                                 ),
                               ],
                             ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  'CheckOut Date',
+                                  style: TextStyle(
+                                      color: Colors.blueGrey,
+                                      fontFamily: fontFamily,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                Text(
+                                  checkOutDate,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: fontFamily,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      height: 35,
+                      width: 80,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_searchController.text.isEmpty ||
+                              _searchController.text.length < 3) {
+                            return;
+                          }
+
+                          Navigator.of(context).pushNamed(
+                              AppRoutes.propertyListingPage,
+                              arguments: {
+                                'location': _searchController.text,
+                                'property': Property.fromSearch,
+                                'checkInDate': checkInDate,
+                                'checkOutDate': checkOutDate,
+                              });
+                          FocusScope.of(context).unfocus();
+                        },
+                        child: Text(
+                          'Search',
+                          style: TextStyle(
+                              fontFamily: fontFamily,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16),
+                        ),
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                              CustomTheme.appTheme,
+                            ),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30)),
+                            )),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Frequently Searched Locations',
+                        style: TextStyle(
+                          //  color: CustomTheme.appTheme,
+                          fontFamily: fontFamily,
+                          // fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        getLocationBox(
+                            property: 'Bangalore',
+                            onTap: () => Navigator.of(context).pushNamed(
+                                    AppRoutes.propertyListingPage,
+                                    arguments: {
+                                      'location': 'Bengaluru-Karnataka-India',
+                                      'property': Property.fromLocation,
+                                    })),
+                        getLocationBox(
+                            property: 'BTM Layout',
+                            onTap: () => Navigator.of(context).pushNamed(
+                                    AppRoutes.propertyListingPage,
+                                    arguments: {
+                                      'location':
+                                          'BTM-Layout-Bengaluru-Karnataka-India',
+                                      'property': Property.fromLocation,
+                                    })),
+                        getLocationBox(
+                            property: 'HSR Layout',
+                            onTap: () => Navigator.of(context).pushNamed(
+                                    AppRoutes.propertyListingPage,
+                                    arguments: {
+                                      'location':
+                                          'Hsr-layout-Bengaluru-Karnataka-India',
+                                      'property': Property.fromLocation,
+                                    })),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        getLocationBox(
+                            property: 'Kundlahalli',
+                            onTap: () => Navigator.of(context).pushNamed(
+                                    AppRoutes.propertyListingPage,
+                                    arguments: {
+                                      'location':
+                                          'Kundanahalli-Gate-ITPL-Main-Road-Brookefield-Bengaluru-Karnataka-India',
+                                      'property': Property.fromLocation,
+                                    })),
+                        getLocationBox(
+                            property: 'Marathalli',
+                            onTap: () => Navigator.of(context).pushNamed(
+                                    AppRoutes.propertyListingPage,
+                                    arguments: {
+                                      'location':
+                                          'Marathahalli-Bengaluru-Karnataka-India',
+                                      'property': Property.fromLocation,
+                                    })),
+                        getLocationBox(
+                            property: 'Whitefield',
+                            onTap: () => Navigator.of(context).pushNamed(
+                                    AppRoutes.propertyListingPage,
+                                    arguments: {
+                                      'location':
+                                          'Whitefield-Bengaluru-Karnataka-India',
+                                      'property': Property.fromLocation,
+                                    })),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        getLocationBox(
+                            property: 'Old Airport Road',
+                            onTap: () => Navigator.of(context).pushNamed(
+                                    AppRoutes.propertyListingPage,
+                                    arguments: {
+                                      'location':
+                                          'Old-airport-road-Bengaluru-Karnataka-India',
+                                      'property': Property.fromLocation,
+                                    })),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Search by Desired Property Type',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: fontFamily,
+                          // fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        getLocationBox(
+                          property: '1 BHK',
+                          onTap: () => Navigator.of(context).pushNamed(
+                            AppRoutes.propertyListingPage,
+                            arguments: {
+                              'location': 'Bengaluru-Karnataka-India',
+                              'propertyType': '1BHK',
+                              'property': Property.fromBHK,
+                            },
+                          ),
+                        ),
+                        getLocationBox(
+                          property: '2 BHK',
+                          onTap: () => Navigator.of(context).pushNamed(
+                            AppRoutes.propertyListingPage,
+                            arguments: {
+                              'location': 'Bengaluru-Karnataka-India',
+                              'propertyType': '2BHK',
+                              'property': Property.fromBHK,
+                            },
+                          ),
+                        ),
+                        getLocationBox(
+                          property: 'Studio',
+                          onTap: () => Navigator.of(context).pushNamed(
+                            AppRoutes.propertyListingPage,
+                            arguments: {
+                              'location': 'Bengaluru-Karnataka-India',
+                              'propertyType': 'Studio',
+                              'property': Property.fromBHK,
+                            },
                           ),
                         ),
                       ],
                     ),
-                  ),
+                  ],
                 ),
-        );
-      },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getLocationBox({required String property, required Function onTap}) {
+    return GestureDetector(
+      onTap: () => onTap(),
+      child: Container(
+        alignment: Alignment.center,
+        padding: EdgeInsets.only(
+            left: _mainWidth * 0.015, right: _mainWidth * 0.015),
+        height: _mainHeight * 0.04,
+        width: _mainWidth * 0.3,
+        decoration: BoxDecoration(
+          border: Border.all(color: CustomTheme.appTheme),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          property,
+          style: getTextStyle,
+        ),
+      ),
     );
   }
 }

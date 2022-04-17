@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
             color: CustomTheme.appTheme,
             height: _mainHeight,
             width: _mainWidth,
-            padding: EdgeInsets.only(left: 25,right: 25),
+            //padding: EdgeInsets.only(left: 25, right: 25),
             child: Column(
               children: <Widget>[
                 Padding(
@@ -94,23 +94,24 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 20,
                 ),
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25.0),
-                  ),
+                Expanded(
                   child: Container(
                     width: _mainWidth,
-                    height: _mainHeight * 0.45,
-                    margin: EdgeInsets.only(left: 25, right: 25,top: 25),
+                    height: _mainHeight * 0.6,
+                     padding: EdgeInsets.only(left: 15,top: 25,right: 15),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25.0),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(25.0),
+                          topRight: Radius.circular(25.0)),
                     ),
                     child: Column(
                       children: <Widget>[
                         Container(
                           //margin: EdgeInsets.only(top: 10),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20)),
                             color: Colors.white,
                           ),
                           child: Neumorphic(
@@ -141,7 +142,8 @@ class _LoginPageState extends State<LoginPage> {
                         Container(
                           margin: EdgeInsets.only(top: 10),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20)),
                             color: Colors.white,
                           ),
                           child: Neumorphic(
@@ -172,78 +174,91 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(
                           height: 40,
                         ),
-                        Container(
-                          width: _mainWidth * 0.4,
-                          height: 35,
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor:
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: _mainWidth * 0.4,
+                              height: 35,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            CustomTheme.appTheme),
+                                    shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(40)),
+                                    )),
+                                onPressed: () async {
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
+                                  if (_formKey.currentState != null &&
+                                      !_formKey.currentState!.validate()) {}
+                                  if (_emailController.text.isEmpty) {
+                                    Fluttertoast.showToast(
+                                        msg: 'Please Enter E-mail Address',
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.CENTER);
+                                  } else {
+                                    if (_passwordController.text.isEmpty) {
+                                      RMSWidgets.getToast(
+                                          message: 'Please Enter Password',
+                                          color: CustomTheme().colorError);
+                                    } else {
+                                      RMSWidgets.showLoaderDialog(
+                                          context: context,
+                                          message: 'Please wait...');
+                                      final LoginResponseModel response =
+                                          await _loginViewModel.getLoginDetails(
+                                              email: _emailController.text,
+                                              password: _passwordController.text);
+                                      Navigator.pop(context);
+                                      if (response.msg?.toLowerCase() !=
+                                              'failure' &&
+                                          response.data != null) {
+                                        await setSPValues(response: response);
+
+                                        Navigator.pushNamedAndRemoveUntil(
+                                          context,
+                                          AppRoutes.dashboardPage,
+                                          (route) => false,
+                                        );
+                                      }
+                                    }
+                                    //
+                                  }
+                                },
+                                child: Center(child: Text("LOGIN")),
+                              ),
+                            ),
+                            Container(
+                              width: _mainWidth * 0.4,
+                              height: 35,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor:
                                     MaterialStateProperty.all<Color>(
                                         CustomTheme.appTheme),
-                                shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(40)),
-                                )),
-                            onPressed: () async {
-                              FocusScope.of(context).requestFocus(FocusNode());
-                              if (_formKey.currentState != null &&
-                                  !_formKey.currentState!.validate()) {}
-                              if (_emailController.text.isEmpty) {
-                                Fluttertoast.showToast(
-                                    msg: 'Please Enter E-mail Address',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.CENTER);
-                              } else {
-                                if (_passwordController.text.isEmpty) {
-                                  RMSWidgets.getToast(
-                                      message: 'Please Enter Password',
-                                      color: CustomTheme().colorError);
-                                } else {
-                                  RMSWidgets.showLoaderDialog(
-                                      context: context,
-                                      message: 'Please wait...');
-                                  final LoginResponseModel response =
-                                      await _loginViewModel.getLoginDetails(
-                                          email: _emailController.text,
-                                          password: _passwordController.text);
-
-                                  if (response.status?.toLowerCase() ==
-                                      'success') {
-                                    await setSPValues(response: response);
-                                    Navigator.pop(context);
-                                    Navigator.pushNamedAndRemoveUntil(
-                                      context,
-                                      AppRoutes.dashboardPage,
-                                      (route) => false,
-                                    );
-                                  } else {
-                                    RMSWidgets.showSnackbar(
-                                        context: context,
-                                        message:
-                                            'Email not Registered or Invalid Password.',
-                                        color: CustomTheme().colorError);
-                                    Navigator.pop(context);
-                                  }
-                                }
-                                //
-                              }
-                            },
-                            child: Center(child: Text("LOGIN")),
-                          ),
+                                    shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(40)),
+                                    )),
+                                onPressed: () async {
+                                  showForgotPasswordDialog(context: context);
+                                },
+                                child: Text('Forgot Password?'),
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(
                           height: 15,
                         ),
-                        GestureDetector(
-                          onTap: () =>
-                              showForgotPasswordDialog(context: context),
-                          child: Container(
-                            color: Colors.white,
-                            alignment: Alignment.centerLeft,
-                            child: Text('Forgot Password?'),
-                          ),
-                        ),
+
                         SizedBox(
                           height: 40,
                         ),
@@ -256,7 +271,7 @@ class _LoginPageState extends State<LoginPage> {
                           height: 20,
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
@@ -312,7 +327,6 @@ class _LoginPageState extends State<LoginPage> {
                                         await GoogleAuthService.loginIn();
 
                                     if (data != null) {
-                                      log('Gmail Data :: ${data.toString()}  ');
                                       final LoginResponseModel response =
                                           await _loginViewModel
                                               .registerUserAfterGmail(
@@ -325,19 +339,21 @@ class _LoginPageState extends State<LoginPage> {
                                       ));
 
                                       Navigator.of(context).pop();
-                                      if (response.status?.toLowerCase() ==
-                                          'success') {
-                                        if (response.contactNum == null &&
-                                            response.contactNum!.isEmpty) {
+                                      if (response.msg?.toLowerCase() !=
+                                          'failure') {
+                                        if (response.data != null &&
+                                            response.data?.contactNum !=
+                                                null &&
+                                            response.data?.contactNum == '') {
                                           SharedPreferenceUtil shared =
                                               SharedPreferenceUtil();
                                           await shared.setString(
                                               rms_registeredUserToken,
-                                              response.appToken.toString());
+                                              '${response.data?.appToken}');
                                           await shared.setString(rms_gmapKey,
-                                              response.gmapKey.toString());
+                                              '${response.data?.gmapKey}');
                                           await shared.setString(rms_userId,
-                                              response.id.toString());
+                                              '${response.data?.id}');
                                           Navigator.of(context).pushNamed(
                                               AppRoutes
                                                   .firebaseRegistrationPage,
@@ -346,9 +362,8 @@ class _LoginPageState extends State<LoginPage> {
                                                 'from': 'Gmail',
                                               });
                                         } else {
-                                          log("USER" +
-                                              (response.id).toString());
-                                          await setSPValues(response: response);
+                                          await setSPValues(
+                                              response: response);
                                           Navigator.pushNamedAndRemoveUntil(
                                             context,
                                             AppRoutes.dashboardPage,
@@ -401,35 +416,34 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
+                        Spacer(),
+                        GestureDetector(
+                          onTap: () => _handleURLButtonPress(
+                              context, privacy_policy, 'Privacy Policy'),
+                          child: Container(
+                            // color: Colors.white,
+                            margin: EdgeInsets.only(bottom: 10),
+                            alignment: Alignment.bottomLeft,
+                            child: RichText(
+                              text: TextSpan(children: [
+                                TextSpan(
+                                    text:
+                                        "By Signing in, you are agree to our ",
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 12)),
+                                TextSpan(
+                                    text: "Privacy Policy",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: CustomTheme.black,
+                                      fontStyle: FontStyle.italic,
+                                      fontWeight: FontWeight.w600,
+                                    )),
+                              ]),
+                            ),
+                          ),
+                        ),
                       ],
-                    ),
-                  ),
-                ),
-                Spacer(),
-                GestureDetector(
-                  onTap: () => _handleURLButtonPress(
-                      context, privacy_policy, 'Privacy Policy'),
-                  child: Container(
-                   // color: Colors.white,
-                    margin: EdgeInsets.only(bottom: 10),
-                    alignment: Alignment.bottomLeft,
-                    child: RichText(
-                      text: TextSpan(children: [
-                        TextSpan(
-                            text: "By Signing in, you are agree to our ",
-                            style: TextStyle(
-                                color: Colors.white,
-                              fontSize: 12
-                            )),
-                        TextSpan(
-                            text: "Privacy Policy",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: CustomTheme.white,
-                              fontStyle: FontStyle.italic,
-                              fontWeight: FontWeight.w600,
-                            )),
-                      ]),
                     ),
                   ),
                 ),
@@ -444,13 +458,13 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> setSPValues({required LoginResponseModel response}) async {
     SharedPreferenceUtil shared = SharedPreferenceUtil();
     await shared.setString(
-        rms_registeredUserToken, response.appToken.toString());
-    await shared.setString(rms_profilePicUrl, response.pic.toString());
-    await shared.setString(rms_phoneNumber, response.contactNum.toString());
-    await shared.setString(rms_name, response.name.toString());
-    await shared.setString(rms_email, response.email.toString());
-    await shared.setString(rms_gmapKey, response.gmapKey.toString());
-    await shared.setString(rms_userId, response.id.toString());
+        rms_registeredUserToken, '${response.data?.appToken}');
+    await shared.setString(rms_profilePicUrl, '${response.data?.pic}');
+    await shared.setString(rms_phoneNumber, '${response.data?.contactNum}');
+    await shared.setString(rms_name, '${response.data?.name}');
+    await shared.setString(rms_email, '${response.data?.email}');
+    await shared.setString(rms_gmapKey, '${response.data?.gmapKey}');
+    await shared.setString(rms_userId, '${response.data?.id}');
   }
 
   void showForgotPasswordDialog({required BuildContext context}) {
@@ -479,7 +493,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Neumorphic(
                     style: NeumorphicStyle(
-                        depth: -3,
+                        depth: -2,
                         color: Colors.white,
                         lightSource: LightSource.bottomLeft),
                     child: TextFormField(
@@ -517,22 +531,21 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () async {
                     RMSWidgets.showLoaderDialog(
                         context: context, message: 'Please wait...');
-                    final Map<String, dynamic>? data = await _loginViewModel
-                        .resetPassword(email: _resetEmailController.text);
+                    final int response = await _loginViewModel.resetPassword(
+                        email: _resetEmailController.text);
                     Navigator.pop(context);
-                    if (data != null) {
-                      if (data['status'].toString().toLowerCase() ==
-                          'success') {
-                        RMSWidgets.getToast(
-                            message: data['message'].toString(),
-                            color: myFavColor);
-                        _resetEmailController.clear();
-                        Navigator.pop(context);
-                      } else {
-                        RMSWidgets.getToast(
-                            message: data['message'].toString(),
-                            color: CustomTheme.peach);
-                      }
+
+                    if (response == 200) {
+                      RMSWidgets.getToast(
+                          message:
+                              'An Email with instructions for resetting the password is sent to your email id.',
+                          color: myFavColor);
+                      _resetEmailController.clear();
+                      Navigator.pop(context);
+                    } else {
+                      RMSWidgets.getToast(
+                          message: 'Something Went Wrong!',
+                          color: CustomTheme.peach);
                     }
                   },
                   child: Text(

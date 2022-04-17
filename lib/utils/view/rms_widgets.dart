@@ -93,6 +93,22 @@ class RMSWidgets {
     );
   }
 
+  static Widget someError(
+      {required BuildContext context,
+         String? message,
+        Color? fontColor,
+        double? fontSize,
+        FontWeight? fontWeight}) {
+    FontWeight.w600;
+    return Center(
+      child: Text(
+        message ?? 'Something went wrong...',
+        style: TextStyle(
+            fontSize: fontSize ?? 20, fontWeight: fontWeight, color: fontColor ?? CustomTheme.appTheme),
+      ),
+    );
+  }
+
   static void showSnackbar(
       {required BuildContext context,
       required String message,

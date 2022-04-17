@@ -1,13 +1,12 @@
 class AppUrls {
   static const String baseUrl = "www.rentmystay.com";
 
-  static const String loginUrl = "/m/sign_in";
-  static const String loginOtpUrl = "/m/sign_in_otp";
-  static const String signUpUrl = "/m/sign_up";
-  static const String forgotPasswordUrl = "/m/forgot_password";
-  static const String signInWithGoogleUrl = "/m/google_login";
-  static const String registrationWithGoogleUrl = "/m/add_phone";
-
+  static const String loginUrl = "/v2/signIn";
+  static const String loginOtpUrl = "/v2/signInOTP";
+  static const String signUpUrl = "/v2/signUp";
+  static const String forgotPasswordUrl = "/v2/forgotPassword";
+  static const String signInWithGoogleUrl = "/v2/googleLogin";
+  static const String registrationWithGoogleUrl = "/v2/addPhone";
   static const String profileUrl = '/v2/userProfile';
   static const String bookingDetailsUrl = "/v2/bookingCost";
   static const String scheduleSiteVisitUrl = "/v2/scheduleVisit";

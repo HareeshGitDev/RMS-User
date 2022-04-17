@@ -1,6 +1,25 @@
 class OtpRegistrationResponseModel {
-  String? status;
-  String? message;
+  String? msg;
+  Data? data;
+
+  OtpRegistrationResponseModel({this.msg, this.data});
+
+  OtpRegistrationResponseModel.fromJson(Map<String, dynamic> json) {
+    msg = json['msg'];
+    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['msg'] = this.msg;
+    if (this.data != null) {
+      data['data'] = this.data!.toJson();
+    }
+    return data;
+  }
+}
+
+class Data {
   String? email;
   String? appToken;
   String? username;
@@ -15,10 +34,8 @@ class OtpRegistrationResponseModel {
   String? action;
   String? gmapKey;
 
-  OtpRegistrationResponseModel(
-      {this.status,
-        this.message,
-        this.email,
+  Data(
+      {this.email,
         this.appToken,
         this.username,
         this.isAdmin,
@@ -32,9 +49,7 @@ class OtpRegistrationResponseModel {
         this.action,
         this.gmapKey});
 
-  OtpRegistrationResponseModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    message = json['message'];
+  Data.fromJson(Map<String, dynamic> json) {
     email = json['email'];
     appToken = json['app_token'];
     username = json['username'];
@@ -52,8 +67,6 @@ class OtpRegistrationResponseModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
     data['email'] = this.email;
     data['app_token'] = this.appToken;
     data['username'] = this.username;

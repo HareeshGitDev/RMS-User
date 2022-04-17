@@ -50,7 +50,6 @@ class PropertyListingPage extends StatefulWidget {
 }
 
 class _PropertyListingPageState extends State<PropertyListingPage> {
-
   var _mainHeight;
   var _mainWidth;
   late PropertyViewModel _propertyViewModel;
@@ -129,7 +128,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         child: Consumer<PropertyViewModel>(
           builder: (context, value, child) {
-            return value.propertyListModel.data != null
+            return value.propertyListModel.msg != null &&
+                    value.propertyListModel.msg?.toLowerCase() == 'success'
                 ? Visibility(
                     visible: !showSearchResults,
                     replacement: Container(
@@ -409,11 +409,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                 }
                                               },
                                               child: Container(
-                                                width: _mainWidth * 0.40,
+                                                width: _mainWidth,
                                                 color: Colors.white,
                                                 child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     Padding(
                                                       padding: EdgeInsets.only(
@@ -421,50 +419,60 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                               _mainWidth * 0.02,
                                                           top: _mainHeight *
                                                               0.005),
-                                                      child: Icon(
-                                                        Icons
-                                                            .my_location_outlined,
-                                                        color: myFavColor,
-                                                        size:
-                                                            _mainHeight * 0.02,
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    Container(
-                                                      //    color: Colors.amber,
-                                                      width: _mainWidth * 0.30,
-                                                      child: Wrap(
-                                                        children: [
-                                                          Padding(
-                                                            padding: EdgeInsets.only(
-                                                                top:
-                                                                    _mainHeight *
-                                                                        0.007),
-                                                            child: Text(
-                                                              (data.areas ??
-                                                                      data.city) ??
-                                                                  " ",
-                                                              maxLines: 1,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  fontFamily:
-                                                                      fontFamily,
-                                                                  fontSize: 12),
+                                                      child: RichText(
+                                                        text:
+                                                            TextSpan(children: [
+                                                          WidgetSpan(
+                                                            child: Icon(
+                                                              Icons
+                                                                  .my_location_outlined,
+                                                              color: myFavColor,
+                                                              size:
+                                                                  _mainHeight *
+                                                                      0.02,
                                                             ),
                                                           ),
-                                                        ],
+                                                          TextSpan(
+                                                            text: (data.areas ??
+                                                                    data.city) ??
+                                                                " ",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontFamily:
+                                                                    fontFamily,
+                                                                fontSize: 12),
+                                                          ),
+                                                        ]),
                                                       ),
                                                     ),
+                                                    data.avl?.toLowerCase() ==
+                                                            'booked'
+                                                        ? Padding(
+                                                     padding: EdgeInsets.only(
+                                                          right:
+                                                          _mainWidth * 0.02,
+                                                          top: _mainHeight *
+                                                              0.005),
+                                                          child: Text(
+                                                              'Booked',
+                                                              style: TextStyle(
+                                                                  color: Color(
+                                                                      0xffFF0000),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700,
+                                                                  fontSize: 14),
+                                                            ),
+                                                        )
+                                                        : Text('')
                                                   ],
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                 ),
                                               ),
                                             ),
@@ -813,9 +821,93 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                       ),
                     ),
                   )
-                : Center(
-                    child: CircularProgressIndicator(),
-                  );
+                : value.propertyListModel.msg != null &&
+                        value.propertyListModel.msg?.toLowerCase() == 'failure'
+                    ? Visibility(
+                        visible: !showSearchResults,
+                        replacement: Container(
+                            padding: EdgeInsets.only(
+                                left: _mainWidth * 0.03,
+                                right: _mainWidth * 0.03,
+                                top: _mainHeight * 0.02),
+                            height: _mainHeight,
+                            color: Colors.white,
+                            child: ListView.separated(
+                              padding: EdgeInsets.zero,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () async {
+                                    RMSWidgets.showLoaderDialog(
+                                        context: context, message: 'Loading');
+
+                                    _searchController.text =
+                                        value.locations[index];
+                                    await _propertyViewModel
+                                        .getPropertyDetailsList(
+                                            address: value.locations[index],
+                                            property: Property.fromSearch,
+                                            toDate: widget.checkOutDate,
+                                            fromDate: widget.checkInDate);
+                                    showSearchResults = false;
+                                    FocusScope.of(context)
+                                        .requestFocus(FocusNode());
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.only(
+                                      left: _mainWidth * 0.03,
+                                    ),
+                                    height: _mainHeight * 0.045,
+                                    alignment: Alignment.centerLeft,
+                                    decoration: BoxDecoration(
+                                        //  color: Colors.white,//CustomTheme.appTheme.withAlpha(20),
+                                        border: Border.all(
+                                            color: CustomTheme.appTheme
+                                                .withAlpha(100)),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Icon(
+                                          Icons.location_on_outlined,
+                                          size: 20,
+                                          color: CustomTheme.appTheme,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Container(
+                                          width: _mainWidth * 0.8,
+                                          child: Text(
+                                            value.locations[index],
+                                            style: TextStyle(
+                                                fontFamily: fontFamily,
+                                                fontSize: 14,
+                                                color: Colors.black54,
+                                                fontWeight: FontWeight.w600),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                              itemCount: value.locations.length,
+                              separatorBuilder: (context, index) => SizedBox(
+                                height: 10,
+                              ),
+                            )),
+                        child: Center(
+                            child: RMSWidgets.someError(
+                          context: context,
+                        )))
+                    : Center(
+                        child:
+                            RMSWidgets.getLoader(color: CustomTheme.appTheme));
           },
         ),
       ),

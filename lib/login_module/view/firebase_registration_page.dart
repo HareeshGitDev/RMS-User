@@ -87,8 +87,8 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
                   child: AnimatedTextKit(
                     animatedTexts: [
                       ColorizeAnimatedText('You are Almost there!',
-                          textStyle: TextStyle(
-                              fontSize: 30, fontFamily: "HKGrotest-Light"),
+                          textStyle: const TextStyle(
+                              fontSize: 30, ),
                           colors: [
                             Colors.white,
                             CustomTheme.appTheme,
@@ -99,7 +99,7 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
                   ),
                 ),
                 Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius:
                           BorderRadius.vertical(top: Radius.circular(30))),
@@ -164,10 +164,27 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
                         visible: widget.from == 'OTP',
                         child: Padding(
                           padding: const EdgeInsets.only(top: 10),
-                          child: _textInput(
-                              hint: "Name",
-                              icon: Icons.person,
-                              controller: _nameController),
+                          child: Container(
+                            margin: EdgeInsets.only(top: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(20)),
+                              color: Colors.white,
+                            ),
+                            child: Neumorphic(
+                              style: NeumorphicStyle(
+                                depth: -2,
+                                color: Colors.white,
+                              ),
+                              child: TextFormField(
+                                controller: _nameController,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Name",
+                                  prefixIcon: Icon(Icons.person),
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -175,10 +192,27 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
                       ),
                       Visibility(
                         visible: widget.from == 'Gmail',
-                        child: _textInput(
-                            hint: "Phone Number",
-                            icon: Icons.contact_page,
-                            controller: _phoneNumberController),
+                        child: Container(
+                          margin: EdgeInsets.only(top: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            color: Colors.white,
+                          ),
+                          child: Neumorphic(
+                            style: NeumorphicStyle(
+                              depth: -2,
+                              color: Colors.white,
+                            ),
+                            child: TextFormField(
+                              controller:  _phoneNumberController,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: "Phone Number",
+                                prefixIcon: Icon( Icons.contact_page),
+                              ),
+                            ),
+                          ),
+                        )
                       ),
                       Visibility(
                         visible: widget.from == 'Gmail',
@@ -305,14 +339,7 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
                         ),
                       ),
                       Spacer(),
-                      /* GestureDetector(
-                          onTap: () async{
-                            await GoogleAuthService.logOut();
-                            Navigator.pop(context);
-                          },
-                          child: Container(child: Text('Click me'),height: 40,color: Colors.white,)
-                      ),*/
-                      Container(
+                     Container(
                         width: _mainWidth,
                         height: 50,
                         margin: EdgeInsets.only(bottom: 15),
@@ -434,13 +461,13 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
   Future<void> setSPValuesForOTP({required SignUpResponseModel response}) async {
     SharedPreferenceUtil shared = SharedPreferenceUtil();
     await shared.setString(
-        rms_registeredUserToken, response.appToken.toString());
-    await shared.setString(rms_profilePicUrl,response.pic.toString());
-    await shared.setString(rms_phoneNumber, response.contactNum.toString());
-    await shared.setString(rms_name, response.name.toString());
-    await shared.setString(rms_email, response.email.toString());
-    await shared.setString(rms_gmapKey, response.gmapKey.toString());
-    await shared.setString(rms_userId, response.id.toString());
+        rms_registeredUserToken, '${response.data?.appToken}');
+    await shared.setString(rms_profilePicUrl, '${response.data?.pic}');
+    await shared.setString(rms_phoneNumber, '${response.data?.contactNum}');
+    await shared.setString(rms_name,  '${response.data?.name}');
+    await shared.setString(rms_email,  '${response.data?.email}');
+    await shared.setString(rms_gmapKey,  '${response.data?.gmapKey}');
+    await shared.setString(rms_userId,  '${response.data?.id}');
   }
 
   Future<void> calledFromGmailPage() async {
@@ -466,14 +493,12 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
           gravity: ToastGravity.CENTER);
     } else {
       RMSWidgets.showLoaderDialog(context: context, message: 'Please wait...');
-      SharedPreferenceUtil shared = SharedPreferenceUtil();
       final int response = await _loginViewModel.detailsValidationAfterGmail(
           model: GmailRegistrationRequestModel(
         city: selectedCity,
         iam: typeValue,
         mobileNo: _phoneNumberController.text,
         sourceRms: sourceRMS,
-        appToken: await shared.getString(rms_registeredUserToken),
       ));
       Navigator.of(context).pop();
 
@@ -481,10 +506,6 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
         await setSPValues();
         Navigator.pushNamedAndRemoveUntil(
           context,AppRoutes.dashboardPage,(route) => false,);
-      } else {
-        RMSWidgets.getToast(
-            message: 'Something went wrong...',
-            color: CustomTheme().colorError);
       }
     }
   }
@@ -518,8 +539,6 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
     } else {
       RMSWidgets.showLoaderDialog(context: context, message: 'Please wait...');
 
-      log(widget.mobile.toString());
-      log(widget.uid.toString());
       final response = await _loginViewModel.detailsValidationAfterOTP(
           model: SignUpRequestModel(
         sourceRms: sourceRMS,
@@ -533,7 +552,7 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
       ));
       Navigator.of(context).pop();
 
-      if (response.status?.toLowerCase()=='success') {
+      if (response.msg?.toLowerCase() !='failure') {
         log('Called For OTP Registration');
         await setSPValuesForOTP(response: response);
         Navigator.pushNamedAndRemoveUntil(

@@ -36,7 +36,7 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
 
   late MyStayViewModel _viewModel;
 
-  List<File> imageList = [];
+  String? image;
 
   List<String> get getIssueList => [
         'Pest Control',
@@ -227,7 +227,7 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
                             );
                             if (model != null) {
                               setState(() {
-                                imageList.add(File(model));
+                                image=model;
                               });
                               log(model);
                             }
@@ -270,7 +270,7 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
                             );
                             if (model != null) {
                               setState(() {
-                                imageList.add(File(model));
+                                image=model;
                               });
                               log(model);
                             }
@@ -299,7 +299,7 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
                   height: 30,
                 ),
                 Visibility(
-                  visible: imageList.isNotEmpty,
+                  visible: image != null,
                   replacement: Container(),
                   child: Container(
                     padding: EdgeInsets.only(
@@ -308,7 +308,35 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
                     ),
                     height: _mainHeight * 0.2,
                     width: _mainWidth,
-                    child: ListView.separated(
+                    child:Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.file(
+                            image != null? File(image.toString()):File(''),
+                            fit: BoxFit.cover,
+                            width: _mainWidth * 0.4,
+                          ),
+                        ),
+                        Positioned(
+                          child: GestureDetector(
+                            onTap: () =>
+                                setState(() => image=null),
+                            child: CircleAvatar(
+                              child: Icon(
+                                Icons.clear,
+                                color: CustomTheme.appTheme,
+                                size: 16,
+                              ),
+                              backgroundColor:
+                              CustomTheme.white.withAlpha(250),
+                              radius: 12,
+                            ),
+                          ),
+                          left: 0,
+                        )
+                      ],
+                    )/* ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
                         return Stack(
@@ -345,7 +373,7 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
                       separatorBuilder: (context, index) => SizedBox(
                         width: 10,
                       ),
-                    ),
+                    ),*/
                   ),
                 )
               ],
@@ -375,12 +403,12 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
                 propertyId: widget.propertyId,
                 description: _descriptionController.text,
                 address: widget.address,
-                issueImagesList: imageList);
+                imagePath: image);
             Navigator.of(context).pop();
             if(response==200){
-             // RMSWidgets.showSnackbar(context: context, message: 'Ticket has been created Successfully', color: CustomTheme.myFavColor);
-              //Provider.of<BottomNavigationProvider>(context,listen: false).shiftBottom(index: 0);
-              //Navigator.of(context,).pushNamedAndRemoveUntil(AppRoutes.dashboardPage, (route) => false);
+              RMSWidgets.showSnackbar(context: context, message: 'Ticket has been created Successfully', color: CustomTheme.myFavColor);
+              Provider.of<BottomNavigationProvider>(context,listen: false).shiftBottom(index: 0);
+              Navigator.of(context,).pushNamedAndRemoveUntil(AppRoutes.dashboardPage, (route) => false);
             }
           },
           child: Center(child: Text("Submit Ticket")),
