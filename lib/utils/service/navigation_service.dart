@@ -1,6 +1,8 @@
 import 'package:RentMyStay_user/home_module/view/dashboard_page.dart';
 import 'package:RentMyStay_user/home_module/view/refer_earn_page.dart';
 import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
+import 'package:RentMyStay_user/language_module/view/language_screen.dart';
+import 'package:RentMyStay_user/language_module/viewModel/language_viewModel.dart';
 
 import 'package:RentMyStay_user/login_module/view/login_page.dart';
 import 'package:RentMyStay_user/login_module/view/firebase_registration_page.dart';
@@ -64,6 +66,14 @@ class NavigationService {
           builder: (context) => ChangeNotifierProvider(
             create: (_) => HomeViewModel(),
             child: ReferAndEarn(),
+          ),
+        );
+      case AppRoutes.languageScreen:
+        String lang=settings.arguments as String;
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+            create: (_) => LanguageViewModel(),
+            child:LanguageScreen(language: lang),
           ),
         );
       case AppRoutes.registrationPage:
@@ -324,4 +334,5 @@ class AppRoutes {
   static const String ticketListPage = 'ticketListPage';
   static const String ticketDetailsPage = 'ticketDetailsPage';
   static const String razorpayPaymentPage = 'razorpayPaymentPage';
+  static const String languageScreen = 'languageScreen';
 }

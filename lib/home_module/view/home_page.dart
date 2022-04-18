@@ -17,13 +17,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:flutx/flutx.dart';
-import 'package:flutx/utils/spacing.dart';
-import 'package:flutx/widgets/button/button.dart';
-import 'package:flutx/widgets/container/container.dart';
-import 'package:flutx/widgets/text/text.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -32,6 +25,7 @@ import '../../theme/app_notifier.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/theme_type.dart';
 import '../../utils/constants/enum_consts.dart';
+import '../../utils/firestore_model.dart';
 import '../../utils/service/location_service.dart';
 import '../../utils/service/navigation_service.dart';
 
@@ -56,7 +50,14 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
-    userDetails=getSharedPreferencesValues();
+    userDetails = getSharedPreferencesValues();
+    getLanguageData();
+  }
+
+  getLanguageData() async {
+    await _homeViewModel.getLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'HomePage');
   }
 
   Future<Map<String, String>> getSharedPreferencesValues() async {
@@ -72,400 +73,426 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        backgroundColor: CustomTheme.appTheme,
-        centerTitle: true,
-        elevation: 4,
-        bottom: PreferredSize(
-          preferredSize: Size(20, 50),
-          child: GestureDetector(
-            onTap: () => Navigator.of(context)
-                .pushNamed(AppRoutes.searchPage, arguments: {
-              'fromBottom': false,
-            }),
-            child: Container(
-              height: 40,
-              padding: EdgeInsets.only(
-                left: 15,
-              ),
-              margin: EdgeInsets.only(left: 15, right: 15, bottom: 10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.white,
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.search_rounded),
-                  SizedBox(
-                    width: 10,
+    return Consumer<HomeViewModel>(
+      builder: (context, value, child) {
+        return Scaffold(
+          resizeToAvoidBottomInset: true,
+          appBar: AppBar(
+            backgroundColor: CustomTheme.appTheme,
+            centerTitle: true,
+            elevation: 4,
+            bottom: PreferredSize(
+              preferredSize: Size(20, 50),
+              child: GestureDetector(
+                onTap: () => Navigator.of(context)
+                    .pushNamed(AppRoutes.searchPage, arguments: {
+                  'fromBottom': false,
+                }),
+                child: Container(
+                  height: 40,
+                  padding: EdgeInsets.only(
+                    left: 15,
                   ),
-                  Text('Search'),
-                ],
+                  margin: EdgeInsets.only(left: 15, right: 15, bottom: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    color: Colors.white,
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.search_rounded),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                          '${nullCheck(list: value.languageData) ? value.languageData[2].name : 'Search'}'),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(15),
+                    bottomRight: Radius.circular(15))),
+            actions: [
+              Container(
+                child: Icon(Icons.notifications_none),
+                margin: EdgeInsets.only(right: 15),
+              ),
+            ],
+            title: Container(
+              margin: EdgeInsets.only(top: 10),
+              child: Image.asset(
+                Images.brandLogo_Transparent,
+                height: 100,
               ),
             ),
           ),
-        ),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(15),
-                bottomRight: Radius.circular(15))),
-        actions: [
-          Container(
-            child: Icon(Icons.notifications_none),
-            margin: EdgeInsets.only(right: 15),
-          ),
-        ],
-        title: Container(
-          margin: EdgeInsets.only(top: 10),
-          child: Image.asset(
-            Images.brandLogo_Transparent,
-            height: 100,
-          ),
-        ),
-      ),
-      body: WillPopScope(
-        onWillPop: () async {
-          showExitDialog(context);
-          return false;
-        },
-        child: Container(
+          body: WillPopScope(
+            onWillPop: () async {
+              showExitDialog(context);
+              return false;
+            },
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color: Colors.white,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                        padding: EdgeInsets.only(
+                            top: _mainHeight * 0.015,
+                            left: _mainWidth * 0.03,
+                            right: _mainWidth * 0.03),
+                        height: _mainHeight * 0.12,
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            var data = _homeViewModel.getCitySuggestionList(
+                                context: context)[index];
+                            return InkWell(
+                              onTap: index == 0
+                                  ? () async {
+                                      bool? granted =
+                                          await LocationService.checkPermission(
+                                              context: context);
+                                      if (granted != null && granted) {
+                                        Navigator.of(context).pushNamed(
+                                            AppRoutes.propertyListingPage,
+                                            arguments: {
+                                              'location': data.value,
+                                              'property':
+                                                  Property.fromCurrentLocation,
+                                            });
+                                      }
+                                    }
+                                  : () => Navigator.of(context).pushNamed(
+                                          AppRoutes.propertyListingPage,
+                                          arguments: {
+                                            'location': data.value,
+                                            'property': Property.fromLocation,
+                                          }),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    height: 60,
+                                    width: 70,
+                                    child: index == 0
+                                        ? Transform.rotate(
+                                            angle: math.pi / 4,
+                                            child: CircleAvatar(
+                                                backgroundColor:
+                                                    CustomTheme.appTheme,
+                                                child: Icon(
+                                                  Icons.navigation_outlined,
+                                                  size: 25,
+                                                  color: CustomTheme.white,
+                                                )),
+                                          )
+                                        : CachedNetworkImage(
+                                            imageUrl: data.imageUrl.toString(),
+                                            imageBuilder:
+                                                (context, imageProvider) =>
+                                                    Container(
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                            placeholder: (context, url) =>
+                                                Shimmer.fromColors(
+                                                    child: Container(
+                                                      height: 60,
+                                                      width: 75,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                                    baseColor: Colors.grey[200]
+                                                        as Color,
+                                                    highlightColor: Colors
+                                                        .grey[350] as Color),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
+                                          ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Visibility(
+                                    visible: index == 0,
+                                    child: Text(
+                                      '${nullCheck(list: value.languageData) ? value.languageData[0].name : 'Current Location'}',
+                                      style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    replacement: Text(
+                                      data.cityName,
+                                      style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          itemCount: _homeViewModel
+                              .getCitySuggestionList(context: context)
+                              .length,
+                        )),
+                    Container(
+                      margin: EdgeInsets.only(top: 10),
+                      width: MediaQuery.of(context).size.width,
+                      child: CarouselSlider(
+                        items: _homeViewModel
+                            .getAdsImageList()
+                            .map(
+                              (imageUrl) => CachedNetworkImage(
+                                imageUrl: imageUrl,
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                placeholder: (context, url) =>
+                                    Shimmer.fromColors(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
+                                          height: 180,
+                                        ),
+                                        baseColor: Colors.grey[200] as Color,
+                                        highlightColor:
+                                            Colors.grey[350] as Color),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              ),
+                            )
+                            .toList(),
+                        options: CarouselOptions(
+                            height: 180,
+                            enlargeCenterPage: true,
+                            autoPlay: true,
+                            aspectRatio: 16 / 9,
+                            autoPlayCurve: Curves.fastOutSlowIn,
+                            enableInfiniteScroll: true,
+                            viewportFraction: 0.8),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 15),
+                      child: Text(
+                        '${nullCheck(list: value.languageData) ? value.languageData[1].name : "Popular"}',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          //decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                    Container(
+                        padding: EdgeInsets.only(left: 10),
+                        height: 260,
+                        // color: CustomTheme.peach.withAlpha(40),
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            var data = _homeViewModel
+                                .getPopularPropertyModelList()[index];
+                            return InkWell(
+                              onTap: () => Navigator.of(context).pushNamed(
+                                  AppRoutes.propertyListingPage,
+                                  arguments: {
+                                    'location': 'Bengaluru-Karnataka-India',
+                                    'propertyType': data.propertyType,
+                                    'property': Property.fromBHK,
+                                  }),
+                              child: Card(
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                elevation: 3,
+                                shadowColor: CustomTheme.appTheme,
+                                margin: EdgeInsets.all(10),
+                                child: Container(
+                                  //margin: EdgeInsets.all(10),
+                                  width: 220,
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          height: 140,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(10),
+                                                  topRight:
+                                                      Radius.circular(10)),
+                                              image: DecorationImage(
+                                                  image: AssetImage(
+                                                      data.imageUrl!),
+                                                  fit: BoxFit.cover
+                                                  //NetworkImage(data.imageUrl!),fit: BoxFit.cover,
+                                                  )),
+                                        ),
+                                      ),
+                                      Container(
+                                          margin:
+                                              EdgeInsets.only(left: 5, top: 5),
+                                          alignment: Alignment.topLeft,
+                                          child: Text(data.propertyType!,
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                              ))),
+                                      Container(
+                                          margin:
+                                              EdgeInsets.only(left: 5, top: 5),
+                                          alignment: Alignment.topLeft,
+                                          child: Text(
+                                            data.propertyDesc!,
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 12),
+                                          )),
+                                      Container(
+                                          margin: EdgeInsets.only(
+                                            right: 10,
+                                          ),
+                                          alignment: Alignment.topRight,
+                                          child: Text(
+                                              '${nullCheck(list: value.languageData) ? value.languageData[3].name : 'More Info'}',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                  color: CustomTheme.peach))),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          itemCount: _homeViewModel
+                              .getPopularPropertyModelList()
+                              .length,
+                        )),
+                    Padding(
+                      padding: EdgeInsets.only(left: 15, top: 10),
+                      child: Text(
+                        '${nullCheck(list: value.languageData) ? value.languageData[4].name : "Refer & Earn"}',
+                        style: TextStyle(
+                          color: Colors.black45,
+                          fontSize: 18,
 
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-              color: Colors.white,
-
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-
-                    padding: EdgeInsets.only(
-                        top: _mainHeight * 0.015,
-                        left: _mainWidth * 0.03,
-                        right: _mainWidth * 0.03),
-                    height: _mainHeight * 0.12,
-                    width: MediaQuery.of(context).size.width,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        var data = _homeViewModel.getCitySuggestionList(
-                            context: context)[index];
-                        return InkWell(
-                          onTap: index == 0
-                              ? () async{
-                              bool? granted=await LocationService.checkPermission(context: context);
-                              if(granted != null && granted){
-                                Navigator.of(context).pushNamed(
-                                    AppRoutes.propertyListingPage,
-                                    arguments: {
-                                      'location': data.value,
-                                      'property':
-                                      Property.fromCurrentLocation,
-                                    });
-                              }
-
-                              }
-                              : () => Navigator.of(context).pushNamed(
-                                      AppRoutes.propertyListingPage,
-                                      arguments: {
-                                        'location': data.value,
-                                        'property': Property.fromLocation,
-                                      }),
-                          child: Column(
+                          //decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.of(context)
+                          .pushNamed(AppRoutes.referAndEarn),
+                      child: Container(
+                          child: Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                height: 60,
-                                width: 70,
-                                child: index == 0
-                                    ? Transform.rotate(
-                                        angle: math.pi / 4,
-                                        child: CircleAvatar(
-                                            backgroundColor:
-                                                CustomTheme.appTheme,
-                                            child: Icon(
-                                              Icons.navigation_outlined,
-                                              size: 25,
-                                              color: CustomTheme.white,
-                                            )),
-                                      )
-                                    : CachedNetworkImage(
-                                        imageUrl: data.imageUrl.toString(),
-                                        imageBuilder:
-                                            (context, imageProvider) =>
-                                                Container(
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                              image: imageProvider,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                        placeholder: (context, url) =>
-                                            Shimmer.fromColors(
-                                                child: Container(
-                                                  height: 60,
-                                                  width: 75,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: Colors.grey,
-                                                  ),
-                                                ),
-                                                baseColor:
-                                                    Colors.grey[200] as Color,
-                                                highlightColor:
-                                                    Colors.grey[350] as Color),
-                                        errorWidget: (context, url, error) =>
-                                            const Icon(Icons.error),
+                                margin: EdgeInsets.only(left: 20, top: 15),
+                                child: Text(
+                                  "Earn",
+                                  style: TextStyle(
+                                    color: CustomTheme.peach,
+                                    fontSize: 28,
+
+                                    //decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(left: 15, top: 10),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "1000",
+                                      style: TextStyle(
+                                        color: CustomTheme.peach,
+                                        fontSize: 40,
+
+                                        //decoration: TextDecoration.underline,
                                       ),
+                                    ),
+                                    Text(
+                                      "Rupees",
+                                      style: TextStyle(
+                                        color: CustomTheme.peach,
+                                        fontSize: 16,
+
+                                        //decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                data.cityName,
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600),
+                              Container(
+                                margin: EdgeInsets.only(left: 15, top: 10),
+                                child: Text(
+                                  "Share with your Friend",
+                                  style: TextStyle(
+                                    color: Colors.black45,
+                                    fontSize: 18,
+
+                                    //decoration: TextDecoration.underline,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
-                        );
-                      },
-                      itemCount: _homeViewModel
-                          .getCitySuggestionList(context: context)
-                          .length,
-                    )),
-                Container(
-                  margin: EdgeInsets.only(top: 10),
-                  width: MediaQuery.of(context).size.width,
-                  child: CarouselSlider(
-                    items: _homeViewModel
-                        .getAdsImageList()
-                        .map(
-                          (imageUrl) => CachedNetworkImage(
-                            imageUrl: imageUrl,
-                            imageBuilder: (context, imageProvider) => Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            placeholder: (context, url) => Shimmer.fromColors(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey,
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  height: 180,
-                                ),
-                                baseColor: Colors.grey[200] as Color,
-                                highlightColor: Colors.grey[350] as Color),
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
-                          ),
-                        )
-                        .toList(),
-                    options: CarouselOptions(
-                        height: 180,
-                        enlargeCenterPage: true,
-                        autoPlay: true,
-                        aspectRatio: 16 / 9,
-                        autoPlayCurve: Curves.fastOutSlowIn,
-                        enableInfiniteScroll: true,
-                        viewportFraction: 0.8),
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 15),
-                  child: Text(
-                    "Popular",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      //decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
-                Container(
-                    padding: EdgeInsets.only(left: 10),
-                    height: 260,
-                    // color: CustomTheme.peach.withAlpha(40),
-                    width: MediaQuery.of(context).size.width,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        var data =
-                            _homeViewModel.getPopularPropertyModelList()[index];
-                        return InkWell(
-                          onTap: () => Navigator.of(context).pushNamed(
-                              AppRoutes.propertyListingPage,
-                              arguments: {
-                                'location': 'Bengaluru-Karnataka-India',
-                                'propertyType': data.propertyType,
-                                'property': Property.fromBHK,
-                              }),
-                          child: Card(
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            elevation: 3,
-                            shadowColor: CustomTheme.appTheme,
-                            margin: EdgeInsets.all(10),
-                            child: Container(
-                              //margin: EdgeInsets.all(10),
-                              width: 220,
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      height: 140,
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(10),
-                                              topRight: Radius.circular(10)),
-                                          image: DecorationImage(
-                                              image: AssetImage(data.imageUrl!),
-                                              fit: BoxFit.cover
-                                              //NetworkImage(data.imageUrl!),fit: BoxFit.cover,
-                                              )),
-                                    ),
-                                  ),
-                                  Container(
-                                      margin: EdgeInsets.only(left: 5, top: 5),
-                                      alignment: Alignment.topLeft,
-                                      child: Text(data.propertyType!,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                          ))),
-                                  Container(
-                                      margin: EdgeInsets.only(left: 5, top: 5),
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        data.propertyDesc!,
-                                        style: TextStyle(
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 12),
-                                      )),
-                                  Container(
-                                      margin: EdgeInsets.only(
-                                        right: 10,
-                                      ),
-                                      alignment: Alignment.topRight,
-                                      child: Text(data.hint!,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              color: CustomTheme.peach))),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                      itemCount:
-                          _homeViewModel.getPopularPropertyModelList().length,
-                    )),
-                Padding(
-                  padding: EdgeInsets.only(left: 15, top: 10),
-                  child: Text(
-                    "Refer & Earn",
-                    style: TextStyle(
-                      color: Colors.black45,
-                      fontSize: 18,
-
-                      //decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () =>
-                      Navigator.of(context).pushNamed(AppRoutes.referAndEarn),
-                  child: Container(
-                      child: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
                           Container(
-                            margin: EdgeInsets.only(left: 20, top: 15),
-                            child: Text(
-                              "Earn",
-                              style: TextStyle(
-                                color: CustomTheme.peach,
-                                fontSize: 28,
-
-                                //decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(left: 15, top: 10),
-                            child: Row(
-                              children: [
-                                Text(
-                                  "1000",
-                                  style: TextStyle(
-                                    color: CustomTheme.peach,
-                                    fontSize: 40,
-
-                                    //decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                                Text(
-                                  "Rupees",
-                                  style: TextStyle(
-                                    color: CustomTheme.peach,
-                                    fontSize: 16,
-
-                                    //decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(left: 15, top: 10),
-                            child: Text(
-                              "Share with your Friend",
-                              style: TextStyle(
-                                color: Colors.black45,
-                                fontSize: 18,
-
-                                //decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
+                              height: 200,
+                              child: Image.asset(Images.referIconHome))
                         ],
-                      ),
-                      Container(
-                          height: 200, child: Image.asset(Images.referIconHome))
-                    ],
-                  )),
-                )
-              ],
+                      )),
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
-      ),
-      drawer: _getDrawer(
-          context:
-              context), // This trailing comma makes auto-formatting nicer for build methods.
+          drawer: _getDrawer(
+              context:
+                  context), // This trailing comma makes auto-formatting nicer for build methods.
+        );
+      },
     );
   }
 
@@ -631,6 +658,19 @@ class _HomePageState extends State<HomePage> {
             getTile(
               context: context,
               leading: Icon(
+                Icons.language,
+                color: CustomTheme.appTheme,
+                size: 20,
+              ),
+              title: 'Language',
+              onTap: () async => Navigator.of(context).popAndPushNamed(
+                  AppRoutes.languageScreen,
+                  arguments: await preferenceUtil.getString(rms_language) ??
+                      'english'),
+            ),
+            getTile(
+              context: context,
+              leading: Icon(
                 Icons.logout,
                 color: CustomTheme.appTheme,
                 size: 20,
@@ -775,5 +815,9 @@ class _HomePageState extends State<HomePage> {
         return alert; //WillPopScope(child: alert, onWillPop: ()async=>false);
       },
     );
+  }
+
+  bool nullCheck({required List<FirestoreModel> list}) {
+    return list.length == 5 ? true : false;
   }
 }
