@@ -30,9 +30,7 @@ class Images {
 
 
   // ------ Widgets --------//
-  static String buttonIcon = 'assets/icons/toggle_outline.png';
   static String whatsapplogo = 'assets/icons/whatsapplogo.png';
-  static String wallet='assets/icons/wallet-outline.png';
   static String mobSignIn='assets/icons/mob_signin.png';
   static String mobOtp='assets/icons/mob_otp.png';
   static String loginIcon = 'assets/icons/login_outline.png';
@@ -42,11 +40,8 @@ class Images {
   static String profileIcon = 'assets/icons/profile_outline.png';
   static String userRegisterIcon = 'assets/icons/user_logout_outline.png';
   static String advancedIcon = 'assets/icons/maps_pin_outline.png';
-
-  static String settingIcon = 'assets/icons/setting_outline.png';
   static String referIconHome = 'assets/icons/refer_icon_home.webp';
   static const String resetPasswordIcon='assets/icons/reset_password.png';
-  //static const String successfulIcon='assets/icons/Check.gif';
   static const String successfulIcon='assets/icons/checkCircle.gif';
   static const String failedIcon='assets/icons/payment_failed_icon.png';
   static const String paidIcon='assets/icons/paid_Icon.webp';

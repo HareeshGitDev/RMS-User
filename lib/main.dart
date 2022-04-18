@@ -6,6 +6,7 @@ import 'package:RentMyStay_user/utils/service/location_service.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'login_module/view/splash_page.dart';
 //import 'firebase_options.dart';
@@ -32,13 +33,13 @@ void main() async {
   //             messagingSenderId: '172037116875',
   //             databaseURL:
   //                 'https://rentmystay-new-1539065190327.firebaseio.com'));
-
   runApp(MyApp());
 
 }
 
 class MyApp extends StatelessWidget {
   @override
+
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
@@ -50,7 +51,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'RentMyStay ',
         theme: ThemeData(
-          primarySwatch: Colors.red,
+          primarySwatch: customColor,
           fontFamily: 'hk-grotest',
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
@@ -59,4 +60,24 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+}
+Map<int, Color> colorMap = {
+  50: Color.fromRGBO(0, 54, 111, .1),
+  100: Color.fromRGBO(0, 54, 111, .2),
+  200: Color.fromRGBO(0, 54, 111, .3),
+  300: Color.fromRGBO(0, 54, 111, .4),
+  400: Color.fromRGBO(0, 54, 111, .5),
+  500: Color.fromRGBO(0, 54, 111, .6),
+  600: Color.fromRGBO(0, 54, 111, .7),
+  700: Color.fromRGBO(0, 54, 111, .8),
+  800: Color.fromRGBO(0, 54, 111, .9),
+  900: Color.fromRGBO(0, 54, 111, 1),
+};
+// Green color code: 93cd48 and first two characters (FF) are alpha values (transparency)
+MaterialColor customColor = MaterialColor(0xff00366F, colorMap);
+void _portraitModeOnly() {
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 }

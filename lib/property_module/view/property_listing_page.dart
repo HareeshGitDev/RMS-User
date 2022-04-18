@@ -1,7 +1,5 @@
 import 'dart:developer' as logger;
-import 'dart:io';
 import 'dart:math' as math;
-import 'dart:ui';
 
 import 'package:RentMyStay_user/profile_Module/model/filter_sort_request_model.dart';
 import 'package:RentMyStay_user/property_module/viewModel/property_viewModel.dart';
@@ -15,9 +13,7 @@ import 'package:RentMyStay_user/utils/service/system_service.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -315,7 +311,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                   children: [
                                                     Icon(
                                                       Icons.home_work_outlined,
-                                                      color: myFavColor,
+                                                      color: CustomTheme.appTheme,
                                                       size: 18,
                                                     ),
                                                     SizedBox(
@@ -425,8 +421,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                           WidgetSpan(
                                                             child: Icon(
                                                               Icons
-                                                                  .my_location_outlined,
-                                                              color: myFavColor,
+                                                                  .location_on_outlined,
+                                                              color: CustomTheme.appTheme,
                                                               size:
                                                                   _mainHeight *
                                                                       0.02,
@@ -511,7 +507,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                             ' $rupee ${data.rent ?? " "}',
                                                             style: TextStyle(
                                                                 color:
-                                                                    myFavColor,
+                                                                    CustomTheme.appTheme,
                                                                 fontFamily:
                                                                     fontFamily,
                                                                 fontWeight:
@@ -540,7 +536,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                                           ' $rupee ${data.rent ?? " "}',
                                                                       style: TextStyle(
                                                                           color:
-                                                                              myFavColor,
+                                                                              CustomTheme.appTheme,
                                                                           fontFamily:
                                                                               fontFamily,
                                                                           fontWeight: FontWeight
@@ -577,7 +573,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                             ' $rupee ${data.monthlyRent ?? " "}',
                                                             style: TextStyle(
                                                                 color:
-                                                                    myFavColor,
+                                                                    CustomTheme.appTheme,
                                                                 fontFamily:
                                                                     fontFamily,
                                                                 fontWeight:
@@ -606,7 +602,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                                           ' $rupee ${data.monthlyRent ?? " "}',
                                                                       style: TextStyle(
                                                                           color:
-                                                                              myFavColor,
+                                                                              CustomTheme.appTheme,
                                                                           fontFamily:
                                                                               fontFamily,
                                                                           fontWeight: FontWeight
@@ -643,7 +639,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                             ' $rupee ${data.rmsRent ?? " "}',
                                                             style: TextStyle(
                                                                 color:
-                                                                    myFavColor,
+                                                                CustomTheme.appTheme,
                                                                 fontFamily:
                                                                     fontFamily,
                                                                 fontWeight:
@@ -672,7 +668,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                                           ' $rupee ${data.rmsRent ?? " "}',
                                                                       style: TextStyle(
                                                                           color:
-                                                                              myFavColor,
+                                                                              CustomTheme.appTheme,
                                                                           fontFamily:
                                                                               fontFamily,
                                                                           fontWeight: FontWeight
@@ -714,7 +710,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                         radius:
                                                             _mainHeight * 0.012,
                                                         backgroundColor:
-                                                            myFavColor,
+                                                            CustomTheme.appTheme,
                                                         child: Icon(
                                                           Icons.check,
                                                           size: _mainHeight *
@@ -788,17 +784,17 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                 },
                                                 child: CircleAvatar(
                                                     backgroundColor:
-                                                        Colors.white,
+                                                        Colors.white60,
                                                     radius: 15,
                                                     child: data.wishlist == 1
                                                         ? Icon(
                                                             Icons.favorite,
-                                                            color: Colors.red,
+                                                            color: CustomTheme.appTheme,
                                                           )
                                                         : Icon(
                                                             Icons
                                                                 .favorite_outline_rounded,
-                                                            color: Colors.red,
+                                                            color: CustomTheme.appTheme,
                                                           )),
                                               ),
                                             ],
