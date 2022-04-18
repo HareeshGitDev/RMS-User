@@ -29,7 +29,7 @@ class Data {
   int? flag;
   String? verifiedPhoneFlag;
   String? team;
-  String? id;
+  dynamic id;
   String? pic;
   String? gmapKey;
 

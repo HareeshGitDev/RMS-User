@@ -6,6 +6,7 @@ import 'package:RentMyStay_user/utils/color.dart';
 import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:RentMyStay_user/utils/service/system_service.dart';
+import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -13,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../utils/constants/enum_consts.dart';
+import '../../utils/firestore_model.dart';
 import '../../utils/service/bottom_navigation_provider.dart';
 import '../../utils/service/date_time_service.dart';
 import '../../utils/service/navigation_service.dart';
@@ -37,6 +39,7 @@ class _SearchPageState extends State<SearchPage> {
   final _searchController = TextEditingController();
   final SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
   bool showSearchResults = false;
+  late PropertyViewModel _propertyViewModel;
 
   TextStyle get getTextStyle => const TextStyle(
       color: Colors.black,
@@ -45,12 +48,29 @@ class _SearchPageState extends State<SearchPage> {
       overflow: TextOverflow.ellipsis,
       fontSize: 15);
 
+
+
+  getLanguageData() async {
+    await _propertyViewModel.getLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'SearchPage');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _propertyViewModel=Provider.of<PropertyViewModel>(context,listen: false);
+    getLanguageData();
+
+  }
+
   @override
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
     return Consumer<PropertyViewModel>(
       builder: (context, value, child) {
+        log('Called');
         return Scaffold(
           body: widget.fromBottom
               ? WillPopScope(
@@ -120,7 +140,7 @@ class _SearchPageState extends State<SearchPage> {
                         },
                         decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'Search by Locality, Landmark or City',
+                            hintText:nullCheck(list: value.languageData) ? '${value.languageData[0].name}' : 'Search by Locality, Landmark or City',
                             hintStyle: TextStyle(
                                 fontFamily: fontFamily,
                                 fontSize: 16,
@@ -257,7 +277,7 @@ class _SearchPageState extends State<SearchPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
-                                  'CheckIn Date',
+                                  nullCheck(list: value.languageData) ? '${value.languageData[1].name}' :'CheckIn Date',
                                   style: TextStyle(
                                       color: Colors.blueGrey,
                                       fontFamily: fontFamily,
@@ -278,7 +298,7 @@ class _SearchPageState extends State<SearchPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
-                                  'CheckOut Date',
+                                  nullCheck(list: value.languageData) ? '${value.languageData[2].name}' :'CheckOut Date',
                                   style: TextStyle(
                                       color: Colors.blueGrey,
                                       fontFamily: fontFamily,
@@ -309,6 +329,7 @@ class _SearchPageState extends State<SearchPage> {
                         onPressed: () {
                           if (_searchController.text.isEmpty ||
                               _searchController.text.length < 3) {
+                            RMSWidgets.showSnackbar(context: context, message: 'Please Enter Place or City.', color: CustomTheme.errorColor);
                             return;
                           }
 
@@ -323,7 +344,7 @@ class _SearchPageState extends State<SearchPage> {
                           FocusScope.of(context).unfocus();
                         },
                         child: Text(
-                          'Search',
+                          nullCheck(list: value.languageData) ? '${value.languageData[3].name}' :'Search',
                           style: TextStyle(
                               fontFamily: fontFamily,
                               color: Colors.white,
@@ -347,7 +368,7 @@ class _SearchPageState extends State<SearchPage> {
                     Container(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Frequently Searched Locations',
+                        nullCheck(list: value.languageData) ? '${value.languageData[4].name}' : 'Frequently Searched Locations',
                         style: TextStyle(
                           //  color: CustomTheme.appTheme,
                           fontFamily: fontFamily,
@@ -448,7 +469,7 @@ class _SearchPageState extends State<SearchPage> {
                     Container(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Search by Desired Property Type',
+                        nullCheck(list: value.languageData) ? '${value.languageData[5].name}' :'Search by Desired Property Type',
                         style: TextStyle(
                           color: Colors.black,
                           fontFamily: fontFamily,
@@ -528,4 +549,7 @@ class _SearchPageState extends State<SearchPage> {
       ),
     );
   }
+
+  bool nullCheck({required List<FirestoreModel> list}) =>
+      list.length == 6 ? true : false;
 }

@@ -5,7 +5,9 @@ import 'package:RentMyStay_user/property_module/model/wish_list_model.dart';
 import 'package:RentMyStay_user/property_module/service/property_api_service.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../../language_module/service/language_api_service.dart';
 import '../../utils/constants/enum_consts.dart';
+import '../../utils/firestore_model.dart';
 import '../../utils/service/rms_user_api_service.dart';
 import '../model/property_list_model.dart';
 
@@ -14,6 +16,9 @@ class PropertyViewModel extends ChangeNotifier {
   PropertyListModel propertyListModel = PropertyListModel();
   WishListModel wishListModel = WishListModel();
   List<String> locations = [];
+  final LanguageApiService _languageApiService = LanguageApiService();
+  List<FirestoreModel> languageData = [];
+
 
   Future<void> getPropertyDetailsList({
     required String address,
@@ -71,6 +76,13 @@ class PropertyViewModel extends ChangeNotifier {
 
     propertyListModel = data;
     log('ALL Sorted PROPERTIES ::  ${data.data?.length}');
+    notifyListeners();
+  }
+  Future<void> getLanguagesData(
+      {required String language, required String pageName}) async {
+    final response = await _languageApiService.fetchLanguagesData(
+        language: language, pageName: pageName);
+    languageData = response;
     notifyListeners();
   }
 }

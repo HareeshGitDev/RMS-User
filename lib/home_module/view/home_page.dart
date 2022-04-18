@@ -75,6 +75,7 @@ class _HomePageState extends State<HomePage> {
     _mainWidth = MediaQuery.of(context).size.width;
     return Consumer<HomeViewModel>(
       builder: (context, value, child) {
+
         return Scaffold(
           resizeToAvoidBottomInset: true,
           appBar: AppBar(
@@ -489,14 +490,16 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           drawer: _getDrawer(
-              context:
-                  context), // This trailing comma makes auto-formatting nicer for build methods.
+              context: context,
+              list: value
+                  .languageData), // This trailing comma makes auto-formatting nicer for build methods.
         );
       },
     );
   }
 
-  Widget _getDrawer({required BuildContext context}) {
+  Widget _getDrawer(
+      {required BuildContext context, required List<FirestoreModel> list}) {
     return Drawer(
       key: _drawerKey,
       backgroundColor: CustomTheme.white,
@@ -591,7 +594,7 @@ class _HomePageState extends State<HomePage> {
                 color: CustomTheme.appTheme,
                 size: 20,
               ),
-              title: 'Profile',
+              title: nullCheck(list: list) ? '${list[5].name}' : 'Profile',
               onTap: () => Navigator.pushNamed(
                 context,
                 AppRoutes.profilePage,
@@ -607,7 +610,7 @@ class _HomePageState extends State<HomePage> {
                 color: CustomTheme.appTheme,
                 size: 20,
               ),
-              title: 'My Stays',
+              title: nullCheck(list: list) ? '${list[6].name}' : 'My Stays',
               onTap: () => Navigator.pushNamed(
                 context,
                 AppRoutes.myStayListPage,
@@ -623,7 +626,7 @@ class _HomePageState extends State<HomePage> {
                 color: CustomTheme.appTheme,
                 size: 20,
               ),
-              title: 'My Tickets',
+              title: nullCheck(list: list) ? '${list[7].name}' : 'My Tickets',
               onTap: () => Navigator.pushNamed(
                 context,
                 AppRoutes.ticketListPage,
@@ -636,7 +639,7 @@ class _HomePageState extends State<HomePage> {
                 color: CustomTheme.appTheme,
                 size: 20,
               ),
-              title: 'My WishList',
+              title: nullCheck(list: list) ? '${list[8].name}' : 'My WishList',
               onTap: () => {
                 Navigator.pushNamed(context, AppRoutes.wishListPage,
                     arguments: {
@@ -651,7 +654,7 @@ class _HomePageState extends State<HomePage> {
                 color: CustomTheme.appTheme,
                 size: 20,
               ),
-              title: 'Refer & Earn',
+              title: nullCheck(list: list) ? '${list[9].name}' : 'Refer & Earn',
               onTap: () =>
                   Navigator.of(context).pushNamed(AppRoutes.referAndEarn),
             ),
@@ -662,7 +665,7 @@ class _HomePageState extends State<HomePage> {
                 color: CustomTheme.appTheme,
                 size: 20,
               ),
-              title: 'Language',
+              title: nullCheck(list: list) ? '${list[10].name}' : 'Language',
               onTap: () async => Navigator.of(context).popAndPushNamed(
                   AppRoutes.languageScreen,
                   arguments: await preferenceUtil.getString(rms_language) ??
@@ -675,7 +678,7 @@ class _HomePageState extends State<HomePage> {
                 color: CustomTheme.appTheme,
                 size: 20,
               ),
-              title: 'Logout',
+              title: nullCheck(list: list) ? '${list[11].name}' : 'Logout',
               onTap: () async {
                 RMSWidgets.showLoaderDialog(
                     context: context, message: 'Logging out...');
@@ -817,7 +820,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  bool nullCheck({required List<FirestoreModel> list}) {
-    return list.length == 5 ? true : false;
-  }
+  bool nullCheck({required List<FirestoreModel> list}) =>
+      list.length == 12 ? true : false;
 }

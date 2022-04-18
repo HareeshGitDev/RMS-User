@@ -47,31 +47,47 @@ class _LanguageScreenState extends State<LanguageScreen> {
       body: Container(
         height: _mainHeight,
         width: _mainWidth,
-        padding: EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 20),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
         child: Column(
           children: [
-            Container(
-                height: _mainHeight * 0.05,
-                child: RadioListTile(
-                    value: 'english',
-                    groupValue: widget.language,
-                    activeColor: CustomTheme.appTheme,
-                    title: Text('English'),
-                    onChanged: (lang) {
-                      log(lang as String);
-                      setState(() =>widget. language = lang);
-                    })),
-            Container(
-                height: _mainHeight * 0.05,
-                child: RadioListTile(
-                    value: 'hindi',
-                    groupValue: widget.language,
-                    activeColor: CustomTheme.appTheme,
-                    title: Text('Hindi'),
-                    onChanged: (lang) {
-                      log(lang as String);
-                      setState(() => widget.language = lang);
-                    })),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('English',style: TextStyle(
+                  fontSize: 16,
+                  color: CustomTheme.black,
+                  fontWeight: FontWeight.w600
+                ),),
+                Radio(
+                  groupValue:widget.language,
+                  value: 'english',
+                  activeColor: CustomTheme.appTheme,
+                  onChanged: (value) {
+                    setState(() =>widget. language = value as String);
+                  },
+
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Hindi',style: TextStyle(
+                    fontSize: 16,
+                    color: CustomTheme.black,
+                    fontWeight: FontWeight.w600
+                ),),
+                Radio(
+                  groupValue:widget.language,
+                  value: 'hindi',
+                  activeColor: CustomTheme.appTheme,
+                  onChanged: (value) {
+                    setState(() =>widget. language = value as String);
+                  },
+
+                ),
+              ],
+            ),
             Spacer(),
             Container(
               width: _mainWidth,
@@ -85,11 +101,10 @@ class _LanguageScreenState extends State<LanguageScreen> {
                           borderRadius: BorderRadius.circular(15)),
                     )),
                 onPressed: () async {
-                  RMSWidgets.showLoaderDialog(
-                      context: context, message: 'Loading');
+
 
                   await shared.setString(rms_language, widget.language);
-                  Navigator.of(context).pop();
+
                   Navigator.of(context)
                       .popAndPushNamed(AppRoutes.dashboardPage);
                 },

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:RentMyStay_user/home_module/model/invite_and_earn_model.dart';
 import 'package:RentMyStay_user/home_module/model/popular_model.dart';
 import 'package:RentMyStay_user/images.dart';
+import 'package:RentMyStay_user/language_module/service/language_api_service.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -12,6 +13,7 @@ import '../service/home_api_service.dart';
 
 class HomeViewModel extends ChangeNotifier {
   final HomeApiService _homeApiService = HomeApiService();
+  final LanguageApiService _languageApiService = LanguageApiService();
   ReferAndEarnModel referAndEarnModel = ReferAndEarnModel();
   List<FirestoreModel> languageData = [];
 
@@ -111,7 +113,7 @@ class HomeViewModel extends ChangeNotifier {
 
   Future<void> getLanguagesData(
       {required String language, required String pageName}) async {
-    final response = await _homeApiService.fetchLanguagesData(
+    final response = await _languageApiService.fetchLanguagesData(
         language: language, pageName: pageName);
     languageData = response;
     notifyListeners();
