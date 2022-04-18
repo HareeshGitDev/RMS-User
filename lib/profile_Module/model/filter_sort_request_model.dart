@@ -1,18 +1,18 @@
 class FilterSortRequestModel {
-  String? fromd;
-  String? tod;
-  String? addr;
-  String? sortOrder;
-  String? studio;
-  String? s1Bhk;
-  String? s2Bhk;
-  String? s3Bhk;
+  String? fromd='dd-MM-YYYY';
+  String? tod='dd-MM-YYYY';
+  String? addr='location';
+  String? sortOrder='0';
+  String? studio='Studio';
+  String? s1Bhk='1BHK';
+  String? s2Bhk='2BHK';
+  String? s3Bhk='3BHK';
   String? maxguests;
   String? pricefrom;
   String? priceto;
-  String? fullyFurnish;
-  String? semiFurnish;
-  String? termm;
+  String? fullyFurnish='fully_furnish';
+  String? semiFurnish='semi_furnish';
+  String? term='daily_basis/monthly_basis/long_basis';
   String? roomTypee;
   String? furType;
 
@@ -30,7 +30,7 @@ class FilterSortRequestModel {
         this.priceto,
         this.fullyFurnish,
         this.semiFurnish,
-        this.termm,
+        this.term,
         this.roomTypee,
         this.furType});
 
@@ -48,7 +48,7 @@ class FilterSortRequestModel {
     priceto = json['priceto'];
     fullyFurnish = json['fully_furnish'];
     semiFurnish = json['semi_furnish'];
-    termm = json['termm'];
+    term = json['term'];
     roomTypee = json['room_typee'];
     furType = json['fur_type'];
   }
@@ -68,7 +68,7 @@ class FilterSortRequestModel {
     data['priceto'] = this.priceto;
     data['fully_furnish'] = this.fullyFurnish;
     data['semi_furnish'] = this.semiFurnish;
-    data['termm'] = this.termm;
+    data['term'] = this.term;
     data['room_typee'] = this.roomTypee;
     data['fur_type'] = this.furType;
     return data;

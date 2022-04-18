@@ -180,6 +180,7 @@ class NavigationService {
                   child: UpdateInvoiceUTRPage(
                     bookingId: data['bookingId'],
                     invoiceId:  data['invoiceId'],
+                    amount:  data['amount'],
                   ),
                 ));
 

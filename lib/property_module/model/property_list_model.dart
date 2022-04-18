@@ -64,7 +64,7 @@ class Data {
   String? rentSort;
   String? offerStatus;
   String? distance;
-  Null? available;
+  String? available;
   String? avl;
   String? encdPropId;
   String? propUrl;

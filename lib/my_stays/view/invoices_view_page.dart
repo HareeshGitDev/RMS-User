@@ -141,12 +141,17 @@ class _InvoiceState extends State<InvoicePage> {
                                             style: getValueStyle)
                                       ]),
                                       TableRow(children: [
-                                        Text('Pay Now :', style: getKeyStyle),
-                                        Text('$rupee ${data?.amount ?? '0'}',
-                                            style: getValueStyle),
-                                        Text('Status :', style: getKeyStyle),
-                                        Text('${data?.status ?? ''}',
-                                            style: getValueStyle)
+
+                                        Visibility(
+                                            visible: data?.pendingBalance!=0
+                                            ,child: Text('Pay Now :', style: getKeyStyle)),
+                                        Visibility(visible: data?.pendingBalance!=0,
+                                          child: Text('$rupee ${data?.pendingBalance ?? '0'}',
+                                              style: getValueStyle),
+                                        ),
+                                        Visibility(visible: data?.pendingBalance!=0,child: Text('Status :', style: getKeyStyle)),
+                                        Visibility(visible: data?.pendingBalance!=0,child: Text('${data?.status ?? ''}',
+                                            style: getValueStyle),),
                                       ]),
                                     ],
                                   ),
@@ -160,10 +165,7 @@ class _InvoiceState extends State<InvoicePage> {
                                       style: ButtonStyle(
                                           backgroundColor:
                                               MaterialStateProperty.all<
-                                                  Color>(data?.status != null &&
-                                                      data?.status
-                                                              ?.toLowerCase() ==
-                                                          'closed'
+                                                  Color>(data?.pendingBalance == 0
                                                   ? Color(0xff7AB02A)
                                                   : Color(0xffFF0000)),
                                           shape: MaterialStateProperty.all<
@@ -199,10 +201,14 @@ class _InvoiceState extends State<InvoicePage> {
                                                   model: data ??
                                                       invoiceModelData.Data());
                                             },
-                                      child: Center(
-                                          child: data?.pendingBalance == 0
-                                              ? Text('Download Invoice')
-                                              : Text('Pay Now')),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                              child: data?.pendingBalance == 0
+                                                  ? Text('Download Invoice')
+                                                  : Text('Pay Now')),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   SizedBox(
@@ -339,6 +345,7 @@ class _InvoiceState extends State<InvoicePage> {
                       arguments: {
                         'bookingId': widget.bookingId,
                         'invoiceId': model.invoiceId,
+                        'amount': model.pendingBalance,
                       },
                     );
                     },

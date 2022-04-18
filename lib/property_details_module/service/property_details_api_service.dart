@@ -81,6 +81,7 @@ class PropertyDetailsApiService {
     final response = await _apiService
         .getApiCallWithQueryParams(endPoint: url, queryParams: {
       'id': model.propId.toString(),
+      //'id': 887.toString(),  //for testing
       'travel_from_date': model.fromDate,
       'travel_to_date': model.toDate,
       'num_guests': model.numOfGuests,

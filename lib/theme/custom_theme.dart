@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomTheme {
   static final Color occur = Color(0xffb38220);
   static final Color appThemeContrast2 = Color(0xff226e79);
-  static final Color peach = Color(0xff226e79);
+  static final Color peach = Color(0xffe55d27);
 
   static final Color skyBlue = Color(0xff639fdc); // original one
  // static final Color skyBlue = Color(0xff2596be);

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'dart:ui';
 
-import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
 import 'package:RentMyStay_user/profile_Module/model/filter_sort_request_model.dart';
 import 'package:RentMyStay_user/property_module/viewModel/property_viewModel.dart';
 import 'package:RentMyStay_user/theme/app_theme.dart';
@@ -20,17 +19,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:flutx/flutx.dart';
-import 'package:flutx/widgets/star_rating/star_rating.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-import '../../home_module/model/invite_and_earn_model.dart';
-import '../../images.dart';
 import '../../utils/constants/app_consts.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/date_time_service.dart';
@@ -494,6 +486,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                             SizedBox(
                                               height: _mainHeight * 0.007,
                                             ),
+                                            Visibility(
+                                              visible: data.rent != null &&
+                                                  data.rent != "0",child:
                                             Container(
                                                 //color: Colors.amber,
                                                 height: _mainHeight * 0.02,
@@ -558,7 +553,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,
-                                                )),
+                                                ))),
                                             Container(
                                                 //color: Colors.amber,
                                                 height: _mainHeight * 0.02,
