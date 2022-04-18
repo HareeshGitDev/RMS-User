@@ -244,9 +244,10 @@ class RMSUserApiService {
 
   Map<String, dynamic> _getErrorResponse(decode) {
     final error = decode as Map<String, dynamic>;
+    log(error.toString());
     RMSWidgets.getToast(
         message: error['msg'] ?? 'failure', color: Color(0xffFF0000));
 
-    return {'msg': 'failure'};
+    return {'msg': error['msg'] ?? 'failure'};
   }
 }

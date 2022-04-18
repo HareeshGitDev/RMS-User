@@ -93,7 +93,7 @@ class PropertyDetailsApiService {
       return BookingAmountsResponseModel.fromJson(data);
     } else {
       return BookingAmountsResponseModel(
-          msg: 'failure');
+          msg: data['msg']  ?? 'failure');
     }
   }
 

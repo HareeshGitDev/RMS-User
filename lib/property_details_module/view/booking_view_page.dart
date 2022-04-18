@@ -60,6 +60,7 @@ class _BookingPageState extends State<BookingPage> {
   final _nameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
   late PropertyDetailsViewModel _viewModel;
+  SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
 
   @override
   void initState() {
@@ -73,7 +74,7 @@ class _BookingPageState extends State<BookingPage> {
     _nameController.text = (widget.propertyDetailsUtilModel.name).toString();
     _phoneNumberController.text =
         (widget.propertyDetailsUtilModel.mobile).toString();
-    SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+
     checkInDate = await preferenceUtil.getString(rms_checkInDate) ??
         DateTimeService.ddMMYYYYformatDate(DateTime.now());
     checkOutDate = await preferenceUtil.getString(rms_checkOutDate) ??
@@ -113,392 +114,391 @@ class _BookingPageState extends State<BookingPage> {
             titleSpacing: 0,
             backgroundColor: CustomTheme.appTheme,
           ),
-          body: value.bookingAmountsResponseModel != null &&
-                  value.bookingAmountsResponseModel?.data != null
-              ? Container(
-                  height: _mainHeight,
-                  width: _mainWidth,
-                  padding: EdgeInsets.only(
-                    top: 20,
+          body: Container(
+            height: _mainHeight,
+            width: _mainWidth,
+            padding: EdgeInsets.only(
+              top: 0,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  value.bookingAmountsResponseModel == null
+                      ? const Text('')
+                      : value.bookingAmountsResponseModel != null &&
+                              value.bookingAmountsResponseModel?.msg
+                                      ?.toString()
+                                      .toLowerCase() ==
+                                  'success'
+                          ? const Text('')
+                          : Container(
+                              height: 35,
+                              width: _mainWidth,
+                              padding: EdgeInsets.only(left: 15,right: 5),
+                              color: CustomTheme.appThemeContrast,
+                              alignment: Alignment.center,
+                              child: Text(
+                                  '${value.bookingAmountsResponseModel?.msg} Please Select Other Dates.',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 14),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis),
+                            ),
+                  SizedBox(height: 15,),
+                  Text(
+                    "You Are almost Done !",
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontFamily: fontFamily,
+                        fontWeight: FontWeight.w500),
                   ),
-                  child: SingleChildScrollView(
+                  Container(
+                    margin: EdgeInsets.only(
+                      top: 10,
+                      bottom: 10,
+                    ),
                     child: Column(
                       children: [
-                        Text(
-                          "You Are almost Done !",
-                          style: TextStyle(
-                              fontSize: 24,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: Text(
+                            widget.propertyDetailsUtilModel.title ?? '',
+                            style: const TextStyle(
                               fontFamily: fontFamily,
-                              fontWeight: FontWeight.w500),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(
-                            top: 10,
-                            bottom: 10,
-                          ),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 10, right: 10),
-                                child: Text(
-                                  widget.propertyDetailsUtilModel.title ?? '',
-                                  style: const TextStyle(
-                                    fontFamily: fontFamily,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
+                          // color: Colors.amber,
+                          // height: _mainHeight*0.55,
+                          margin: EdgeInsets.only(top: 10, bottom: 10),
+                          child: Stepper(
+                            controlsBuilder: (context, details) {
+                              if (details.stepIndex == 5) {
+                                return Container();
+                              } else {
+                                return Container(
+                                  height: 40,
+                                  //  color: Colors.green,
+                                  margin: EdgeInsets.only(top: 5, bottom: 0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _currentStep += 1;
+                                          });
+                                        },
+                                        child: Text('Continue'),
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all<
+                                                        Color>(
+                                                    CustomTheme.appTheme),
+                                            shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                            )),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          if (_currentStep <= 0) return;
+                                          setState(() {
+                                            _currentStep -= 1;
+                                          });
+                                        },
+                                        child: Text('Cancel'),
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all<
+                                                        Color>(
+                                                    CustomTheme.appTheme),
+                                            shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                            )),
+                                      ),
+                                    ],
                                   ),
-                                  textAlign: TextAlign.center,
+                                );
+                              }
+                            },
+                            currentStep: _currentStep,
+                            onStepContinue: () {
+                              log('Continue Called');
+                              if (_currentStep >= 5) return;
+                              setState(() {
+                                _currentStep += 1;
+                              });
+                            },
+                            onStepCancel: () {
+                              log('Cancel Called');
+                              if (_currentStep <= 0) return;
+                              setState(() {
+                                _currentStep -= 1;
+                              });
+                            },
+                            onStepTapped: (pos) {
+                              log('Tapped Called');
+                              setState(() {
+                                _currentStep = pos;
+                              });
+                            },
+                            physics: const NeverScrollableScrollPhysics(),
+                            steps: <Step>[
+                              Step(
+                                isActive: true,
+                                title: Text(
+                                  'Select Date',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: fontFamily,
+                                      color: Colors.grey),
+                                ),
+                                state: StepState.complete,
+                                content: _getSelectDateView(
+                                    context: context,
+                                    model: value.bookingAmountsResponseModel ??
+                                        BookingAmountsResponseModel()),
+                              ),
+                              Step(
+                                isActive: true,
+                                state: StepState.complete,
+                                title: Text(
+                                  'Guest Name* (As per Aadhar)',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: fontFamily,
+                                      color: Colors.grey),
+                                ),
+                                content: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)),
+                                  ),
+                                  child: Neumorphic(
+                                    style: NeumorphicStyle(
+                                      depth: -3,
+                                      color: Colors.white,
+                                    ),
+                                    child: TextFormField(
+                                      /*validator: (value) {
+                                    if (value != null && value.length < 6) {
+                                      return "Enter proper email";
+                                    }
+                                    return null;
+                                  },*/
+                                      style: TextStyle(fontFamily: fontFamily),
+                                      controller: _nameController,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        prefixIcon: Icon(
+                                            Icons.drive_file_rename_outline),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
-                              Container(
-                                // color: Colors.amber,
-                                // height: _mainHeight*0.55,
-                                margin: EdgeInsets.only(top: 10, bottom: 10),
-                                child: Stepper(
-                                  controlsBuilder: (context, details) {
-                                    if (details.stepIndex == 5) {
-                                      return Container();
-                                    } else {
-                                      return Container(
-                                        height: 40,
-                                        //  color: Colors.green,
-                                        margin:
-                                            EdgeInsets.only(top: 5, bottom: 0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  _currentStep += 1;
-                                                });
-                                              },
-                                              child: Text('Continue'),
-                                              style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all<
-                                                              Color>(
-                                                          CustomTheme.appTheme),
-                                                  shape:
-                                                      MaterialStateProperty.all<
-                                                          RoundedRectangleBorder>(
-                                                    RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10)),
-                                                  )),
-                                            ),
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                if (_currentStep <= 0) return;
-                                                setState(() {
-                                                  _currentStep -= 1;
-                                                });
-                                              },
-                                              child: Text('Cancel'),
-                                              style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all<
-                                                              Color>(
-                                                          CustomTheme.appTheme),
-                                                  shape:
-                                                      MaterialStateProperty.all<
-                                                          RoundedRectangleBorder>(
-                                                    RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10)),
-                                                  )),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  currentStep: _currentStep,
-                                  onStepContinue: () {
-                                    log('Continue Called');
-                                    if (_currentStep >= 5) return;
-                                    setState(() {
-                                      _currentStep += 1;
-                                    });
-                                  },
-                                  onStepCancel: () {
-                                    log('Cancel Called');
-                                    if (_currentStep <= 0) return;
-                                    setState(() {
-                                      _currentStep -= 1;
-                                    });
-                                  },
-                                  onStepTapped: (pos) {
-                                    log('Tapped Called');
-                                    setState(() {
-                                      _currentStep = pos;
-                                    });
-                                  },
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  steps: <Step>[
-                                    Step(
-                                      isActive: true,
-                                      title: Text(
-                                        'Select Date',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: fontFamily,
-                                            color: Colors.grey),
-                                      ),
-                                      state: StepState.complete,
-                                      content: _getSelectDateView(
-                                          context: context,
-                                          model: value
-                                                  .bookingAmountsResponseModel ??
-                                              BookingAmountsResponseModel()),
+                              Step(
+                                isActive: true,
+                                state: StepState.complete,
+                                title: Text(
+                                  'Guest Mobile*',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: fontFamily,
+                                      color: Colors.grey),
+                                ),
+                                content: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)),
+                                  ),
+                                  child: Neumorphic(
+                                    style: NeumorphicStyle(
+                                      depth: -3,
+                                      color: Colors.white,
                                     ),
-                                    Step(
-                                      isActive: true,
-                                      state: StepState.complete,
-                                      title: Text(
-                                        'Guest Name* (As per Aadhar)',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: fontFamily,
-                                            color: Colors.grey),
-                                      ),
-                                      content: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(20)),
-                                        ),
-                                        child: Neumorphic(
-                                          style: NeumorphicStyle(
-                                            depth: -3,
-                                            color: Colors.white,
-                                          ),
-                                          child: TextFormField(
-                                            /*validator: (value) {
-                                    if (value != null && value.length < 6) {
-                                      return "Enter proper email";
-                                    }
-                                    return null;
-                                  },*/
-                                            style: TextStyle(
-                                                fontFamily: fontFamily),
-                                            controller: _nameController,
-                                            decoration: InputDecoration(
-                                              border: InputBorder.none,
-                                              prefixIcon: Icon(Icons
-                                                  .drive_file_rename_outline),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Step(
-                                      isActive: true,
-                                      state: StepState.complete,
-                                      title: Text(
-                                        'Guest Mobile*',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: fontFamily,
-                                            color: Colors.grey),
-                                      ),
-                                      content: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(20)),
-                                        ),
-                                        child: Neumorphic(
-                                          style: NeumorphicStyle(
-                                            depth: -3,
-                                            color: Colors.white,
-                                          ),
-                                          child: TextFormField(
-                                            /*validator: (value) {
+                                    child: TextFormField(
+                                      /*validator: (value) {
                                     if (value != null && value.length < 6) {
                                       return "Enter proper email";
                                     }
                                     return null;
                                   },*/
 
-                                            keyboardType: TextInputType.phone,
-                                            controller: _phoneNumberController,
-                                            style: TextStyle(
-                                                fontFamily: fontFamily),
-                                            decoration: InputDecoration(
-                                              border: InputBorder.none,
+                                      keyboardType: TextInputType.phone,
+                                      controller: _phoneNumberController,
+                                      style: TextStyle(fontFamily: fontFamily),
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
 
-                                              //hintText: 'Email',
-                                              prefixIcon:
-                                                  Icon(Icons.mobile_friendly),
-                                            ),
-                                          ),
-                                        ),
+                                        //hintText: 'Email',
+                                        prefixIcon: Icon(Icons.mobile_friendly),
                                       ),
                                     ),
-                                    Step(
-                                      isActive: true,
-                                      state: StepState.complete,
-                                      title: Text(
-                                        'Guest Email*',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: fontFamily,
-                                            color: Colors.grey),
-                                      ),
-                                      content: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(20)),
-                                        ),
-                                        child: Neumorphic(
-                                          style: NeumorphicStyle(
-                                            depth: -3,
-                                            color: Colors.white,
-                                          ),
-                                          child: TextFormField(
-                                            /*validator: (value) {
+                                  ),
+                                ),
+                              ),
+                              Step(
+                                isActive: true,
+                                state: StepState.complete,
+                                title: Text(
+                                  'Guest Email*',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: fontFamily,
+                                      color: Colors.grey),
+                                ),
+                                content: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)),
+                                  ),
+                                  child: Neumorphic(
+                                    style: NeumorphicStyle(
+                                      depth: -3,
+                                      color: Colors.white,
+                                    ),
+                                    child: TextFormField(
+                                      /*validator: (value) {
                                     if (value != null && value.length < 6) {
                                       return "Enter proper email";
                                     }
                                     return null;
                                   },*/
-                                            enabled: false,
-                                            keyboardType:
-                                                TextInputType.emailAddress,
-                                            controller: _emailController,
-                                            style: TextStyle(
-                                                fontFamily: fontFamily),
-                                            decoration: InputDecoration(
-                                              border: InputBorder.none,
-                                              //hintText: 'Email',
-                                              prefixIcon:
-                                                  Icon(Icons.email_outlined),
-                                            ),
+                                      enabled: false,
+                                      keyboardType: TextInputType.emailAddress,
+                                      controller: _emailController,
+                                      style: TextStyle(fontFamily: fontFamily),
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        //hintText: 'Email',
+                                        prefixIcon: Icon(Icons.email_outlined),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Step(
+                                isActive: true,
+                                title: Text(
+                                  '${widget.propertyDetailsUtilModel.maxGuest} Guests',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: fontFamily,
+                                      color: Colors.grey),
+                                ),
+                                state: StepState.complete,
+                                content: Container(
+                                  margin: EdgeInsets.only(left: 8),
+                                ),
+                              ),
+                              Step(
+                                isActive: true,
+                                title: const Text(
+                                  'Coupan Code',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: fontFamily,
+                                      color: Colors.grey),
+                                ),
+                                state: StepState.complete,
+                                content: Column(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20)),
+                                      ),
+                                      child: Neumorphic(
+                                        style: NeumorphicStyle(
+                                          depth: -3,
+                                          color: Colors.white,
+                                        ),
+                                        child: TextFormField(
+                                          controller: _coupanController,
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            hintText: 'Enter coupan code here',
+                                            prefixIcon: Icon(
+                                                Icons.monetization_on_outlined),
                                           ),
                                         ),
                                       ),
                                     ),
-                                    Step(
-                                      isActive: true,
-                                      title: Text(
-                                        '${widget.propertyDetailsUtilModel.maxGuest} Guests',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: fontFamily,
-                                            color: Colors.grey),
-                                      ),
-                                      state: StepState.complete,
-                                      content: Container(
-                                        margin: EdgeInsets.only(left: 8),
-                                      ),
-                                    ),
-                                    Step(
-                                      isActive: true,
-                                      title: const Text(
-                                        'Coupan Code',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: fontFamily,
-                                            color: Colors.grey),
-                                      ),
-                                      state: StepState.complete,
-                                      content: Column(
-                                        children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(20)),
-                                            ),
-                                            child: Neumorphic(
-                                              style: NeumorphicStyle(
-                                                depth: -3,
-                                                color: Colors.white,
-                                              ),
-                                              child: TextFormField(
-                                                controller: _coupanController,
-                                                decoration: InputDecoration(
-                                                  border: InputBorder.none,
-                                                  hintText:
-                                                      'Enter coupan code here',
-                                                  prefixIcon: Icon(Icons
-                                                      .monetization_on_outlined),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () async {
-                                              if (_coupanController
-                                                      .text.isEmpty ||
-                                                  _coupanController
-                                                          .text.length <
-                                                      5) {
-                                                RMSWidgets.showSnackbar(
-                                                    context: context,
-                                                    message:
-                                                        'Please Enter Valid Coupon Code',
-                                                    color:
-                                                        CustomTheme.errorColor);
-                                                return;
-                                              }
-                                              RMSWidgets.showLoaderDialog(
-                                                  context: context,
-                                                  message: 'Loading...');
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        if (_coupanController.text.isEmpty ||
+                                            _coupanController.text.length < 5) {
+                                          RMSWidgets.showSnackbar(
+                                              context: context,
+                                              message:
+                                                  'Please Enter Valid Coupon Code',
+                                              color: CustomTheme.errorColor);
+                                          return;
+                                        }
+                                        RMSWidgets.showLoaderDialog(
+                                            context: context,
+                                            message: 'Loading...');
 
-                                              await _viewModel.getBookingDetails(
-                                                  model: BookingAmountRequestModel(
-                                                propId: (widget
-                                                        .propertyDetailsUtilModel
-                                                        .propId)
-                                                    .toString(),
-                                                token: (widget
-                                                        .propertyDetailsUtilModel
-                                                        .token)
-                                                    .toString(),
-                                                numOfGuests: (widget
-                                                        .propertyDetailsUtilModel
-                                                        .maxGuest)
-                                                    .toString(),
-                                                couponCode:
-                                                    _coupanController.text,
-                                                fromDate: checkInDate,
-                                                toDate: checkOutDate,
-                                              ));
-                                              FocusScope.of(context)
-                                                  .requestFocus(FocusNode());
-                                              Navigator.of(context).pop();
+                                        await _viewModel.getBookingDetails(
+                                            model: BookingAmountRequestModel(
+                                          propId: (widget
+                                                  .propertyDetailsUtilModel
+                                                  .propId)
+                                              .toString(),
+                                          token: (widget
+                                                  .propertyDetailsUtilModel
+                                                  .token)
+                                              .toString(),
+                                          numOfGuests: (widget
+                                                  .propertyDetailsUtilModel
+                                                  .maxGuest)
+                                              .toString(),
+                                          couponCode: _coupanController.text,
+                                          fromDate: checkInDate,
+                                          toDate: checkOutDate,
+                                        ));
+                                        FocusScope.of(context)
+                                            .requestFocus(FocusNode());
+                                        Navigator.of(context).pop();
 
-                                              RMSWidgets.showSnackbar(
-                                                  context: context,
-                                                  message:
-                                                      '${value.bookingAmountsResponseModel?.data?.userMsg}',
-                                                  color: Colors.green);
-                                            },
-                                            child: Text('Apply'),
-                                            style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all<
-                                                          Color>(
-                                                      CustomTheme.appTheme),
-                                              shape: MaterialStateProperty.all<
-                                                  RoundedRectangleBorder>(
-                                                RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                              ),
-                                            ),
+                                        RMSWidgets.showSnackbar(
+                                            context: context,
+                                            message:
+                                                '${value.bookingAmountsResponseModel?.data?.userMsg}',
+                                            color: Colors.green);
+                                      },
+                                      child: Text('Apply'),
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                                CustomTheme.appTheme),
+                                        shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
                                           ),
-                                        ],
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -510,17 +510,18 @@ class _BookingPageState extends State<BookingPage> {
                       ],
                     ),
                   ),
-                )
-              : Center(
-                  child: CircularProgressIndicator(),
-                ),
+                ],
+              ),
+            ),
+          ),
           bottomNavigationBar: Container(
             height: 100,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: value.bookingAmountsResponseModel != null
+                  onTap: value.bookingAmountsResponseModel != null &&
+                          value.bookingAmountsResponseModel?.data != null
                       ? () async {
                           _showBreakdownBottomSheet(
                               context: context,
@@ -606,7 +607,9 @@ class _BookingPageState extends State<BookingPage> {
                                     couponCode: '',
                                     fromDate: checkInDate,
                                     toDate: checkOutDate,
-                                    cartId:value.bookingAmountsResponseModel?.data?.cartId.toString(),
+                                    cartId: value.bookingAmountsResponseModel
+                                        ?.data?.cartId
+                                        .toString(),
                                     email: _emailController.text,
                                     name: _nameController.text,
                                     phone: _phoneNumberController.text,
@@ -672,7 +675,10 @@ class _BookingPageState extends State<BookingPage> {
                           ),
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
-                                  value.bookingAmountsResponseModel != null
+                                  value.bookingAmountsResponseModel != null &&
+                                          value.bookingAmountsResponseModel
+                                                  ?.data !=
+                                              null
                                       ? CustomTheme.appTheme
                                       : Colors.grey),
                               shape: MaterialStateProperty.all<
@@ -758,6 +764,11 @@ class _BookingPageState extends State<BookingPage> {
           checkOutDate = DateTimeService.ddMMYYYYformatDate(
               dateRange.endDate ?? DateTime.now().add(const Duration(days: 1)));
 
+          await preferenceUtil.setString(
+              rms_checkInDate, checkInDate);
+          await preferenceUtil.setString(
+              rms_checkOutDate, checkOutDate);
+
           await _viewModel.getBookingDetails(
               model: BookingAmountRequestModel(
             propId: (widget.propertyDetailsUtilModel.propId).toString(),
@@ -770,7 +781,7 @@ class _BookingPageState extends State<BookingPage> {
           Navigator.of(context).pop();
         }
       },
-      child: Container(
+      child: model.msg == null?RMSWidgets.showShimmer(height: _mainHeight * 0.26, width: _mainWidth):Container(
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: Colors.blueGrey.shade100),
@@ -778,7 +789,7 @@ class _BookingPageState extends State<BookingPage> {
         ),
         padding: EdgeInsets.only(left: _mainWidth * 0.02, top: 10, bottom: 10),
         height: _mainHeight * 0.26,
-        width: MediaQuery.of(context).size.width,
+        width: _mainWidth,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
