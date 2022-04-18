@@ -135,7 +135,7 @@ class _BookingPageState extends State<BookingPage> {
                               height: 35,
                               width: _mainWidth,
                               padding: EdgeInsets.only(left: 15,right: 5),
-                              color: CustomTheme.appThemeContrast,
+                              color: CustomTheme.errorColor,
                               alignment: Alignment.center,
                               child: Text(
                                   '${value.bookingAmountsResponseModel?.msg} Please Select Other Dates.',
