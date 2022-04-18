@@ -214,7 +214,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                               right: _mainWidth * 0.02),
                                           icon: Icon(
                                             Icons.call,
-                                            color: CustomTheme.myFavColor,
+                                            color: CustomTheme.appTheme,
                                             size: _mainWidth * 0.06,
                                           ),
                                           onPressed: () {

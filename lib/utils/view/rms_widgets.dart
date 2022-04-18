@@ -2,6 +2,7 @@ import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shimmer/shimmer.dart';
 
 class RMSWidgets {
   static void showLoaderDialog(
@@ -120,5 +121,20 @@ class RMSWidgets {
         backgroundColor: color,
       ),
     );
+  }
+
+  static Widget showShimmer({required double height,required double width}){
+
+    return Shimmer.fromColors(
+        child: Container(
+          height: height ,
+          width: width,
+          decoration: BoxDecoration(
+            color: Colors.grey,
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        baseColor: Colors.grey[200] as Color,
+        highlightColor: Colors.grey[350] as Color);
   }
 }

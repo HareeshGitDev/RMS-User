@@ -627,7 +627,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                       EdgeInsets.only(left: _mainWidth * 0.08),
                                   icon: Icon(
                                     Icons.call,
-                                    color: CustomTheme.myFavColor,
+                                    color: CustomTheme.appTheme,
                                     size: _mainWidth * 0.05,
                                   ),
                                   onPressed: () {
@@ -651,7 +651,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   icon: Image(
                                     image: NetworkImage(
                                         'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/whatsapplogo.png?alt=media&token=41df11ff-b9e7-4f5b-a4fc-30b47cfe1435'),
-                                  ),
+                                   ),
 
                                   /*Icon(Icons.email_outlined,
                                       color: CustomTheme.appTheme,
@@ -724,7 +724,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
         }
         },
                                     child: Icon(Icons.calendar_today,
-                                        color: myFavColor,
+                                        color: CustomTheme.appTheme,
                                         size: _mainWidth * 0.06),
                                   ),
                                 ),
