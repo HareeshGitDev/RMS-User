@@ -9,3 +9,4 @@ const String rms_user_longitude='userLongitude';
 const String rms_user_latitude='userLatitude';
 const String rms_checkInDate='checkInDate';
 const String rms_checkOutDate='checkOutDate';
+const String rms_language='language';

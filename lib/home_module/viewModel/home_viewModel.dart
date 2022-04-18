@@ -6,12 +6,14 @@ import 'package:RentMyStay_user/images.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../../utils/firestore_model.dart';
 import '../model/City_suggestion_model.dart';
 import '../service/home_api_service.dart';
 
 class HomeViewModel extends ChangeNotifier {
   final HomeApiService _homeApiService = HomeApiService();
   ReferAndEarnModel referAndEarnModel = ReferAndEarnModel();
+  List<FirestoreModel> languageData = [];
 
   List<CitySuggestionModel> getCitySuggestionList(
       {required BuildContext context}) {
@@ -19,7 +21,7 @@ class HomeViewModel extends ChangeNotifier {
       CitySuggestionModel(
           cityName: 'Current Location',
           imageUrl:
-          "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/newbangaloreimage.png?alt=media&token=b665228b-a72c-46f1-8683-0e0a0ce88d11",
+              "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/newbangaloreimage.png?alt=media&token=b665228b-a72c-46f1-8683-0e0a0ce88d11",
           value: "Bengaluru-Karnataka-India"),
       CitySuggestionModel(
           cityName: 'Bangalore',
@@ -95,14 +97,23 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   List<String> getAdsImageList() => [
-      'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/WhatsApp%20Image%202022-02-14%20at%2012.01.05%20PM.jpeg?alt=media&token=153f6374-979f-46ad-aaf3-06f9ff1d0b20',
-      'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/bannerhome.png?alt=media&token=b66dab51-8676-470a-b876-025c613c303a',
-      'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/WhatsApp%20Image%202022-02-14%20at%2012.01.04%20PM.jpeg?alt=media&token=6d78225a-59f7-4a7c-8bf3-e5d3f3c66bca',
-    ];
+        'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/WhatsApp%20Image%202022-02-14%20at%2012.01.05%20PM.jpeg?alt=media&token=153f6374-979f-46ad-aaf3-06f9ff1d0b20',
+        'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/bannerhome.png?alt=media&token=b66dab51-8676-470a-b876-025c613c303a',
+        'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/WhatsApp%20Image%202022-02-14%20at%2012.01.04%20PM.jpeg?alt=media&token=6d78225a-59f7-4a7c-8bf3-e5d3f3c66bca',
+      ];
 
   Future<void> getInviteEarnDetails() async {
-    final ReferAndEarnModel response = await _homeApiService.fetchInviteEarnDetails();
+    final ReferAndEarnModel response =
+        await _homeApiService.fetchInviteEarnDetails();
     referAndEarnModel = response;
+    notifyListeners();
+  }
+
+  Future<void> getLanguagesData(
+      {required String language, required String pageName}) async {
+    final response = await _homeApiService.fetchLanguagesData(
+        language: language, pageName: pageName);
+    languageData = response;
     notifyListeners();
   }
 }
