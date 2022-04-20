@@ -29,12 +29,13 @@ class HomeApiService {
     });
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() == 'success') {
-      return ReferAndEarnModel.fromJson(data);
-    } else {
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
       return ReferAndEarnModel(
         msg: 'failure',
       );
+    } else {
+      return ReferAndEarnModel.fromJson(data);
+
     }
   }
 

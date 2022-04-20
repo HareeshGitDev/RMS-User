@@ -13,13 +13,6 @@ import '../../utils/service/rms_user_api_service.dart';
 
 class PropertyApiService {
   final RMSUserApiService _apiService = RMSUserApiService();
-  String? registeredToken;
-
-  Future<String?> _getRegisteredToken() async {
-    SharedPreferenceUtil _shared = SharedPreferenceUtil();
-    registeredToken = await _shared.getString(rms_registeredUserToken);
-    return registeredToken;
-  }
 
   Future<PropertyListModel> fetchPropertyDetailsList({
     required String address,
@@ -55,10 +48,10 @@ class PropertyApiService {
         queryParams: queryParams);
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() == 'success') {
-      return PropertyListModel.fromJson(data);
-    } else {
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
       return PropertyListModel(msg: 'failure');
+    } else {
+      return PropertyListModel.fromJson(data);
     }
   }
 
@@ -69,7 +62,7 @@ class PropertyApiService {
     });
 
     final data = response as Map<String, dynamic>;
-    return data['msg'].toString().toLowerCase() == 'success' ? 200 : 404;
+    return data['msg'].toString().toLowerCase().contains('failure') ? 404 : 200;
   }
 
   Future<WishListModel> fetchWishList() async {
@@ -79,10 +72,10 @@ class PropertyApiService {
 
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() == 'success') {
-      return WishListModel.fromJson(data);
-    } else {
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
       return WishListModel(msg: 'failure', data: []);
+    } else {
+      return WishListModel.fromJson(data);
     }
   }
 
@@ -95,10 +88,10 @@ class PropertyApiService {
         endPoint: url, queryParams: requestModel.toJson());
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() == 'success') {
-      return PropertyListModel.fromJson(data);
-    } else {
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
       return PropertyListModel(msg: 'failure');
+    } else {
+      return PropertyListModel.fromJson(data);
     }
   }
 }

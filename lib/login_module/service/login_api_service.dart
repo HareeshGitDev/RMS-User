@@ -26,11 +26,10 @@ class LoginApiService {
         fromLogin: true);
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() ==
-        'you have successfully logged in') {
-      return LoginResponseModel.fromJson(data);
-    } else {
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
       return LoginResponseModel(msg: 'failure');
+    } else {
+      return LoginResponseModel.fromJson(data);
     }
   }
 
@@ -52,12 +51,12 @@ class LoginApiService {
         fromLogin: true);
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() != 'failure') {
-      return SignUpResponseModel.fromJson(data);
-    } else {
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
       return SignUpResponseModel(
         msg: 'failure',
       );
+    } else {
+      return SignUpResponseModel.fromJson(data);
     }
   }
 
@@ -71,7 +70,7 @@ class LoginApiService {
         fromLogin: true);
     final data = response as Map<String, dynamic>;
 
-    return data['msg'].toString().toLowerCase() != 'failure' ? 200 : 400;
+    return data['msg'].toString().toLowerCase().contains('failure') ? 404 : 200;
   }
 
   Future<LoginResponseModel> registerAfterGmail(
@@ -81,10 +80,10 @@ class LoginApiService {
         endPoint: url, bodyParams: model.toJson(), fromLogin: true);
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() != 'failure') {
-      return LoginResponseModel.fromJson(data);
-    } else {
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
       return LoginResponseModel(msg: 'failure');
+    } else {
+      return LoginResponseModel.fromJson(data);
     }
   }
 
@@ -95,7 +94,7 @@ class LoginApiService {
         endPoint: url, bodyParams: model.toJson());
     final data = response as Map<String, dynamic>;
 
-    return data['msg'].toString().toLowerCase() != 'failure' ? 200 : 404;
+    return data['msg'].toString().toLowerCase().contains('failure') ? 404 : 200;
   }
 
   Future<OtpRegistrationResponseModel> verifyOTP(
@@ -107,10 +106,10 @@ class LoginApiService {
         fromLogin: true);
 
     final data = response as Map<String, dynamic>;
-    if (data['msg'].toString().toLowerCase() != 'failure') {
-      return OtpRegistrationResponseModel.fromJson(data);
-    } else {
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
       return OtpRegistrationResponseModel(msg: 'failure');
+    } else {
+      return OtpRegistrationResponseModel.fromJson(data);
     }
   }
 
@@ -129,10 +128,10 @@ class LoginApiService {
     });
 
     final data = response as Map<String, dynamic>;
-    return data['msg'].toString().toLowerCase() != 'failure'
-        ? SignUpResponseModel.fromJson(data)
-        : SignUpResponseModel(
+    return data['msg'].toString().toLowerCase().contains('failure')
+        ? SignUpResponseModel(
             msg: 'failure',
-          );
+          )
+        : SignUpResponseModel.fromJson(data);
   }
 }

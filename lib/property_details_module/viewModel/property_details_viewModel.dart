@@ -88,16 +88,6 @@ class PropertyDetailsViewModel extends ChangeNotifier {
     return await _detailsApiService.fetchBookingCredentials(model: model);
   }
 
-  Future<dynamic> submitPaymentResponse(
-      {required String paymentId,
-      required String paymentSignature,
-      required String redirectApi}) async {
-    return await _detailsApiService.submitPaymentResponse(
-        paymentId: paymentId,
-        paymentSignature: paymentSignature,
-        redirectApi: redirectApi);
-  }
-
   void getAmenitiesList(Amenities? amenitiesNew) {
     if (amenitiesNew?.wifi == '1') {
       amenitiesList.add(AmenitiesModel(

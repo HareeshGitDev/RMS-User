@@ -248,6 +248,6 @@ class RMSUserApiService {
     RMSWidgets.getToast(
         message: error['msg'] ?? 'failure', color: Color(0xffFF0000));
 
-    return {'msg': error['msg'] ?? 'failure'};
+    return {'msg': 'failure '+ error['msg']};
   }
 }

@@ -55,7 +55,6 @@ class _SearchPageState extends State<SearchPage> {
         language: await preferenceUtil.getString(rms_language) ?? 'english',
         pageName: 'SearchPage');
   }
-
   @override
   void initState() {
     super.initState();

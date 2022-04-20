@@ -27,13 +27,12 @@ class MyStayApiService {
     final response = await _apiService.getApiCall(endPoint: url);
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() == 'success' &&
-        data['data'] != []) {
-      return MyStayListModel.fromJson(data);
-    } else {
-      return MyStayListModel(
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
+      return  MyStayListModel(
         msg: 'failure',
       );
+    } else {
+      return MyStayListModel.fromJson(data);
     }
   }
 
@@ -48,12 +47,12 @@ class MyStayApiService {
     );
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() == 'success') {
-      return MyStayDetailsModel.fromJson(data);
-    } else {
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
       return MyStayDetailsModel(
         msg: 'failure',
       );
+    } else {
+      return MyStayDetailsModel.fromJson(data);
     }
   }
 
@@ -64,12 +63,12 @@ class MyStayApiService {
         endPoint: url, queryParams: {'booking_id': bookingId});
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() == 'success') {
-      return RefundSplitUpModel.fromJson(data);
-    } else {
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
       return RefundSplitUpModel(
         msg: 'failure',
       );
+    } else {
+      return RefundSplitUpModel.fromJson(data);
     }
   }
 
@@ -81,12 +80,12 @@ class MyStayApiService {
         queryParams: {'booking_id': base64Encode(utf8.encode(bookingId))});
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() == 'success') {
-      return InvoiceDetailsModel.fromJson(data);
-    } else {
-      return InvoiceDetailsModel(
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
+      return  InvoiceDetailsModel(
         msg: 'failure',
       );
+    } else {
+      return InvoiceDetailsModel.fromJson(data);
     }
   }
 
@@ -110,12 +109,7 @@ class MyStayApiService {
     });
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() ==
-        'bank details updated successfully.') {
-      return 200;
-    } else {
-      return 404;
-    }
+    return data['msg'].toString().toLowerCase().contains('failure') ? 404:200;
   }
 
   Future<int> checkInAndCheckOut(
@@ -127,11 +121,7 @@ class MyStayApiService {
         bodyParams: {'booking_id': bookingId});
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() == 'success') {
-      return 200;
-    } else {
-      return 404;
-    }
+    return data['msg'].toString().toLowerCase().contains('failure') ? 404:200;
   }
 
   Future<TicketResponseModel> fetchTicketList() async {
@@ -139,12 +129,12 @@ class MyStayApiService {
     final response = await _apiService.getApiCall(endPoint: url);
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() != 'failure') {
-      return TicketResponseModel.fromJson(data);
-    } else {
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
       return TicketResponseModel(
         msg: 'failure',
       );
+    } else {
+      return TicketResponseModel.fromJson(data);
     }
   }
 
@@ -156,7 +146,7 @@ class MyStayApiService {
 
     final data = response as Map<String, dynamic>;
 
-    return data['msg'].toString().toLowerCase() == 'success' ? 200 : 404;
+    return data['msg'].toString().toLowerCase().contains('failure') ? 404 : 200;
   }
 
   Future<int> generateTicket(
@@ -188,7 +178,7 @@ class MyStayApiService {
 
     final data = response as Map<String, dynamic>;
 
-    return data['msg'].toString().toLowerCase() == 'success' ? 200 : 404;
+    return data['msg'].toString().toLowerCase().contains('failure') ? 404 : 200;
   }
 
   Future<String> downloadInvoice(
@@ -202,10 +192,9 @@ class MyStayApiService {
 
     final data = response as Map<String, dynamic>;
 
-    return data['msg'].toString().toLowerCase() == 'success' &&
-            data['data'].toString().isNotEmpty
-        ? data['data']
-        : '';
+    return data['msg'].toString().toLowerCase().contains('failure')
+        ? ''
+        : data['data'];
   }
 
   Future<InvoicePaymentModel> fetchInvoicePaymentCredentials(
@@ -220,10 +209,10 @@ class MyStayApiService {
     });
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() == 'success') {
-      return InvoicePaymentModel.fromJson(data);
-    } else {
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
       return InvoicePaymentModel(msg: 'failure');
+    } else {
+      return InvoicePaymentModel.fromJson(data);
     }
   }
 
@@ -240,6 +229,6 @@ class MyStayApiService {
     });
     final data = response as Map<String, dynamic>;
 
-    return data['msg'].toString().toLowerCase() == 'success' ? 200 : 404;
+    return data['msg'].toString().toLowerCase().contains('failure') ? 404 : 200;
   }
 }
