@@ -11,8 +11,10 @@ import 'package:provider/provider.dart';
 
 import '../../Web_View_Container.dart';
 import '../../home_module/viewModel/home_viewModel.dart';
+import '../../language_module/model/language_model.dart';
 import '../../login_module/service/google_auth_service.dart';
 import '../../theme/custom_theme.dart';
+import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/bottom_navigation_provider.dart';
 import '../../utils/service/shared_prefrences_util.dart';
 import '../../utils/view/rms_widgets.dart';
@@ -33,13 +35,24 @@ class _ProfilePageState extends State<ProfilePage> {
 
   String? userid = "";
   String? token = "";
+  late SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
 
   @override
   void initState() {
     super.initState();
     _profileViewModel = Provider.of<ProfileViewModel>(context, listen: false);
     _profileViewModel.getProfileDetails();
+    getLanguageData();
   }
+
+  getLanguageData() async {
+    await _profileViewModel.getLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'Profile');
+  }
+
+  bool nullCheck({required List<LanguageModel> list}) =>
+      list.isNotEmpty ? true : false;
 
   @override
   Widget build(BuildContext context) {
@@ -57,188 +70,191 @@ class _ProfilePageState extends State<ProfilePage> {
         body: value.profileModel.data != null &&
                 value.profileModel.data?.result != null &&
                 value.profileModel.data?.profileCompletion != null
-            ? Container(
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: Container(
-                            height: 100,
-                            width: 100,
-                            decoration: BoxDecoration(
-                                //borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: NetworkImage(
-                                        '${value.profileModel.data?.result![0].picture}'))
-                                // color: Colors.orange[100],
-                                ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    _profileName(value.profileModel.data?.result != null &&
-                            value.profileModel.data?.result![0] != null &&
-                            value.profileModel.data?.result![0].firstname !=
-                                null
-                        ? '${value.profileModel.data?.result![0].firstname}'
-                        : ""),
-                    SizedBox(
-                      height: 14,
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width *
-                          0.80, //80% of width,
-                      child: Text(
-                        "Personal Details",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 6,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Card(
-                        elevation: 4,
-                        child: Column(
-                          children: [
-                            //row for each deatails
-                            ListTile(
-                              leading: Icon(
-                                Icons.email,
-                                color: CustomTheme.appTheme,
-                              ),
-                              title: Text(
-                                value.profileModel.data?.result != null &&
-                                        value.profileModel.data?.result![0] !=
-                                            null &&
-                                        value.profileModel.data?.result![0]
-                                                .email !=
-                                            null
-                                    ? '${value.profileModel.data?.result![0].email}'
-                                    : "",
-                                style: TextStyle(fontSize: 14),
-                              ),
-                            ),
-                            Divider(
-                              height: 0.6,
-                              color: Colors.black87,
-                            ),
-                            ListTile(
-                              leading: Icon(
-                                Icons.phone,
-                                color: CustomTheme.appTheme,
-                              ),
-                              title: Text(
-                                value.profileModel.data?.result != null &&
-                                        value.profileModel.data?.result![0] !=
-                                            null &&
-                                        value.profileModel.data?.result![0]
-                                                .contactNo !=
-                                            null
-                                    ? '${value.profileModel.data?.result![0].contactNo}'
-                                    : "",
-                                style: TextStyle(fontSize: 14),
-                              ),
-                            ),
-                            Divider(
-                              height: 0.6,
-                              color: Colors.black87,
-                            ),
-                            ListTile(
-                              leading: Icon(
-                                Icons.location_on_outlined,
-                                color: CustomTheme.appTheme,
-                              ),
-                              title: Text(
-                                value.profileModel.data?.result != null &&
-                                        value.profileModel.data?.result![0] !=
-                                            null &&
-                                        value.profileModel.data?.result![0]
-                                                .permanentAddress !=
-                                            null
-                                    ? '${value.profileModel.data?.result![0].permanentAddress}'
-                                    : "",
-                                style: TextStyle(fontSize: 14),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width *
-                          0.80, //80% of width,
-                      child: Text(
-                        "DashBoard",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 6,
-                    ),
-                    _settingsCard(),
-                    Spacer(),
-                    Container(
-                      height: 45,
-                      margin: EdgeInsets.only(left: 15, right: 15, bottom: 15),
-                      child: InkWell(
-                        onTap: () async {
-                          RMSWidgets.showLoaderDialog(
-                              context: context, message: 'Logging out...');
-                          SharedPreferenceUtil shared = SharedPreferenceUtil();
-                          await GoogleAuthService.logOut();
-                          await GoogleAuthService.logoutFromFirebase();
-                          bool deletedAllValues = await shared.clearAll();
-
-                          Navigator.of(context).pop();
-                          if (deletedAllValues) {
-                            Provider.of<BottomNavigationProvider>(context,
-                                    listen: false)
-                                .shiftBottom(index: 0);
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                AppRoutes.loginPage, (route) => false);
-                          } else {
-                            log('NOT ABLE TO DELETE VALUES FROM SP');
-                          }
-                        },
+            ? Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
                         child: Container(
-                            decoration: BoxDecoration(
-                                color: CustomTheme.appTheme,
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Container(
-                              //   padding: const EdgeInsets.all(10.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.logout,
-                                    color: Colors.white,
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text(
-                                    "Logout",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 18),
-                                  )
-                                ],
+                          height: 100,
+                          width: 100,
+                          decoration: BoxDecoration(
+                              //borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: NetworkImage(
+                                      '${value.profileModel.data?.result![0].picture}'))
+                              // color: Colors.orange[100],
                               ),
-                            )),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  _profileName(value.profileModel.data?.result != null &&
+                          value.profileModel.data?.result![0] != null &&
+                          value.profileModel.data?.result![0].firstname != null
+                      ? '${value.profileModel.data?.result![0].firstname}'
+                      : ""),
+                  SizedBox(
+                    height: 14,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width *
+                        0.80, //80% of width,
+                    child: Text(
+                      nullCheck(list: value.languageData)
+                          ? '${value.languageData[1].name}'
+                          : "Personal Details",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 6,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      elevation: 4,
+                      child: Column(
+                        children: [
+                          //row for each deatails
+                          ListTile(
+                            leading: Icon(
+                              Icons.email,
+                              color: CustomTheme.appTheme,
+                            ),
+                            title: Text(
+                              value.profileModel.data?.result != null &&
+                                      value.profileModel.data?.result![0] !=
+                                          null &&
+                                      value.profileModel.data?.result![0]
+                                              .email !=
+                                          null
+                                  ? '${value.profileModel.data?.result![0].email}'
+                                  : "",
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ),
+                          Divider(
+                            height: 0.6,
+                            color: Colors.black87,
+                          ),
+                          ListTile(
+                            leading: Icon(
+                              Icons.phone,
+                              color: CustomTheme.appTheme,
+                            ),
+                            title: Text(
+                              value.profileModel.data?.result != null &&
+                                      value.profileModel.data?.result![0] !=
+                                          null &&
+                                      value.profileModel.data?.result![0]
+                                              .contactNo !=
+                                          null
+                                  ? '${value.profileModel.data?.result![0].contactNo}'
+                                  : "",
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ),
+                          Divider(
+                            height: 0.6,
+                            color: Colors.black87,
+                          ),
+                          ListTile(
+                            leading: Icon(
+                              Icons.location_on_outlined,
+                              color: CustomTheme.appTheme,
+                            ),
+                            title: Text(
+                              value.profileModel.data?.result != null &&
+                                      value.profileModel.data?.result![0] !=
+                                          null &&
+                                      value.profileModel.data?.result![0]
+                                              .permanentAddress !=
+                                          null
+                                  ? '${value.profileModel.data?.result![0].permanentAddress}'
+                                  : "",
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width *
+                        0.80, //80% of width,
+                    child: Text(
+                      nullCheck(list: value.languageData)
+                          ? '${value.languageData[2].name}'
+                          : "DashBoard",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 6,
+                  ),
+                  _settingsCard(value: value),
+                  Spacer(),
+                  Container(
+                    height: 45,
+                    margin: EdgeInsets.only(left: 15, right: 15, bottom: 15),
+                    child: InkWell(
+                      onTap: () async {
+                        RMSWidgets.showLoaderDialog(
+                            context: context, message: 'Logging out...');
+                        SharedPreferenceUtil shared = SharedPreferenceUtil();
+                        await GoogleAuthService.logOut();
+                        await GoogleAuthService.logoutFromFirebase();
+                        bool deletedAllValues = await shared.clearAll();
+
+                        Navigator.of(context).pop();
+                        if (deletedAllValues) {
+                          Provider.of<BottomNavigationProvider>(context,
+                                  listen: false)
+                              .shiftBottom(index: 0);
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              AppRoutes.loginPage, (route) => false);
+                        } else {
+                          log('NOT ABLE TO DELETE VALUES FROM SP');
+                        }
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                              color: CustomTheme.appTheme,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Container(
+                            //   padding: const EdgeInsets.all(10.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.logout,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  nullCheck(list: value.languageData)
+                                      ? '${value.languageData[6].name}'
+                                      :"Logout",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                )
+                              ],
+                            ),
+                          )),
+                    ),
+                  ),
+                ],
               )
             : Center(
                 child: CircularProgressIndicator(
@@ -263,7 +279,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _settingsCard() {
+  Widget _settingsCard({required ProfileViewModel value}) {
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Card(
@@ -283,7 +299,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 color: CustomTheme.appTheme,
               ),
               title: Text(
-                "My Stays",
+                nullCheck(list: value.languageData)
+                    ? '${value.languageData[3].name}'
+                    : "My Stays",
                 style: TextStyle(fontSize: 14),
               ),
             ),
@@ -302,7 +320,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: CustomTheme.appTheme,
                 ),
                 title: Text(
-                  "Update KYC",
+                  nullCheck(list: value.languageData)
+                      ? '${value.languageData[4].name}'
+                      : "Update KYC",
                   style: TextStyle(fontSize: 14),
                 ),
               ),
@@ -318,7 +338,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 color: CustomTheme.appTheme,
               ),
               title: Text(
-                "Upload ID-proof",
+                nullCheck(list: value.languageData)
+                    ? '${value.languageData[5].name}'
+                    : "Upload ID-proof",
                 style: TextStyle(fontSize: 14),
               ),
             ),
@@ -362,8 +384,11 @@ class _ProfilePageState extends State<ProfilePage> {
       elevation: 0,
       backgroundColor: CustomTheme.appTheme,
       // centerTitle: true,
-      title: Text('Profile',
-          style: TextStyle(
+      title: Text(
+          nullCheck(list: context.read<ProfileViewModel>().languageData)
+              ? '${context.read<ProfileViewModel>().languageData[0].name}'
+              : 'Profile',
+          style: const TextStyle(
               color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700)),
     );
   }
