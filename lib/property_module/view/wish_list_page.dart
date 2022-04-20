@@ -57,7 +57,7 @@ class _WishListPageState extends State<WishListPage> {
   }
 
   bool nullCheck({required List<FirestoreModel> list}) =>
-      list.length == 3 ? true : false;
+      list.isNotEmpty ? true : false;
 
   @override
   Widget build(BuildContext context) {

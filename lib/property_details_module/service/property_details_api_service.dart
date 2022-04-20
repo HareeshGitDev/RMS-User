@@ -16,13 +16,6 @@ import '../model/property_details_model.dart';
 
 class PropertyDetailsApiService {
   final RMSUserApiService _apiService = RMSUserApiService();
-  String? registeredToken;
-
-  Future<String?> _getRegisteredToken() async {
-    SharedPreferenceUtil _shared = SharedPreferenceUtil();
-    registeredToken = await _shared.getString(rms_registeredUserToken);
-    return registeredToken;
-  }
 
   Future<PropertyDetailsModel> fetchPropertyDetails(
       {required String propId}) async {
@@ -34,11 +27,11 @@ class PropertyDetailsApiService {
     });
     final data = response as Map<String, dynamic>;
 
-    return data['msg'].toString().toLowerCase() == 'success'
-        ? PropertyDetailsModel.fromJson(data)
-        : PropertyDetailsModel(
-            msg: 'failure',
-          );
+    return data['msg'].toString().toLowerCase().contains('failure')
+        ? PropertyDetailsModel(
+      msg: 'failure',
+    )
+        : PropertyDetailsModel.fromJson(data);
   }
 
   Future<int> addToWishList({required String propertyId}) async {
@@ -49,7 +42,7 @@ class PropertyDetailsApiService {
 
     final data = response as Map<String, dynamic>;
 
-    return data['msg'].toString().toLowerCase() == 'success' ? 200 : 404;
+    return data['msg'].toString().toLowerCase().contains('failure') ? 404 : 200;
   }
 
   Future<int> scheduleSiteVisit(
@@ -69,10 +62,9 @@ class PropertyDetailsApiService {
       'visit_type': visitType,
     });
     final data = response as Map<String, dynamic>;
-    return data['msg'].toString().toLowerCase() ==
-            "thank you for scheduling a visit with us. please check your email."
-        ? 200
-        : 404;
+    return data['msg'].toString().toLowerCase().contains('failure')
+        ? 404
+        : 200;
   }
 
   Future<BookingAmountsResponseModel> fetchBookingAmounts(
@@ -81,7 +73,6 @@ class PropertyDetailsApiService {
     final response = await _apiService
         .getApiCallWithQueryParams(endPoint: url, queryParams: {
       'id': model.propId.toString(),
-      //'id': 887.toString(),  //for testing
       'travel_from_date': model.fromDate,
       'travel_to_date': model.toDate,
       'num_guests': model.numOfGuests,
@@ -89,11 +80,11 @@ class PropertyDetailsApiService {
     });
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() == 'success') {
-      return BookingAmountsResponseModel.fromJson(data);
-    } else {
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
       return BookingAmountsResponseModel(
           msg: data['msg']  ?? 'failure');
+    } else {
+      return BookingAmountsResponseModel.fromJson(data);
     }
   }
 
@@ -114,33 +105,11 @@ class PropertyDetailsApiService {
     });
     final data = response as Map<String, dynamic>;
 
-    if (data['msg'].toString().toLowerCase() == 'success') {
-      return BookingCredentialResponseModel.fromJson(data);
-    } else {
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
       return BookingCredentialResponseModel(msg: 'failure');
+    } else {
+      return BookingCredentialResponseModel.fromJson(data);
     }
   }
 
-  Future<dynamic> submitPaymentResponse(
-      {required String paymentId,
-      required String paymentSignature,
-      required String redirectApi}) async {
-    String url = 'v2/$redirectApi';
-    final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
-      'razorpay_payment_id': paymentId,
-      'razorpay_signature': paymentSignature,
-      'app_token': await _getRegisteredToken() ?? '',
-    });
-    final data = response as Map<String, dynamic>;
-    log('PAYMENT :: ${data.toString()} -- ZZ $response');
-    //final data = response as Map<String, dynamic>;
-
-    /*if (data['status'].toString().toLowerCase() == 'success') {
-      return BookingAmountsResponseModel.fromJson(data);
-    } else {
-      return BookingAmountsResponseModel(
-          status: 'failure', message: data['message']);
-    }*/
-    return response;
-  }
 }

@@ -55,6 +55,8 @@ class _SearchPageState extends State<SearchPage> {
         language: await preferenceUtil.getString(rms_language) ?? 'english',
         pageName: 'SearchPage');
   }
+  bool nullCheck({required List<FirestoreModel> list}) =>
+      list.isNotEmpty ? true : false;
 
   @override
   void initState() {
@@ -550,6 +552,5 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  bool nullCheck({required List<FirestoreModel> list}) =>
-      list.length == 6 ? true : false;
+
 }

@@ -1,20 +1,8 @@
-import 'dart:developer';
-
 import 'package:RentMyStay_user/utils/service/rms_user_api_service.dart';
 
-import '../../utils/constants/sp_constants.dart';
-import '../../utils/service/shared_prefrences_util.dart';
 
 class PaymentApiService {
   late final RMSUserApiService _apiService = RMSUserApiService();
-
-  String? registeredToken;
-
-  Future<String?>  get _getRegisteredToken async {
-    SharedPreferenceUtil _shared = SharedPreferenceUtil();
-    registeredToken ??= await _shared.getString(rms_registeredUserToken);
-    return registeredToken;
-  }
 
 
   Future<int> submitPaymentResponse(
@@ -25,7 +13,7 @@ class PaymentApiService {
       'razorpay_signature': paymentSignature,
     });
     final data = response as Map<String, dynamic>;
-    log('PAYMENT :: ${data.toString()} -- ZZ $response');
-    return data['msg'].toString().toLowerCase()=='success'?200:404;
+
+    return data['msg'].toString().toLowerCase().contains('failure') ? 404 : 200;
   }
 }

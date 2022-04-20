@@ -821,5 +821,5 @@ class _HomePageState extends State<HomePage> {
   }
 
   bool nullCheck({required List<FirestoreModel> list}) =>
-      list.length == 12 ? true : false;
+      list.isNotEmpty ? true : false;
 }
