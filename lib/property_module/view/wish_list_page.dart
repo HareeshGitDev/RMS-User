@@ -21,7 +21,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../images.dart';
 import '../../utils/constants/app_consts.dart';
 import '../../utils/constants/sp_constants.dart';
-import '../../utils/firestore_model.dart';
+import '../../language_module/model/language_model.dart';
 import '../../utils/service/bottom_navigation_provider.dart';
 import '../../utils/service/navigation_service.dart';
 import '../../utils/service/system_service.dart';
@@ -56,7 +56,7 @@ class _WishListPageState extends State<WishListPage> {
         pageName: 'WishlistPage');
   }
 
-  bool nullCheck({required List<FirestoreModel> list}) =>
+  bool nullCheck({required List<LanguageModel> list}) =>
       list.length == 3 ? true : false;
 
   @override

@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../utils/constants/enum_consts.dart';
-import '../../utils/firestore_model.dart';
+import '../../language_module/model/language_model.dart';
 import '../../utils/service/bottom_navigation_provider.dart';
 import '../../utils/service/date_time_service.dart';
 import '../../utils/service/navigation_service.dart';
@@ -550,6 +550,6 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  bool nullCheck({required List<FirestoreModel> list}) =>
+  bool nullCheck({required List<LanguageModel> list}) =>
       list.length == 6 ? true : false;
 }

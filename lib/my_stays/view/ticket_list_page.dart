@@ -73,7 +73,6 @@ class _TicketListPageState extends State<TicketListPage> {
                   child: Column(
                     
                     children: [
-                      Text('data'),
                       Expanded(
                         child: ListView.separated(
                           itemBuilder: (context, index) {

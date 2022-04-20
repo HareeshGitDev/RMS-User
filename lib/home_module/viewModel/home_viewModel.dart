@@ -7,7 +7,7 @@ import 'package:RentMyStay_user/language_module/service/language_api_service.dar
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../../utils/firestore_model.dart';
+import '../../language_module/model/language_model.dart';
 import '../model/City_suggestion_model.dart';
 import '../service/home_api_service.dart';
 
@@ -15,7 +15,7 @@ class HomeViewModel extends ChangeNotifier {
   final HomeApiService _homeApiService = HomeApiService();
   final LanguageApiService _languageApiService = LanguageApiService();
   ReferAndEarnModel referAndEarnModel = ReferAndEarnModel();
-  List<FirestoreModel> languageData = [];
+  List<LanguageModel> languageData = [];
 
   List<CitySuggestionModel> getCitySuggestionList(
       {required BuildContext context}) {

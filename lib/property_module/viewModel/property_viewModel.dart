@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../../language_module/service/language_api_service.dart';
 import '../../utils/constants/enum_consts.dart';
-import '../../utils/firestore_model.dart';
+import '../../language_module/model/language_model.dart';
 import '../../utils/service/rms_user_api_service.dart';
 import '../model/property_list_model.dart';
 
@@ -17,7 +17,7 @@ class PropertyViewModel extends ChangeNotifier {
   WishListModel wishListModel = WishListModel();
   List<String> locations = [];
   final LanguageApiService _languageApiService = LanguageApiService();
-  List<FirestoreModel> languageData = [];
+  List<LanguageModel> languageData = [];
 
 
   Future<void> getPropertyDetailsList({

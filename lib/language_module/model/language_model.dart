@@ -1,10 +1,10 @@
-class FirestoreModel {
+class LanguageModel {
   String? name;
   String? info;
 
-  FirestoreModel({this.name, this.info});
+  LanguageModel({this.name, this.info});
 
-  FirestoreModel.fromJson(Map<String, dynamic> json) {
+  LanguageModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     info = json['info'];
   }

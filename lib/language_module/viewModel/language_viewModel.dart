@@ -5,7 +5,7 @@ class LanguageViewModel extends ChangeNotifier{
   List<String> getAvailableLanguageList(){
     return [
       'English',
-      'Hindi'
+      'Hindi',
     ];
   }
 

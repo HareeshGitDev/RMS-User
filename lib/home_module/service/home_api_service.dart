@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:RentMyStay_user/home_module/model/invite_and_earn_model.dart';
-import 'package:RentMyStay_user/utils/firestore_model.dart';
+import 'package:RentMyStay_user/language_module/model/language_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../utils/constants/api_urls.dart';

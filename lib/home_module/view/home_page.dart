@@ -2,30 +2,22 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
-import 'package:RentMyStay_user/extensions/extensions.dart';
 import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
 import 'package:RentMyStay_user/login_module/service/google_auth_service.dart';
-import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
-import 'package:RentMyStay_user/utils/service/bottom_navigation_provider.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../images.dart';
-import '../../theme/app_notifier.dart';
 import '../../theme/app_theme.dart';
-import '../../theme/theme_type.dart';
 import '../../utils/constants/enum_consts.dart';
-import '../../utils/firestore_model.dart';
+import '../../language_module/model/language_model.dart';
 import '../../utils/service/location_service.dart';
 import '../../utils/service/navigation_service.dart';
 
@@ -499,7 +491,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _getDrawer(
-      {required BuildContext context, required List<FirestoreModel> list}) {
+      {required BuildContext context, required List<LanguageModel> list}) {
     return Drawer(
       key: _drawerKey,
       backgroundColor: CustomTheme.white,
@@ -820,6 +812,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  bool nullCheck({required List<FirestoreModel> list}) =>
+  bool nullCheck({required List<LanguageModel> list}) =>
       list.length == 12 ? true : false;
 }
