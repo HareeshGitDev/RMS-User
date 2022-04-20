@@ -139,7 +139,7 @@ class _SearchPageState extends State<SearchPage> {
                         },
                         decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText:nullCheck(list: value.languageData) ? '${value.languageData[0].name}' : 'Search by Locality, Landmark or City',
+                            hintText:nullCheck(list: value.languageData) ? '${value.languageData[0].name}' : 'Search by Locality , Landmark or City',
                             hintStyle: TextStyle(
                                 fontFamily: fontFamily,
                                 fontSize: 16,
@@ -323,7 +323,6 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                     SizedBox(
                       height: 35,
-                      width: 80,
                       child: ElevatedButton(
                         onPressed: () {
                           if (_searchController.text.isEmpty ||
@@ -550,5 +549,5 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   bool nullCheck({required List<LanguageModel> list}) =>
-      list.length == 6 ? true : false;
+      list.isNotEmpty ? true : false;
 }
