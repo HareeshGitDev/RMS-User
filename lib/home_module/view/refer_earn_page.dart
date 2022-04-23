@@ -257,7 +257,7 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                       Padding(
                                         padding: const EdgeInsets.all(16),
                                         child: Text(
-                                          "Invite You Friend and Get 1000 to your account once he/she books a flats using your Invite Code. ",
+                                          "Invite Your Friend and Get 1000 to your account once he/she books a flats using your Invite Code. ",
                                           textAlign: TextAlign.center,
                                         ),
                                       ),

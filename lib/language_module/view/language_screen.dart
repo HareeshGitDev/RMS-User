@@ -91,14 +91,14 @@ class _LanguageScreenState extends State<LanguageScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('தமிழ்',style: TextStyle(
+                Text('ಕನ್ನಡ',style: TextStyle(
                     fontSize: 16,
                     color: CustomTheme.black,
                     fontWeight: FontWeight.w600
                 ),),
                 Radio(
                   groupValue:widget.language,
-                  value: 'Tamil',
+                  value: 'kannada',
                   activeColor: CustomTheme.appTheme,
                   onChanged: (value) {
                     setState(() =>widget. language = value as String);
@@ -107,25 +107,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                 ),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('తెలుగు',style: TextStyle(
-                    fontSize: 16,
-                    color: CustomTheme.black,
-                    fontWeight: FontWeight.w600
-                ),),
-                Radio(
-                  groupValue:widget.language,
-                  value: 'telugu',
-                  activeColor: CustomTheme.appTheme,
-                  onChanged: (value) {
-                    setState(() =>widget. language = value as String);
-                  },
 
-                ),
-              ],
-            ),
             Spacer(),
             Container(
               width: _mainWidth,
