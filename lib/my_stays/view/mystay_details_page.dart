@@ -14,7 +14,9 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../language_module/model/language_model.dart';
 import '../../theme/custom_theme.dart';
+import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/navigation_service.dart';
 import '../../utils/service/shared_prefrences_util.dart';
 import '../../utils/service/system_service.dart';
@@ -37,15 +39,25 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
   late MyStayViewModel _viewModel;
   var _mainHeight;
   var _mainWidth;
+  late SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
 
   @override
   void initState() {
     super.initState();
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
     _viewModel.getMyStayDetails(bookingId: widget.bookingId);
-    SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+    getLanguageData();
     preferenceUtil.getToken().then((value) => token = value ?? '');
   }
+
+  getLanguageData() async {
+    await _viewModel.getLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'BookingDetails');
+  }
+
+  bool nullCheck({required List<LanguageModel> list}) =>
+      list.isNotEmpty ? true : false;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +68,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
       body: Consumer<MyStayViewModel>(
         builder: (context, value, child) {
           return value.myStayDetailsModel != null &&
+                  value.myStayDetailsModel?.msg != null &&
                   value.myStayDetailsModel?.data != null
               ? Container(
                   height: _mainHeight,
@@ -107,7 +120,9 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                     color: CustomTheme.appTheme,
                                   ),
                                   Text(
-                                    ' Map ',
+                                    nullCheck(list: value.bookingDetailsLang)
+                                        ? ' ${value.bookingDetailsLang[1].name} '
+                                        : ' Map ',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 14),
@@ -268,7 +283,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                     ),
                                     TextSpan(
                                       text:
-                                          '  ${value.myStayDetailsModel?.data?.numGuests ?? ''} Guests',
+                                          '  ${value.myStayDetailsModel?.data?.numGuests ?? ''} ${nullCheck(list: value.bookingDetailsLang) ? '${value.bookingDetailsLang[2].name}' : 'Guests'}',
                                     )
                                   ],
                                 ),
@@ -287,7 +302,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                     ),
                                     TextSpan(
                                       text:
-                                          '  ${value.myStayDetailsModel?.data?.nights ?? ''} Nights',
+                                          '  ${value.myStayDetailsModel?.data?.numGuests ?? ''} ${nullCheck(list: value.bookingDetailsLang) ? '${value.bookingDetailsLang[3].name}' : 'Nights'}',
                                     )
                                   ],
                                 ),
@@ -323,7 +338,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "Name : ${value.myStayDetailsModel?.data?.travellerName ?? ''}",
+                                "${nullCheck(list: value.bookingDetailsLang) ? ' ${value.bookingDetailsLang[5].name} ' : 'Name'} : ${value.myStayDetailsModel?.data?.travellerName ?? ''}",
                                 style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -334,7 +349,8 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                     context,
                                     updateKYCLink,
                                     'Update Your kyc',
-                                    '${value.myStayDetailsModel?.data?.userId ?? ''}'),
+                                    value.myStayDetailsModel?.data?.userId ??
+                                        ''),
                                 child: Container(
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(5),
@@ -342,7 +358,9 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                   padding: EdgeInsets.only(
                                       left: 5, right: 5, top: 1, bottom: 1),
                                   child: Text(
-                                    "Update Your Kyc",
+                                    nullCheck(list: value.bookingDetailsLang)
+                                        ? ' ${value.bookingDetailsLang[4].name} '
+                                        : "Update Your Kyc",
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),
@@ -356,12 +374,11 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                               right: _mainWidth * 0.04),
                           alignment: Alignment.centerLeft,
                           child: Text(
-                              "Phone No : ${value.myStayDetailsModel?.data?.travellerContactNum ?? ''}",
+                              "${nullCheck(list: value.bookingDetailsLang) ? ' ${value.bookingDetailsLang[6].name} ' : 'Phone No'} : ${value.myStayDetailsModel?.data?.travellerContactNum ?? ''}",
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.black))),
-
                       Container(
                           padding: EdgeInsets.only(
                               left: _mainWidth * 0.04,
@@ -369,7 +386,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                               right: _mainWidth * 0.04),
                           alignment: Alignment.centerLeft,
                           child: Text(
-                              "Email : ${value.myStayDetailsModel?.data?.contactEmail ?? ''}",
+                              "${nullCheck(list: value.bookingDetailsLang) ? ' ${value.bookingDetailsLang[7].name} ' : 'Email'} : ${value.myStayDetailsModel?.data?.contactEmail ?? ''}",
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
@@ -386,8 +403,12 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                           child: Text(
                             value.myStayDetailsModel?.data?.checkOutStatus ==
                                     '1'
-                                ? 'Completed Booking'
-                                : 'Active Booking',
+                                ? nullCheck(list: value.bookingDetailsLang)
+                                    ? ' ${value.bookingDetailsLang[17].name} '
+                                    : 'Completed Booking'
+                                : nullCheck(list: value.bookingDetailsLang)
+                                    ? ' ${value.bookingDetailsLang[18].name} '
+                                    : 'Active Booking',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,
@@ -407,7 +428,10 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                   child: Row(
                                     children: [
                                       Text(
-                                        "Booking From",
+                                        nullCheck(
+                                                list: value.bookingDetailsLang)
+                                            ? ' ${value.bookingDetailsLang[8].name} '
+                                            : "Booking From",
                                         style: TextStyle(
                                             fontSize: 16,
                                             color: Colors.blueGrey,
@@ -532,7 +556,11 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                     child: Row(
                                       children: [
                                         Text(
-                                          "Booking To",
+                                          nullCheck(
+                                                  list:
+                                                      value.bookingDetailsLang)
+                                              ? ' ${value.bookingDetailsLang[9].name} '
+                                              : "Booking To",
                                           style: TextStyle(
                                               fontSize: 16,
                                               color: Colors.blueGrey,
@@ -561,8 +589,11 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                     )),
                                 children: [
                                   Container(
-                                      margin:
-                                          EdgeInsets.only(left: 20, right: 20),
+                                      padding: EdgeInsets.only(
+                                        left: _mainWidth * 0.04,
+                                        right: _mainWidth * 0.04,
+                                        bottom: _mainHeight * 0.002,
+                                      ),
                                       width: _mainWidth,
                                       child: Row(
                                         children: [
@@ -584,8 +615,9 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                             MainAxisAlignment.spaceBetween,
                                       )),
                                   Container(
-                                      margin:
-                                          EdgeInsets.only(left: 20, right: 20),
+                                      padding: EdgeInsets.only(
+                                          left: _mainWidth * 0.04,
+                                          right: _mainWidth * 0.04),
                                       width: _mainWidth,
                                       child: Row(
                                         children: [
@@ -653,7 +685,9 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                           child: Row(
                             children: [
                               Text(
-                                "Pending Details ",
+                                nullCheck(list: value.bookingDetailsLang)
+                                    ? ' ${value.bookingDetailsLang[10].name} '
+                                    : "Pending Details ",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 14,
@@ -673,31 +707,46 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           _gridInput(
-                              hint: "Monthly Invoice(s)",
+                              hint: nullCheck(list: value.bookingDetailsLang)
+                                  ? ' ${value.bookingDetailsLang[11].name} '
+                                  : "Monthly Invoice(s)",
                               icon: Icon(
                                 Icons.line_weight_outlined,
                                 size: _mainHeight * 0.032,
                                 color: CustomTheme.appTheme,
                               ),
                               callBack: () => Navigator.pushNamed(
-                                  context, AppRoutes.invoicePage,
-                                  arguments: {
-                                    'address':value.myStayDetailsModel?.data?.addressDisplay ??'',
-                                    'bookingId':widget.bookingId,
-                                    'propertyId':value.myStayDetailsModel?.data?.propId ??'0',
-                                    'name':value.myStayDetailsModel?.data?.travellerName ??'',
-                                    'mobile':value.myStayDetailsModel?.data?.travellerContactNum ??'',
-                                    'email':value.myStayDetailsModel?.data?.contactEmail ??'',
-
-                                  })),
+                                      context, AppRoutes.invoicePage,
+                                      arguments: {
+                                        'address': value.myStayDetailsModel
+                                                ?.data?.addressDisplay ??
+                                            '',
+                                        'bookingId': widget.bookingId,
+                                        'propertyId': value.myStayDetailsModel
+                                                ?.data?.propId ??
+                                            '0',
+                                        'name': value.myStayDetailsModel?.data
+                                                ?.travellerName ??
+                                            '',
+                                        'mobile': value.myStayDetailsModel?.data
+                                                ?.travellerContactNum ??
+                                            '',
+                                        'email': value.myStayDetailsModel?.data
+                                                ?.contactEmail ??
+                                            '',
+                                      })),
                           _gridInput(
                               hint: value.myStayDetailsModel?.data?.agreementStatus != null &&
                                       value.myStayDetailsModel?.data?.agreementStatus ==
                                           '1'
                                   ? 'Download Agreement '
-                                  : 'Agreement Sign',
-                              icon: value.myStayDetailsModel?.data?.agreementStatus != null &&
-                                      value.myStayDetailsModel?.data?.agreementStatus ==
+                                  : nullCheck(list: value.bookingDetailsLang)
+                                      ? ' ${value.bookingDetailsLang[12].name} '
+                                      : 'Agreement Sign',
+                              icon: value.myStayDetailsModel?.data?.agreementStatus !=
+                                          null &&
+                                      value.myStayDetailsModel?.data
+                                              ?.agreementStatus ==
                                           '1'
                                   ? Icon(
                                       Icons.assignment_turned_in,
@@ -732,12 +781,16 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                   : () => _handleURLButtonPress(
                                       context,
                                       agreementLink,
-                                      'Agreement Sign',
+                                  nullCheck(list: value.bookingDetailsLang)
+                                      ? ' ${value.bookingDetailsLang[12].name} '
+                                      :'Agreement Sign',
                                       base64Encode(utf8.encode(widget.bookingId)) +
                                           '/' +
                                           token)),
                           _gridInput(
-                            hint: "Refund SplitUp",
+                            hint: nullCheck(list: value.bookingDetailsLang)
+                                ? ' ${value.bookingDetailsLang[13].name} '
+                                : "Refund SplitUp",
                             icon: Icon(
                               Icons.sticky_note_2_outlined,
                               size: _mainHeight * 0.032,
@@ -757,7 +810,9 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                         children: [
                           GestureDetector(
                             child: _gridInput(
-                                hint: "Raise Ticket",
+                                hint: nullCheck(list: value.bookingDetailsLang)
+                                    ? ' ${value.bookingDetailsLang[14].name} '
+                                    : "Raise Ticket",
                                 icon: Icon(
                                   Icons.report_problem_outlined,
                                   size: _mainHeight * 0.032,
@@ -805,7 +860,9 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                             })),
                           ),
                           _gridInput(
-                              hint: "Refund Form",
+                              hint: nullCheck(list: value.bookingDetailsLang)
+                                  ? ' ${value.bookingDetailsLang[15].name} '
+                                  : "Refund Form",
                               icon: Icon(
                                 Icons.person_outline,
                                 size: _mainHeight * 0.032,
@@ -826,20 +883,31 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                         'bookingId': widget.bookingId,
                                       })),
                           _gridInput(
-                              hint: "Privacy Policies",
+                              hint: nullCheck(list: value.bookingDetailsLang)
+                                  ? ' ${value.bookingDetailsLang[16].name} '
+                                  : "Privacy Policies",
                               icon: Icon(
                                 Icons.policy_outlined,
                                 size: _mainHeight * 0.032,
                                 color: CustomTheme.appTheme,
                               ),
                               callBack: () => _handleURLButtonPress(context,
-                                  privacyPolicyLink, 'Privacy Policy', '1')),
+                                  privacyPolicyLink, nullCheck(list: value.bookingDetailsLang)
+                                      ? ' ${value.bookingDetailsLang[16].name} '
+                                      :'Privacy Policy', '1')),
                         ],
                       ),
                     ],
                   ),
                 )
-              : Center(child: CircularProgressIndicator());
+              : value.myStayDetailsModel != null &&
+                      value.myStayDetailsModel?.msg != null &&
+                      value.myStayDetailsModel?.data == null
+                  ? RMSWidgets.noData(
+                      context: context,
+                      message:
+                          'Something went Wrong.Booking Details could not be found.')
+                  : Center(child: RMSWidgets.getLoader());
         },
       ),
     );
@@ -859,7 +927,10 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
       backgroundColor: CustomTheme.appTheme,
       title: Padding(
         padding: EdgeInsets.all(10),
-        child: Text('Booking Id : $bookingId'),
+        child: Text(nullCheck(
+                list: context.watch<MyStayViewModel>().bookingDetailsLang)
+            ? '${context.watch<MyStayViewModel>().bookingDetailsLang[0].name} : $bookingId'
+            : 'Booking Id : $bookingId'),
       ),
     );
   }

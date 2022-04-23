@@ -12,10 +12,13 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../language_module/model/language_model.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/custom_theme.dart';
+import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/bottom_navigation_provider.dart';
 import '../../utils/service/date_time_service.dart';
+import '../../utils/service/shared_prefrences_util.dart';
 
 class MyStayListPage extends StatefulWidget {
   final bool fromBottom;
@@ -31,13 +34,24 @@ class _MyStayListPageState extends State<MyStayListPage> {
   late MyStayViewModel _viewModel;
   var _mainHeight;
   var _mainWidth;
+  late SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
 
   @override
   void initState() {
     super.initState();
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
     _viewModel.getMyStayList();
+    getLanguageData();
   }
+
+  getLanguageData() async {
+    await _viewModel.getLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'MyStays');
+  }
+
+  bool nullCheck({required List<LanguageModel> list}) =>
+      list.isNotEmpty ? true : false;
 
   @override
   Widget build(BuildContext context) {
@@ -62,8 +76,10 @@ class _MyStayListPageState extends State<MyStayListPage> {
             backgroundColor: CustomTheme.appTheme,
             toolbarHeight: _mainHeight * 0.05,
             centerTitle: widget.fromBottom,
-            title: const Text(
-              'My Stays',
+            title: Text(
+              nullCheck(list: context.watch<MyStayViewModel>().myStayLang)
+                  ? '${context.watch<MyStayViewModel>().myStayLang[0].name}'
+                  : 'My Stays',
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 20,
@@ -72,10 +88,13 @@ class _MyStayListPageState extends State<MyStayListPage> {
             titleSpacing: 0,
             bottom: TabBar(
               indicatorColor: CustomTheme.white,
-              tabs: const [
+              tabs: [
                 Tab(
                   child: Text(
-                    "Active Booking",
+                    nullCheck(
+                            list: context.watch<MyStayViewModel>().myStayLang)
+                        ? '${context.watch<MyStayViewModel>().myStayLang[1].name}'
+                        : "Active Bookings",
                     style: TextStyle(
                       fontSize: 16,
                     ),
@@ -83,7 +102,9 @@ class _MyStayListPageState extends State<MyStayListPage> {
                 ),
                 Tab(
                     child: Text(
-                  "Completed Booking",
+                  nullCheck(list: context.watch<MyStayViewModel>().myStayLang)
+                      ? '${context.watch<MyStayViewModel>().myStayLang[2].name}'
+                      : "Completed Bookings",
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -106,10 +127,12 @@ class _MyStayListPageState extends State<MyStayListPage> {
                   children: <Widget>[
                     getActiveTab(
                         activeBookingList: value.activeBookingList,
-                        context: context),
+                        context: context,
+                        langList: value.myStayLang),
                     getCompletedTab(
                         completedBookingList: value.completedBookingList,
-                        context: context),
+                        context: context,
+                        langList: value.myStayLang),
                   ],
                 ),
               );
@@ -120,7 +143,8 @@ class _MyStayListPageState extends State<MyStayListPage> {
 
   Widget getActiveTab(
       {required List<Result>? activeBookingList,
-      required BuildContext context}) {
+      required BuildContext context,
+      required List<LanguageModel> langList}) {
     return activeBookingList != null && activeBookingList.isNotEmpty
         ? Container(
             width: _mainWidth,
@@ -146,7 +170,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
                                 bottom: _mainHeight * 0.005,
                                 left: _mainWidth * 0.02),
                             child: CachedNetworkImage(
-                              imageUrl: data.picThumbnail ??'',
+                              imageUrl: data.picThumbnail ?? '',
                               imageBuilder: (context, imageProvider) =>
                                   Container(
                                 decoration: BoxDecoration(
@@ -270,7 +294,10 @@ class _MyStayListPageState extends State<MyStayListPage> {
           )
         : activeBookingList != null && activeBookingList.isEmpty
             ? RMSWidgets.noData(
-                context: context, message: 'No Any Active Bookings Found.')
+                context: context,
+                message: nullCheck(list: langList)
+                    ? '${langList[3].name}'
+                    : 'No Any Active Bookings Found.')
             : Center(
                 child: RMSWidgets.getLoader(
                 color: CustomTheme.appTheme,
@@ -279,7 +306,8 @@ class _MyStayListPageState extends State<MyStayListPage> {
 
   Widget getCompletedTab(
       {required List<Result>? completedBookingList,
-      required BuildContext context}) {
+      required BuildContext context,
+      required List<LanguageModel> langList}) {
     return completedBookingList != null && completedBookingList.isNotEmpty
         ? Container(
             width: _mainWidth,
@@ -426,7 +454,10 @@ class _MyStayListPageState extends State<MyStayListPage> {
           )
         : completedBookingList != null && completedBookingList.isEmpty
             ? RMSWidgets.noData(
-                context: context, message: 'No Any Completed Bookings Found.')
+                context: context,
+                message: nullCheck(list: langList)
+                    ? '${langList[4].name}'
+                    : 'No Any Completed Bookings Found.')
             : Center(child: RMSWidgets.getLoader(color: CustomTheme.appTheme));
   }
 }

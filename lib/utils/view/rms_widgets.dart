@@ -73,9 +73,9 @@ class RMSWidgets {
         fontSize: 16.0);
   }
 
-  static Widget getLoader({required Color color}) {
+  static Widget getLoader({Color? color}) {
     return CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(color));
+        valueColor: AlwaysStoppedAnimation<Color>(color?? CustomTheme.appTheme));
   }
 
   static Widget noData(
@@ -86,10 +86,13 @@ class RMSWidgets {
       FontWeight? fontWeight}) {
     FontWeight.w600;
     return Center(
-      child: Text(
-        message,
-        style: TextStyle(
-            fontSize: fontSize ?? 20, fontWeight: fontWeight, color: fontColor),
+      child: Container(
+        padding: EdgeInsets.only(left: 20,right: 20),
+        child: Text(
+          message,
+          style: TextStyle(
+              fontSize: fontSize ?? 20, fontWeight: fontWeight, color: fontColor),
+        ),
       ),
     );
   }
@@ -123,7 +126,7 @@ class RMSWidgets {
     );
   }
 
-  static Widget showShimmer({required double height,required double width}){
+  static Widget showShimmer({required double height,required double width,double ?borderCorner}){
 
     return Shimmer.fromColors(
         child: Container(
@@ -131,7 +134,7 @@ class RMSWidgets {
           width: width,
           decoration: BoxDecoration(
             color: Colors.grey,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(borderCorner ?? 15),
           ),
         ),
         baseColor: Colors.grey[200] as Color,

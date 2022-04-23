@@ -61,7 +61,7 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                 gradient: LinearGradient(
                                     colors: [
                                       CustomTheme.appTheme.withAlpha(99),
-                                      CustomTheme.peach.withAlpha(20)
+                                      CustomTheme.appThemeContrast.withAlpha(20)
                                     ],
                                     end: Alignment.topCenter,
                                     begin: Alignment.bottomCenter),
@@ -85,7 +85,7 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                   /*   gradient: LinearGradient(
                                   colors: [
                                     CustomTheme.skyBlue,
-                                    CustomTheme.peach
+
                                   ],
                                   end: Alignment.topCenter,
                                   begin: Alignment.bottomCenter),*/
@@ -244,7 +244,7 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                                             TextAlign.center,
                                                         style: TextStyle(
                                                             backgroundColor:
-                                                                CustomTheme.peach
+                                                                CustomTheme.appThemeContrast
                                                                     .withAlpha(
                                                                         60)),
                                                       ),

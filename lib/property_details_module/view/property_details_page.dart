@@ -368,7 +368,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                           height: _mainHeight * 0.015,
                         ),
                         Container(
-                          height: _mainHeight * 0.05,
+                          //height: _mainHeight * 0.05,
                           margin: EdgeInsets.only(
                             left: _mainWidth * 0.04,
                             right: _mainWidth * 0.02,
@@ -616,7 +616,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                           thickness: 2,
                         ),
                         Container(
-                          // color: CustomTheme.peach,
+
                           padding: EdgeInsets.only(
                             left: _mainWidth * 0.04,
                             right: _mainWidth * 0.04,
@@ -691,7 +691,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                           thickness: 2,
                         ),
                         Container(
-                          // color: CustomTheme.peach,
+
                           padding: EdgeInsets.only(
                             left: _mainWidth * 0.04,
                             right: _mainWidth * 0.04,
@@ -1215,7 +1215,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
           left: _mainWidth * 0.04,
           right: _mainWidth * 0.04,
         ),
-        height: _mainHeight * 0.17,
+       // height: _mainHeight * 0.17,
         width: _mainWidth,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1403,7 +1403,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                       CachedNetworkImage(
                         imageUrl: data.picThumbnail.toString(),
                         imageBuilder: (context, imageProvider) => Container(
-                          height: _mainHeight * 0.13,
+                          height: _mainHeight * 0.125,
                           width: _mainWidth * 0.4,
                           decoration: BoxDecoration(
                             borderRadius: const BorderRadius.only(
@@ -1442,6 +1442,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         ),
                       ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Container(
                             alignment: Alignment.centerLeft,
@@ -1457,12 +1458,14 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                 color: Colors.black87,
                                 fontFamily: fontFamily,
                                 fontWeight: FontWeight.w500,
+                                overflow: TextOverflow.ellipsis,
+
 
                                 //fontStyle: FontStyle.italic,
-                              ),
+                              ),maxLines: 1,
                             ),
                           ),
-                          const Spacer(),
+
                           Container(
                             alignment: Alignment.centerLeft,
                             padding: EdgeInsets.only(

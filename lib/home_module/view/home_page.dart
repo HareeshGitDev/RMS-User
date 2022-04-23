@@ -313,7 +313,7 @@ class _HomePageState extends State<HomePage> {
                     Container(
                         padding: EdgeInsets.only(left: 10),
                         height: 260,
-                        // color: CustomTheme.peach.withAlpha(40),
+
                         width: MediaQuery.of(context).size.width,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
@@ -387,7 +387,7 @@ class _HomePageState extends State<HomePage> {
                                               '${nullCheck(list: value.languageData) ? value.languageData[3].name : 'More Info'}',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w700,
-                                                  color: CustomTheme.peach))),
+                                                  color: CustomTheme.appThemeContrast))),
                                     ],
                                   ),
                                 ),
@@ -424,7 +424,7 @@ class _HomePageState extends State<HomePage> {
                                 child: Text(
                                   "Earn",
                                   style: TextStyle(
-                                    color: CustomTheme.peach,
+                                    color: CustomTheme.appThemeContrast,
                                     fontSize: 28,
 
                                     //decoration: TextDecoration.underline,
@@ -438,7 +438,7 @@ class _HomePageState extends State<HomePage> {
                                     Text(
                                       "1000",
                                       style: TextStyle(
-                                        color: CustomTheme.peach,
+                                        color: CustomTheme.appThemeContrast,
                                         fontSize: 40,
 
                                         //decoration: TextDecoration.underline,
@@ -447,7 +447,7 @@ class _HomePageState extends State<HomePage> {
                                     Text(
                                       "Rupees",
                                       style: TextStyle(
-                                        color: CustomTheme.peach,
+                                        color: CustomTheme.appThemeContrast,
                                         fontSize: 16,
 
                                         //decoration: TextDecoration.underline,

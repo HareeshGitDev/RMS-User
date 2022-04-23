@@ -781,11 +781,11 @@ class _BookingPageState extends State<BookingPage> {
           Navigator.of(context).pop();
         }
       },
-      child: model.msg == null?RMSWidgets.showShimmer(height: _mainHeight * 0.26, width: _mainWidth):Container(
+      child: model.msg == null?RMSWidgets.showShimmer(height: _mainHeight * 0.26, width: _mainWidth,borderCorner: 15):Container(
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: Colors.blueGrey.shade100),
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(15),
         ),
         padding: EdgeInsets.only(left: _mainWidth * 0.02, top: 10, bottom: 10),
         height: _mainHeight * 0.26,
@@ -811,7 +811,7 @@ class _BookingPageState extends State<BookingPage> {
                   ),
                   Text(
                     'Edit',
-                    style: TextStyle(color: CustomTheme.peach),
+                    style: TextStyle(color: CustomTheme.appThemeContrast),
                   ),
                 ],
               ),
@@ -865,7 +865,7 @@ class _BookingPageState extends State<BookingPage> {
                   ),
                   Text(
                     'Edit',
-                    style: TextStyle(color: CustomTheme.peach),
+                    style: TextStyle(color: CustomTheme.appThemeContrast),
                   ),
                 ],
               ),

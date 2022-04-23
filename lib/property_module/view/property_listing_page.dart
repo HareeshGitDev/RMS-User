@@ -19,6 +19,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import '../../language_module/model/language_model.dart';
 import '../../utils/constants/app_consts.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/date_time_service.dart';
@@ -98,6 +99,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
               address: value, property: Property.fromLocation));
     }
   }
+
 
   hello() async {
     final val1 = await Permission.manageExternalStorage.request();

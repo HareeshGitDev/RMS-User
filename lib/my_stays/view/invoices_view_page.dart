@@ -9,12 +9,14 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../language_module/model/language_model.dart';
 import '../../payment_module/model/payment_request_model.dart';
 import '../../property_details_module/model/booking_amount_request_model.dart';
 import '../../property_details_module/model/booking_credential_response_model.dart';
 import '../../theme/custom_theme.dart';
 import '../../utils/constants/app_consts.dart';
 import '../../utils/constants/enum_consts.dart';
+import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/navigation_service.dart';
 import '../../utils/view/rms_widgets.dart';
 import '../model/Invoice_Details_Model.dart' as invoiceModelData;
@@ -46,15 +48,25 @@ class _InvoiceState extends State<InvoicePage> {
   @override
   var _mainHeight;
   var _mainWidth;
-  static const String fontFamily = 'hk-grotest';
   late MyStayViewModel _viewModel;
+  late SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
 
   @override
   void initState() {
     super.initState();
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
     _viewModel.getInvoiceDetails(bookingId: widget.bookingId);
+    getLanguageData();
   }
+
+  getLanguageData() async {
+    await _viewModel.getLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'Invoices');
+  }
+
+  bool nullCheck({required List<LanguageModel> list}) =>
+      list.isNotEmpty ? true : false;
 
   TextStyle get getKeyStyle =>
       TextStyle(color: Colors.grey, fontWeight: FontWeight.w500, fontSize: 14);
@@ -67,14 +79,18 @@ class _InvoiceState extends State<InvoicePage> {
     _mainWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         appBar: AppBar(
-          title: Text('Invoices '),
+          title: Text(
+              nullCheck(list: context.watch<MyStayViewModel>().invoiceLang)
+                  ? '${context.watch<MyStayViewModel>().invoiceLang[0].name}'
+                  : 'Invoices '),
           titleSpacing: 0,
           backgroundColor: CustomTheme.appTheme,
         ),
         body: Consumer<MyStayViewModel>(
           builder: (context, value, child) {
             return value.invoiceDetailsModel != null &&
-                    value.invoiceDetailsModel?.data != null
+                value.invoiceDetailsModel?.msg != null &&
+                value.invoiceDetailsModel?.data != null
                 ? Container(
                     height: _mainHeight,
                     width: _mainWidth,
@@ -100,13 +116,16 @@ class _InvoiceState extends State<InvoicePage> {
                                   Table(
                                     children: [
                                       TableRow(children: [
-                                        Text('Category :', style: getKeyStyle),
+                                        Text(
+                                            '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[1].name : 'Category'} : ',
+                                            style: getKeyStyle),
                                         Text(
                                           '${data?.transactionType ?? ''}',
                                           style: getValueStyle,
                                           maxLines: 2,
                                         ),
-                                        Text('Invoice Id :',
+                                        Text(
+                                            '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[2].name : 'Invoice Id'} :',
                                             style: getKeyStyle),
                                         Text(
                                           '${data?.invoiceId ?? ''}',
@@ -114,44 +133,66 @@ class _InvoiceState extends State<InvoicePage> {
                                         )
                                       ]),
                                       TableRow(children: [
-                                        Text('From :', style: getKeyStyle),
+                                        Text(
+                                            '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[3].name : 'From'} :',
+                                            style: getKeyStyle),
                                         Text('${data?.fromDate ?? ''}',
                                             style: getValueStyle),
-                                        Text('To :', style: getKeyStyle),
+                                        Text(
+                                            '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[4].name : 'To'} :',
+                                            style: getKeyStyle),
                                         Text('${data?.tillDate ?? ''}',
                                             style: getValueStyle)
                                       ]),
                                       TableRow(children: [
-                                        Text('Amount :', style: getKeyStyle),
+                                        Text(
+                                            '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[5].name : 'Amount'} :',
+                                            style: getKeyStyle),
                                         Text('$rupee ${data?.amount ?? ' '}',
                                             style: getValueStyle),
-                                        Text('Received :', style: getKeyStyle),
+                                        Text(
+                                            '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[6].name : 'Received'} :',
+                                            style: getKeyStyle),
                                         Text(
                                             '$rupee ${data?.amountRecieved ?? ''}',
                                             style: getValueStyle)
                                       ]),
                                       TableRow(children: [
-                                        Text('Referral :', style: getKeyStyle),
+                                        Text(
+                                            '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[7].name : 'Referral'} :',
+                                            style: getKeyStyle),
                                         Text(
                                             '$rupee ${data?.refferalDiscount ?? ''}',
                                             style: getValueStyle),
-                                        Text('Pending :', style: getKeyStyle),
+                                        Text(
+                                            '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[8].name : 'Pending'} :',
+                                            style: getKeyStyle),
                                         Text(
                                             '$rupee ${data?.pendingBalance ?? ''}',
                                             style: getValueStyle)
                                       ]),
                                       TableRow(children: [
-
                                         Visibility(
-                                            visible: data?.pendingBalance!=0
-                                            ,child: Text('Pay Now :', style: getKeyStyle)),
-                                        Visibility(visible: data?.pendingBalance!=0,
-                                          child: Text('$rupee ${data?.pendingBalance ?? '0'}',
+                                            visible: data?.pendingBalance != 0,
+                                            child: Text(
+                                                '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[9].name : 'Pay Now'} :',
+                                                style: getKeyStyle)),
+                                        Visibility(
+                                          visible: data?.pendingBalance != 0,
+                                          child: Text(
+                                              '$rupee ${data?.pendingBalance ?? '0'}',
                                               style: getValueStyle),
                                         ),
-                                        Visibility(visible: data?.pendingBalance!=0,child: Text('Status :', style: getKeyStyle)),
-                                        Visibility(visible: data?.pendingBalance!=0,child: Text('${data?.status ?? ''}',
-                                            style: getValueStyle),),
+                                        Visibility(
+                                            visible: data?.pendingBalance != 0,
+                                            child: Text(
+                                                '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[10].name : 'Status'} :',
+                                                style: getKeyStyle)),
+                                        Visibility(
+                                          visible: data?.pendingBalance != 0,
+                                          child: Text('${data?.status ?? ''}',
+                                              style: getValueStyle),
+                                        ),
                                       ]),
                                     ],
                                   ),
@@ -164,10 +205,10 @@ class _InvoiceState extends State<InvoicePage> {
                                     child: ElevatedButton(
                                       style: ButtonStyle(
                                           backgroundColor:
-                                              MaterialStateProperty.all<
-                                                  Color>(data?.pendingBalance == 0
-                                                  ? Color(0xff7AB02A)
-                                                  : Color(0xffFF0000)),
+                                              MaterialStateProperty.all<Color>(
+                                                  data?.pendingBalance == 0
+                                                      ? Color(0xff7AB02A)
+                                                      : Color(0xffFF0000)),
                                           shape: MaterialStateProperty.all<
                                               RoundedRectangleBorder>(
                                             RoundedRectangleBorder(
@@ -205,8 +246,16 @@ class _InvoiceState extends State<InvoicePage> {
                                         children: [
                                           Container(
                                               child: data?.pendingBalance == 0
-                                                  ? Text('Download Invoice')
-                                                  : Text('Pay Now')),
+                                                  ? Text(nullCheck(
+                                                  list:
+                                                  value.invoiceLang)
+                                                  ? ' ${value.invoiceLang[11].name} '
+                                                  :'Download Invoice')
+                                                  : Text(nullCheck(
+                                                          list:
+                                                              value.invoiceLang)
+                                                      ? ' ${value.invoiceLang[9].name} '
+                                                      : 'Pay Now')),
                                         ],
                                       ),
                                     ),
@@ -227,7 +276,13 @@ class _InvoiceState extends State<InvoicePage> {
                         itemCount:
                             value.invoiceDetailsModel?.data!.length ?? 0),
                   )
-                : Center(child: CircularProgressIndicator());
+                : value.invoiceDetailsModel != null &&
+                value.invoiceDetailsModel?.msg != null &&
+                value.invoiceDetailsModel?.data == null
+                ? RMSWidgets.noData(
+                context: context,
+                message: 'Something went Wrong.Invoice Details could not be found.')
+                : Center(child: RMSWidgets.getLoader());
           },
         ));
   }
@@ -340,14 +395,14 @@ class _InvoiceState extends State<InvoicePage> {
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pushNamed(
-                      context,
-                      AppRoutes.updateInvoiceUTRPage,
-                      arguments: {
-                        'bookingId': widget.bookingId,
-                        'invoiceId': model.invoiceId,
-                        'amount': model.pendingBalance,
-                      },
-                    );
+                        context,
+                        AppRoutes.updateInvoiceUTRPage,
+                        arguments: {
+                          'bookingId': widget.bookingId,
+                          'invoiceId': model.invoiceId,
+                          'amount': model.pendingBalance,
+                        },
+                      );
                     },
                     child: Neumorphic(
                       style: NeumorphicStyle(

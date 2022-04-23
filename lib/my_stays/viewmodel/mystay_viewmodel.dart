@@ -8,6 +8,8 @@ import 'package:RentMyStay_user/my_stays/model/refund_splitup_model.dart';
 import 'package:RentMyStay_user/my_stays/model/ticket_response_model.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../../language_module/model/language_model.dart';
+import '../../language_module/service/language_api_service.dart';
 import '../../property_details_module/model/booking_amount_request_model.dart';
 import '../model/mystay_list_model.dart';
 import '../service/mystay_api_service.dart';
@@ -21,6 +23,12 @@ class MyStayViewModel extends ChangeNotifier {
   RefundSplitUpModel? refundSplitUpModel;
   InvoiceDetailsModel? invoiceDetailsModel;
   TicketResponseModel? ticketResponseModel;
+  final LanguageApiService _languageApiService = LanguageApiService();
+  List<LanguageModel> myStayLang = [];
+  List<LanguageModel> bookingDetailsLang = [];
+  List<LanguageModel> invoiceLang = [];
+  List<LanguageModel> refundSplitUpLang = [];
+  List<LanguageModel> feedBackLang = [];
 
   Future<void> getMyStayList() async {
     final MyStayListModel response = await _myStayApiService.fetchMyStayList();
@@ -147,4 +155,24 @@ class MyStayViewModel extends ChangeNotifier {
   }) async =>
       await _myStayApiService.updateInvoiceUTRPayment(
           invoiceId: invoiceId, utrNumber: utrNumber, bookingId: bookingId);
+
+  Future<void> getLanguagesData(
+      {required String language, required String pageName}) async {
+    final response = await _languageApiService.fetchLanguagesData(
+        language: language, pageName: pageName);
+
+    if (pageName == 'MyStays') {
+      myStayLang = response;
+    } else if (pageName == 'BookingDetails') {
+      bookingDetailsLang = response;
+    } else if (pageName == 'FeedbackForm') {
+      feedBackLang = response;
+    } else if (pageName == 'Invoices') {
+      invoiceLang = response;
+    } else if (pageName == 'Refundsplitup') {
+      refundSplitUpLang = response;
+    }
+
+    notifyListeners();
+  }
 }

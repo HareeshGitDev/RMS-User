@@ -478,7 +478,7 @@ class _LoginPageState extends State<LoginPage> {
             title: Text(
               'Forgot Password ?',
               style: TextStyle(
-                  color: CustomTheme.peach,
+                  color: CustomTheme.appThemeContrast,
                   fontWeight: FontWeight.w600,
                   fontSize: 20),
             ),
@@ -523,7 +523,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(CustomTheme.peach),
+                          MaterialStateProperty.all<Color>(CustomTheme.appThemeContrast),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(40)),
@@ -545,7 +545,7 @@ class _LoginPageState extends State<LoginPage> {
                     } else {
                       RMSWidgets.getToast(
                           message: 'Something Went Wrong!',
-                          color: CustomTheme.peach);
+                          color: CustomTheme.appThemeContrast);
                     }
                   },
                   child: Text(

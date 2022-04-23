@@ -385,8 +385,8 @@ class _ProfilePageState extends State<ProfilePage> {
       backgroundColor: CustomTheme.appTheme,
       // centerTitle: true,
       title: Text(
-          nullCheck(list: context.read<ProfileViewModel>().languageData)
-              ? '${context.read<ProfileViewModel>().languageData[0].name}'
+          nullCheck(list: context.watch<ProfileViewModel>().languageData)
+              ? '${context.watch<ProfileViewModel>().languageData[0].name}'
               : 'Profile',
           style: const TextStyle(
               color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700)),
