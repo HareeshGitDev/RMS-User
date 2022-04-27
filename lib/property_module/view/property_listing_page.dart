@@ -1499,202 +1499,213 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                     SizedBox(
                       height: _mainHeight * 0.02,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        FilterChip(
-                            selected: fullyFurnishedSelected,
-                            checkmarkColor: CustomTheme.white,
-                            backgroundColor: CustomTheme.white,
-                            label: Text(
-                              'Fully Furnished Home',
-                              style: getTextStyle(
-                                  isSelected: fullyFurnishedSelected),
-                            ),
-                            elevation: 2,
-                            selectedColor: CustomTheme.appTheme,
-                            pressElevation: 1,
-                            onSelected: (bool selected) {
-                              setState(() {
-                                fullyFurnishedSelected =
-                                    !fullyFurnishedSelected;
-                              });
-                            }),
-                        FilterChip(
-                            selected: semiFurnishedSelected,
-                            checkmarkColor: CustomTheme.white,
-                            backgroundColor: CustomTheme.white,
-                            label: Text(
-                              'Semi Furnished Home',
-                              style: getTextStyle(
-                                  isSelected: semiFurnishedSelected),
-                            ),
-                            elevation: 2,
-                            selectedColor: CustomTheme.appTheme,
-                            pressElevation: 1,
-                            onSelected: (bool selected) {
-                              setState(() {
-                                semiFurnishedSelected = !semiFurnishedSelected;
-                              });
-                            })
-                      ],
+                    FittedBox(
+
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(right: 10),
+                            child: FilterChip(
+                                selected: fullyFurnishedSelected,
+                                checkmarkColor: CustomTheme.white,
+                                backgroundColor: CustomTheme.white,
+                                label: Text(
+                                  'Fully Furnished Home',
+                                  style: getTextStyle(
+                                      isSelected: fullyFurnishedSelected),
+                                ),
+                                elevation: 2,
+                                selectedColor: CustomTheme.appTheme,
+                                pressElevation: 1,
+                                onSelected: (bool selected) {
+                                  setState(() {
+                                    fullyFurnishedSelected =
+                                        !fullyFurnishedSelected;
+                                  });
+                                }),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(right: 10),
+                            child: FilterChip(
+                                selected: semiFurnishedSelected,
+                                checkmarkColor: CustomTheme.white,
+                                backgroundColor: CustomTheme.white,
+                                label: Text(
+                                  'Semi Furnished Home',
+                                  style: getTextStyle(
+                                      isSelected: semiFurnishedSelected),
+                                ),
+                                elevation: 2,
+                                selectedColor: CustomTheme.appTheme,
+                                pressElevation: 1,
+                                onSelected: (bool selected) {
+                                  setState(() {
+                                    semiFurnishedSelected = !semiFurnishedSelected;
+                                  });
+                                }),
+                          )
+                        ],
+                      ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        FilterChip(
-                            selected: entireHouseSelected,
-                            checkmarkColor: CustomTheme.white,
-                            backgroundColor: CustomTheme.white,
-                            label: Text(
-                              'Entire House',
-                              style:
-                                  getTextStyle(isSelected: entireHouseSelected),
-                            ),
-                            elevation: 2,
-                            selectedColor: CustomTheme.appTheme,
-                            pressElevation: 1,
-                            onSelected: (bool selected) {
-                              setState(() {
-                                entireHouseSelected = !entireHouseSelected;
-                              });
-                            }),
-                        FilterChip(
-                            selected: privateRoomSelected,
-                            checkmarkColor: CustomTheme.white,
-                            backgroundColor: CustomTheme.white,
-                            label: Text(
-                              'Private Room',
-                              style:
-                                  getTextStyle(isSelected: privateRoomSelected),
-                            ),
-                            elevation: 2,
-                            selectedColor: CustomTheme.appTheme,
-                            pressElevation: 1,
-                            onSelected: (bool selected) {
-                              setState(() {
-                                privateRoomSelected = !privateRoomSelected;
-                              });
-                            }),
-                        FilterChip(
-                            selected: sharedRoomSelected,
-                            checkmarkColor: CustomTheme.white,
-                            backgroundColor: CustomTheme.white,
-                            label: Text(
-                              'Shared Room',
-                              style:
-                                  getTextStyle(isSelected: sharedRoomSelected),
-                            ),
-                            elevation: 2,
-                            selectedColor: CustomTheme.appTheme,
-                            pressElevation: 1,
-                            onSelected: (bool selected) {
-                              setState(() {
-                                sharedRoomSelected = !sharedRoomSelected;
-                              });
-                            })
-                      ],
+                    SizedBox(
+                      height: _mainHeight * 0.02,
                     ),
-                    FilterChip(
-                        selected: studioSelected,
-                        checkmarkColor: CustomTheme.white,
-                        backgroundColor: CustomTheme.white,
-                        label: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'For Lone Rangers(1+1) members',
-                              style: getTextStyle(isSelected: studioSelected),
-                            ),
-                            Text(
-                              'Studio',
-                              style: getTextStyle(isSelected: studioSelected),
-                            )
-                          ],
-                        ),
-                        elevation: 2,
-                        selectedColor: CustomTheme.appTheme,
-                        pressElevation: 1,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            studioSelected = !studioSelected;
-                          });
-                        }),
-                    FilterChip(
-                        selected: oneBHKSelected,
-                        checkmarkColor: CustomTheme.white,
-                        backgroundColor: CustomTheme.white,
-                        label: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'For Small Family (2+1) members',
-                              style: getTextStyle(isSelected: oneBHKSelected),
-                            ),
-                            Text(
-                              'One BHK',
-                              style: getTextStyle(isSelected: oneBHKSelected),
-                            )
-                          ],
-                        ),
-                        elevation: 2,
-                        selectedColor: CustomTheme.appTheme,
-                        pressElevation: 1,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            oneBHKSelected = !oneBHKSelected;
-                          });
-                        }),
-                    FilterChip(
-                        selected: twoBHKSelected,
-                        checkmarkColor: CustomTheme.white,
-                        backgroundColor: CustomTheme.white,
-                        label: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Fit For Friend Groups of (4+1) members',
-                              style: getTextStyle(isSelected: twoBHKSelected),
-                            ),
-                            Text(
-                              'Two BHK',
-                              style: getTextStyle(isSelected: twoBHKSelected),
-                            )
-                          ],
-                        ),
-                        elevation: 2,
-                        selectedColor: CustomTheme.appTheme,
-                        pressElevation: 1,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            twoBHKSelected = !twoBHKSelected;
-                          });
-                        }),
-                    FilterChip(
-                        selected: threeBHKSelected,
-                        checkmarkColor: CustomTheme.white,
-                        backgroundColor: CustomTheme.white,
-                        label: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Fit For Joint Family of (6+1) members',
-                              style: getTextStyle(isSelected: threeBHKSelected),
-                            ),
-                            Text(
-                              'Three BHK',
-                              style: getTextStyle(isSelected: threeBHKSelected),
-                            )
-                          ],
-                        ),
-                        elevation: 2,
-                        selectedColor: CustomTheme.appTheme,
-                        pressElevation: 1,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            threeBHKSelected = !threeBHKSelected;
-                          });
-                        }),
+
+                    FittedBox(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(right: 10),
+                            child: FilterChip(
+                                selected: entireHouseSelected,
+                                checkmarkColor: CustomTheme.white,
+                                backgroundColor: CustomTheme.white,
+                                label: Text(
+                                  'Entire House',
+                                  style:
+                                      getTextStyle(isSelected: entireHouseSelected),
+                                ),
+                                elevation: 2,
+                                selectedColor: CustomTheme.appTheme,
+                                pressElevation: 1,
+                                onSelected: (bool selected) {
+                                  setState(() {
+                                    entireHouseSelected = !entireHouseSelected;
+                                  });
+                                }),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(right: 10),
+                            child: FilterChip(
+                                selected: privateRoomSelected,
+                                checkmarkColor: CustomTheme.white,
+                                backgroundColor: CustomTheme.white,
+                                label: Text(
+                                  'Private Room',
+                                  style:
+                                      getTextStyle(isSelected: privateRoomSelected),
+                                ),
+                                elevation: 2,
+                                selectedColor: CustomTheme.appTheme,
+                                pressElevation: 1,
+                                onSelected: (bool selected) {
+                                  setState(() {
+                                    privateRoomSelected = !privateRoomSelected;
+                                  });
+                                }),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(right: 10),
+                            child: FilterChip(
+                                selected: sharedRoomSelected,
+                                checkmarkColor: CustomTheme.white,
+                                backgroundColor: CustomTheme.white,
+                                label: Text(
+                                  'Shared Room',
+                                  style:
+                                      getTextStyle(isSelected: sharedRoomSelected),
+                                ),
+                                elevation: 2,
+                                selectedColor: CustomTheme.appTheme,
+                                pressElevation: 1,
+                                onSelected: (bool selected) {
+                                  setState(() {
+                                    sharedRoomSelected = !sharedRoomSelected;
+                                  });
+                                }),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: _mainHeight * 0.02,
+                    ),
+                    FittedBox(
+
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(right: 10),
+                            child: FilterChip(
+                                selected: studioSelected,
+                                checkmarkColor: CustomTheme.white,
+                                backgroundColor: CustomTheme.white,
+                                label:Text(
+                                  'Studio',
+                                  style: getTextStyle(isSelected: studioSelected),
+                                ),
+                                elevation: 2,
+                                selectedColor: CustomTheme.appTheme,
+                                pressElevation: 1,
+                                onSelected: (bool selected) {
+                                  setState(() {
+                                    studioSelected = !studioSelected;
+                                  });
+                                }),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(right: 10),
+                            child: FilterChip(
+                                selected: oneBHKSelected,
+                                checkmarkColor: CustomTheme.white,
+                                backgroundColor: CustomTheme.white,
+                                label:  Text(
+                                  'One BHK',
+                                  style: getTextStyle(isSelected: oneBHKSelected),
+                                ),
+                                elevation: 2,
+                                selectedColor: CustomTheme.appTheme,
+                                pressElevation: 1,
+                                onSelected: (bool selected) {
+                                  setState(() {
+                                    oneBHKSelected = !oneBHKSelected;
+                                  });
+                                }),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(right: 10),
+                            child: FilterChip(
+                                selected: twoBHKSelected,
+                                checkmarkColor: CustomTheme.white,
+                                backgroundColor: CustomTheme.white,
+                                label: Text(
+                                  'Two BHK',
+                                  style: getTextStyle(isSelected: twoBHKSelected),
+                                ),
+                                elevation: 2,
+                                selectedColor: CustomTheme.appTheme,
+                                pressElevation: 1,
+                                onSelected: (bool selected) {
+                                  setState(() {
+                                    twoBHKSelected = !twoBHKSelected;
+                                  });
+                                }),
+                          ),
+                          FilterChip(
+                              selected: threeBHKSelected,
+                              checkmarkColor: CustomTheme.white,
+                              backgroundColor: CustomTheme.white,
+                              label:  Text(
+                                'Three BHK',
+                                style: getTextStyle(isSelected: threeBHKSelected),
+                              ),
+                              elevation: 2,
+                              selectedColor: CustomTheme.appTheme,
+                              pressElevation: 1,
+                              onSelected: (bool selected) {
+                                setState(() {
+                                  threeBHKSelected = !threeBHKSelected;
+                                });
+                              }),
+                        ],
+                      ),
+                    ),
+
+
+
                   ],
                 ),
               );
