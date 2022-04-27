@@ -1,65 +1,80 @@
 class FilterSortRequestModel {
-  String? fromd='22-Jun-2022';
-  String? tod='22-Jun-2022';
-  String? addr='Bengaluru-Karnataka-India';
-  String? sortOrder='0';
-  String? studio='Studio';
-  String? s1Bhk='1BHK';
-  String? s2Bhk='2BHK';
-  String? s3Bhk='3BHK';
-  String? pricefrom='5000';
-  String? priceto='50000';
-  String? term='daily_basis/monthly_basis/long_basis';
-  String? roomTypee='entire1^shared2^private3^';
-  String? furType='Semi Furnished^Fully Furnished^';
+  String? fromDate;
+  String? toDate;
+  String? address;
+  String? sortOrder;
+  String? studio;
+  String? s1bhk;
+  String? s2bhk;
+  String? s3bhk;
+  String? pricefrom;
+  String? priceto;
+  String? semiFurnish;
+  String? fullyFurnish;
+  String? maxGuests;
+  String? term;
+  String? entireHouse;
+  String? privateRoom;
+  String? sharedRoom;
 
   FilterSortRequestModel(
-      {this.fromd,
-        this.tod,
-        this.addr,
+      {this.fromDate,
+        this.toDate,
+        this.address,
         this.sortOrder,
         this.studio,
-        this.s1Bhk,
-        this.s2Bhk,
-        this.s3Bhk,
+        this.s1bhk,
+        this.s2bhk,
+        this.s3bhk,
         this.pricefrom,
         this.priceto,
+        this.semiFurnish,
+        this.fullyFurnish,
+        this.maxGuests,
         this.term,
-        this.roomTypee,
-        this.furType});
+        this.entireHouse,
+        this.privateRoom,
+        this.sharedRoom});
 
   FilterSortRequestModel.fromJson(Map<String, dynamic> json) {
-    fromd = json['fromd'];
-    tod = json['tod'];
-    addr = json['addr'];
+    fromDate = json['fromDate'];
+    toDate = json['toDate'];
+    address = json['address'];
     sortOrder = json['sortOrder'];
     studio = json['studio'];
-    s1Bhk = json['1_bhk'];
-    s2Bhk = json['2_bhk'];
-    s3Bhk = json['3_bhk'];
-
+    s1bhk = json['1bhk'];
+    s2bhk = json['2bhk'];
+    s3bhk = json['3bhk'];
     pricefrom = json['pricefrom'];
     priceto = json['priceto'];
+    semiFurnish = json['semiFurnish'];
+    fullyFurnish = json['fullyFurnish'];
+    maxGuests = json['maxGuests'];
     term = json['term'];
-    roomTypee = json['room_typee'];
-    furType = json['fur_type'];
+    entireHouse = json['entireHouse'];
+    privateRoom = json['privateRoom'];
+    sharedRoom = json['sharedRoom'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['fromd'] = this.fromd;
-    data['tod'] = this.tod;
-    data['addr'] = this.addr;
+    data['fromDate'] = this.fromDate;
+    data['toDate'] = this.toDate;
+    data['address'] = this.address;
     data['sortOrder'] = this.sortOrder;
     data['studio'] = this.studio;
-    data['1_bhk'] = this.s1Bhk;
-    data['2_bhk'] = this.s2Bhk;
-    data['3_bhk'] = this.s3Bhk;
+    data['1bhk'] = this.s1bhk;
+    data['2bhk'] = this.s2bhk;
+    data['3bhk'] = this.s3bhk;
     data['pricefrom'] = this.pricefrom;
     data['priceto'] = this.priceto;
+    data['semiFurnish'] = this.semiFurnish;
+    data['fullyFurnish'] = this.fullyFurnish;
+    data['maxGuests'] = this.maxGuests;
     data['term'] = this.term;
-    data['room_typee'] = this.roomTypee;
-    data['fur_type'] = this.furType;
+    data['entireHouse'] = this.entireHouse;
+    data['privateRoom'] = this.privateRoom;
+    data['sharedRoom'] = this.sharedRoom;
     return data;
   }
 }

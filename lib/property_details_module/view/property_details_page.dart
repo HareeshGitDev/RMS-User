@@ -1447,7 +1447,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         ),
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
                             alignment: Alignment.centerLeft,
