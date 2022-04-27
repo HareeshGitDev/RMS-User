@@ -194,7 +194,7 @@ class _BookingPageState extends State<BookingPage> {
                                             _currentStep += 1;
                                           });
                                         },
-                                        child: Text('Continue'),
+                                        child: Text('Next'),
                                         style: ButtonStyle(
                                             backgroundColor:
                                                 MaterialStateProperty.all<
@@ -208,26 +208,29 @@ class _BookingPageState extends State<BookingPage> {
                                                           10)),
                                             )),
                                       ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          if (_currentStep <= 0) return;
-                                          setState(() {
-                                            _currentStep -= 1;
-                                          });
-                                        },
-                                        child: Text('Cancel'),
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all<
-                                                        Color>(
-                                                    CustomTheme.appTheme),
-                                            shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                              RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                            )),
+
+                                      Visibility( visible: details.stepIndex>0,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            if (_currentStep <= 0) return;
+                                            setState(() {
+                                              _currentStep -= 1;
+                                            });
+                                          },
+                                          child: Text('Back'),
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all<
+                                                          Color>(
+                                                      CustomTheme.appTheme),
+                                              shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                              )),
+                                        ),
                                       ),
                                     ],
                                   ),

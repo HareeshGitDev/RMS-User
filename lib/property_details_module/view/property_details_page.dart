@@ -168,11 +168,11 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                 1
                                         ? Icon(
                                             Icons.favorite,
-                                            color: Colors.red,
+                                            color: CustomTheme.appTheme,
                                           )
                                         : Icon(
                                             Icons.favorite_outline_rounded,
-                                            color: Colors.red,
+                                            color: CustomTheme.appTheme,
                                           )),
                           ),
                           SizedBox(
@@ -887,12 +887,22 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         SizedBox(
                           height: _mainHeight * 0.01,
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: _mainWidth * 0.04,
-                            right: _mainWidth * 0.04,
-                          ),
-                          child: const Text(
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.only(left: _mainWidth*0.04,right: _mainWidth * 0.04,),
+                        padding: EdgeInsets.only(
+                        left: _mainWidth * 0.04,
+                        right: _mainWidth * 0.04,
+                      ),
+                        decoration: BoxDecoration(
+                        border: Border.all(
+                          color: CustomTheme.appTheme,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                        child: Column(children: [
+                          const Text(
                             'Five Reasons to Choose RentMyStay',
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
@@ -900,24 +910,19 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                 fontFamily: fontFamily,
                                 color: Colors.black),
                           ),
-                        ),
-                        SizedBox(
-                          height: _mainHeight * 0.005,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: _mainWidth * 0.04,
-                            right: _mainWidth * 0.04,
+                          SizedBox(
+                            height: _mainHeight * 0.005,
                           ),
-                          child: Text(
+                          Text(
                             getMoreText,
                             style: const TextStyle(
                                 color: Colors.black54,
                                 fontFamily: fontFamily,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500),
-                          ),
-                        ),
+                          ),],),
+                      ),
+
                         const Divider(
                           thickness: 2,
                         ),

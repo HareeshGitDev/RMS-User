@@ -551,7 +551,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,
-                                                ))),
+                                                )),
+                                            ),
                                             Container(
                                                 //color: Colors.amber,
                                                 height: _mainHeight * 0.02,

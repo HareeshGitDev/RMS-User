@@ -410,10 +410,12 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
+
                     GestureDetector(
                       onTap: () => Navigator.of(context)
                           .pushNamed(AppRoutes.referAndEarn),
                       child: Container(
+                        width: _mainWidth,
                           child: Row(
                         children: [
                           Column(
@@ -472,6 +474,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Container(
                               height: 200,
+                              width: 180,
                               child: Image.asset(Images.referIconHome))
                         ],
                       )),
@@ -598,7 +601,7 @@ class _HomePageState extends State<HomePage> {
             getTile(
               context: context,
               leading: Icon(
-                Icons.house_outlined,
+                Icons.line_weight_rounded,
                 color: CustomTheme.appTheme,
                 size: 20,
               ),

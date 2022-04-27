@@ -161,7 +161,7 @@ class _WishListPageState extends State<WishListPage> {
                                       children: [
                                         Icon(
                                           Icons.home_work_outlined,
-                                          color: myFavColor,
+                                          color: CustomTheme.appTheme,
                                           size: 18,
                                         ),
                                         SizedBox(
@@ -252,8 +252,8 @@ class _WishListPageState extends State<WishListPage> {
                                               left: _mainWidth * 0.02,
                                               top: _mainHeight * 0.005),
                                           child: Icon(
-                                            Icons.my_location_outlined,
-                                            color: myFavColor,
+                                            Icons.location_on_outlined,
+                                            color:CustomTheme.appTheme,
                                             size: _mainHeight * 0.02,
                                           ),
                                         ),
@@ -299,6 +299,9 @@ class _WishListPageState extends State<WishListPage> {
                                 SizedBox(
                                   height: _mainHeight * 0.007,
                                 ),
+                                Visibility(
+                                  visible: data.rent != null &&
+                                      data.rent != "0",child:
                                 Container(
                                     //color: Colors.amber,
                                     height: _mainHeight * 0.02,
@@ -319,7 +322,7 @@ class _WishListPageState extends State<WishListPage> {
                                             ? Text(
                                                 ' $rupee ${data.rent ?? " "}',
                                                 style: TextStyle(
-                                                    color: myFavColor,
+                                                    color: CustomTheme.appTheme,
                                                     fontFamily: fontFamily,
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 14))
@@ -342,7 +345,7 @@ class _WishListPageState extends State<WishListPage> {
                                                       text:
                                                           ' $rupee ${data.rent ?? " "}',
                                                       style: TextStyle(
-                                                          color: myFavColor,
+                                                          color: CustomTheme.appTheme,
                                                           fontFamily:
                                                               fontFamily,
                                                           fontWeight:
@@ -353,7 +356,7 @@ class _WishListPageState extends State<WishListPage> {
                                       ],
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
-                                    )),
+                                    )),),
                                 Container(
                                     //color: Colors.amber,
                                     height: _mainHeight * 0.02,
@@ -374,7 +377,7 @@ class _WishListPageState extends State<WishListPage> {
                                             ? Text(
                                                 ' $rupee ${data.monthlyRent ?? " "}',
                                                 style: TextStyle(
-                                                    color: myFavColor,
+                                                    color: CustomTheme.appTheme,
                                                     fontFamily: fontFamily,
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 14))
@@ -397,7 +400,7 @@ class _WishListPageState extends State<WishListPage> {
                                                       text:
                                                           ' $rupee ${data.monthlyRent ?? " "}',
                                                       style: TextStyle(
-                                                          color: myFavColor,
+                                                          color: CustomTheme.appTheme,
                                                           fontFamily:
                                                               fontFamily,
                                                           fontWeight:
@@ -427,7 +430,7 @@ class _WishListPageState extends State<WishListPage> {
                                             ? Text(
                                                 ' $rupee ${data.rmsRent ?? " "}',
                                                 style: TextStyle(
-                                                    color: myFavColor,
+                                                    color: CustomTheme.appTheme,
                                                     fontFamily: fontFamily,
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 14))
@@ -450,7 +453,7 @@ class _WishListPageState extends State<WishListPage> {
                                                       text:
                                                           ' $rupee ${data.rmsRent ?? " "}',
                                                       style: TextStyle(
-                                                          color: myFavColor,
+                                                          color: CustomTheme.appTheme,
                                                           fontFamily:
                                                               fontFamily,
                                                           fontWeight:
@@ -554,11 +557,11 @@ class _WishListPageState extends State<WishListPage> {
                                         child: data.wishlist == 1
                                             ? Icon(
                                                 Icons.favorite,
-                                                color: Colors.red,
+                                                color: CustomTheme.appTheme,
                                               )
                                             : Icon(
                                                 Icons.favorite_outline_rounded,
-                                                color: Colors.red,
+                                                color: CustomTheme.appTheme,
                                               )),
                                   ),
                                 ],
