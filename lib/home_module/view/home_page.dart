@@ -14,8 +14,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../Web_View_Container.dart';
 import '../../images.dart';
 import '../../theme/app_theme.dart';
+import '../../utils/constants/app_consts.dart';
 import '../../utils/constants/enum_consts.dart';
 import '../../language_module/model/language_model.dart';
 import '../../utils/service/location_service.dart';
@@ -29,6 +31,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late String token;
   late ThemeData theme;
   late CustomTheme customTheme;
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
@@ -43,6 +46,8 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
     userDetails = getSharedPreferencesValues();
+    preferenceUtil.getToken().then((value) => token = value ?? '');
+
     getLanguageData();
   }
 
@@ -645,6 +650,34 @@ class _HomePageState extends State<HomePage> {
             getTile(
               context: context,
               leading: Icon(
+                Icons.library_add_check,
+                color: CustomTheme.appTheme,
+                size: 20,
+              ),
+              title: nullCheck(list: list) ? '${list[12].name}' : 'My Site Visits',
+              onTap: () => {
+                _handleURLButtonPress(context,
+                    myVisitsLink, nullCheck(list: list) ? '${list[12].name}'
+                        :'My Site Visits', token),
+              },
+            ),
+            getTile(
+              context: context,
+              leading: Icon(
+                Icons.library_add_check,
+                color: CustomTheme.appTheme,
+                size: 20,
+              ),
+              title: nullCheck(list: list) ? '${list[12].name}' : 'My Site Visits',
+              onTap: () => {
+                _handleURLButtonPress(context,
+                    myVisitsLink, nullCheck(list: list) ? '${list[12].name}'
+                        :'My Site Visits', token),
+              },
+            ),
+            getTile(
+              context: context,
+              leading: Icon(
                 Icons.share,
                 color: CustomTheme.appTheme,
                 size: 20,
@@ -733,7 +766,17 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+  void _handleURLButtonPress(
+      BuildContext context, String url, String title, String params) {
+    String urlwithparams = url + params;
+    log(urlwithparams);
 
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => Web_View_Container(urlwithparams, title)),
+    );
+  }
   Future showExitDialog(BuildContext context) async {
     AlertDialog alert = AlertDialog(
       shape: RoundedRectangleBorder(

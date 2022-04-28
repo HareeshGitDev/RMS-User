@@ -297,29 +297,32 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             valueListenable: showPics,
                           ),
                           titlePadding: EdgeInsets.all(0),
-                          title: IconButton(
-                            icon: value.propertyDetailsModel?.data?.shareLink !=
-                                        null &&
-                                    value.propertyDetailsModel?.data?.shareLink
-                                            ?.trim() !=
-                                        ''
-                                ? Icon(
-                                    Icons.play_circle_outline,
-                                    color: Colors.white,
-                                    size: 20,
-                                  )
-                                : Container(),
-                            onPressed: value.propertyDetailsModel?.data
-                                            ?.shareLink !=
-                                        null &&
-                                    value.propertyDetailsModel?.data?.shareLink
-                                            ?.trim() !=
-                                        ''
-                                ? () {
-                                    showPics.value = !showPics.value;
-                                    value.youTubeController.reset();
-                                  }
-                                : () {},
+                          title: Align(
+                            alignment: Alignment.bottomLeft,
+                            child: IconButton(
+                              icon: value.propertyDetailsModel?.data?.shareLink !=
+                                          null &&
+                                      value.propertyDetailsModel?.data?.shareLink
+                                              ?.trim() !=
+                                          ''
+                                  ? Icon(
+                                      Icons.play_circle_outline,
+                                      color: Colors.white,
+                                      size: 20,
+                                    )
+                                  : Container(),
+                              onPressed: value.propertyDetailsModel?.data
+                                              ?.shareLink !=
+                                          null &&
+                                      value.propertyDetailsModel?.data?.shareLink
+                                              ?.trim() !=
+                                          ''
+                                  ? () {
+                                      showPics.value = !showPics.value;
+                                      value.youTubeController.reset();
+                                    }
+                                  : () {},
+                            ),
                           ),
                         ),
                       ),

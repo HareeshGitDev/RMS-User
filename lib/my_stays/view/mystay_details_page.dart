@@ -894,7 +894,8 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                               callBack: () => _handleURLButtonPress(context,
                                   privacyPolicyLink, nullCheck(list: value.bookingDetailsLang)
                                       ? ' ${value.bookingDetailsLang[16].name} '
-                                      :'Privacy Policy', '1')),
+                                      :'Privacy Policy', '1'),
+                          ),
                         ],
                       ),
                     ],
