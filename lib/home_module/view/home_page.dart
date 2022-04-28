@@ -668,11 +668,11 @@ class _HomePageState extends State<HomePage> {
                 color: CustomTheme.appTheme,
                 size: 20,
               ),
-              title: nullCheck(list: list) ? '${list[12].name}' : 'My Site Visits',
+              title: nullCheck(list: list) ? '${list[12].name}' : 'Owner View',
               onTap: () => {
                 _handleURLButtonPress(context,
-                    myVisitsLink, nullCheck(list: list) ? '${list[12].name}'
-                        :'My Site Visits', token),
+                    ownerViewLink, nullCheck(list: list) ? '${list[12].name}'
+                        :'Owner View', token),
               },
             ),
             getTile(
