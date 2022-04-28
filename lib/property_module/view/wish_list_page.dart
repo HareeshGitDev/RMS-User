@@ -51,7 +51,7 @@ class _WishListPageState extends State<WishListPage> {
   }
 
   getLanguageData() async {
-    await _propertyViewModel.getLanguagesData(
+    await _propertyViewModel.getWishListedLanguagesData(
         language: await preferenceUtil.getString(rms_language) ?? 'english',
         pageName: 'WishlistPage');
   }
@@ -65,7 +65,8 @@ class _WishListPageState extends State<WishListPage> {
     _mainWidth = MediaQuery.of(context).size.width;
     return Consumer<PropertyViewModel>(
       builder: (context, value, child) {
-        if (value.wishListModel.data != null &&
+        if (value.wishListModel.msg != null &&
+            value.wishListModel.data != null &&
             value.wishListModel.data!.isNotEmpty) {
           return Scaffold(
             appBar: _getAppBar(context: context, value: value),
@@ -253,7 +254,7 @@ class _WishListPageState extends State<WishListPage> {
                                               top: _mainHeight * 0.005),
                                           child: Icon(
                                             Icons.location_on_outlined,
-                                            color:CustomTheme.appTheme,
+                                            color: CustomTheme.appTheme,
                                             size: _mainHeight * 0.02,
                                           ),
                                         ),
@@ -300,63 +301,67 @@ class _WishListPageState extends State<WishListPage> {
                                   height: _mainHeight * 0.007,
                                 ),
                                 Visibility(
-                                  visible: data.rent != null &&
-                                      data.rent != "0",child:
-                                Container(
-                                    //color: Colors.amber,
-                                    height: _mainHeight * 0.02,
-                                    margin: EdgeInsets.only(
-                                        left: _mainWidth * 0.02,
-                                        right: _mainWidth * 0.02),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Rent Per Day',
-                                          style: TextStyle(
-                                            fontFamily: fontFamily,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
+                                  visible:
+                                      data.rent != null && data.rent != "0",
+                                  child: Container(
+                                      //color: Colors.amber,
+                                      height: _mainHeight * 0.02,
+                                      margin: EdgeInsets.only(
+                                          left: _mainWidth * 0.02,
+                                          right: _mainWidth * 0.02),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Rent Per Day',
+                                            style: TextStyle(
+                                              fontFamily: fontFamily,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
                                           ),
-                                        ),
-                                        data.orgRent == data.rent
-                                            ? Text(
-                                                ' $rupee ${data.rent ?? " "}',
-                                                style: TextStyle(
-                                                    color: CustomTheme.appTheme,
-                                                    fontFamily: fontFamily,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 14))
-                                            : RichText(
-                                                text: TextSpan(children: [
-                                                  TextSpan(
-                                                      text:
-                                                          '$rupee ${data.orgRent ?? " "}',
-                                                      style: TextStyle(
-                                                          color: Colors.grey,
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontFamily:
-                                                              fontFamily,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .lineThrough)),
-                                                  TextSpan(
-                                                      text:
-                                                          ' $rupee ${data.rent ?? " "}',
-                                                      style: TextStyle(
-                                                          color: CustomTheme.appTheme,
-                                                          fontFamily:
-                                                              fontFamily,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontSize: 14)),
-                                                ]),
-                                              ),
-                                      ],
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                    )),),
+                                          data.orgRent == data.rent
+                                              ? Text(
+                                                  ' $rupee ${data.rent ?? " "}',
+                                                  style: TextStyle(
+                                                      color:
+                                                          CustomTheme.appTheme,
+                                                      fontFamily: fontFamily,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 14))
+                                              : RichText(
+                                                  text: TextSpan(children: [
+                                                    TextSpan(
+                                                        text:
+                                                            '$rupee ${data.orgRent ?? " "}',
+                                                        style: TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontFamily:
+                                                                fontFamily,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .lineThrough)),
+                                                    TextSpan(
+                                                        text:
+                                                            ' $rupee ${data.rent ?? " "}',
+                                                        style: TextStyle(
+                                                            color: CustomTheme
+                                                                .appTheme,
+                                                            fontFamily:
+                                                                fontFamily,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontSize: 14)),
+                                                  ]),
+                                                ),
+                                        ],
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                      )),
+                                ),
                                 Container(
                                     //color: Colors.amber,
                                     height: _mainHeight * 0.02,
@@ -400,7 +405,8 @@ class _WishListPageState extends State<WishListPage> {
                                                       text:
                                                           ' $rupee ${data.monthlyRent ?? " "}',
                                                       style: TextStyle(
-                                                          color: CustomTheme.appTheme,
+                                                          color: CustomTheme
+                                                              .appTheme,
                                                           fontFamily:
                                                               fontFamily,
                                                           fontWeight:
@@ -453,7 +459,8 @@ class _WishListPageState extends State<WishListPage> {
                                                       text:
                                                           ' $rupee ${data.rmsRent ?? " "}',
                                                       style: TextStyle(
-                                                          color: CustomTheme.appTheme,
+                                                          color: CustomTheme
+                                                              .appTheme,
                                                           fontFamily:
                                                               fontFamily,
                                                           fontWeight:
@@ -499,7 +506,9 @@ class _WishListPageState extends State<WishListPage> {
                                         ),
                                         Container(
                                             child: Text(
-                                              nullCheck(list: value.languageData) ? '${value.languageData[2].name}' :'Managed by RMS',
+                                          nullCheck(list: value.wishListLang)
+                                              ? '${value.wishListLang[2].name}'
+                                              : 'Managed by RMS',
                                           style: TextStyle(
                                               fontStyle: FontStyle.italic,
                                               color: Colors.black,
@@ -580,13 +589,25 @@ class _WishListPageState extends State<WishListPage> {
               ),
             ),
           );
-        } else if (value.wishListModel.data != null &&
+        } else if (value.wishListModel.msg != null &&
+            value.wishListModel.data == null) {
+          return Scaffold(
+            appBar: _getAppBar(context: context, value: value),
+            body: Center(
+              child: RMSWidgets.someError(context: context),
+            ),
+          );
+        } else if (value.wishListModel.msg != null &&
+            value.wishListModel.data != null &&
             value.wishListModel.data!.isEmpty) {
           return Scaffold(
               appBar: _getAppBar(context: context, value: value),
-              body: Center(child: Text(nullCheck(list: value.languageData) ? '${value.languageData[1].name}' :'No Any Wishlisted Property Found.',style: TextStyle(
-                fontSize: 16
-              ),)));
+              body: Center(
+                  child: RMSWidgets.noData(
+                      context: context,
+                      message: nullCheck(list: value.wishListLang)
+                          ? '${value.wishListLang[1].name}'
+                          : 'No Any Wishlisted Property Found.')));
         } else {
           return Scaffold(
               appBar: _getAppBar(context: context, value: value),
@@ -617,8 +638,8 @@ class _WishListPageState extends State<WishListPage> {
       backgroundColor: CustomTheme.appTheme,
       title: Container(
         child: Text(
-            nullCheck(list: value.languageData)
-                ? '${value.languageData[0].name}'
+            nullCheck(list: value.wishListLang)
+                ? '${value.wishListLang[0].name}'
                 : 'My WishList',
             style: TextStyle(
                 color: Colors.white,

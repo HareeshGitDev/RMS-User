@@ -9,6 +9,9 @@ import 'package:RentMyStay_user/property_details_module/service/property_details
 import 'package:flutter/cupertino.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../language_module/model/language_model.dart';
+import '../../language_module/service/language_api_service.dart';
+
 class PropertyDetailsViewModel extends ChangeNotifier {
   final PropertyDetailsApiService _detailsApiService =
       PropertyDetailsApiService();
@@ -16,6 +19,9 @@ class PropertyDetailsViewModel extends ChangeNotifier {
 
   PropertyDetailsModel? propertyDetailsModel;
   List<AmenitiesModel> amenitiesList = [];
+  final LanguageApiService _languageApiService = LanguageApiService();
+  List<LanguageModel> propertyDetailsLang = [];
+  List<LanguageModel> bookingAmountLang = [];
 
   YoutubePlayerController youTubeController = YoutubePlayerController(
     initialVideoId: '',
@@ -257,5 +263,19 @@ class PropertyDetailsViewModel extends ChangeNotifier {
           imageUrl:
               'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/refrigerator-01.png?alt=media&token=102cccf8-df60-48ad-b3e7-d8bb6e4b9782'));
     }
+  }
+  Future<void> getPropertyDetailsLanguagesData(
+      {required String language, required String pageName}) async {
+    final response = await _languageApiService.fetchLanguagesData(
+        language: language, pageName: pageName);
+    propertyDetailsLang = response;
+    notifyListeners();
+  }
+  Future<void> getBookingPageLanguagesData(
+      {required String language, required String pageName}) async {
+    final response = await _languageApiService.fetchLanguagesData(
+        language: language, pageName: pageName);
+    bookingAmountLang = response;
+    notifyListeners();
   }
 }

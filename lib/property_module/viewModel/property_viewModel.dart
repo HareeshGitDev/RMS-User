@@ -17,7 +17,9 @@ class PropertyViewModel extends ChangeNotifier {
   WishListModel wishListModel = WishListModel();
   List<String> locations = [];
   final LanguageApiService _languageApiService = LanguageApiService();
-  List<LanguageModel> languageData = [];
+  List<LanguageModel> searchPageLang = [];
+  List<LanguageModel> wishListLang = [];
+  List<LanguageModel> propertyListingLang = [];
 
 
   Future<void> getPropertyDetailsList({
@@ -82,7 +84,21 @@ class PropertyViewModel extends ChangeNotifier {
       {required String language, required String pageName}) async {
     final response = await _languageApiService.fetchLanguagesData(
         language: language, pageName: pageName);
-    languageData = response;
+    searchPageLang = response;
+    notifyListeners();
+  }
+  Future<void> getWishListedLanguagesData(
+      {required String language, required String pageName}) async {
+    final response = await _languageApiService.fetchLanguagesData(
+        language: language, pageName: pageName);
+    wishListLang = response;
+    notifyListeners();
+  }
+  Future<void> getPropertyListingLanguagesData(
+      {required String language, required String pageName}) async {
+    final response = await _languageApiService.fetchLanguagesData(
+        language: language, pageName: pageName);
+    propertyListingLang = response;
     notifyListeners();
   }
 }

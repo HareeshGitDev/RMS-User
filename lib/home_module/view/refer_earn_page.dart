@@ -10,7 +10,10 @@ import 'package:flutx/widgets/text/text.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../language_module/model/language_model.dart';
 import '../../theme/custom_theme.dart';
+import '../../utils/constants/sp_constants.dart';
+import '../../utils/service/shared_prefrences_util.dart';
 
 class ReferAndEarn extends StatefulWidget {
   ReferAndEarn({Key? key}) : super(key: key);
@@ -23,16 +26,24 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
   var _mainHeight;
   var _mainWidth;
   late HomeViewModel _homeViewModel;
+  late SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
 
   @override
   void initState() {
+    super.initState();
     _homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
     _homeViewModel.getInviteEarnDetails();
-    super.initState();
+    getLanguageData();
   }
-  Future onRefresh()async{
-     return _homeViewModel.getInviteEarnDetails();
+
+  getLanguageData() async {
+    await _homeViewModel.getReferAndEarnLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'refer&earn');
   }
+
+  bool nullCheck({required List<LanguageModel> list}) =>
+      list.isNotEmpty ? true : false;
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +53,9 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
     return Consumer<HomeViewModel>(builder: (context, value, child) {
       return Scaffold(
         appBar: _getAppBar(context: context),
-        body: value.referAndEarnModel.msg != null &&
-                value.referAndEarnModel.msg?.toLowerCase() == 'success'
+        body: value.referAndEarnModel != null &&
+                value.referAndEarnModel?.msg != null &&
+                value.referAndEarnModel?.data != null
             ? Container(
                 color: Colors.white,
                 height: _mainHeight,
@@ -95,7 +107,8 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                       Images.rmscard_background,
                                     ),
                                     colorFilter: ColorFilter.mode(
-                                        CustomTheme.appTheme, BlendMode.colorBurn),
+                                        CustomTheme.appTheme,
+                                        BlendMode.colorBurn),
                                     fit: BoxFit.cover,
                                   ),
 
@@ -111,7 +124,8 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                   child: Column(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         mainAxisAlignment:
@@ -124,8 +138,8 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                             ),
                                             Text(
                                               "Monies",
-                                              style:
-                                                  TextStyle(color: Colors.white),
+                                              style: TextStyle(
+                                                  color: Colors.white),
                                             )
                                           ]),
                                           Container(
@@ -142,15 +156,16 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                       Container(
                                         alignment: Alignment.center,
                                         height: 28,
-                                        width: MediaQuery.of(context).size.width *
-                                            0.20,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.20,
                                         margin: EdgeInsets.all(20),
                                         decoration: BoxDecoration(
                                             color: Colors.white,
                                             borderRadius:
                                                 BorderRadius.circular(35)),
                                         child: Text(
-                                            '$rupee ${value.referAndEarnModel.data?.refferalMoney ?? " 0 "}'),
+                                            '$rupee ${value.referAndEarnModel?.data?.refferalMoney ?? " 0 "}'),
                                       )
                                     ],
                                   ),
@@ -191,12 +206,13 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                   margin: EdgeInsets.symmetric(horizontal: 15),
                                   height: _mainHeight * 0.20,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Container(
                                           margin: EdgeInsets.only(top: 10),
                                           child: Text(
-                                            "Your Invite Code",
+                                            '${nullCheck(list: value.referAndEarnLang) ? value.referAndEarnLang[0].name : 'Your Invite Code'}',
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 fontSize: 12,
@@ -209,15 +225,17 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                               MainAxisAlignment.center,
                                           children: [
                                             Padding(
-                                              padding: const EdgeInsets.all(6.0),
+                                              padding:
+                                                  const EdgeInsets.all(6.0),
                                               child: Text(
-                                                  value.referAndEarnModel.data
+                                                  value.referAndEarnModel?.data
                                                           ?.refferalCode ??
                                                       " ",
                                                   textAlign: TextAlign.center,
-                                                  style: TextStyle(fontSize: 20)),
+                                                  style:
+                                                      TextStyle(fontSize: 20)),
                                             ),
-                                            value.referAndEarnModel.data
+                                            value.referAndEarnModel?.data
                                                         ?.refferalCode !=
                                                     null
                                                 ? GestureDetector(
@@ -226,13 +244,14 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                                           ClipboardData(
                                                               text: value
                                                                       .referAndEarnModel
-                                                                      .data
+                                                                      ?.data
                                                                       ?.refferalCode ??
                                                                   " "));
                                                       RMSWidgets.getToast(
                                                           message:
                                                               'Invite Code Copied ',
-                                                          color: Colors.black12);
+                                                          color:
+                                                              Colors.black12);
                                                     },
                                                     child: Padding(
                                                       padding:
@@ -244,7 +263,8 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                                             TextAlign.center,
                                                         style: TextStyle(
                                                             backgroundColor:
-                                                                CustomTheme.appThemeContrast
+                                                                CustomTheme
+                                                                    .appThemeContrast
                                                                     .withAlpha(
                                                                         60)),
                                                       ),
@@ -257,7 +277,7 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                       Padding(
                                         padding: const EdgeInsets.all(16),
                                         child: Text(
-                                          "Invite Your Friend and Get 1000 to your account once he/she books a flats using your Invite Code. ",
+                                          '${nullCheck(list: value.referAndEarnLang) ? value.referAndEarnLang[1].name : 'Invite Your Friend and Get 1000 to your account once he/she books a flats using your Invite Code.'}',
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
@@ -266,7 +286,8 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                         margin: EdgeInsets.only(
                                             left: 15, right: 15, bottom: 15),
                                         height: _mainHeight * 0.08,
-                                        width: MediaQuery.of(context).size.width,
+                                        width:
+                                            MediaQuery.of(context).size.width,
                                         child: Neumorphic(
                                             style: NeumorphicStyle(
                                               color: Colors.green,
@@ -275,7 +296,7 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                               onPressed: () async {
                                                 await Share.share(value
                                                         .referAndEarnModel
-                                                        .data
+                                                        ?.data
                                                         ?.refferalText ??
                                                     " ");
                                               },
@@ -288,7 +309,7 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                                     color: Colors.white,
                                                   ),
                                                   Text(
-                                                    "   Invite Your Friends  ",
+                                                    '${nullCheck(list: value.referAndEarnLang) ? value.referAndEarnLang[2].name : 'Invite Your Friends'}',
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                         color: Colors.white),
@@ -308,16 +329,19 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                         alignment: Alignment.center,
                         child: GestureDetector(
                             onTap: _showDialog,
-                            child: Text("Terms and Conditions",
+                            child: Text('${nullCheck(list: value.referAndEarnLang) ? value.referAndEarnLang[4].name : 'Terms & Conditions'}',
                                 style: TextStyle(color: CustomTheme.appTheme))),
                       ),
                     ],
                   ),
                 ))
-            : value.referAndEarnModel.msg != null &&
-                    value.referAndEarnModel.msg?.toLowerCase() == 'failure'
+            : value.referAndEarnModel != null &&
+                    value.referAndEarnModel?.msg != null &&
+                    value.referAndEarnModel?.data == null
                 ? Center(
-            child: RMSWidgets.someError(context: context,))
+                    child: RMSWidgets.someError(
+                    context: context,
+                  ))
                 : Center(
                     child: RMSWidgets.getLoader(color: CustomTheme.appTheme)),
       );
@@ -335,7 +359,10 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
               bottomRight: Radius.circular(15))),
       titleSpacing: 0,
       backgroundColor: CustomTheme.appTheme,
-      title: Text('Refer And Earn'),
+      title: Text(
+          nullCheck(list: context.watch<HomeViewModel>().referAndEarnLang)
+              ? '${context.watch<HomeViewModel>().referAndEarnLang[3].name}'
+              : 'Refer & Earn'),
     );
   }
 
