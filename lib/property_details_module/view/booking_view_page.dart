@@ -26,6 +26,7 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../images.dart';
+import '../../language_module/model/language_model.dart';
 import '../../payment_module/model/payment_request_model.dart';
 import '../model/property_details_util_model.dart';
 import '../../utils/constants/enum_consts.dart';
@@ -66,8 +67,18 @@ class _BookingPageState extends State<BookingPage> {
   void initState() {
     super.initState();
     _viewModel = Provider.of<PropertyDetailsViewModel>(context, listen: false);
+    getLanguageData();
     initMethod();
   }
+
+  getLanguageData() async {
+    await _viewModel.getBookingPageLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'bookingpage');
+  }
+
+  bool nullCheck({required List<LanguageModel> list}) =>
+      list.isNotEmpty ? true : false;
 
   Future<void> initMethod() async {
     _emailController.text = (widget.propertyDetailsUtilModel.email).toString();
@@ -134,7 +145,7 @@ class _BookingPageState extends State<BookingPage> {
                           : Container(
                               height: 35,
                               width: _mainWidth,
-                              padding: EdgeInsets.only(left: 15,right: 5),
+                              padding: EdgeInsets.only(left: 15, right: 5),
                               color: CustomTheme.errorColor,
                               alignment: Alignment.center,
                               child: Text(
@@ -144,9 +155,11 @@ class _BookingPageState extends State<BookingPage> {
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis),
                             ),
-                  SizedBox(height: 15,),
+                  SizedBox(
+                    height: 15,
+                  ),
                   Text(
-                    "You Are almost Done !",
+                    '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[0].name : "You Are almost Done !"}',
                     style: TextStyle(
                         fontSize: 24,
                         fontFamily: fontFamily,
@@ -194,7 +207,8 @@ class _BookingPageState extends State<BookingPage> {
                                             _currentStep += 1;
                                           });
                                         },
-                                        child: Text('Next'),
+                                        child: Text(
+                                            '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[3].name : 'Next'}'),
                                         style: ButtonStyle(
                                             backgroundColor:
                                                 MaterialStateProperty.all<
@@ -208,8 +222,8 @@ class _BookingPageState extends State<BookingPage> {
                                                           10)),
                                             )),
                                       ),
-
-                                      Visibility( visible: details.stepIndex>0,
+                                      Visibility(
+                                        visible: details.stepIndex > 0,
                                         child: ElevatedButton(
                                           onPressed: () {
                                             if (_currentStep <= 0) return;
@@ -217,7 +231,8 @@ class _BookingPageState extends State<BookingPage> {
                                               _currentStep -= 1;
                                             });
                                           },
-                                          child: Text('Back'),
+                                          child: Text(
+                                              '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[4].name : 'Prevoius'}'),
                                           style: ButtonStyle(
                                               backgroundColor:
                                                   MaterialStateProperty.all<
@@ -263,7 +278,7 @@ class _BookingPageState extends State<BookingPage> {
                               Step(
                                 isActive: true,
                                 title: Text(
-                                  'Select Date',
+                                  '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[1].name : 'Select Date'}',
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -274,13 +289,16 @@ class _BookingPageState extends State<BookingPage> {
                                 content: _getSelectDateView(
                                     context: context,
                                     model: value.bookingAmountsResponseModel ??
-                                        BookingAmountsResponseModel()),
+                                        BookingAmountsResponseModel(),
+                                    value: value),
                               ),
                               Step(
                                 isActive: true,
                                 state: StepState.complete,
                                 title: Text(
-                                  'Guest Name* (As per Aadhar)',
+                                  '${nullCheck(list: value.bookingAmountLang)
+                                      ? value.bookingAmountLang[5].name
+                                      :'Guest Name* (As per Aadhar)'}',
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -306,7 +324,7 @@ class _BookingPageState extends State<BookingPage> {
                                   },*/
                                       style: TextStyle(fontFamily: fontFamily),
                                       controller: _nameController,
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                         border: InputBorder.none,
                                         prefixIcon: Icon(
                                             Icons.drive_file_rename_outline),
@@ -319,8 +337,10 @@ class _BookingPageState extends State<BookingPage> {
                                 isActive: true,
                                 state: StepState.complete,
                                 title: Text(
-                                  'Guest Mobile*',
-                                  style: TextStyle(
+                                  '${nullCheck(list: value.bookingAmountLang)
+                                      ? value.bookingAmountLang[6].name
+                                      :'Guest Mobile*'}',
+                                  style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
                                       fontFamily: fontFamily,
@@ -361,8 +381,10 @@ class _BookingPageState extends State<BookingPage> {
                                 isActive: true,
                                 state: StepState.complete,
                                 title: Text(
-                                  'Guest Email*',
-                                  style: TextStyle(
+                                  '${nullCheck(list: value.bookingAmountLang)
+                                      ? value.bookingAmountLang[7].name
+                                      :'Guest Email*'}',
+                                  style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
                                       fontFamily: fontFamily,
@@ -415,9 +437,11 @@ class _BookingPageState extends State<BookingPage> {
                               ),
                               Step(
                                 isActive: true,
-                                title: const Text(
-                                  'Coupan Code',
-                                  style: TextStyle(
+                                title: Text(
+                                  '${nullCheck(list: value.bookingAmountLang)
+                                      ? value.bookingAmountLang[5].name
+                                      :'Coupon Code'}',
+                                  style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
                                       fontFamily: fontFamily,
@@ -529,7 +553,7 @@ class _BookingPageState extends State<BookingPage> {
                           _showBreakdownBottomSheet(
                               context: context,
                               model: value.bookingAmountsResponseModel ??
-                                  BookingAmountsResponseModel());
+                                  BookingAmountsResponseModel(),value: value);
                         }
                       : () {},
                   child: Container(
@@ -539,7 +563,9 @@ class _BookingPageState extends State<BookingPage> {
                     width: _mainWidth,
                     child: RichText(
                         text: TextSpan(
-                            text: 'Click to see ',
+                            text: '${nullCheck(list: value.bookingAmountLang)
+                                ? value.bookingAmountLang[10].name
+                                :'Click to see '}',
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 12,
@@ -547,7 +573,9 @@ class _BookingPageState extends State<BookingPage> {
                                 color: Colors.black),
                             children: <TextSpan>[
                           TextSpan(
-                            text: ' Price BreakDown',
+                            text: ' ${nullCheck(list: value.bookingAmountLang)
+                                ? value.bookingAmountLang[11].name
+                                :' Price BreakDown'}',
                             style: TextStyle(
                               color: myFavColor,
                               fontSize: 14,
@@ -579,7 +607,9 @@ class _BookingPageState extends State<BookingPage> {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          Text('Payable Amount'),
+                          Text('${nullCheck(list: value.bookingAmountLang)
+                              ? value.bookingAmountLang[12].name
+                              :'Payable Amount'}'),
                         ],
                       ),
                     ),
@@ -670,8 +700,10 @@ class _BookingPageState extends State<BookingPage> {
                                 }
                               : () {},
                           child: Text(
-                            'Proceed Booking',
-                            style: TextStyle(
+                            '${nullCheck(list: value.bookingAmountLang)
+                                ? value.bookingAmountLang[13].name
+                                :'Proceed Booking'}',
+                            style: const TextStyle(
                               fontFamily: fontFamily,
                               fontSize: 16,
                             ),
@@ -748,7 +780,8 @@ class _BookingPageState extends State<BookingPage> {
 
   Widget _getSelectDateView(
       {required BuildContext context,
-      required BookingAmountsResponseModel model}) {
+      required BookingAmountsResponseModel model,
+      required PropertyDetailsViewModel value}) {
     return GestureDetector(
       onTap: () async {
         PickerDateRange? dateRange =
@@ -767,10 +800,8 @@ class _BookingPageState extends State<BookingPage> {
           checkOutDate = DateTimeService.ddMMYYYYformatDate(
               dateRange.endDate ?? DateTime.now().add(const Duration(days: 1)));
 
-          await preferenceUtil.setString(
-              rms_checkInDate, checkInDate);
-          await preferenceUtil.setString(
-              rms_checkOutDate, checkOutDate);
+          await preferenceUtil.setString(rms_checkInDate, checkInDate);
+          await preferenceUtil.setString(rms_checkOutDate, checkOutDate);
 
           await _viewModel.getBookingDetails(
               model: BookingAmountRequestModel(
@@ -784,104 +815,130 @@ class _BookingPageState extends State<BookingPage> {
           Navigator.of(context).pop();
         }
       },
-      child: model.msg == null?RMSWidgets.showShimmer(height: _mainHeight * 0.26, width: _mainWidth,borderCorner: 15):Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.blueGrey.shade100),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        padding: EdgeInsets.only(left: _mainWidth * 0.02, top: 10, bottom: 10),
-        height: _mainHeight * 0.26,
-        width: _mainWidth,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: EdgeInsets.only(right: 25),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: model.msg == null
+          ? RMSWidgets.showShimmer(
+              height: _mainHeight * 0.26, width: _mainWidth, borderCorner: 15)
+          : Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.blueGrey.shade100),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              padding:
+                  EdgeInsets.only(left: _mainWidth * 0.02, top: 10, bottom: 10),
+              height: _mainHeight * 0.26,
+              width: _mainWidth,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
+                  Container(
+                    margin: EdgeInsets.only(right: 25),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            Text(showformatDate(checkInDate),
+                                style: TextStyle(fontSize: 16)),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text('CheckIn: 12:00PM',
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.grey)),
+                          ],
+                        ),
+                        Text(
+                          'Edit',
+                          style: TextStyle(color: CustomTheme.appThemeContrast),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(showformatDate(checkInDate),
-                          style: TextStyle(fontSize: 16)),
-                      SizedBox(
-                        height: 5,
+                      Column(
+                        children: [
+                          SizedBox(
+                              height: 40,
+                              child: VerticalDivider(
+                                width: 40,
+                                thickness: 1,
+                                color: Colors.grey,
+                                endIndent: 5,
+                                indent: 5,
+                              )),
+                          RichText(
+                              text: TextSpan(
+                                  text:
+                                      '${model.data?.nights != null ? model.data?.nights.toString() : 0}',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
+                                      fontFamily: fontFamily,
+                                      color: Colors.grey),
+                                  children: <TextSpan>[
+                                TextSpan(
+                                  text:
+                                      ' ${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[2].name : ' Nights'}',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
+                                      fontFamily: fontFamily,
+                                      color: Colors.grey),
+                                ),
+                              ])),
+                          SizedBox(
+                              height: 40,
+                              child: VerticalDivider(
+                                width: 40,
+                                thickness: 1,
+                                color: Colors.grey,
+                                endIndent: 5,
+                                indent: 5,
+                              )),
+                        ],
                       ),
-                      Text('CheckIn: 12:00PM',
-                          style: TextStyle(fontSize: 12, color: Colors.grey)),
                     ],
                   ),
-                  Text(
-                    'Edit',
-                    style: TextStyle(color: CustomTheme.appThemeContrast),
+                  Container(
+                    margin: EdgeInsets.only(right: 25),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            Text(showformatDate(checkOutDate),
+                                style: TextStyle(fontSize: 16)),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              'CheckOut: 11:00AM',
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 12),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          'Edit',
+                          style: TextStyle(color: CustomTheme.appThemeContrast),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    SizedBox(
-                        height: 40,
-                        child: VerticalDivider(
-                          width: 40,
-                          thickness: 1,
-                          color: Colors.grey,
-                          endIndent: 5,
-                          indent: 5,
-                        )),
-                    Text(
-                        '${model.data?.nights != null ? model.data?.nights.toString() : 0} Nights'),
-                    SizedBox(
-                        height: 40,
-                        child: VerticalDivider(
-                          width: 40,
-                          thickness: 1,
-                          color: Colors.grey,
-                          endIndent: 5,
-                          indent: 5,
-                        )),
-                  ],
-                ),
-              ],
-            ),
-            Container(
-              margin: EdgeInsets.only(right: 25),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      Text(showformatDate(checkOutDate),
-                          style: TextStyle(fontSize: 16)),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        'CheckOut: 11:00AM',
-                        style: TextStyle(color: Colors.grey, fontSize: 12),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    'Edit',
-                    style: TextStyle(color: CustomTheme.appThemeContrast),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
   void _showBreakdownBottomSheet(
       {required BuildContext context,
-      required BookingAmountsResponseModel model}) {
+      required BookingAmountsResponseModel model,
+      required PropertyDetailsViewModel value
+      }) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext buildContext) {
@@ -899,8 +956,10 @@ class _BookingPageState extends State<BookingPage> {
                   Column(
                     children: <Widget>[
                       Text(
-                        'See Payment BreakDown',
-                        style: TextStyle(
+                        '${nullCheck(list: value.bookingAmountLang)
+                            ? value.bookingAmountLang[14].name
+                            :'See Payment BreakDown'}',
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
@@ -919,7 +978,9 @@ class _BookingPageState extends State<BookingPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Unit Rent"),
+                                  Text('${nullCheck(list: value.bookingAmountLang)
+                                      ? value.bookingAmountLang[15].name
+                                      :"Unit Rent"}'),
                                   Text('${model.data?.totalAmount}'),
                                 ],
                               ),
@@ -930,7 +991,9 @@ class _BookingPageState extends State<BookingPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Deposite (Fully Refunded)"),
+                                  Text('${nullCheck(list: value.bookingAmountLang)
+                                      ? value.bookingAmountLang[16].name
+                                      :"Deposite (Fully Refunded)"}'),
                                   Text('${model.data?.deposit}'),
                                 ],
                               ),
@@ -941,7 +1004,9 @@ class _BookingPageState extends State<BookingPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Refferal discount"),
+                                  Text('${nullCheck(list: value.bookingAmountLang)
+                                      ? value.bookingAmountLang[17].name
+                                      :"Refferal discount"}'),
                                   Text('${model.data?.refferalDiscount}'),
                                 ],
                               ),
@@ -952,7 +1017,9 @@ class _BookingPageState extends State<BookingPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("coupon discount"),
+                                  Text('${nullCheck(list: value.bookingAmountLang)
+                                      ? value.bookingAmountLang[18].name
+                                      :"Coupon discount"}'),
                                   Text('${model.data?.couponDiscount}'),
                                 ],
                               ),

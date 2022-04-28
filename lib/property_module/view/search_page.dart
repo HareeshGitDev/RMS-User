@@ -139,7 +139,7 @@ class _SearchPageState extends State<SearchPage> {
                         },
                         decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText:nullCheck(list: value.languageData) ? '${value.languageData[0].name}' : 'Search by Locality , Landmark or City',
+                            hintText:nullCheck(list: value.searchPageLang) ? '${value.searchPageLang[0].name}' : 'Search by Locality , Landmark or City',
                             hintStyle: TextStyle(
                                 fontFamily: fontFamily,
                                 fontSize: 16,
@@ -276,7 +276,7 @@ class _SearchPageState extends State<SearchPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
-                                  nullCheck(list: value.languageData) ? '${value.languageData[1].name}' :'CheckIn Date',
+                                  nullCheck(list: value.searchPageLang) ? '${value.searchPageLang[1].name}' :'CheckIn Date',
                                   style: TextStyle(
                                       color: Colors.blueGrey,
                                       fontFamily: fontFamily,
@@ -297,7 +297,7 @@ class _SearchPageState extends State<SearchPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
-                                  nullCheck(list: value.languageData) ? '${value.languageData[2].name}' :'CheckOut Date',
+                                  nullCheck(list: value.searchPageLang) ? '${value.searchPageLang[2].name}' :'CheckOut Date',
                                   style: TextStyle(
                                       color: Colors.blueGrey,
                                       fontFamily: fontFamily,
@@ -342,7 +342,7 @@ class _SearchPageState extends State<SearchPage> {
                           FocusScope.of(context).unfocus();
                         },
                         child: Text(
-                          nullCheck(list: value.languageData) ? '${value.languageData[3].name}' :'Search',
+                          nullCheck(list: value.searchPageLang) ? '${value.searchPageLang[3].name}' :'Search',
                           style: TextStyle(
                               fontFamily: fontFamily,
                               color: Colors.white,
@@ -366,7 +366,7 @@ class _SearchPageState extends State<SearchPage> {
                     Container(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        nullCheck(list: value.languageData) ? '${value.languageData[4].name}' : 'Frequently Searched Locations',
+                        nullCheck(list: value.searchPageLang) ? '${value.searchPageLang[4].name}' : 'Frequently Searched Locations',
                         style: TextStyle(
                           //  color: CustomTheme.appTheme,
                           fontFamily: fontFamily,
@@ -467,7 +467,7 @@ class _SearchPageState extends State<SearchPage> {
                     Container(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        nullCheck(list: value.languageData) ? '${value.languageData[5].name}' :'Search by Desired Property Type',
+                        nullCheck(list: value.searchPageLang) ? '${value.searchPageLang[5].name}' :'Search by Desired Property Type',
                         style: TextStyle(
                           color: Colors.black,
                           fontFamily: fontFamily,

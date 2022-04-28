@@ -89,8 +89,8 @@ class _InvoiceState extends State<InvoicePage> {
         body: Consumer<MyStayViewModel>(
           builder: (context, value, child) {
             return value.invoiceDetailsModel != null &&
-                value.invoiceDetailsModel?.msg != null &&
-                value.invoiceDetailsModel?.data != null
+                    value.invoiceDetailsModel?.msg != null &&
+                    value.invoiceDetailsModel?.data != null
                 ? Container(
                     height: _mainHeight,
                     width: _mainWidth,
@@ -247,10 +247,10 @@ class _InvoiceState extends State<InvoicePage> {
                                           Container(
                                               child: data?.pendingBalance == 0
                                                   ? Text(nullCheck(
-                                                  list:
-                                                  value.invoiceLang)
-                                                  ? ' ${value.invoiceLang[11].name} '
-                                                  :'Download Invoice')
+                                                          list:
+                                                              value.invoiceLang)
+                                                      ? ' ${value.invoiceLang[11].name} '
+                                                      : 'Download Invoice')
                                                   : Text(nullCheck(
                                                           list:
                                                               value.invoiceLang)
@@ -277,12 +277,13 @@ class _InvoiceState extends State<InvoicePage> {
                             value.invoiceDetailsModel?.data!.length ?? 0),
                   )
                 : value.invoiceDetailsModel != null &&
-                value.invoiceDetailsModel?.msg != null &&
-                value.invoiceDetailsModel?.data == null
-                ? RMSWidgets.noData(
-                context: context,
-                message: 'Something went Wrong.Invoice Details could not be found.')
-                : Center(child: RMSWidgets.getLoader());
+                        value.invoiceDetailsModel?.msg != null &&
+                        value.invoiceDetailsModel?.data == null
+                    ? RMSWidgets.noData(
+                        context: context,
+                        message:
+                            'Something went Wrong.Invoice Details could not be found.')
+                    : Center(child: RMSWidgets.getLoader());
           },
         ));
   }

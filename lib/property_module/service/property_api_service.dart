@@ -73,7 +73,7 @@ class PropertyApiService {
     final data = response as Map<String, dynamic>;
 
     if (data['msg'].toString().toLowerCase().contains('failure')) {
-      return WishListModel(msg: 'failure', data: []);
+      return WishListModel(msg: 'failure',);
     } else {
       return WishListModel.fromJson(data);
     }

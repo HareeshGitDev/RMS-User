@@ -14,8 +14,9 @@ import '../service/home_api_service.dart';
 class HomeViewModel extends ChangeNotifier {
   final HomeApiService _homeApiService = HomeApiService();
   final LanguageApiService _languageApiService = LanguageApiService();
-  ReferAndEarnModel referAndEarnModel = ReferAndEarnModel();
+  ReferAndEarnModel? referAndEarnModel ;
   List<LanguageModel> languageData = [];
+  List<LanguageModel> referAndEarnLang = [];
 
   List<CitySuggestionModel> getCitySuggestionList(
       {required BuildContext context}) {
@@ -116,6 +117,13 @@ class HomeViewModel extends ChangeNotifier {
     final response = await _languageApiService.fetchLanguagesData(
         language: language, pageName: pageName);
     languageData = response;
+    notifyListeners();
+  }
+  Future<void> getReferAndEarnLanguagesData(
+      {required String language, required String pageName}) async {
+    final response = await _languageApiService.fetchLanguagesData(
+        language: language, pageName: pageName);
+    referAndEarnLang = response;
     notifyListeners();
   }
 }
