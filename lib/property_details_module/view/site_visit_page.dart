@@ -107,7 +107,7 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                   FilterChip(
                       selected: _selected[0],
                       label: Container(
-                        height: _mainHeight * 0.02,
+                        height: _mainHeight * 0.025,
                         child: Text(
                           'Virtual Visit',
                           style: TextStyle(
@@ -133,7 +133,7 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                   FilterChip(
                       selected: _selected[1],
                       label: Container(
-                        height: _mainHeight * 0.02,
+                        height: _mainHeight * 0.025,
                         child: Text(
                           'Physical Visit',
                           style: TextStyle(
@@ -198,6 +198,8 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                     color: Colors.white,
                   ),
                   child: TextFormField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                  //  validator: (input) => input?.isValidEmail() ? null : "Check your email",
                     controller: _emailController,
                     decoration: InputDecoration(
                       border: InputBorder.none,
@@ -337,14 +339,14 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                             message: 'Please Enter Your Name',
                             color: Colors.grey);
                       } else {
-                        if (_emailController.text.isEmpty) {
+                        if (_emailController.text.isEmpty || (!_emailController.toString().contains('@') && !_emailController.toString().contains('.com')) ) {
                           RMSWidgets.getToast(
-                              message: 'Please Enter Your Email Address',
+                              message: 'Please Enter Your Valid Email Address',
                               color: Colors.grey);
                         } else {
-                          if (_phoneNumberController.text.isEmpty) {
+                          if (_phoneNumberController.text.isEmpty || _phoneNumberController.text.length!=10) {
                             RMSWidgets.getToast(
-                                message: 'Please Enter Your Mobile Number',
+                                message: 'Please Enter Your Correct Mobile Number',
                                 color: Colors.grey);
                           } else {
                             if (showDate == 'Select Date For Visit' ||

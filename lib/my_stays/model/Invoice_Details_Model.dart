@@ -31,11 +31,11 @@ class Data {
   String? durationPeriod;
   String? amount;
   String? amountRecieved;
-  int? pendingBalance;
+  dynamic pendingBalance;
   String? fromDate;
   String? tillDate;
   String? status;
-  int? refferalDiscount;
+  dynamic refferalDiscount;
 
   Data(
       {this.bookingId,

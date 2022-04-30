@@ -309,29 +309,32 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                           titlePadding: EdgeInsets.all(0),
                           title: Align(
                             alignment: Alignment.bottomLeft,
-                            child: IconButton(
-                              icon: value.propertyDetailsModel?.data?.shareLink !=
-                                          null &&
-                                      value.propertyDetailsModel?.data?.shareLink
-                                              ?.trim() !=
-                                          ''
-                                  ? Icon(
-                                      Icons.play_circle_outline,
-                                      color: Colors.white,
-                                      size: 20,
-                                    )
-                                  : Container(),
-                              onPressed: value.propertyDetailsModel?.data
-                                              ?.shareLink !=
-                                          null &&
-                                      value.propertyDetailsModel?.data?.shareLink
-                                              ?.trim() !=
-                                          ''
-                                  ? () {
-                                      showPics.value = !showPics.value;
-                                      value.youTubeController.reset();
-                                    }
-                                  : () {},
+                            child: Visibility(
+                              visible: value.propertyDetailsModel?.data?.details?.videoLink!='',
+                              child: IconButton(
+                                icon: value.propertyDetailsModel?.data?.shareLink !=
+                                            null &&
+                                        value.propertyDetailsModel?.data?.shareLink
+                                                ?.trim() !=
+                                            ''
+                                    ? Icon(
+                                        Icons.play_circle_outline,
+                                        color: Colors.white,
+                                        size: 20,
+                                      )
+                                    : Container(),
+                                onPressed: value.propertyDetailsModel?.data
+                                                ?.shareLink !=
+                                            null &&
+                                        value.propertyDetailsModel?.data?.shareLink
+                                                ?.trim() !=
+                                            ''
+                                    ? () {
+                                        showPics.value = !showPics.value;
+                                        value.youTubeController.reset();
+                                      }
+                                    : () {},
+                              ),
                             ),
                           ),
                         ),
@@ -410,19 +413,20 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                           fontSize: 16,
                                           fontFamily: fontFamily,
                                           fontWeight: FontWeight.w600),
-                                      maxLines: 1,
+                                      maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    Text(
+                                    Row(children: [
+                                      Text(
                                       value.propertyDetailsModel?.data
-                                                      ?.details !=
-                                                  null &&
-                                              value.propertyDetailsModel?.data
-                                                      ?.details?.bname !=
-                                                  null
+                                          ?.details !=
+                                          null &&
+                                          value.propertyDetailsModel?.data
+                                              ?.details?.bname !=
+                                              null
                                           ? (value.propertyDetailsModel?.data
-                                                  ?.details?.bname)
-                                              .toString()
+                                          ?.details?.bname)
+                                          .toString()
                                           : '',
                                       style: TextStyle(
                                           color: Colors.black54,
@@ -432,6 +436,26 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
+                                      Text(
+                                      value.propertyDetailsModel?.data
+                                          ?.details !=
+                                          null &&
+                                          value.propertyDetailsModel?.data
+                                              ?.details?.propId !=
+                                              null
+                                          ? ' ( ${(value.propertyDetailsModel?.data
+                                          ?.details?.propId)} )'
+                                          .toString()
+                                          : '',
+                                      style: TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 14,
+                                          fontFamily: fontFamily,
+                                          fontWeight: FontWeight.w600),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),],
+                                      ),
                                   ],
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                 ),
@@ -1062,11 +1086,18 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                 value.propertyDetailsLang[22].name
                                     :'Site Visit'}',
                                 style: TextStyle(
-                                    color: CustomTheme.white,
+                                    color: CustomTheme.black,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500),
                               ),
-                              style: ButtonStyle(
+                              style:ElevatedButton.styleFrom(primary: Colors.white,
+                                side: BorderSide(width: 1.0,color: CustomTheme.appTheme,),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),),
+                              ),
+                              /*style:
+
+                               ButtonStyle(
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
                                           CustomTheme.appThemeContrast),
@@ -1075,7 +1106,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                     RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(10)),
-                                  )),
+                                  )), */
                             )),
                         Container(
                             width: _mainWidth * 0.4,
