@@ -117,7 +117,7 @@ class _BookingPageState extends State<BookingPage> {
           backgroundColor: Colors.white,
           appBar: AppBar(
             title: Text(
-              widget.propertyDetailsUtilModel.buildingName ?? '',
+              '${widget.propertyDetailsUtilModel.buildingName ?? ''} (${widget.propertyDetailsUtilModel.propId})',
               style: const TextStyle(
                 fontFamily: fontFamily,
               ),
@@ -201,6 +201,31 @@ class _BookingPageState extends State<BookingPage> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
+                                      Visibility(
+                                        visible: details.stepIndex > 0,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            if (_currentStep <= 0) return;
+                                            setState(() {
+                                              _currentStep -= 1;
+                                            });
+                                          },
+                                          child: Text(
+                                              '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[4].name : 'Prev'}'),
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty
+                                                      .all<Color>(CustomTheme
+                                                          .appThemeContrast),
+                                              shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                              )),
+                                        ),
+                                      ),
                                       ElevatedButton(
                                         onPressed: () {
                                           setState(() {
@@ -221,31 +246,6 @@ class _BookingPageState extends State<BookingPage> {
                                                       BorderRadius.circular(
                                                           10)),
                                             )),
-                                      ),
-                                      Visibility(
-                                        visible: details.stepIndex > 0,
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            if (_currentStep <= 0) return;
-                                            setState(() {
-                                              _currentStep -= 1;
-                                            });
-                                          },
-                                          child: Text(
-                                              '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[4].name : 'Prevoius'}'),
-                                          style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all<
-                                                          Color>(
-                                                      CustomTheme.appTheme),
-                                              shape: MaterialStateProperty.all<
-                                                  RoundedRectangleBorder>(
-                                                RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
-                                              )),
-                                        ),
                                       ),
                                     ],
                                   ),
@@ -279,7 +279,7 @@ class _BookingPageState extends State<BookingPage> {
                                 isActive: true,
                                 title: Text(
                                   '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[1].name : 'Select Date'}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
                                       fontFamily: fontFamily,
@@ -296,9 +296,7 @@ class _BookingPageState extends State<BookingPage> {
                                 isActive: true,
                                 state: StepState.complete,
                                 title: Text(
-                                  '${nullCheck(list: value.bookingAmountLang)
-                                      ? value.bookingAmountLang[5].name
-                                      :'Guest Name* (As per Aadhar)'}',
+                                  '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[5].name : 'Guest Name* (As per Aadhar)'}',
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -337,9 +335,7 @@ class _BookingPageState extends State<BookingPage> {
                                 isActive: true,
                                 state: StepState.complete,
                                 title: Text(
-                                  '${nullCheck(list: value.bookingAmountLang)
-                                      ? value.bookingAmountLang[6].name
-                                      :'Guest Mobile*'}',
+                                  '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[6].name : 'Guest Mobile*'}',
                                   style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -357,20 +353,23 @@ class _BookingPageState extends State<BookingPage> {
                                       color: Colors.white,
                                     ),
                                     child: TextFormField(
-                                      /*validator: (value) {
-                                    if (value != null && value.length < 6) {
-                                      return "Enter proper email";
-                                    }
-                                    return null;
-                                  },*/
+                                      validator: (value) {
+                                        if (value != null && value.length != 10) {
+                                          return "Enter Valid Mobile Number";
+                                        }
+                                        return null;
+                                      },
 
+                                      autovalidateMode: AutovalidateMode.onUserInteraction,
                                       keyboardType: TextInputType.phone,
+                                      maxLength: 10,
+
                                       controller: _phoneNumberController,
                                       style: TextStyle(fontFamily: fontFamily),
                                       decoration: InputDecoration(
                                         border: InputBorder.none,
 
-                                        //hintText: 'Email',
+
                                         prefixIcon: Icon(Icons.mobile_friendly),
                                       ),
                                     ),
@@ -381,9 +380,7 @@ class _BookingPageState extends State<BookingPage> {
                                 isActive: true,
                                 state: StepState.complete,
                                 title: Text(
-                                  '${nullCheck(list: value.bookingAmountLang)
-                                      ? value.bookingAmountLang[7].name
-                                      :'Guest Email*'}',
+                                  '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[7].name : 'Guest Email*'}',
                                   style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -401,13 +398,13 @@ class _BookingPageState extends State<BookingPage> {
                                       color: Colors.white,
                                     ),
                                     child: TextFormField(
-                                      /*validator: (value) {
-                                    if (value != null && value.length < 6) {
+                                    /*  validator: (value) {
+                                    if (value != null && !value.contains('@')) {
                                       return "Enter proper email";
                                     }
                                     return null;
                                   },*/
-                                      enabled: false,
+                                      enabled: true,
                                       keyboardType: TextInputType.emailAddress,
                                       controller: _emailController,
                                       style: TextStyle(fontFamily: fontFamily),
@@ -438,9 +435,7 @@ class _BookingPageState extends State<BookingPage> {
                               Step(
                                 isActive: true,
                                 title: Text(
-                                  '${nullCheck(list: value.bookingAmountLang)
-                                      ? value.bookingAmountLang[5].name
-                                      :'Coupon Code'}',
+                                  '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[9].name : 'Coupon Code'}',
                                   style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -464,7 +459,7 @@ class _BookingPageState extends State<BookingPage> {
                                           controller: _coupanController,
                                           decoration: InputDecoration(
                                             border: InputBorder.none,
-                                            hintText: 'Enter coupan code here',
+                                            hintText: 'Enter coupon code here',
                                             prefixIcon: Icon(
                                                 Icons.monetization_on_outlined),
                                           ),
@@ -553,7 +548,8 @@ class _BookingPageState extends State<BookingPage> {
                           _showBreakdownBottomSheet(
                               context: context,
                               model: value.bookingAmountsResponseModel ??
-                                  BookingAmountsResponseModel(),value: value);
+                                  BookingAmountsResponseModel(),
+                              value: value);
                         }
                       : () {},
                   child: Container(
@@ -563,9 +559,8 @@ class _BookingPageState extends State<BookingPage> {
                     width: _mainWidth,
                     child: RichText(
                         text: TextSpan(
-                            text: '${nullCheck(list: value.bookingAmountLang)
-                                ? value.bookingAmountLang[10].name
-                                :'Click to see '}',
+                            text:
+                                '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[10].name : 'Click to see '}',
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 12,
@@ -573,9 +568,8 @@ class _BookingPageState extends State<BookingPage> {
                                 color: Colors.black),
                             children: <TextSpan>[
                           TextSpan(
-                            text: ' ${nullCheck(list: value.bookingAmountLang)
-                                ? value.bookingAmountLang[11].name
-                                :' Price BreakDown'}',
+                            text:
+                                ' ${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[11].name : ' Price BreakDown'}',
                             style: TextStyle(
                               color: myFavColor,
                               fontSize: 14,
@@ -607,9 +601,8 @@ class _BookingPageState extends State<BookingPage> {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          Text('${nullCheck(list: value.bookingAmountLang)
-                              ? value.bookingAmountLang[12].name
-                              :'Payable Amount'}'),
+                          Text(
+                              '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[12].name : 'Payable Amount'}'),
                         ],
                       ),
                     ),
@@ -669,9 +662,8 @@ class _BookingPageState extends State<BookingPage> {
                                       response.data?.orderId != null &&
                                       response.data?.callbackApi != null) {
                                     // _bookingCredentialResponseModel = response;
-                                    Navigator.of(context).pushNamedAndRemoveUntil(
+                                    Navigator.of(context).pushNamed(
                                         AppRoutes.razorpayPaymentPage,
-                                        (route) => false,
                                         arguments: PaymentRequestModel(
                                             name: response.data?.prefill?.name ??
                                                 '',
@@ -681,11 +673,12 @@ class _BookingPageState extends State<BookingPage> {
                                                 response.data?.prefill?.email ??
                                                     '',
                                             image: response.data?.image ?? '',
-                                            amount: (response.data?.amount ?? '')
-                                                .toString(),
-                                            contactNumber:
-                                                response.data?.prefill?.contact ??
-                                                    '',
+                                            amount:
+                                                (response.data?.amount ?? '')
+                                                    .toString(),
+                                            contactNumber: response
+                                                    .data?.prefill?.contact ??
+                                                '',
                                             description:
                                                 response.data?.description ??
                                                     'RMS Payment',
@@ -693,16 +686,16 @@ class _BookingPageState extends State<BookingPage> {
                                                 response.data?.orderId ?? '',
                                             paymentMode:
                                                 PaymentMode.FromProperty,
-                                            razorPayKey: response.data?.key ?? '',
-                                            redirectApi: response.data?.callbackApi ?? '',
+                                            razorPayKey:
+                                                response.data?.key ?? '',
+                                            redirectApi:
+                                                response.data?.callbackApi ?? '',
                                             extraInfo: ''));
                                   }
                                 }
                               : () {},
                           child: Text(
-                            '${nullCheck(list: value.bookingAmountLang)
-                                ? value.bookingAmountLang[13].name
-                                :'Proceed Booking'}',
+                            '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[13].name : 'Proceed Booking'}',
                             style: const TextStyle(
                               fontFamily: fontFamily,
                               fontSize: 16,
@@ -937,8 +930,7 @@ class _BookingPageState extends State<BookingPage> {
   void _showBreakdownBottomSheet(
       {required BuildContext context,
       required BookingAmountsResponseModel model,
-      required PropertyDetailsViewModel value
-      }) {
+      required PropertyDetailsViewModel value}) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext buildContext) {
@@ -956,9 +948,7 @@ class _BookingPageState extends State<BookingPage> {
                   Column(
                     children: <Widget>[
                       Text(
-                        '${nullCheck(list: value.bookingAmountLang)
-                            ? value.bookingAmountLang[14].name
-                            :'See Payment BreakDown'}',
+                        '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[14].name : 'See Payment BreakDown'}',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -978,10 +968,9 @@ class _BookingPageState extends State<BookingPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('${nullCheck(list: value.bookingAmountLang)
-                                      ? value.bookingAmountLang[15].name
-                                      :"Unit Rent"}'),
-                                  Text('${model.data?.totalAmount}'),
+                                  Text(
+                                      '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[15].name : "Unit Rent"}'),
+                                  Text('${model.data?.rent}'),
                                 ],
                               ),
                               SizedBox(
@@ -991,37 +980,40 @@ class _BookingPageState extends State<BookingPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('${nullCheck(list: value.bookingAmountLang)
-                                      ? value.bookingAmountLang[16].name
-                                      :"Deposite (Fully Refunded)"}'),
+                                  Text(
+                                      '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[16].name : "Deposit (Fully Refunded)"}'),
                                   Text('${model.data?.deposit}'),
                                 ],
                               ),
                               SizedBox(
                                 height: 10,
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('${nullCheck(list: value.bookingAmountLang)
-                                      ? value.bookingAmountLang[17].name
-                                      :"Refferal discount"}'),
-                                  Text('${model.data?.refferalDiscount}'),
-                                ],
+                              Visibility(
+                                visible: model.data?.refferalDiscount != 0,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                        '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[17].name : "Referral discount"}'),
+                                    Text('${model.data?.refferalDiscount}'),
+                                  ],
+                                ),
                               ),
                               SizedBox(
                                 height: 10,
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('${nullCheck(list: value.bookingAmountLang)
-                                      ? value.bookingAmountLang[18].name
-                                      :"Coupon discount"}'),
-                                  Text('${model.data?.couponDiscount}'),
-                                ],
+                              Visibility(
+                                visible: model.data?.couponDiscount != 0,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                        '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[18].name : "Coupon discount"}'),
+                                    Text('${model.data?.couponDiscount}'),
+                                  ],
+                                ),
                               ),
                               SizedBox(
                                 height: 10,
@@ -1045,7 +1037,7 @@ class _BookingPageState extends State<BookingPage> {
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Text(
-                          'Pay ${model.data?.advanceAmount ?? 0} Before CheckIn',
+                          'Pay ${model.data?.pendingAmount ?? 0} Before CheckIn',
                         ),
                       ),
                     ],

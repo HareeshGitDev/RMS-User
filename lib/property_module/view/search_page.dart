@@ -69,7 +69,6 @@ class _SearchPageState extends State<SearchPage> {
     _mainWidth = MediaQuery.of(context).size.width;
     return Consumer<PropertyViewModel>(
       builder: (context, value, child) {
-        log('Called');
         return Scaffold(
           body: widget.fromBottom
               ? WillPopScope(

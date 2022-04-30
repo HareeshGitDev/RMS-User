@@ -37,6 +37,7 @@ class _RazorpayPaymentPageState extends State<RazorpayPaymentPage> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
+
   @override
   void dispose() {
     _razorpay.clear();
@@ -102,13 +103,12 @@ class _RazorpayPaymentPageState extends State<RazorpayPaymentPage> {
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
-    Navigator.pushNamedAndRemoveUntil(
-        context, AppRoutes.paymentStatusPage, (route) => false,
-        arguments: {
-          'status': 'failed',
-          'amount': widget.paymentRequestModel.amount,
-          'title': widget.paymentRequestModel.description,
-        });
+    Navigator.of(context)
+        .popAndPushNamed(AppRoutes.paymentStatusPage, arguments: {
+      'status': 'failed',
+      'amount': widget.paymentRequestModel.amount,
+      'title': widget.paymentRequestModel.description,
+    });
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {}

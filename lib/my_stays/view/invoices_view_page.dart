@@ -242,22 +242,18 @@ class _InvoiceState extends State<InvoicePage> {
                                                   model: data ??
                                                       invoiceModelData.Data());
                                             },
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                              child: data?.pendingBalance == 0
-                                                  ? Text(nullCheck(
-                                                          list:
-                                                              value.invoiceLang)
-                                                      ? ' ${value.invoiceLang[11].name} '
-                                                      : 'Download Invoice')
-                                                  : Text(nullCheck(
-                                                          list:
-                                                              value.invoiceLang)
-                                                      ? ' ${value.invoiceLang[9].name} '
-                                                      : 'Pay Now')),
-                                        ],
-                                      ),
+                                      child: Container(
+                                          child: data?.pendingBalance == 0
+                                              ? Text(nullCheck(
+                                                      list:
+                                                          value.invoiceLang)
+                                                  ? ' ${value.invoiceLang[11].name} '
+                                                  : 'Download Invoice')
+                                              : Text(nullCheck(
+                                                      list:
+                                                          value.invoiceLang)
+                                                  ? ' ${value.invoiceLang[9].name} '
+                                                  : 'Pay Now')),
                                     ),
                                   ),
                                   SizedBox(

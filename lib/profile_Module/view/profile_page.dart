@@ -204,7 +204,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 6,
                   ),
                   _settingsCard(value: value),
-                  Spacer(),
+                 /* Spacer(),
                   Container(
                     height: 45,
                     margin: EdgeInsets.only(left: 15, right: 15, bottom: 15),
@@ -253,7 +253,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           )),
                     ),
-                  ),
+                  ),*/
                 ],
               )
             : Center(

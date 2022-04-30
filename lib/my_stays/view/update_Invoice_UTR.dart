@@ -11,7 +11,7 @@ import '../viewmodel/mystay_viewmodel.dart';
 class UpdateInvoiceUTRPage extends StatefulWidget {
   final String bookingId;
   final String invoiceId;
-  final String amount;
+  final dynamic amount;
 
   const UpdateInvoiceUTRPage(
       {Key? key, required this.bookingId, required this.invoiceId,required this.amount})

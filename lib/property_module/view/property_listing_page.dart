@@ -78,8 +78,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
   @override
   void initState() {
     super.initState();
-    _searchController=TextEditingController();
-    _searchController.text=widget.locationName;
+    _searchController = TextEditingController();
+    _searchController.text = widget.locationName;
 
     _propertyViewModel = Provider.of<PropertyViewModel>(context, listen: false);
     getLanguageData();
@@ -103,6 +103,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
               address: value, property: Property.fromLocation));
     }
   }
+
   getLanguageData() async {
     await _propertyViewModel.getPropertyListingLanguagesData(
         language: await preferenceUtil.getString(rms_language) ?? 'english',
@@ -137,7 +138,6 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         child: Consumer<PropertyViewModel>(
           builder: (context, value, child) {
-
             return value.propertyListModel.msg != null &&
                     value.propertyListModel.msg?.toLowerCase() == 'success'
                 ? Visibility(
@@ -234,7 +234,6 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                     arguments: data.propId),
                                 child: Card(
                                   elevation: 4,
-
                                   shadowColor: CustomTheme.appTheme,
                                   shape: const RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
@@ -247,53 +246,55 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                         children: [
                                           CarouselSlider(
                                             items: data.propPics
-                                                    ?.map((e) =>
-                                                        CachedNetworkImage(
-                                                          imageUrl: e.picLink
-                                                              .toString(),
-                                                          imageBuilder: (context,
-                                                                  imageProvider) =>
-                                                              Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              borderRadius: BorderRadius.only(
-                                                                  topLeft: Radius
-                                                                      .circular(
-                                                                          10),
-                                                                  topRight: Radius
-                                                                      .circular(
-                                                                          10)),
-                                                              image:
-                                                                  DecorationImage(
-                                                                image:
-                                                                    imageProvider,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          placeholder: (context, url) => Shimmer
-                                                              .fromColors(
-                                                                  child:
+                                                    ?.map(
+                                                        (e) =>
+                                                            CachedNetworkImage(
+                                                              imageUrl: e
+                                                                  .picLink
+                                                                  .toString(),
+                                                              imageBuilder:
+                                                                  (context,
+                                                                          imageProvider) =>
                                                                       Container(
-                                                                    height:
-                                                                        _mainHeight *
-                                                                            0.27,
-                                                                    color: Colors
-                                                                        .grey,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  borderRadius: const BorderRadius.only(
+                                                                      topLeft: Radius
+                                                                          .circular(
+                                                                              10),
+                                                                      topRight:
+                                                                          Radius.circular(
+                                                                              10)),
+                                                                  image:
+                                                                      DecorationImage(
+                                                                    image:
+                                                                        imageProvider,
+                                                                    fit: BoxFit
+                                                                        .cover,
                                                                   ),
-                                                                  baseColor: Colors
-                                                                          .grey[200]
-                                                                      as Color,
-                                                                  highlightColor:
-                                                                      Colors.grey[350]
-                                                                          as Color),
-                                                          errorWidget:
-                                                              (context, url,
+                                                                ),
+                                                              ),
+                                                              placeholder: (context, url) => Shimmer
+                                                                  .fromColors(
+                                                                      child:
+                                                                          Container(
+                                                                        height: _mainHeight *
+                                                                            0.27,
+                                                                        color: Colors
+                                                                            .grey,
+                                                                      ),
+                                                                      baseColor:
+                                                                          Colors.grey[200]
+                                                                              as Color,
+                                                                      highlightColor:
+                                                                          Colors.grey[350]
+                                                                              as Color),
+                                                              errorWidget: (context,
+                                                                      url,
                                                                       error) =>
                                                                   const Icon(Icons
                                                                       .error),
-                                                        ))
+                                                            ))
                                                     .toList() ??
                                                 [],
                                             options: CarouselOptions(
@@ -302,10 +303,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                 autoPlay: true,
                                                 aspectRatio: 16 / 9,
                                                 autoPlayInterval: Duration(
-                                                    milliseconds:
-                                                        math.Random().nextInt(
-                                                                6000) +
-                                                            1500),
+                                                    milliseconds: math.Random()
+                                                            .nextInt(6000) +
+                                                        1500),
                                                 autoPlayCurve:
                                                     Curves.fastOutSlowIn,
                                                 enableInfiniteScroll: true,
@@ -324,8 +324,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                 children: [
                                                   Icon(
                                                     Icons.home_work_outlined,
-                                                    color:
-                                                        CustomTheme.appTheme,
+                                                    color: CustomTheme.appTheme,
                                                     size: 18,
                                                   ),
                                                   const SizedBox(
@@ -333,16 +332,14 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                   ),
                                                   Expanded(
                                                     child: Text(
-                                                      data.buildingName ??
-                                                          " ",
-                                                      overflow: TextOverflow
-                                                          .ellipsis,
+                                                      data.buildingName ?? " ",
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       maxLines: 1,
                                                       style: TextStyle(
                                                         fontSize: 14,
                                                         color: Colors.black87,
-                                                        fontFamily:
-                                                            fontFamily,
+                                                        fontFamily: fontFamily,
                                                         fontWeight:
                                                             FontWeight.w500,
                                                       ),
@@ -355,8 +352,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                     maxLines: 1,
                                                     style: const TextStyle(
                                                         fontSize: 12,
-                                                        fontFamily:
-                                                            fontFamily,
+                                                        fontFamily: fontFamily,
                                                         fontWeight:
                                                             FontWeight.w700),
                                                   ),
@@ -377,13 +373,11 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                 'Multiple Units Available',
                                                 style: TextStyle(
                                                     color: Colors.grey,
-                                                    fontWeight:
-                                                        FontWeight.w700,
+                                                    fontWeight: FontWeight.w700,
                                                     fontSize: 12,
                                                     fontFamily: fontFamily),
                                               ),
-                                              alignment:
-                                                  Alignment.centerRight,
+                                              alignment: Alignment.centerRight,
                                               padding: EdgeInsets.only(
                                                   right: _mainWidth * 0.02),
                                             ),
@@ -400,8 +394,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                   fontSize: 12,
                                                   fontFamily: fontFamily,
                                                   color: Colors.black,
-                                                  fontWeight:
-                                                      FontWeight.w600),
+                                                  fontWeight: FontWeight.w600),
                                             ),
                                           ),
                                           GestureDetector(
@@ -425,22 +418,19 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                 children: [
                                                   Padding(
                                                     padding: EdgeInsets.only(
-                                                        left:
-                                                            _mainWidth * 0.02,
+                                                        left: _mainWidth * 0.02,
                                                         top: _mainHeight *
                                                             0.005),
                                                     child: RichText(
-                                                      text:
-                                                          TextSpan(children: [
+                                                      text: TextSpan(children: [
                                                         WidgetSpan(
                                                           child: Icon(
                                                             Icons
                                                                 .location_on_outlined,
                                                             color: CustomTheme
                                                                 .appTheme,
-                                                            size:
-                                                                _mainHeight *
-                                                                    0.02,
+                                                            size: _mainHeight *
+                                                                0.02,
                                                           ),
                                                         ),
                                                         TextSpan(
@@ -448,8 +438,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                                   data.city) ??
                                                               " ",
                                                           style: TextStyle(
-                                                              color: Colors
-                                                                  .black,
+                                                              color:
+                                                                  Colors.black,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w600,
@@ -467,9 +457,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                               right:
                                                                   _mainWidth *
                                                                       0.02,
-                                                              top:
-                                                                  _mainHeight *
-                                                                      0.005),
+                                                              top: _mainHeight *
+                                                                  0.005),
                                                           child: Text(
                                                             'Booked',
                                                             style: TextStyle(
@@ -501,229 +490,209 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                           ),
                                           FittedBox(
                                             child: Container(
-                                              padding:EdgeInsets.only(bottom: 10),
+                                              padding:
+                                                  EdgeInsets.only(bottom: 10),
                                               child: Row(
-
                                                 children: [
                                                   Visibility(
-                                                    visible: data.rent != null &&
-                                                        data.rent != "0",
+                                                    visible:
+                                                        data.rent != null &&
+                                                            data.rent != "0",
                                                     child: Container(
-
                                                         margin: EdgeInsets.only(
-                                                            left: _mainWidth * 0.02,
-                                                            right: _mainWidth * 0.02),
+                                                            left: _mainWidth *
+                                                                0.02,
+                                                            right: _mainWidth *
+                                                                0.02),
                                                         child: Column(
-                                                          crossAxisAlignment:CrossAxisAlignment.start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
                                                           children: [
                                                             const Text(
                                                               'Rent Per Day',
                                                               style: TextStyle(
                                                                 fontFamily:
-                                                                fontFamily,
+                                                                    fontFamily,
                                                                 fontSize: 14,
                                                                 fontWeight:
-                                                                FontWeight.w500,
-                                                              ),
-                                                            ),
-                                                            data.orgRent == data.rent
-                                                                ? Text(
-                                                                ' $rupee ${data.rent ?? " "}',
-                                                                style: TextStyle(
-                                                                    color: CustomTheme
-                                                                        .appTheme,
-                                                                    fontFamily:
-                                                                    fontFamily,
-                                                                    fontWeight:
                                                                     FontWeight
                                                                         .w500,
-                                                                    fontSize: 14))
-                                                                : RichText(
-                                                              text: TextSpan(
-                                                                  children: [
-                                                                    TextSpan(
-                                                                        text:
-                                                                        '$rupee ${data.orgRent ?? " "}',
-                                                                        style: const TextStyle(
-                                                                            color: Colors
-                                                                                .grey,
-                                                                            fontSize:
-                                                                            12,
-                                                                            fontWeight: FontWeight
-                                                                                .w500,
-                                                                            fontFamily:
-                                                                            fontFamily,
-                                                                            decoration:
-                                                                            TextDecoration.lineThrough)),
-                                                                    TextSpan(
-                                                                        text:
-                                                                        ' $rupee ${data.rent ?? " "}',
-                                                                        style: TextStyle(
-                                                                            color: CustomTheme
-                                                                                .appTheme,
-                                                                            fontFamily:
-                                                                            fontFamily,
-                                                                            fontWeight:
-                                                                            FontWeight.w500,
-                                                                            fontSize: 14)),
-                                                                  ]),
+                                                              ),
                                                             ),
+                                                            data.orgRent ==
+                                                                    data.rent
+                                                                ? Text(
+                                                                    ' $rupee ${data.rent ?? " "}',
+                                                                    style: TextStyle(
+                                                                        color: CustomTheme
+                                                                            .appTheme,
+                                                                        fontFamily:
+                                                                            fontFamily,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w500,
+                                                                        fontSize:
+                                                                            14))
+                                                                : RichText(
+                                                                    text: TextSpan(
+                                                                        children: [
+                                                                          TextSpan(
+                                                                              text: '$rupee ${data.orgRent ?? " "}',
+                                                                              style: const TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w500, fontFamily: fontFamily, decoration: TextDecoration.lineThrough)),
+                                                                          TextSpan(
+                                                                              text: ' $rupee ${data.rent ?? " "}',
+                                                                              style: TextStyle(color: CustomTheme.appTheme, fontFamily: fontFamily, fontWeight: FontWeight.w500, fontSize: 14)),
+                                                                        ]),
+                                                                  ),
                                                           ],
                                                         )),
                                                   ),
                                                   Visibility(
-                                                    visible: data.rent != null &&
-                                                        data.rent != "0",
-                                                    child: SizedBox(height: _mainHeight*0.03,
+                                                    visible:
+                                                        data.rent != null &&
+                                                            data.rent != "0",
+                                                    child: SizedBox(
+                                                      height:
+                                                          _mainHeight * 0.03,
                                                       child: VerticalDivider(
-                                                        color: CustomTheme.appTheme,
+                                                        color: CustomTheme
+                                                            .appTheme,
                                                       ),
                                                     ),
                                                   ),
                                                   Container(
-
                                                       margin: EdgeInsets.only(
-                                                          left: _mainWidth * 0.02,
-                                                          right: _mainWidth * 0.02),
+                                                          left:
+                                                              _mainWidth * 0.02,
+                                                          right: _mainWidth *
+                                                              0.02),
                                                       child: Column(
-                                                        crossAxisAlignment:CrossAxisAlignment.start,
-
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
                                                           Text(
                                                             'Rent (Stay < 3 Month)',
                                                             style: TextStyle(
-                                                              fontFamily: fontFamily,
+                                                              fontFamily:
+                                                                  fontFamily,
                                                               fontSize: 14,
                                                               fontWeight:
-                                                              FontWeight.w500,
+                                                                  FontWeight
+                                                                      .w500,
                                                             ),
                                                           ),
                                                           data.orgMonthRent ==
-                                                              data.monthlyRent
+                                                                  data
+                                                                      .monthlyRent
                                                               ? Text(
-                                                              ' $rupee ${data.monthlyRent ?? " "}',
-                                                              style: TextStyle(
-                                                                  color: CustomTheme
-                                                                      .appTheme,
-                                                                  fontFamily:
-                                                                  fontFamily,
-                                                                  fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                                  fontSize: 14))
+                                                                  ' $rupee ${data.monthlyRent ?? " "}',
+                                                                  style: TextStyle(
+                                                                      color: CustomTheme
+                                                                          .appTheme,
+                                                                      fontFamily:
+                                                                          fontFamily,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      fontSize:
+                                                                          14))
                                                               : RichText(
-                                                            text: TextSpan(
-                                                                children: [
-                                                                  TextSpan(
-                                                                      text:
-                                                                      '$rupee ${data.orgMonthRent ?? " "}',
-                                                                      style: TextStyle(
-                                                                          color: Colors
-                                                                              .grey,
-                                                                          fontSize:
-                                                                          12,
-                                                                          fontWeight: FontWeight
-                                                                              .w500,
-                                                                          fontFamily:
-                                                                          fontFamily,
-                                                                          decoration:
-                                                                          TextDecoration.lineThrough)),
-                                                                  TextSpan(
-                                                                      text:
-                                                                      ' $rupee ${data.monthlyRent ?? " "}',
-                                                                      style: TextStyle(
-                                                                          color: CustomTheme
-                                                                              .appTheme,
-                                                                          fontFamily:
-                                                                          fontFamily,
-                                                                          fontWeight: FontWeight
-                                                                              .w500,
-                                                                          fontSize:
-                                                                          14)),
-                                                                ]),
-                                                          ),
+                                                                  text: TextSpan(
+                                                                      children: [
+                                                                        TextSpan(
+                                                                            text:
+                                                                                '$rupee ${data.orgMonthRent ?? " "}',
+                                                                            style: TextStyle(
+                                                                                color: Colors.grey,
+                                                                                fontSize: 12,
+                                                                                fontWeight: FontWeight.w500,
+                                                                                fontFamily: fontFamily,
+                                                                                decoration: TextDecoration.lineThrough)),
+                                                                        TextSpan(
+                                                                            text:
+                                                                                ' $rupee ${data.monthlyRent ?? " "}',
+                                                                            style: TextStyle(
+                                                                                color: CustomTheme.appTheme,
+                                                                                fontFamily: fontFamily,
+                                                                                fontWeight: FontWeight.w500,
+                                                                                fontSize: 14)),
+                                                                      ]),
+                                                                ),
                                                         ],
-
                                                       )),
-                                                  SizedBox(height: _mainHeight*0.03,
+                                                  SizedBox(
+                                                    height: _mainHeight * 0.03,
                                                     child: VerticalDivider(
-                                                      color: CustomTheme.appTheme,
+                                                      color:
+                                                          CustomTheme.appTheme,
                                                     ),
                                                   ),
                                                   Container(
-
                                                       margin: EdgeInsets.only(
-                                                          left: _mainWidth * 0.02,
-                                                          right: _mainWidth * 0.02),
+                                                          left:
+                                                              _mainWidth * 0.02,
+                                                          right: _mainWidth *
+                                                              0.02),
                                                       child: Column(
-                                                        crossAxisAlignment:CrossAxisAlignment.start,
-
-
-
-
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
                                                           Text(
                                                               'Rent (Stay > 3 Month)',
                                                               style: TextStyle(
                                                                 fontFamily:
-                                                                fontFamily,
+                                                                    fontFamily,
                                                                 fontSize: 14,
                                                                 fontWeight:
-                                                                FontWeight.w500,
+                                                                    FontWeight
+                                                                        .w500,
                                                               )),
                                                           data.orgRmsRent ==
-                                                              data.rmsRent
+                                                                  data.rmsRent
                                                               ? Text(
-                                                              ' $rupee ${data.rmsRent ?? " "}',
-                                                              style: TextStyle(
-                                                                  color: CustomTheme
-                                                                      .appTheme,
-                                                                  fontFamily:
-                                                                  fontFamily,
-                                                                  fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                                  fontSize: 14))
+                                                                  ' $rupee ${data.rmsRent ?? " "}',
+                                                                  style: TextStyle(
+                                                                      color: CustomTheme
+                                                                          .appTheme,
+                                                                      fontFamily:
+                                                                          fontFamily,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      fontSize:
+                                                                          14))
                                                               : RichText(
-                                                            text: TextSpan(
-                                                                children: [
-                                                                  TextSpan(
-                                                                      text:
-                                                                      '$rupee ${data.orgRmsRent ?? " "}',
-                                                                      style: TextStyle(
-                                                                          color: Colors
-                                                                              .grey,
-                                                                          fontSize:
-                                                                          12,
-                                                                          fontWeight: FontWeight
-                                                                              .w500,
-                                                                          fontFamily:
-                                                                          fontFamily,
-                                                                          decoration:
-                                                                          TextDecoration.lineThrough)),
-                                                                  TextSpan(
-                                                                      text:
-                                                                      ' $rupee ${data.rmsRent ?? " "}',
-                                                                      style: TextStyle(
-                                                                          color: CustomTheme
-                                                                              .appTheme,
-                                                                          fontFamily:
-                                                                          fontFamily,
-                                                                          fontWeight: FontWeight
-                                                                              .w500,
-                                                                          fontSize:
-                                                                          14)),
-                                                                ]),
-                                                          ),
+                                                                  text: TextSpan(
+                                                                      children: [
+                                                                        TextSpan(
+                                                                            text:
+                                                                                '$rupee ${data.orgRmsRent ?? " "}',
+                                                                            style: TextStyle(
+                                                                                color: Colors.grey,
+                                                                                fontSize: 12,
+                                                                                fontWeight: FontWeight.w500,
+                                                                                fontFamily: fontFamily,
+                                                                                decoration: TextDecoration.lineThrough)),
+                                                                        TextSpan(
+                                                                            text:
+                                                                                ' $rupee ${data.rmsRent ?? " "}',
+                                                                            style: TextStyle(
+                                                                                color: CustomTheme.appTheme,
+                                                                                fontFamily: fontFamily,
+                                                                                fontWeight: FontWeight.w500,
+                                                                                fontSize: 14)),
+                                                                      ]),
+                                                                ),
                                                         ],
-
                                                       )),
                                                 ],
-                                               // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               ),
                                             ),
                                           ),
-
                                         ],
                                       ),
                                       Container(
@@ -752,30 +721,26 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                       radius:
                                                           _mainHeight * 0.012,
                                                       backgroundColor:
-                                                          CustomTheme
-                                                              .appTheme,
+                                                          CustomTheme.appTheme,
                                                       child: Icon(
                                                         Icons.check,
-                                                        size: _mainHeight *
-                                                            0.017,
+                                                        size:
+                                                            _mainHeight * 0.017,
                                                         color: Colors.white,
                                                       )),
                                                   SizedBox(
                                                     width: _mainWidth * 0.01,
                                                   ),
                                                   Text(
-                                                    '${nullCheck(list: value.propertyListingLang)
-                                                        ? value.propertyListingLang[1].name
-                                                        : 'Managed by RMS'}',
+                                                    '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[1].name : 'Managed by RMS'}',
                                                     style: TextStyle(
-                                                    fontStyle:
-                                                        FontStyle.italic,
-                                                    color: Colors.black,
-                                                    fontFamily:
-                                                        fontFamily,
-                                                    fontWeight:
-                                                        FontWeight.w500,
-                                                    fontSize: 14),
+                                                        fontStyle:
+                                                            FontStyle.italic,
+                                                        color: Colors.black,
+                                                        fontFamily: fontFamily,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 14),
                                                   ),
                                                 ]),
                                               ),
@@ -803,8 +768,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                               .appTheme);
                                                     }
                                                   }
-                                                } else if (data.wishlist ==
-                                                    0) {
+                                                } else if (data.wishlist == 0) {
                                                   if (data.propId != null) {
                                                     int response =
                                                         await _propertyViewModel
@@ -857,7 +821,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                               height: _mainHeight * 0.008,
                             ),
                           ),
-                          _getFilterSortSetting(context: context,value: value),
+                          _getFilterSortSetting(context: context, value: value),
                         ],
                       ),
                     ),
@@ -986,9 +950,12 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
             decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.only(left: 10, top: 10),
-                hintText: nullCheck(list: context.watch<PropertyViewModel>().propertyListingLang)
+                hintText: nullCheck(
+                        list: context
+                            .watch<PropertyViewModel>()
+                            .propertyListingLang)
                     ? '${context.watch<PropertyViewModel>().propertyListingLang[0].name}'
-                    :'Search by Locality , Landmark or City',
+                    : 'Search by Locality , Landmark or City',
                 hintStyle: TextStyle(
                     fontFamily: fontFamily,
                     fontSize: 16,
@@ -1011,37 +978,41 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
         ));
   }
 
-  Widget _getFilterSortSetting({required BuildContext context,required PropertyViewModel value}) {
+  Widget _getFilterSortSetting(
+      {required BuildContext context, required PropertyViewModel value}) {
     return Positioned(
       bottom: _mainHeight * 0.01,
       left: _mainWidth * 0.15,
       child: Row(
         children: [
           ElevatedButton(
-            onPressed: () => applyFilter(context,value),
-            style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                  CustomTheme.appTheme,
-                ),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30)),
-                )),
+            onPressed: () => applyFilter(context, value),
+            style: ElevatedButton.styleFrom(
+              primary: Colors.white,
+              side: BorderSide(
+                width: 1.0,
+                color: CustomTheme.appTheme,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+            ),
             child: Container(
               width: _mainWidth * 0.2,
               child: Row(
-                children:  [
-                  Icon(Icons.filter_alt_outlined),
+                children: [
+                  Icon(
+                    Icons.filter_alt_outlined,
+                    color: CustomTheme.appTheme,
+                  ),
                   SizedBox(
                     width: 15,
                   ),
                   Text(
-                    '${nullCheck(list: value.propertyListingLang)
-                        ? value.propertyListingLang[2].name
-                        : 'Filter'}',
+                    '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[2].name : 'Filter'}',
                     style: TextStyle(
                         fontSize: 16,
-                        color: Colors.white,
+                        color: Colors.black,
                         fontWeight: FontWeight.w500,
                         fontFamily: fontFamily),
                   ),
@@ -1053,30 +1024,43 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
             width: 10,
           ),
           ElevatedButton(
-            onPressed: () => applySorting(context,value),
-            style: ButtonStyle(
+            onPressed: () => applySorting(context, value),
+            /* style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(
                   CustomTheme.appTheme,
                 ),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
-                )),
+                ),),
+
+            */
+            style: ElevatedButton.styleFrom(
+              primary: Colors.white,
+              side: BorderSide(
+                width: 1.0,
+                color: CustomTheme.appTheme,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+            ),
             child: Container(
               width: _mainWidth * 0.2,
               child: Row(
                 children: [
-                  Icon(Icons.waves),
+                  Icon(
+                    Icons.waves,
+                    color: CustomTheme.appTheme,
+                  ),
                   SizedBox(
                     width: 15,
                   ),
                   Text(
-                    '${nullCheck(list: value.propertyListingLang)
-                        ? value.propertyListingLang[3].name
-                        : 'Sort'}',
+                    '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[3].name : 'Sort'}',
                     style: TextStyle(
                         fontSize: 16,
-                        color: Colors.white,
+                        color: Colors.black,
                         fontWeight: FontWeight.w500,
                         fontFamily: fontFamily),
                   ),
@@ -1089,7 +1073,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
     );
   }
 
-  Future<void> applySorting(BuildContext context,PropertyViewModel value) async {
+  Future<void> applySorting(
+      BuildContext context, PropertyViewModel value) async {
     return await showModalBottomSheet(
         isScrollControlled: true,
         context: context,
@@ -1122,9 +1107,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                             },
                             child: Center(
                                 child: Text(
-                                  '${nullCheck(list: value.propertyListingLang)
-                                      ? value.propertyListingLang[4].name
-                                      : 'Reset'}',
+                              '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[4].name : 'Reset'}',
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.w600,
@@ -1162,9 +1145,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                             },
                             child: Center(
                                 child: Text(
-                                  '${nullCheck(list: value.propertyListingLang)
-                                      ? value.propertyListingLang[5].name
-                                      : 'Apply Sort'}',
+                              '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[5].name : 'Apply Sort'}',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
@@ -1182,66 +1163,62 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                       ],
                     ),
                     Divider(
-                      color: Colors.red,
+                      color: CustomTheme.appTheme,
                       thickness: 0,
                     ),
-                    CheckboxListTile(
-                      value: _sortKeys[0],
-                      activeColor: CustomTheme.appTheme,
-                      contentPadding: EdgeInsets.zero,
-
-                      onChanged: (value) {
-                        if (value != null) {
-                          sortOrder = '1';
-                          setState(() {
-                            _sortKeys[0] = value;
-                            _sortKeys[1] = false;
-                            _sortKeys[2] = false;
-                          });
-                        }
-                      },
-                      //selected:_sortKeys[0],
-                      title: Text('${nullCheck(list: value.propertyListingLang)
-                          ? value.propertyListingLang[6].name
-                          : 'Price Low to High'}',),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[6].name : 'Price Low to High'}',
+                        ),
+                        Radio(
+                          value: '1',
+                          groupValue: sortOrder,
+                          onChanged: (value) {
+                            setState(() {
+                              sortOrder = value as String;
+                            });
+                          },
+                          activeColor: CustomTheme.appTheme,
+                        ),
+                      ],
                     ),
-                    CheckboxListTile(
-                      value: _sortKeys[1],
-                      activeColor: CustomTheme.appTheme,
-                      contentPadding: EdgeInsets.zero,
-                      onChanged: (value) {
-                        if (value != null) {
-                          sortOrder = '2';
-                          setState(() {
-                            _sortKeys[0] = false;
-                            _sortKeys[1] = value;
-                            _sortKeys[2] = false;
-                          });
-                        }
-                      },
-                      //selected:_sortKeys[0],
-                      title: Text('${nullCheck(list: value.propertyListingLang)
-                          ? value.propertyListingLang[7].name
-                          : 'Price High to Low'}',),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[7].name : 'Price High to Low'}',
+                        ),
+                        Radio(
+                          value: '2',
+                          groupValue: sortOrder,
+                          onChanged: (value) {
+                            setState(() {
+                              sortOrder = value as String;
+                            });
+                          },
+                          activeColor: CustomTheme.appTheme,
+                        ),
+                      ],
                     ),
-                    CheckboxListTile(
-                      value: _sortKeys[2],
-                      activeColor: CustomTheme.appTheme,
-                      contentPadding: EdgeInsets.zero,
-                      onChanged: (value) {
-                        if (value != null) {
-                          sortOrder = '3';
-                          setState(() {
-                            _sortKeys[0] = false;
-                            _sortKeys[1] = false;
-                            _sortKeys[2] = value;
-                          });
-                        }
-                      },
-                      //selected:_sortKeys[0],
-                      title: Text('${nullCheck(list: value.propertyListingLang)
-                          ? value.propertyListingLang[8].name
-                          : 'Show Near By'}',),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[8].name : 'Show Near By'}',
+                        ),
+                        Radio(
+                          value: '3',
+                          groupValue: sortOrder,
+                          onChanged: (value) {
+                            setState(() {
+                              sortOrder = value as String;
+                            });
+                          },
+                          activeColor: CustomTheme.appTheme,
+                        ),
+                      ],
                     ),
                     SizedBox(
                       height: 10,
@@ -1254,7 +1231,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
         });
   }
 
-  void applyFilter(BuildContext context,PropertyViewModel value) {
+  void applyFilter(BuildContext context, PropertyViewModel value) {
     showModalBottomSheet(
         isScrollControlled: true,
         shape: RoundedRectangleBorder(
@@ -1295,9 +1272,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                             },
                             child: Center(
                                 child: Text(
-                                  '${nullCheck(list: value.propertyListingLang)
-                                      ? value.propertyListingLang[4].name
-                                      : 'Reset'}',
+                              '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[4].name : 'Reset'}',
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.w600,
@@ -1307,7 +1282,6 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                         ),
                         Spacer(),
                         Container(
-
                           height: 30,
                           child: ElevatedButton(
                             style: ButtonStyle(
@@ -1327,10 +1301,10 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                 sortOrder: sortOrder,
                               );
                               if (fullyFurnishedSelected) {
-                                model.fullyFurnish = 'FullyFurnish';
+                                model.fullyFurnish = '1';
                               }
                               if (semiFurnishedSelected) {
-                                model.semiFurnish = 'SemiFurnish';
+                                model.semiFurnish = '1';
                               }
                               if (entireHouseSelected) {
                                 model.entireHouse = '1';
@@ -1353,13 +1327,14 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                               if (threeBHKSelected) {
                                 model.s3bhk = '1';
                               }
-                              model.sortOrder=sortOrder;
-                              model.pricefrom=_lowerValue.toString();
-                              model.priceto=_upperValue.toString();
-                              model.fromDate=checkInDate;
-                              model.toDate=checkOutDate;
-                              model.address=_searchController.text;
-                              model.term='MonthlyBasis';//MonthlyBasis/DailyBasis/LongTerm
+                              model.sortOrder = sortOrder;
+                              model.pricefrom = _lowerValue.toString();
+                              model.priceto = _upperValue.toString();
+                              model.fromDate = checkInDate;
+                              model.toDate = checkOutDate;
+                              model.address = _searchController.text;
+                              model.term =
+                                  'MonthlyBasis'; //MonthlyBasis/DailyBasis/LongTerm
 
                               await _propertyViewModel.filterSortPropertyList(
                                   requestModel: model);
@@ -1368,9 +1343,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                             },
                             child: Center(
                                 child: Text(
-                                  '${nullCheck(list: value.propertyListingLang)
-                                      ? value.propertyListingLang[9].name
-                                      : 'Apply Filter'}',
+                              '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[9].name : 'Apply Filter'}',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
@@ -1418,7 +1391,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                         }
                       },
                       child: Container(
-                        padding: EdgeInsets.only(top: 5,bottom: 5),
+                        padding: EdgeInsets.only(top: 5, bottom: 5),
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: CustomTheme.appTheme,
@@ -1434,9 +1407,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
-                                  '${nullCheck(list: value.propertyListingLang)
-                                      ? value.propertyListingLang[10].name
-                                      : 'CheckIn Date'}',
+                                  '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[10].name : 'CheckIn Date'}',
                                   style: TextStyle(
                                       color: Colors.blueGrey,
                                       fontFamily: fontFamily,
@@ -1457,9 +1428,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
-                                  '${nullCheck(list: value.propertyListingLang)
-                                      ? value.propertyListingLang[11].name
-                                      : 'CheckOut Date'}',
+                                  '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[11].name : 'CheckOut Date'}',
                                   style: TextStyle(
                                       color: Colors.blueGrey,
                                       fontFamily: fontFamily,
@@ -1484,7 +1453,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                       height: _mainHeight * 0.01,
                     ),
                     Container(
-                      padding: EdgeInsets.only(top: 5,bottom: 5),
+                      padding: EdgeInsets.only(top: 5, bottom: 5),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: CustomTheme.appTheme,
@@ -1503,7 +1472,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                             inactiveColor:
                                 CustomTheme.appThemeContrast.withAlpha(50),
                             labels: RangeLabels(
-                                _lowerValue.toStringAsFixed(0).toString(), _upperValue.toStringAsFixed(0).toString()),
+                                _lowerValue.toStringAsFixed(0).toString(),
+                                _upperValue.toStringAsFixed(0).toString()),
                             onChanged: (RangeValues rangeValues) {
                               setState(() {
                                 _lowerValue = rangeValues.start;
@@ -1518,9 +1488,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                               Column(
                                 children: [
                                   Text(
-                                    '${nullCheck(list: value.propertyListingLang)
-                                        ? value.propertyListingLang[12].name
-                                        : 'Min Price Selected'}',
+                                    '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[12].name : 'Min Price Selected'}',
                                     style: TextStyle(
                                         color: Colors.blueGrey,
                                         fontWeight: FontWeight.w500,
@@ -1538,9 +1506,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                               Column(
                                 children: [
                                   Text(
-                                    '${nullCheck(list: value.propertyListingLang)
-                                        ? value.propertyListingLang[13].name
-                                        : 'Max Price Selected'}',
+                                    '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[13].name : 'Max Price Selected'}',
                                     style: TextStyle(
                                         color: Colors.blueGrey,
                                         fontWeight: FontWeight.w500,
@@ -1564,7 +1530,6 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                       height: _mainHeight * 0.02,
                     ),
                     FittedBox(
-
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -1575,9 +1540,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                 checkmarkColor: CustomTheme.white,
                                 backgroundColor: CustomTheme.white,
                                 label: Text(
-                                  '${nullCheck(list: value.propertyListingLang)
-                                      ? value.propertyListingLang[14].name
-                                      : 'Fully Furnished Home'}',
+                                  '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[14].name : 'Fully Furnished Home'}',
                                   style: getTextStyle(
                                       isSelected: fullyFurnishedSelected),
                                 ),
@@ -1598,9 +1561,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                 checkmarkColor: CustomTheme.white,
                                 backgroundColor: CustomTheme.white,
                                 label: Text(
-                                  '${nullCheck(list: value.propertyListingLang)
-                                      ? value.propertyListingLang[15].name
-                                      : 'Semi Furnished Home'}',
+                                  '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[15].name : 'Semi Furnished Home'}',
                                   style: getTextStyle(
                                       isSelected: semiFurnishedSelected),
                                 ),
@@ -1609,7 +1570,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                 pressElevation: 1,
                                 onSelected: (bool selected) {
                                   setState(() {
-                                    semiFurnishedSelected = !semiFurnishedSelected;
+                                    semiFurnishedSelected =
+                                        !semiFurnishedSelected;
                                   });
                                 }),
                           )
@@ -1619,7 +1581,6 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                     SizedBox(
                       height: _mainHeight * 0.02,
                     ),
-
                     FittedBox(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1631,11 +1592,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                 checkmarkColor: CustomTheme.white,
                                 backgroundColor: CustomTheme.white,
                                 label: Text(
-                                  '${nullCheck(list: value.propertyListingLang)
-                                      ? value.propertyListingLang[16].name
-                                      : 'Entire House'}',
-                                  style:
-                                      getTextStyle(isSelected: entireHouseSelected),
+                                  '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[16].name : 'Entire House'}',
+                                  style: getTextStyle(
+                                      isSelected: entireHouseSelected),
                                 ),
                                 elevation: 2,
                                 selectedColor: CustomTheme.appTheme,
@@ -1653,11 +1612,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                 checkmarkColor: CustomTheme.white,
                                 backgroundColor: CustomTheme.white,
                                 label: Text(
-                                  '${nullCheck(list: value.propertyListingLang)
-                                      ? value.propertyListingLang[17].name
-                                      : 'Private Room'}',
-                                  style:
-                                      getTextStyle(isSelected: privateRoomSelected),
+                                  '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[17].name : 'Private Room'}',
+                                  style: getTextStyle(
+                                      isSelected: privateRoomSelected),
                                 ),
                                 elevation: 2,
                                 selectedColor: CustomTheme.appTheme,
@@ -1675,11 +1632,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                 checkmarkColor: CustomTheme.white,
                                 backgroundColor: CustomTheme.white,
                                 label: Text(
-                                  '${nullCheck(list: value.propertyListingLang)
-                                      ? value.propertyListingLang[18].name
-                                      : 'Shared Room'}',
-                                  style:
-                                      getTextStyle(isSelected: sharedRoomSelected),
+                                  '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[18].name : 'Shared Room'}',
+                                  style: getTextStyle(
+                                      isSelected: sharedRoomSelected),
                                 ),
                                 elevation: 2,
                                 selectedColor: CustomTheme.appTheme,
@@ -1697,7 +1652,6 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                       height: _mainHeight * 0.02,
                     ),
                     FittedBox(
-
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -1707,11 +1661,10 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                 selected: studioSelected,
                                 checkmarkColor: CustomTheme.white,
                                 backgroundColor: CustomTheme.white,
-                                label:Text(
-                                  '${nullCheck(list: value.propertyListingLang)
-                                      ? value.propertyListingLang[20].name
-                                      : 'Studio'}',
-                                  style: getTextStyle(isSelected: studioSelected),
+                                label: Text(
+                                  '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[20].name : 'Studio'}',
+                                  style:
+                                      getTextStyle(isSelected: studioSelected),
                                 ),
                                 elevation: 2,
                                 selectedColor: CustomTheme.appTheme,
@@ -1728,11 +1681,10 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                 selected: oneBHKSelected,
                                 checkmarkColor: CustomTheme.white,
                                 backgroundColor: CustomTheme.white,
-                                label:  Text(
-                                  '${nullCheck(list: value.propertyListingLang)
-                                      ? value.propertyListingLang[22].name
-                                      : 'One BHK'}',
-                                  style: getTextStyle(isSelected: oneBHKSelected),
+                                label: Text(
+                                  '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[22].name : 'One BHK'}',
+                                  style:
+                                      getTextStyle(isSelected: oneBHKSelected),
                                 ),
                                 elevation: 2,
                                 selectedColor: CustomTheme.appTheme,
@@ -1750,10 +1702,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                 checkmarkColor: CustomTheme.white,
                                 backgroundColor: CustomTheme.white,
                                 label: Text(
-                                  '${nullCheck(list: value.propertyListingLang)
-                                      ? value.propertyListingLang[24].name
-                                      : 'Two BHK'}',
-                                  style: getTextStyle(isSelected: twoBHKSelected),
+                                  '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[24].name : 'Two BHK'}',
+                                  style:
+                                      getTextStyle(isSelected: twoBHKSelected),
                                 ),
                                 elevation: 2,
                                 selectedColor: CustomTheme.appTheme,
@@ -1768,11 +1719,10 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                               selected: threeBHKSelected,
                               checkmarkColor: CustomTheme.white,
                               backgroundColor: CustomTheme.white,
-                              label:  Text(
-                                '${nullCheck(list: value.propertyListingLang)
-                                    ? value.propertyListingLang[26].name
-                                    : 'Three BHK'}',
-                                style: getTextStyle(isSelected: threeBHKSelected),
+                              label: Text(
+                                '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[26].name : 'Three BHK'}',
+                                style:
+                                    getTextStyle(isSelected: threeBHKSelected),
                               ),
                               elevation: 2,
                               selectedColor: CustomTheme.appTheme,
@@ -1785,9 +1735,6 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                         ],
                       ),
                     ),
-
-
-
                   ],
                 ),
               );

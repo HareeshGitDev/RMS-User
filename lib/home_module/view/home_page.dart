@@ -664,14 +664,14 @@ class _HomePageState extends State<HomePage> {
             getTile(
               context: context,
               leading: Icon(
-                Icons.library_add_check,
+                Icons.view_agenda,
                 color: CustomTheme.appTheme,
                 size: 20,
               ),
-              title: nullCheck(list: list) ? '${list[12].name}' : 'Owner View',
+              title: nullCheck(list: list) ? '${list[13].name}' : 'Owner View',
               onTap: () => {
                 _handleURLButtonPress(context,
-                    ownerViewLink, nullCheck(list: list) ? '${list[12].name}'
+                    ownerViewLink, nullCheck(list: list) ? '${list[13].name}'
                         :'Owner View', token),
               },
             ),
