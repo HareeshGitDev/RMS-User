@@ -344,7 +344,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                     fontWeight: FontWeight.w600,
                                     color: Colors.black),
                               ),
-                              GestureDetector(
+                             /* GestureDetector(
                                 onTap: () => _updateKyc(
                                     context,
                                     updateKYCLink,
@@ -364,7 +364,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),
-                              ),
+                              ),  */
                             ]),
                       ),
                       Container(
@@ -533,13 +533,13 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                   }
                                   Navigator.of(context).pop();
                                 },
-                                child: Container(
-                                    margin: EdgeInsets.only(right: 10),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: CustomTheme.appThemeContrast
-                                            .withAlpha(50)),
-                                    child: Text(" Check In ")),
+                                child:Material(elevation: 4,
+                              borderRadius: BorderRadius.circular(5),
+                                 color: CustomTheme.appThemeContrast.withAlpha(150),
+                                  child: Container(
+                                      margin: EdgeInsets.only(right: 5,left: 5),
+                                      child: Text(" Check In ",style: TextStyle(color: Colors.white),)),
+                                ),
                               ),
                             ),
                           ),
@@ -663,13 +663,15 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                   }
                                   Navigator.of(context).pop();
                                 },
-                                child: Container(
-                                    margin: EdgeInsets.only(right: 10),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: CustomTheme.appThemeContrast
-                                            .withAlpha(50)),
-                                    child: Text(" Check Out ")),
+                                child: Material(
+                                  elevation: 4,
+          borderRadius: BorderRadius.circular(5),
+          color: CustomTheme.appThemeContrast.withAlpha(150),
+                                  child: Container(
+                                      margin: EdgeInsets.only(right: 5,left: 5),
+
+                                      child: Text(" Check Out ",style: TextStyle(color: Colors.white),)),
+                                ),
                               ),
                             ),
                           ),
@@ -898,6 +900,28 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                           ),
                         ],
                       ),
+                      SizedBox(
+                        height: _mainHeight * 0.01,
+                      ),
+                      Row( children: [
+                        _gridInput(
+                        hint: nullCheck(list: value.bookingDetailsLang)
+                            ? ' ${value.bookingDetailsLang[04].name} '
+                            : "Update KYC",
+                        icon: Icon(
+                          Icons.fact_check_outlined,
+                          size: _mainHeight * 0.032,
+                          color: CustomTheme.appTheme,
+                        ),
+                        callBack: () =>  _updateKyc(
+              context,
+              updateKYCLink,
+              'Update Your kyc',
+              value.myStayDetailsModel?.data?.userId ??
+                  ''),
+                      ),
+                      ],
+                      )
                     ],
                   ),
                 )

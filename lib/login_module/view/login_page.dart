@@ -74,9 +74,9 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.only(bottom: 5),
+                  padding: EdgeInsets.only(bottom: 5,left: 15),
                   margin: EdgeInsets.only(right: 20),
-                  alignment: Alignment.centerRight,
+                  alignment: Alignment.centerLeft,
                   child: AnimatedTextKit(
                     animatedTexts: [
                       ColorizeAnimatedText('Welcome Back !',
@@ -174,89 +174,74 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(
                           height: 40,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              width: _mainWidth * 0.4,
-                              height: 35,
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            CustomTheme.appTheme),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(40)),
-                                    )),
-                                onPressed: () async {
-                                  FocusScope.of(context)
-                                      .requestFocus(FocusNode());
-                                  if (_formKey.currentState != null &&
-                                      !_formKey.currentState!.validate()) {}
-                                  if (_emailController.text.isEmpty) {
-                                    Fluttertoast.showToast(
-                                        msg: 'Please Enter E-mail Address',
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.CENTER);
-                                  } else {
-                                    if (_passwordController.text.isEmpty) {
-                                      RMSWidgets.getToast(
-                                          message: 'Please Enter Password',
-                                          color: CustomTheme().colorError);
-                                    } else {
-                                      RMSWidgets.showLoaderDialog(
-                                          context: context,
-                                          message: 'Please wait...');
-                                      final LoginResponseModel response =
-                                          await _loginViewModel.getLoginDetails(
-                                              email: _emailController.text,
-                                              password: _passwordController.text);
-                                      Navigator.pop(context);
-                                      if (response.msg?.toLowerCase() !=
-                                              'failure' &&
-                                          response.data != null) {
-                                        await setSPValues(response: response);
-
-                                        Navigator.pushNamedAndRemoveUntil(
-                                          context,
-                                          AppRoutes.dashboardPage,
-                                          (route) => false,
-                                        );
-                                      }
-                                    }
-                                    //
-                                  }
-                                },
-                                child: Center(child: Text("LOGIN")),
-                              ),
-                            ),
-                            Container(
-                              width: _mainWidth * 0.4,
-                              height: 35,
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor:
+                        Container(
+                          width: _mainWidth,
+                          height: 45,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor:
                                     MaterialStateProperty.all<Color>(
                                         CustomTheme.appTheme),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                          borderRadius:
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
                                           BorderRadius.circular(40)),
-                                    )),
-                                onPressed: () async {
-                                  showForgotPasswordDialog(context: context);
-                                },
-                                child: Text('Forgot Password?'),
-                              ),
-                            ),
-                          ],
+                                )),
+                            onPressed: () async {
+                              FocusScope.of(context)
+                                  .requestFocus(FocusNode());
+                              if (_formKey.currentState != null &&
+                                  !_formKey.currentState!.validate()) {}
+                              if (_emailController.text.isEmpty) {
+                                Fluttertoast.showToast(
+                                    msg: 'Please Enter E-mail Address',
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER);
+                              } else {
+                                if (_passwordController.text.isEmpty) {
+                                  RMSWidgets.getToast(
+                                      message: 'Please Enter Password',
+                                      color: CustomTheme().colorError);
+                                } else {
+                                  RMSWidgets.showLoaderDialog(
+                                      context: context,
+                                      message: 'Please wait...');
+                                  final LoginResponseModel response =
+                                      await _loginViewModel.getLoginDetails(
+                                          email: _emailController.text,
+                                          password: _passwordController.text);
+                                  Navigator.pop(context);
+                                  if (response.msg?.toLowerCase() !=
+                                          'failure' &&
+                                      response.data != null) {
+                                    await setSPValues(response: response);
+
+                                    Navigator.pushNamedAndRemoveUntil(
+                                      context,
+                                      AppRoutes.dashboardPage,
+                                      (route) => false,
+                                    );
+                                  }
+                                }
+                                //
+                              }
+                            },
+                            child: Center(child: Text("LOGIN")),
+                          ),
                         ),
                         SizedBox(
                           height: 15,
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: GestureDetector(
+                            onTap: ()=>showForgotPasswordDialog(context: context),
+                              child: Text('Forgot Password',style: TextStyle(
+                                fontSize: 14,
+                                color: CustomTheme.appThemeContrast,
+                                fontWeight: FontWeight.w600
+                              ),)),
                         ),
 
                         SizedBox(
@@ -270,14 +255,36 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(
                           height: 20,
                         ),
-                        Row(
+                        GestureDetector(
+                          onTap: ()=>_showBottomSheet(context),
+                          child: Container(
+                            height: 45,
+                            width: 170,
+                            padding: EdgeInsets.only(left: 15),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: CustomTheme.appTheme),
+                                  borderRadius: BorderRadius.circular(40)
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.mobile_friendly,color: CustomTheme.appTheme,),
+                                SizedBox(width: 10,),
+                                Text('SignIn with OTP',style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600
+                                ),),
+                              ],
+                            ),
+                          ),
+                        ),
+                      /*  Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
                               child: Container(
                                 width: _mainWidth * 0.4,
-                                height: 35,
+                                height: 45,
                                 child: ElevatedButton(
                                   style: ButtonStyle(
                                       backgroundColor:
@@ -291,8 +298,8 @@ class _LoginPageState extends State<LoginPage> {
                                       )),
                                   onPressed: () async {
                                     _showBottomSheet(context);
-                                    /*  Navigator.of(context)
-                                        .pushNamed(AppRoutes.mob_register_login);*/
+                                    *//*  Navigator.of(context)
+                                        .pushNamed(AppRoutes.mob_register_login);*//*
                                   },
                                   child: Text(
                                     'SignIn With OTP',
@@ -304,7 +311,7 @@ class _LoginPageState extends State<LoginPage> {
                             SizedBox(
                               width: 20,
                             ),
-                            Expanded(
+                          *//*  Expanded(
                               child: Container(
                                 width: _mainWidth * 0.4,
                                 height: 35,
@@ -389,9 +396,9 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 ),
                               ),
-                            ),
+                            ),*//*
                           ],
-                        ),
+                        ),*/
                         SizedBox(
                           height: 20,
                         ),

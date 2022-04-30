@@ -49,8 +49,8 @@ class _FeedbackState extends State<FeedbackPage> {
   static const String fontFamily = 'hk-grotest';
   late MyStayViewModel _viewModel;
   ValueNotifier<bool> isChecked = ValueNotifier(false);
-  double rmsRating = 4.0;
-  double buildingRating = 4.0;
+  double rmsRating = 0.0;
+  double buildingRating = 0.0;
   ValueNotifier<bool> shouldRecommendFriend = ValueNotifier(true);
   late SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
 
@@ -231,7 +231,7 @@ class _FeedbackState extends State<FeedbackPage> {
                         height: _mainHeight * 0.05,
                         width: _mainWidth,
                         child: RatingBar.builder(
-                          initialRating: 4,
+                         // initialRating: 4,
                           itemCount: 5,
                           glow: false,
                           maxRating: 10.0,
@@ -294,7 +294,7 @@ class _FeedbackState extends State<FeedbackPage> {
                         height: _mainHeight * 0.05,
                         width: _mainWidth,
                         child: RatingBar.builder(
-                          initialRating: 4,
+                          //initialRating: 4,
                           itemCount: 5,
                           glow: false,
                           maxRating: 10.0,
@@ -453,28 +453,28 @@ class _FeedbackState extends State<FeedbackPage> {
                 RMSWidgets.showSnackbar(
                     context: context,
                     message: 'Name is not Valid.',
-                    color: Colors.black);
+                    color: Colors.red);
                 return;
               } else if (_banknameController.text.isEmpty) {
                 FocusScope.of(context).requestFocus(_bankNameScope);
                 RMSWidgets.showSnackbar(
                     context: context,
                     message: 'Bank Name is not Valid.',
-                    color: Colors.black);
+                    color: Colors.red);
                 return;
               } else if (_banknumberController.text.isEmpty) {
                 FocusScope.of(context).requestFocus(_accountNumberScope);
                 RMSWidgets.showSnackbar(
                     context: context,
                     message: 'Bank Account Number is not Valid.',
-                    color: Colors.black);
+                    color: Colors.red);
                 return;
               } else if (_bankIfscController.text.isEmpty) {
                 FocusScope.of(context).requestFocus(_ifscScope);
                 RMSWidgets.showSnackbar(
                     context: context,
                     message: 'Bank IFSC Code is not Valid.',
-                    color: Colors.black);
+                    color: Colors.red);
                 return;
               } else {
                 RMSWidgets.showLoaderDialog(
