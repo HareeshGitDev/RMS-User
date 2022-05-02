@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:RentMyStay_user/images.dart';
@@ -8,6 +10,7 @@ import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -41,19 +44,67 @@ class _LoginPageState extends State<LoginPage> {
   var _mainHeight;
   final GlobalKey<FormState> _formKey = GlobalKey();
   var _mainWidth;
+  late StreamSubscription<ConnectivityResult> _connectivitySubs;
+  final Connectivity _connectivity = Connectivity();
+  bool _connectionStatus = true;
+
+  Future<void> initConnectionStatus() async {
+    ConnectivityResult result = ConnectivityResult.none;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      log(e.toString());
+    }
+    if (!mounted) {
+      return null;
+    }
+
+    _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.mobile:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = false);
+        break;
+      case ConnectivityResult.ethernet:
+        setState(() => _connectionStatus = true);
+        break;
+      default:
+        setState(() => _connectionStatus = false);
+        break;
+    }
+  }
 
   @override
   void initState() {
-    _loginViewModel = Provider.of<LoginViewModel>(context, listen: false);
     super.initState();
+    initConnectionStatus();
+    _connectivitySubs =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    _loginViewModel = Provider.of<LoginViewModel>(context, listen: false);
+
     theme = AppTheme.theme;
   }
+
+  @override
+  void dispose() {
+    _connectivitySubs.cancel();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
+    return _connectionStatus?Scaffold(
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -74,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.only(bottom: 5,left: 15),
+                  padding: EdgeInsets.only(bottom: 5, left: 15),
                   margin: EdgeInsets.only(right: 20),
                   alignment: Alignment.centerLeft,
                   child: AnimatedTextKit(
@@ -98,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Container(
                     width: _mainWidth,
                     height: _mainHeight * 0.6,
-                     padding: EdgeInsets.only(left: 15,top: 25,right: 15),
+                    padding: EdgeInsets.only(left: 15, top: 25, right: 15),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -110,8 +161,7 @@ class _LoginPageState extends State<LoginPage> {
                         Container(
                           //margin: EdgeInsets.only(top: 10),
                           decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20)),
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
                             color: Colors.white,
                           ),
                           child: Neumorphic(
@@ -121,10 +171,19 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             child: TextFormField(
                               validator: (value) {
-                                if (value != null && value.length < 6) {
-                                  return "Enter proper email";
+                                String p = "[a-zA-Z0-9\+\.\_\%\-\+]{1,256}" +
+                                    "\\@" +
+                                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                                    "(" +
+                                    "\\." +
+                                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                                    ")+";
+                                RegExp regExp = RegExp(p);
+                                if (value != null && value.isNotEmpty && regExp.hasMatch(value)) {
+                                  return null;
+                                } else {
+                                  return "Enter Valid email";
                                 }
-                                return null;
                               },
                               keyboardType: TextInputType.emailAddress,
                               controller: _emailController,
@@ -142,8 +201,7 @@ class _LoginPageState extends State<LoginPage> {
                         Container(
                           margin: EdgeInsets.only(top: 10),
                           decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20)),
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
                             color: Colors.white,
                           ),
                           child: Neumorphic(
@@ -185,47 +243,34 @@ class _LoginPageState extends State<LoginPage> {
                                 shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(40)),
+                                      borderRadius: BorderRadius.circular(40)),
                                 )),
                             onPressed: () async {
-                              FocusScope.of(context)
-                                  .requestFocus(FocusNode());
+                              FocusScope.of(context).requestFocus(FocusNode());
                               if (_formKey.currentState != null &&
-                                  !_formKey.currentState!.validate()) {}
-                              if (_emailController.text.isEmpty) {
-                                Fluttertoast.showToast(
-                                    msg: 'Please Enter E-mail Address',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.CENTER);
-                              } else {
-                                if (_passwordController.text.isEmpty) {
-                                  RMSWidgets.getToast(
-                                      message: 'Please Enter Password',
-                                      color: CustomTheme().colorError);
-                                } else {
-                                  RMSWidgets.showLoaderDialog(
-                                      context: context,
-                                      message: 'Please wait...');
-                                  final LoginResponseModel response =
-                                      await _loginViewModel.getLoginDetails(
-                                          email: _emailController.text,
-                                          password: _passwordController.text);
-                                  Navigator.pop(context);
-                                  if (response.msg?.toLowerCase() !=
-                                          'failure' &&
-                                      response.data != null) {
-                                    await setSPValues(response: response);
+                                  _formKey.currentState!.validate()) {
+                                RMSWidgets.showLoaderDialog(
+                                    context: context,
+                                    message: 'Please wait...');
+                                final LoginResponseModel response =
+                                await _loginViewModel.getLoginDetails(
+                                    email: _emailController.text,
+                                    password: _passwordController.text);
+                                Navigator.pop(context);
+                                if (response.msg?.toLowerCase() !=
+                                    'failure' &&
+                                    response.data != null) {
+                                  await setSPValues(response: response);
 
-                                    Navigator.pushNamedAndRemoveUntil(
-                                      context,
-                                      AppRoutes.dashboardPage,
-                                      (route) => false,
-                                    );
-                                  }
+                                  Navigator.pushNamedAndRemoveUntil(
+                                    context,
+                                    AppRoutes.dashboardPage,
+                                        (route) => false,
+                                  );
                                 }
-                                //
                               }
+                                //
+
                             },
                             child: Center(child: Text("LOGIN")),
                           ),
@@ -236,14 +281,16 @@ class _LoginPageState extends State<LoginPage> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: GestureDetector(
-                            onTap: ()=>showForgotPasswordDialog(context: context),
-                              child: Text('Forgot Password',style: TextStyle(
-                                fontSize: 14,
-                                color: CustomTheme.appThemeContrast,
-                                fontWeight: FontWeight.w600
-                              ),)),
+                              onTap: () =>
+                                  showForgotPasswordDialog(context: context),
+                              child: Text(
+                                'Forgot Password',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: CustomTheme.appThemeContrast,
+                                    fontWeight: FontWeight.w600),
+                              )),
                         ),
-
                         SizedBox(
                           height: 40,
                         ),
@@ -255,150 +302,124 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(
                           height: 20,
                         ),
-                        GestureDetector(
-                          onTap: ()=>_showBottomSheet(context),
-                          child: Container(
-                            height: 45,
-                            width: 170,
-                            padding: EdgeInsets.only(left: 15),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: CustomTheme.appTheme),
-                                  borderRadius: BorderRadius.circular(40)
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(Icons.mobile_friendly,color: CustomTheme.appTheme,),
-                                SizedBox(width: 10,),
-                                Text('SignIn with OTP',style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600
-                                ),),
-                              ],
-                            ),
-                          ),
-                        ),
-                      /*  Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Row(
+                          mainAxisAlignment: Platform.isAndroid
+                              ? MainAxisAlignment.spaceBetween
+                              : MainAxisAlignment.center,
                           children: [
-                            Expanded(
+                            GestureDetector(
+                              onTap: () => _showBottomSheet(context),
                               child: Container(
-                                width: _mainWidth * 0.4,
-                                height: 45,
-                                child: ElevatedButton(
-                                  style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              CustomTheme.appTheme),
-                                      shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(40)),
-                                      )),
-                                  onPressed: () async {
-                                    _showBottomSheet(context);
-                                    *//*  Navigator.of(context)
-                                        .pushNamed(AppRoutes.mob_register_login);*//*
-                                  },
-                                  child: Text(
-                                    'SignIn With OTP',
-                                    style: TextStyle(fontSize: 14),
-                                  ),
+                                height: 40,
+                                padding: EdgeInsets.only(left: 15, right: 15),
+                                decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: CustomTheme.appTheme),
+                                    borderRadius: BorderRadius.circular(40)),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.mobile_friendly,
+                                      color: CustomTheme.appTheme,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'SignIn with OTP',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                          *//*  Expanded(
-                              child: Container(
-                                width: _mainWidth * 0.4,
-                                height: 35,
-                                child: ElevatedButton(
-                                  style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              CustomTheme.appTheme),
-                                      shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(40)),
-                                      )),
-                                  onPressed: () async {
-                                    RMSWidgets.showLoaderDialog(
-                                        context: context,
-                                        message: 'Please wait...');
-                                    final data =
-                                        await GoogleAuthService.loginIn();
+                            Visibility(
+                              visible: Platform.isAndroid,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  RMSWidgets.showLoaderDialog(
+                                      context: context,
+                                      message: 'Please wait...');
+                                  final data =
+                                      await GoogleAuthService.loginIn();
 
-                                    if (data != null) {
-                                      final LoginResponseModel response =
-                                          await _loginViewModel
-                                              .registerUserAfterGmail(
-                                                  model:
-                                                      GmailSignInRequestModel(
-                                        name: data.displayName,
-                                        email: data.email,
-                                        id: data.id,
-                                        picture: data.photoUrl,
-                                      ));
+                                  if (data != null) {
+                                    final LoginResponseModel response =
+                                        await _loginViewModel
+                                            .registerUserAfterGmail(
+                                                model: GmailSignInRequestModel(
+                                      name: data.displayName,
+                                      email: data.email,
+                                      id: data.id,
+                                      picture: data.photoUrl,
+                                    ));
 
-                                      Navigator.of(context).pop();
-                                      if (response.msg?.toLowerCase() !=
-                                          'failure') {
-                                        if (response.data != null &&
-                                            response.data?.contactNum !=
-                                                null &&
-                                            response.data?.contactNum == '') {
-                                          SharedPreferenceUtil shared =
-                                              SharedPreferenceUtil();
-                                          await shared.setString(
-                                              rms_registeredUserToken,
-                                              '${response.data?.appToken}');
-                                          await shared.setString(rms_gmapKey,
-                                              '${response.data?.gmapKey}');
-                                          await shared.setString(rms_userId,
-                                              '${response.data?.id}');
-                                          Navigator.of(context).pushNamed(
-                                              AppRoutes
-                                                  .firebaseRegistrationPage,
-                                              arguments: {
-                                                'gmailData': data,
-                                                'from': 'Gmail',
-                                              });
-                                        } else {
-                                          await setSPValues(
-                                              response: response);
-                                          Navigator.pushNamedAndRemoveUntil(
-                                            context,
-                                            AppRoutes.dashboardPage,
-                                            (route) => false,
-                                          );
-                                        }
+                                    Navigator.of(context).pop();
+                                    if (response.msg?.toLowerCase() !=
+                                        'failure') {
+                                      if (response.data != null &&
+                                          response.data?.contactNum != null &&
+                                          response.data?.contactNum == '') {
+                                        SharedPreferenceUtil shared =
+                                            SharedPreferenceUtil();
+                                        await shared.setString(
+                                            rms_registeredUserToken,
+                                            '${response.data?.appToken}');
+                                        await shared.setString(rms_gmapKey,
+                                            '${response.data?.gmapKey}');
+                                        await shared.setString(
+                                            rms_userId, '${response.data?.id}');
+                                        Navigator.of(context).pushNamed(
+                                            AppRoutes.firebaseRegistrationPage,
+                                            arguments: {
+                                              'gmailData': data,
+                                              'from': 'Gmail',
+                                            });
+                                      } else {
+                                        await setSPValues(response: response);
+                                        Navigator.pushNamedAndRemoveUntil(
+                                          context,
+                                          AppRoutes.dashboardPage,
+                                          (route) => false,
+                                        );
                                       }
-                                    } else {
-                                      log('Gmail SignIn Failed');
-                                      Navigator.of(context).pop();
                                     }
-                                  },
-                                  child: Container(
-                                    width: double.infinity,
-                                    child: Center(
-                                      child: Text(
+                                  } else {
+                                    log('Gmail SignIn Failed');
+                                    Navigator.of(context).pop();
+                                  }
+                                },
+                                child: Container(
+                                  height: 40,
+                                  padding: EdgeInsets.only(left: 15, right: 15),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: CustomTheme.appTheme),
+                                      borderRadius: BorderRadius.circular(40)),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.mail,
+                                        color: CustomTheme.appTheme,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
                                         'SignIn With Gmail',
                                         style: TextStyle(
-                                          fontSize: 14,
-                                        ),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600),
                                       ),
-                                    ),
+                                    ],
                                   ),
                                 ),
                               ),
-                            ),*//*
+                            ),
                           ],
-                        ),*/
+                        ),
                         SizedBox(
                           height: 20,
                         ),
@@ -442,7 +463,7 @@ class _LoginPageState extends State<LoginPage> {
                                     text: "Privacy Policy",
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: CustomTheme.black,
+                                      color: CustomTheme.appTheme,
                                       fontStyle: FontStyle.italic,
                                       fontWeight: FontWeight.w600,
                                     )),
@@ -459,7 +480,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
-    );
+    ):RMSWidgets.networkErrorPage(context: context);
   }
 
   Future<void> setSPValues({required LoginResponseModel response}) async {
@@ -528,13 +549,16 @@ class _LoginPageState extends State<LoginPage> {
                 padding: EdgeInsets.only(bottom: 10),
                 width: _mainWidth * 0.4,
                 child: ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(CustomTheme.appThemeContrast),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(40)),
-                      )),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.white,
+                    side: BorderSide(
+                      width: 1.0,
+                      color: CustomTheme.appTheme,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                   onPressed: () async {
                     RMSWidgets.showLoaderDialog(
                         context: context, message: 'Please wait...');
@@ -557,9 +581,7 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   child: Text(
                     'Recover',
-                    style: TextStyle(
-                      fontSize: 14,
-                    ),
+                    style: TextStyle(fontSize: 14, color: CustomTheme.black),
                   ),
                 ),
               ),
@@ -571,52 +593,58 @@ class _LoginPageState extends State<LoginPage> {
   void _showBottomSheet(context) {
     showModalBottomSheet(
         context: context,
-        builder: (BuildContext buildContext) {
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        builder: (context) {
           return Container(
             decoration: BoxDecoration(
                 color: theme.backgroundColor,
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(16),
                     topRight: Radius.circular(16))),
-            child: Padding(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          color: CustomTheme.appTheme.withAlpha(20),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Image.asset(Images.mobSignIn),
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: CustomTheme.appTheme.withAlpha(20),
+                        shape: BoxShape.circle,
                       ),
-                      Text(
-                        'Registration or Login',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      child: Image.asset(Images.mobSignIn),
+                    ),
+                    Text(
+                      'Registration or Login',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
-                      SizedBox(
-                        height: 10,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Add your phone number. we'll send you a verification code so we know you're real",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black38,
                       ),
-                      Text(
-                        "Add your phone number. we'll send you a verification code so we know you're real",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black38,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Container(
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
+                      child: Container(
                         padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           color: CustomTheme.appTheme.withAlpha(20),
@@ -664,54 +692,51 @@ class _LoginPageState extends State<LoginPage> {
                             SizedBox(
                               height: 10,
                             ),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  if (mob_controller.text.isNotEmpty &&
-                                      mob_controller.text.length == 10) {
-                                    Navigator.of(context).pushNamed(
-                                        AppRoutes.otpVerifyPage,
-                                        arguments: {
-                                          'mobile': mob_controller.text
-                                        });
-                                  } else {
-                                    RMSWidgets.getToast(
-                                        message:
-                                            "Please Enter valid Mobile Number",
-                                        color: CustomTheme().colorError);
-                                  }
-                                },
-                                style: ButtonStyle(
-                                  foregroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Colors.white),
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          CustomTheme.appTheme),
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(24.0),
-                                    ),
+                            ElevatedButton(
+                              onPressed: () async {
+                                if (mob_controller.text.isNotEmpty &&
+                                    mob_controller.text.length == 10) {
+                                  Navigator.of(context).pushNamed(
+                                      AppRoutes.otpVerifyPage,
+                                      arguments: {
+                                        'mobile': mob_controller.text
+                                      });
+                                } else {
+                                  RMSWidgets.getToast(
+                                      message:
+                                          "Please Enter valid Mobile Number",
+                                      color: CustomTheme().colorError);
+                                }
+                              },
+                              style: ButtonStyle(
+                                foregroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.white),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        CustomTheme.appTheme),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24.0),
                                   ),
                                 ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(14.0),
-                                  child: Text(
-                                    'Send',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(14.0),
+                                child: Text(
+                                  'Send OTP',
+                                  style: TextStyle(fontSize: 16),
                                 ),
                               ),
                             )
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           );
         });

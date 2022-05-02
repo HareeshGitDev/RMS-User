@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:RentMyStay_user/extensions/extensions.dart';
@@ -6,6 +7,7 @@ import 'package:RentMyStay_user/my_stays/viewmodel/mystay_viewmodel.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -35,10 +37,56 @@ class _MyStayListPageState extends State<MyStayListPage> {
   var _mainHeight;
   var _mainWidth;
   late SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+  late StreamSubscription<ConnectivityResult> _connectivitySubs;
+  final Connectivity _connectivity = Connectivity();
+  bool _connectionStatus = true;
+
+  Future<void> initConnectionStatus() async {
+    ConnectivityResult result = ConnectivityResult.none;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      log(e.toString());
+    }
+    if (!mounted) {
+      return null;
+    }
+
+    _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.mobile:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = false);
+        break;
+      case ConnectivityResult.ethernet:
+        setState(() => _connectionStatus = true);
+        break;
+      default:
+        setState(() => _connectionStatus = false);
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubs.cancel();
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
+    initConnectionStatus();
+    _connectivitySubs =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
     _viewModel.getMyStayList();
     getLanguageData();
@@ -57,7 +105,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
-    return DefaultTabController(
+    return _connectionStatus?DefaultTabController(
       length: 2,
       initialIndex: 0,
       child: Scaffold(
@@ -138,7 +186,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
               );
             },
           )),
-    );
+    ):RMSWidgets.networkErrorPage(context: context);
   }
 
   Widget getActiveTab(

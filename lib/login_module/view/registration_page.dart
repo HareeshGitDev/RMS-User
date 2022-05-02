@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:RentMyStay_user/images.dart';
@@ -7,6 +9,7 @@ import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -35,18 +38,68 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String typeValue = 'I am';
   String selectedCity = 'Select City';
   String sourceRMS = 'How do you Know RMS';
+  late StreamSubscription<ConnectivityResult> _connectivitySubs;
+  final Connectivity _connectivity = Connectivity();
+  bool _connectionStatus = true;
+
+  Future<void> initConnectionStatus() async {
+    ConnectivityResult result = ConnectivityResult.none;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      log(e.toString());
+    }
+    if (!mounted) {
+      return null;
+    }
+
+    _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.mobile:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = false);
+        break;
+      case ConnectivityResult.ethernet:
+        setState(() => _connectionStatus = true);
+        break;
+      default:
+        setState(() => _connectionStatus = false);
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubs.cancel();
+    super.dispose();
+  }
+
 
   @override
   void initState() {
-    _loginViewModel = Provider.of<LoginViewModel>(context, listen: false);
     super.initState();
+    initConnectionStatus();
+    _connectivitySubs =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    _loginViewModel = Provider.of<LoginViewModel>(context, listen: false);
+
+
   }
+
 
   @override
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
+    return _connectionStatus?Scaffold(
       body: Container(
 
         color: CustomTheme.appTheme,
@@ -322,7 +375,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           ),
         ),
       ),
-    );
+    ):RMSWidgets.networkErrorPage(context: context);
   }
 
   Widget _textInput(

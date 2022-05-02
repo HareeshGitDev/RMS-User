@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:RentMyStay_user/theme/app_theme.dart';
+import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:camera/camera.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 
 // A screen that allows users to take a picture using a given camera.
@@ -22,10 +24,52 @@ class PictureScreenState extends State<PictureScreen> {
   late CameraController _controller;
 
   late Future<void> _initializeControllerFuture;
+  late StreamSubscription<ConnectivityResult> _connectivitySubs;
+  final Connectivity _connectivity = Connectivity();
+  bool _connectionStatus = true;
+
+  Future<void> initConnectionStatus() async {
+    ConnectivityResult result = ConnectivityResult.none;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      log(e.toString());
+    }
+    if (!mounted) {
+      return null;
+    }
+
+    _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.mobile:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = false);
+        break;
+      case ConnectivityResult.ethernet:
+        setState(() => _connectionStatus = true);
+        break;
+      default:
+        setState(() => _connectionStatus = false);
+        break;
+    }
+  }
+
+
 
   @override
   void initState() {
     super.initState();
+    initConnectionStatus();
+    _connectivitySubs =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
 
     // To display the current output from the Camera,
     // create a CameraController.
@@ -44,12 +88,13 @@ class PictureScreenState extends State<PictureScreen> {
   void dispose() {
     // Dispose of the controller when the widget is disposed.
     _controller.dispose();
+    _connectivitySubs.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    return _connectionStatus?WillPopScope(
       onWillPop: () async {
         Navigator.pop(context, "");
         return true;
@@ -118,7 +163,7 @@ class PictureScreenState extends State<PictureScreen> {
           },
         ),
       ),
-    );
+    ):RMSWidgets.networkErrorPage(context: context);
   }
 }
 

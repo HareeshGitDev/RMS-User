@@ -5,6 +5,8 @@ import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
 import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/service/location_service.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
+import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
@@ -21,10 +23,59 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+
+  late StreamSubscription<ConnectivityResult> _connectivitySubs;
+  final Connectivity _connectivity = Connectivity();
+  bool _connectionStatus = true;
+
+  Future<void> initConnectionStatus() async {
+    ConnectivityResult result = ConnectivityResult.none;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      log(e.toString());
+    }
+    if (!mounted) {
+      return null;
+    }
+
+    _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.mobile:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = false);
+        break;
+      case ConnectivityResult.ethernet:
+        setState(() => _connectionStatus = true);
+        break;
+      default:
+        setState(() => _connectionStatus = false);
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubs.cancel();
+    super.dispose();
+  }
+
   @override
   void initState() {
-    initMethod();
     super.initState();
+    initConnectionStatus();
+    _connectivitySubs =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    initMethod();
+
   }
 
   Future<void> initMethod() async {
@@ -48,7 +99,7 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _connectionStatus?Scaffold(
       body: Container(
         decoration: BoxDecoration(
           color: CustomTheme.appTheme
@@ -63,6 +114,6 @@ class _SplashPageState extends State<SplashPage> {
           heightFactor: 100,
         ),
       ),
-    );
+    ):RMSWidgets.networkErrorPage(context: context);
   }
 }

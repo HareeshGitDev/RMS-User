@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:RentMyStay_user/property_module/viewModel/property_viewModel.dart';
@@ -7,6 +8,7 @@ import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:RentMyStay_user/utils/service/system_service.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -40,6 +42,49 @@ class _SearchPageState extends State<SearchPage> {
   final SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
   bool showSearchResults = false;
   late PropertyViewModel _propertyViewModel;
+  late StreamSubscription<ConnectivityResult> _connectivitySubs;
+  final Connectivity _connectivity = Connectivity();
+  bool _connectionStatus = true;
+
+  Future<void> initConnectionStatus() async {
+    ConnectivityResult result = ConnectivityResult.none;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      log(e.toString());
+    }
+    if (!mounted) {
+      return null;
+    }
+
+    _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.mobile:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = false);
+        break;
+      case ConnectivityResult.ethernet:
+        setState(() => _connectionStatus = true);
+        break;
+      default:
+        setState(() => _connectionStatus = false);
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubs.cancel();
+    super.dispose();
+  }
 
   TextStyle get getTextStyle => const TextStyle(
       color: Colors.black,
@@ -58,6 +103,9 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
+    initConnectionStatus();
+    _connectivitySubs =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _propertyViewModel=Provider.of<PropertyViewModel>(context,listen: false);
     getLanguageData();
 
@@ -67,7 +115,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
-    return Consumer<PropertyViewModel>(
+    return _connectionStatus?Consumer<PropertyViewModel>(
       builder: (context, value, child) {
         return Scaffold(
           body: widget.fromBottom
@@ -83,7 +131,7 @@ class _SearchPageState extends State<SearchPage> {
               : getView(value: value),
         );
       },
-    );
+    ):RMSWidgets.networkErrorPage(context: context);
   }
 
   Widget getView({required PropertyViewModel value}) {

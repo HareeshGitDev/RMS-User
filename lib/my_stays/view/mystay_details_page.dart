@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
@@ -7,6 +8,7 @@ import 'package:RentMyStay_user/utils/constants/app_consts.dart';
 import 'package:RentMyStay_user/utils/service/date_time_service.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,10 +42,56 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
   var _mainHeight;
   var _mainWidth;
   late SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+  late StreamSubscription<ConnectivityResult> _connectivitySubs;
+  final Connectivity _connectivity = Connectivity();
+  bool _connectionStatus = true;
+
+  Future<void> initConnectionStatus() async {
+    ConnectivityResult result = ConnectivityResult.none;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      log(e.toString());
+    }
+    if (!mounted) {
+      return null;
+    }
+
+    _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.mobile:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = false);
+        break;
+      case ConnectivityResult.ethernet:
+        setState(() => _connectionStatus = true);
+        break;
+      default:
+        setState(() => _connectionStatus = false);
+        break;
+    }
+  }
+  @override
+  void dispose() {
+    _connectivitySubs.cancel();
+    super.dispose();
+  }
+
 
   @override
   void initState() {
     super.initState();
+    initConnectionStatus();
+    _connectivitySubs =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
     _viewModel.getMyStayDetails(bookingId: widget.bookingId);
     getLanguageData();
@@ -63,7 +111,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
+    return _connectionStatus?Scaffold(
       appBar: _getAppBar(context: context, bookingId: widget.bookingId),
       body: Consumer<MyStayViewModel>(
         builder: (context, value, child) {
@@ -210,7 +258,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                       margin:
                                           EdgeInsets.only(left: 10, right: 10),
                                       child: Text(
-                                        '${value.myStayDetailsModel?.data?.furnishedType} Type',
+                                        '${value.myStayDetailsModel?.data?.furnishedType}',
                                         maxLines: 3,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
@@ -250,7 +298,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                           ),
                                           onPressed: () {
                                             launch(
-                                                'https://wa.me/917204315482?text=Hello');
+                                                'https://wa.me/917204315482?text=Hi, I wanted to contact with you regarding my booking ID ( ${value.myStayDetailsModel?.data?.bookingId})');
                                           },
                                         ),
                                       ],
@@ -884,7 +932,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                             '',
                                         'bookingId': widget.bookingId,
                                       })),
-                          _gridInput(
+                          /*_gridInput(
                               hint: nullCheck(list: value.bookingDetailsLang)
                                   ? ' ${value.bookingDetailsLang[16].name} '
                                   : "Privacy Policies",
@@ -897,31 +945,28 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                   privacyPolicyLink, nullCheck(list: value.bookingDetailsLang)
                                       ? ' ${value.bookingDetailsLang[16].name} '
                                       :'Privacy Policy', '1'),
+                          ), */
+                          _gridInput(
+                            hint: nullCheck(list: value.bookingDetailsLang)
+                                ? ' ${value.bookingDetailsLang[04].name} '
+                                : "Update KYC",
+                            icon: Icon(
+                              Icons.fact_check_outlined,
+                              size: _mainHeight * 0.032,
+                              color: CustomTheme.appTheme,
+                            ),
+                            callBack: () =>  _updateKyc(
+                                context,
+                                updateKYCLink,
+                                'Update Your kyc',
+                                value.myStayDetailsModel?.data?.userId ??
+                                    ''),
                           ),
                         ],
                       ),
                       SizedBox(
                         height: _mainHeight * 0.01,
                       ),
-                      Row( children: [
-                        _gridInput(
-                        hint: nullCheck(list: value.bookingDetailsLang)
-                            ? ' ${value.bookingDetailsLang[04].name} '
-                            : "Update KYC",
-                        icon: Icon(
-                          Icons.fact_check_outlined,
-                          size: _mainHeight * 0.032,
-                          color: CustomTheme.appTheme,
-                        ),
-                        callBack: () =>  _updateKyc(
-              context,
-              updateKYCLink,
-              'Update Your kyc',
-              value.myStayDetailsModel?.data?.userId ??
-                  ''),
-                      ),
-                      ],
-                      )
                     ],
                   ),
                 )
@@ -935,7 +980,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                   : Center(child: RMSWidgets.getLoader());
         },
       ),
-    );
+    ):RMSWidgets.networkErrorPage(context: context);
   }
 
   AppBar _getAppBar(

@@ -1,7 +1,11 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
 import 'package:RentMyStay_user/images.dart';
 import 'package:RentMyStay_user/utils/constants/app_consts.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,10 +31,51 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
   var _mainWidth;
   late HomeViewModel _homeViewModel;
   late SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+  late StreamSubscription<ConnectivityResult> _connectivitySubs;
+  final Connectivity _connectivity = Connectivity();
+  bool _connectionStatus = true;
+
+  Future<void> initConnectionStatus() async {
+    ConnectivityResult result = ConnectivityResult.none;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      log(e.toString());
+    }
+    if (!mounted) {
+      return null;
+    }
+
+    _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.mobile:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = false);
+        break;
+      case ConnectivityResult.ethernet:
+        setState(() => _connectionStatus = true);
+        break;
+      default:
+        setState(() => _connectionStatus = false);
+        break;
+    }
+  }
+
 
   @override
   void initState() {
     super.initState();
+    initConnectionStatus();
+    _connectivitySubs =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
     _homeViewModel.getInviteEarnDetails();
     getLanguageData();
@@ -42,6 +87,12 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
         pageName: 'refer&earn');
   }
 
+  @override
+  void dispose() {
+    _connectivitySubs.cancel();
+    super.dispose();
+  }
+
   bool nullCheck({required List<LanguageModel> list}) =>
       list.isNotEmpty ? true : false;
 
@@ -50,7 +101,7 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
 
-    return Consumer<HomeViewModel>(builder: (context, value, child) {
+    return _connectionStatus?Consumer<HomeViewModel>(builder: (context, value, child) {
       return Scaffold(
         appBar: _getAppBar(context: context),
         body: value.referAndEarnModel != null &&
@@ -345,7 +396,7 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                 : Center(
                     child: RMSWidgets.getLoader(color: CustomTheme.appTheme)),
       );
-    });
+    }):RMSWidgets.networkErrorPage(context: context);
   }
 
   AppBar _getAppBar({required BuildContext context}) {

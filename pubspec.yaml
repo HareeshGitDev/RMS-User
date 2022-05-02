@@ -50,6 +50,7 @@ dependencies:
   fluttertoast: ^8.0.8
   shared_preferences: ^2.0.6
   webview_flutter: ^3.0.0
+  #flutter_webview_pro: ^3.0.1+2
   google_sign_in: ^5.2.4
   cached_network_image: ^3.2.0
   readmore: ^2.1.0
@@ -61,6 +62,8 @@ dependencies:
   camera:
   image_picker: ^0.8.4+9
   cloud_firestore: ^3.1.11
+  connectivity_plus: ^2.3.0
+  internet_connection_checker:
 
 
   # Base Dependencies

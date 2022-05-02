@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
@@ -10,6 +11,7 @@ import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
@@ -63,14 +65,60 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
   bool showAllAmenities = false;
 
   late PropertyDetailsViewModel _viewModel;
+  late StreamSubscription<ConnectivityResult> _connectivitySubs;
+  final Connectivity _connectivity = Connectivity();
+  bool _connectionStatus = true;
+
+  Future<void> initConnectionStatus() async {
+    ConnectivityResult result = ConnectivityResult.none;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      log(e.toString());
+    }
+    if (!mounted) {
+      return null;
+    }
+
+    _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.mobile:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = false);
+        break;
+      case ConnectivityResult.ethernet:
+        setState(() => _connectionStatus = true);
+        break;
+      default:
+        setState(() => _connectionStatus = false);
+        break;
+    }
+  }
+
 
   @override
   void initState() {
     super.initState();
-
+    initConnectionStatus();
+    _connectivitySubs =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _viewModel = Provider.of<PropertyDetailsViewModel>(context, listen: false);
     _viewModel.getPropertyDetails(propId: widget.propId);
     getLanguageData();
+  }
+  @override
+  void dispose() {
+    showPics.dispose();
+    _connectivitySubs.cancel();
+    super.dispose();
   }
 
   getLanguageData() async {
@@ -82,19 +130,12 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
   bool nullCheck({required List<LanguageModel> list}) =>
       list.isNotEmpty ? true : false;
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    showPics.dispose();
-
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     _mainWidth = MediaQuery.of(context).size.width;
     _mainHeight = MediaQuery.of(context).size.height;
-    return Consumer<PropertyDetailsViewModel>(
+    return _connectionStatus?Consumer<PropertyDetailsViewModel>(
       builder: (context, value, child) {
         return SafeArea(
           child: value.propertyDetailsModel != null &&
@@ -957,6 +998,9 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              SizedBox(
+                                height: _mainHeight * 0.005,
+                              ),
                               Text(
                                 '${nullCheck(list: value.propertyDetailsLang) ?
                                 value.propertyDetailsLang[18].name
@@ -1225,7 +1269,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                     ),
         );
       },
-    );
+    ):RMSWidgets.networkErrorPage(context: context);
   }
 
   Widget getAvailableAmenities({required List<AmenitiesModel> list}) {
