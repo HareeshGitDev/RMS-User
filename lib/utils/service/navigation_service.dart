@@ -6,7 +6,7 @@ import 'package:RentMyStay_user/language_module/viewModel/language_viewModel.dar
 
 import 'package:RentMyStay_user/login_module/view/login_page.dart';
 import 'package:RentMyStay_user/login_module/view/firebase_registration_page.dart';
-import 'package:RentMyStay_user/login_module/view/success_page.dart';
+import 'package:RentMyStay_user/login_module/view/payment_status_page.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:RentMyStay_user/my_stays/model/ticket_response_model.dart';
 import 'package:RentMyStay_user/my_stays/view/generate_ticket_page.dart';
@@ -32,7 +32,6 @@ import 'package:provider/provider.dart';
 import '../../my_stays/view/update_Invoice_UTR.dart';
 import '../../property_details_module/view/booking_view_page.dart';
 import '../../home_module/view/home_page.dart';
-import '../../login_module/view/forgot_password_page.dart';
 import '../../login_module/view/mobile_otp_page.dart';
 import '../../login_module/view/registration_page.dart';
 import '../../my_stays/view/feedback_form_view_page.dart';
@@ -86,12 +85,6 @@ class NavigationService {
         return MaterialPageRoute(
             builder: (_) =>
                 PictureScreen(camera: settings.arguments as CameraDescription));
-      case AppRoutes.forgotPassword:
-        return MaterialPageRoute(
-            builder: (context) => ChangeNotifierProvider(
-                  create: (_) => LoginViewModel(),
-                  child: ForgotPasswordPage(),
-                ));
 
       case AppRoutes.otpVerifyPage:
         final data = settings.arguments as Map<String, dynamic>;

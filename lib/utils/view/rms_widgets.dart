@@ -75,7 +75,8 @@ class RMSWidgets {
 
   static Widget getLoader({Color? color}) {
     return CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(color?? CustomTheme.appTheme));
+        valueColor:
+            AlwaysStoppedAnimation<Color>(color ?? CustomTheme.appTheme));
   }
 
   static Widget noData(
@@ -87,11 +88,38 @@ class RMSWidgets {
     FontWeight.w600;
     return Center(
       child: Container(
-        padding: EdgeInsets.only(left: 20,right: 20),
+        padding: EdgeInsets.only(left: 20, right: 20),
         child: Text(
           message,
           style: TextStyle(
-              fontSize: fontSize ?? 20, fontWeight: fontWeight, color: fontColor),
+              fontSize: fontSize ?? 20,
+              fontWeight: fontWeight,
+              color: fontColor),
+        ),
+      ),
+    );
+  }
+
+  static Widget networkErrorPage({required BuildContext context}) {
+
+    return Scaffold(
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.only(left: 20, right: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.wifi_off,color: Colors.grey,size: 50,),
+            SizedBox(height: 20,),
+            Text(
+              'Check Your Internet Connection...',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey),
+            ),
+          ],
         ),
       ),
     );
@@ -99,16 +127,18 @@ class RMSWidgets {
 
   static Widget someError(
       {required BuildContext context,
-         String? message,
-        Color? fontColor,
-        double? fontSize,
-        FontWeight? fontWeight}) {
+      String? message,
+      Color? fontColor,
+      double? fontSize,
+      FontWeight? fontWeight}) {
     FontWeight.w600;
     return Center(
       child: Text(
         message ?? 'Something went wrong...',
         style: TextStyle(
-            fontSize: fontSize ?? 20, fontWeight: fontWeight, color: fontColor ?? CustomTheme.appTheme),
+            fontSize: fontSize ?? 20,
+            fontWeight: fontWeight,
+            color: fontColor ?? CustomTheme.appTheme),
       ),
     );
   }
@@ -126,11 +156,11 @@ class RMSWidgets {
     );
   }
 
-  static Widget showShimmer({required double height,required double width,double ?borderCorner}){
-
+  static Widget showShimmer(
+      {required double height, required double width, double? borderCorner}) {
     return Shimmer.fromColors(
         child: Container(
-          height: height ,
+          height: height,
           width: width,
           decoration: BoxDecoration(
             color: Colors.grey,

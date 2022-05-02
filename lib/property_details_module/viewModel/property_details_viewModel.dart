@@ -24,10 +24,11 @@ class PropertyDetailsViewModel extends ChangeNotifier {
   List<LanguageModel> bookingAmountLang = [];
 
   YoutubePlayerController youTubeController = YoutubePlayerController(
+
     initialVideoId: '',
     flags: const YoutubePlayerFlags(
       autoPlay: true,
-      mute: false,
+      mute: true,
       controlsVisibleAtStart: false,
     ),
   );

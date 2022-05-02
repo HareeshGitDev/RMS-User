@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -9,6 +10,7 @@ import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -40,10 +42,56 @@ class _HomePageState extends State<HomePage> {
   var _mainWidth;
   SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
   late Future<Map<String, String>> userDetails;
+  late StreamSubscription<ConnectivityResult> _connectivitySubs;
+  final Connectivity _connectivity = Connectivity();
+  bool _connectionStatus = true;
+
+  Future<void> initConnectionStatus() async {
+    ConnectivityResult result = ConnectivityResult.none;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      log(e.toString());
+    }
+    if (!mounted) {
+      return null;
+    }
+
+    _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.mobile:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = false);
+        break;
+      case ConnectivityResult.ethernet:
+        setState(() => _connectionStatus = true);
+        break;
+      default:
+        setState(() => _connectionStatus = false);
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubs.cancel();
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
+    initConnectionStatus();
+    _connectivitySubs =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
     userDetails = getSharedPreferencesValues();
     preferenceUtil.getToken().then((value) => token = value ?? '');
@@ -70,432 +118,462 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
-    return Consumer<HomeViewModel>(
-      builder: (context, value, child) {
-
-        return Scaffold(
-          resizeToAvoidBottomInset: true,
-          appBar: AppBar(
-            backgroundColor: CustomTheme.appTheme,
-            centerTitle: true,
-            elevation: 4,
-            bottom: PreferredSize(
-              preferredSize: Size(20, 50),
-              child: GestureDetector(
-                onTap: () => Navigator.of(context)
-                    .pushNamed(AppRoutes.searchPage, arguments: {
-                  'fromBottom': false,
-                }),
-                child: Container(
-                  height: 40,
-                  padding: EdgeInsets.only(
-                    left: 15,
-                  ),
-                  margin: EdgeInsets.only(left: 15, right: 15, bottom: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    color: Colors.white,
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.search_rounded),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                          '${nullCheck(list: value.languageData) ? value.languageData[2].name : 'Search'}'),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15))),
-            actions: [
-              Container(
-                child: Icon(Icons.notifications_none),
-                margin: EdgeInsets.only(right: 15),
-              ),
-            ],
-            title: Container(
-              margin: EdgeInsets.only(top: 10),
-              child: Image.asset(
-                Images.brandLogo_Transparent,
-                height: 100,
-              ),
-            ),
-          ),
-          body: WillPopScope(
-            onWillPop: () async {
-              showExitDialog(context);
-              return false;
-            },
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                color: Colors.white,
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
+    return _connectionStatus
+        ? Consumer<HomeViewModel>(
+            builder: (context, value, child) {
+              return Scaffold(
+                resizeToAvoidBottomInset: true,
+                appBar: AppBar(
+                  backgroundColor: CustomTheme.appTheme,
+                  centerTitle: true,
+                  elevation: 4,
+                  bottom: PreferredSize(
+                    preferredSize: Size(20, 50),
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context)
+                          .pushNamed(AppRoutes.searchPage, arguments: {
+                        'fromBottom': false,
+                      }),
+                      child: Container(
+                        height: 40,
                         padding: EdgeInsets.only(
-                            top: _mainHeight * 0.015,
-                            left: _mainWidth * 0.03,
-                            right: _mainWidth * 0.03),
-                        height: _mainHeight * 0.12,
-                        width: MediaQuery.of(context).size.width,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            var data = _homeViewModel.getCitySuggestionList(
-                                context: context)[index];
-                            return InkWell(
-                              onTap: index == 0
-                                  ? () async {
-                                      bool? granted =
-                                          await LocationService.checkPermission(
-                                              context: context);
-                                      if (granted != null && granted) {
-                                        Navigator.of(context).pushNamed(
-                                            AppRoutes.propertyListingPage,
-                                            arguments: {
-                                              'location': data.value,
-                                              'property':
-                                                  Property.fromCurrentLocation,
-                                            });
-                                      }
-                                    }
-                                  : () => Navigator.of(context).pushNamed(
-                                          AppRoutes.propertyListingPage,
-                                          arguments: {
-                                            'location': data.value,
-                                            'property': Property.fromLocation,
-                                          }),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: 60,
-                                    width: 70,
-                                    child: index == 0
-                                        ? Transform.rotate(
-                                            angle: math.pi / 4,
-                                            child: CircleAvatar(
-                                                backgroundColor:
-                                                    CustomTheme.appTheme,
-                                                child: Icon(
-                                                  Icons.navigation_outlined,
-                                                  size: 25,
-                                                  color: CustomTheme.white,
-                                                )),
-                                          )
-                                        : CachedNetworkImage(
-                                            imageUrl: data.imageUrl.toString(),
-                                            imageBuilder:
-                                                (context, imageProvider) =>
-                                                    Container(
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                image: DecorationImage(
-                                                  image: imageProvider,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                            placeholder: (context, url) =>
-                                                Shimmer.fromColors(
-                                                    child: Container(
-                                                      height: 60,
-                                                      width: 75,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color: Colors.grey,
-                                                      ),
-                                                    ),
-                                                    baseColor: Colors.grey[200]
-                                                        as Color,
-                                                    highlightColor: Colors
-                                                        .grey[350] as Color),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    const Icon(Icons.error),
-                                          ),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Visibility(
-                                    visible: index == 0,
-                                    child: Text(
-                                      '${nullCheck(list: value.languageData) ? value.languageData[0].name : 'Current Location'}',
-                                      style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    replacement: Text(
-                                      data.cityName,
-                                      style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          itemCount: _homeViewModel
-                              .getCitySuggestionList(context: context)
-                              .length,
-                        )),
-                    Container(
-                      margin: EdgeInsets.only(top: 10),
-                      width: MediaQuery.of(context).size.width,
-                      child: CarouselSlider(
-                        items: _homeViewModel
-                            .getAdsImageList()
-                            .map(
-                              (imageUrl) => CachedNetworkImage(
-                                imageUrl: imageUrl,
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                placeholder: (context, url) =>
-                                    Shimmer.fromColors(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey,
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                          ),
-                                          height: 180,
-                                        ),
-                                        baseColor: Colors.grey[200] as Color,
-                                        highlightColor:
-                                            Colors.grey[350] as Color),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                              ),
-                            )
-                            .toList(),
-                        options: CarouselOptions(
-                            height: 180,
-                            enlargeCenterPage: true,
-                            autoPlay: true,
-                            aspectRatio: 16 / 9,
-                            autoPlayCurve: Curves.fastOutSlowIn,
-                            enableInfiniteScroll: true,
-                            viewportFraction: 0.8),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 15),
-                      child: Text(
-                        '${nullCheck(list: value.languageData) ? value.languageData[1].name : "Popular"}',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          //decoration: TextDecoration.underline,
+                          left: 15,
+                        ),
+                        margin:
+                            EdgeInsets.only(left: 15, right: 15, bottom: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.search_rounded),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                                '${nullCheck(list: value.languageData) ? value.languageData[2].name : 'Search'}'),
+                          ],
                         ),
                       ),
                     ),
+                  ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(15),
+                          bottomRight: Radius.circular(15))),
+                  actions: [
                     Container(
-                        padding: EdgeInsets.only(left: 10),
-                        height: 260,
-
-                        width: MediaQuery.of(context).size.width,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            var data = _homeViewModel
-                                .getPopularPropertyModelList()[index];
-                            return InkWell(
-                              onTap: () => Navigator.of(context).pushNamed(
-                                  AppRoutes.propertyListingPage,
-                                  arguments: {
-                                    'location': 'Bengaluru-Karnataka-India',
-                                    'propertyType': data.propertyType,
-                                    'property': Property.fromBHK,
-                                  }),
-                              child: Card(
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                elevation: 3,
-                                shadowColor: CustomTheme.appTheme,
-                                margin: EdgeInsets.all(10),
-                                child: Container(
-                                  //margin: EdgeInsets.all(10),
-                                  width: 220,
+                      child: Icon(Icons.notifications_none),
+                      margin: EdgeInsets.only(right: 15),
+                    ),
+                  ],
+                  title: Container(
+                    margin: EdgeInsets.only(top: 10),
+                    child: Image.asset(
+                      Images.brandLogo_Transparent,
+                      height: 100,
+                    ),
+                  ),
+                ),
+                body: WillPopScope(
+                  onWillPop: () async {
+                    showExitDialog(context);
+                    return false;
+                  },
+                  child: Container(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.only(
+                                top: _mainHeight * 0.015,
+                                left: _mainWidth * 0.03,
+                                right: _mainWidth * 0.03),
+                            height: _mainHeight * 0.12,
+                            width: MediaQuery.of(context).size.width,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                var data = _homeViewModel.getCitySuggestionList(
+                                    context: context)[index];
+                                return InkWell(
+                                  onTap: index == 0
+                                      ? () async {
+                                          bool? granted = await LocationService
+                                              .checkPermission(
+                                                  context: context);
+                                          if (granted != null && granted) {
+                                            Navigator.of(context).pushNamed(
+                                                AppRoutes.propertyListingPage,
+                                                arguments: {
+                                                  'location': data.value,
+                                                  'property': Property
+                                                      .fromCurrentLocation,
+                                                });
+                                          }
+                                        }
+                                      : () => Navigator.of(context).pushNamed(
+                                              AppRoutes.propertyListingPage,
+                                              arguments: {
+                                                'location': data.value,
+                                                'property':
+                                                    Property.fromLocation,
+                                              }),
                                   child: Column(
                                     children: [
-                                      Expanded(
-                                        child: Container(
-                                          height: 140,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(10),
-                                                  topRight:
-                                                      Radius.circular(10)),
-                                              image: DecorationImage(
-                                                  image: AssetImage(
-                                                      data.imageUrl!),
-                                                  fit: BoxFit.cover
-                                                  //NetworkImage(data.imageUrl!),fit: BoxFit.cover,
-                                                  )),
+                                      Container(
+                                        height: 60,
+                                        width: 70,
+                                        child: index == 0
+                                            ? Transform.rotate(
+                                                angle: math.pi / 4,
+                                                child: CircleAvatar(
+                                                    backgroundColor:
+                                                        CustomTheme.appTheme,
+                                                    child: Icon(
+                                                      Icons.navigation_outlined,
+                                                      size: 25,
+                                                      color: CustomTheme.white,
+                                                    )),
+                                              )
+                                            : CachedNetworkImage(
+                                                imageUrl:
+                                                    data.imageUrl.toString(),
+                                                imageBuilder:
+                                                    (context, imageProvider) =>
+                                                        Container(
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    image: DecorationImage(
+                                                      image: imageProvider,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                                placeholder: (context, url) =>
+                                                    Shimmer.fromColors(
+                                                        child: Container(
+                                                          height: 60,
+                                                          width: 75,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            shape:
+                                                                BoxShape.circle,
+                                                            color: Colors.grey,
+                                                          ),
+                                                        ),
+                                                        baseColor: Colors
+                                                            .grey[200] as Color,
+                                                        highlightColor:
+                                                            Colors.grey[350]
+                                                                as Color),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        const Icon(Icons.error),
+                                              ),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Visibility(
+                                        visible: index == 0,
+                                        child: Text(
+                                          '${nullCheck(list: value.languageData) ? value.languageData[0].name : 'My Location'}',
+                                          style: const TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        replacement: Text(
+                                          data.cityName,
+                                          style: const TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w600),
                                         ),
                                       ),
-                                      Container(
-                                          margin:
-                                              EdgeInsets.only(left: 5, top: 5),
-                                          alignment: Alignment.topLeft,
-                                          child: Text(data.propertyType!,
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
-                                              ))),
-                                      Container(
-                                          margin:
-                                              EdgeInsets.only(left: 5, top: 5),
-                                          alignment: Alignment.topLeft,
-                                          child: Text(
-                                            data.propertyDesc!,
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 12),
-                                          )),
-                                      Container(
-                                          margin: EdgeInsets.only(
-                                            right: 10,
-                                          ),
-                                          alignment: Alignment.topRight,
-                                          child: Text(
-                                              '${nullCheck(list: value.languageData) ? value.languageData[3].name : 'More Info'}',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                  color: CustomTheme.appThemeContrast))),
                                     ],
                                   ),
-                                ),
+                                );
+                              },
+                              itemCount: _homeViewModel
+                                  .getCitySuggestionList(context: context)
+                                  .length,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(
+                                width: 10,
                               ),
-                            );
-                          },
-                          itemCount: _homeViewModel
-                              .getPopularPropertyModelList()
-                              .length,
-                        )),
-                    Padding(
-                      padding: EdgeInsets.only(left: 15, top: 10),
-                      child: Text(
-                        '${nullCheck(list: value.languageData) ? value.languageData[4].name : "Refer & Earn"}',
-                        style: TextStyle(
-                          color: Colors.black45,
-                          fontSize: 18,
-
-                          //decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-
-                    GestureDetector(
-                      onTap: () => Navigator.of(context)
-                          .pushNamed(AppRoutes.referAndEarn),
-                      child: Container(
-                        width: _mainWidth,
-                          child: Row(
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(left: 20, top: 15),
-                                child: Text(
-                                  "Earn",
-                                  style: TextStyle(
-                                    color: CustomTheme.appThemeContrast,
-                                    fontSize: 28,
-
-                                    //decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(left: 15, top: 10),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "1000",
-                                      style: TextStyle(
-                                        color: CustomTheme.appThemeContrast,
-                                        fontSize: 40,
-
-                                        //decoration: TextDecoration.underline,
-                                      ),
-                                    ),
-                                    Text(
-                                      "Rupees",
-                                      style: TextStyle(
-                                        color: CustomTheme.appThemeContrast,
-                                        fontSize: 16,
-
-                                        //decoration: TextDecoration.underline,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(left: 15, top: 10),
-                                child: Text(
-                                  "Share with your Friend",
-                                  style: TextStyle(
-                                    color: Colors.black45,
-                                    fontSize: 18,
-
-                                    //decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                           Container(
-                              height: 200,
-                              width: 180,
-                              child: Image.asset(Images.referIconHome))
+                            margin: EdgeInsets.only(top: 10),
+                            width: MediaQuery.of(context).size.width,
+                            child: CarouselSlider(
+                              items: _homeViewModel
+                                  .getAdsImageList()
+                                  .map(
+                                    (imageUrl) => CachedNetworkImage(
+                                      imageUrl: imageUrl,
+                                      imageBuilder: (context, imageProvider) =>
+                                          Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                      placeholder: (context, url) =>
+                                          Shimmer.fromColors(
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey,
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                ),
+                                                height: 180,
+                                              ),
+                                              baseColor:
+                                                  Colors.grey[200] as Color,
+                                              highlightColor:
+                                                  Colors.grey[350] as Color),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
+                                    ),
+                                  )
+                                  .toList(),
+                              options: CarouselOptions(
+                                  height: 180,
+                                  enlargeCenterPage: true,
+                                  autoPlay: true,
+                                  aspectRatio: 16 / 9,
+                                  autoPlayCurve: Curves.fastOutSlowIn,
+                                  enableInfiniteScroll: true,
+                                  viewportFraction: 0.8),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 15),
+                            child: Text(
+                              '${nullCheck(list: value.languageData) ? value.languageData[1].name : "Popular"}',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                                //decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                          Container(
+                              padding: EdgeInsets.only(left: 10),
+                              height: 260,
+                              width: MediaQuery.of(context).size.width,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  var data = _homeViewModel
+                                      .getPopularPropertyModelList()[index];
+                                  return InkWell(
+                                    onTap: () => Navigator.of(context)
+                                        .pushNamed(
+                                            AppRoutes.propertyListingPage,
+                                            arguments: {
+                                          'location':
+                                              'Bengaluru-Karnataka-India',
+                                          'propertyType': data.propertyType,
+                                          'property': Property.fromBHK,
+                                        }),
+                                    child: Card(
+                                      shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10))),
+                                      elevation: 3,
+                                      shadowColor: CustomTheme.appTheme,
+                                      margin: EdgeInsets.all(10),
+                                      child: Container(
+                                        //margin: EdgeInsets.all(10),
+                                        width: 220,
+                                        child: Column(
+                                          children: [
+                                            Expanded(
+                                              child: Container(
+                                                height: 140,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                            topLeft: Radius
+                                                                .circular(10),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    10)),
+                                                    image: DecorationImage(
+                                                        image: AssetImage(
+                                                            data.imageUrl!),
+                                                        fit: BoxFit.cover
+                                                        //NetworkImage(data.imageUrl!),fit: BoxFit.cover,
+                                                        )),
+                                              ),
+                                            ),
+                                            Container(
+                                                margin: EdgeInsets.only(
+                                                    left: 5, top: 5),
+                                                alignment: Alignment.topLeft,
+                                                child: Text(data.propertyType!,
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ))),
+                                            Container(
+                                                margin: EdgeInsets.only(
+                                                    left: 5, top: 5),
+                                                alignment: Alignment.topLeft,
+                                                child: Text(
+                                                  data.propertyDesc!,
+                                                  style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 12),
+                                                )),
+                                            Container(
+                                                margin: EdgeInsets.only(
+                                                  right: 10,
+                                                ),
+                                                alignment: Alignment.topRight,
+                                                child: Text(
+                                                    '${nullCheck(list: value.languageData) ? value.languageData[3].name : 'More Info'}',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color: CustomTheme
+                                                            .appThemeContrast))),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                itemCount: _homeViewModel
+                                    .getPopularPropertyModelList()
+                                    .length,
+                              )),
+                          Padding(
+                            padding: EdgeInsets.only(left: 15, top: 10),
+                            child: Text(
+                              '${nullCheck(list: value.languageData) ? value.languageData[4].name : "Refer & Earn"}',
+                              style: TextStyle(
+                                color: Colors.black45,
+                                fontSize: 18,
+
+                                //decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () => Navigator.of(context)
+                                .pushNamed(AppRoutes.referAndEarn),
+                            child: Container(
+                                width: _mainWidth,
+                                child: Row(
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.only(
+                                              left: 20, top: 15),
+                                          child: Text(
+                                            "Earn",
+                                            style: TextStyle(
+                                              color:
+                                                  CustomTheme.appThemeContrast,
+                                              fontSize: 28,
+
+                                              //decoration: TextDecoration.underline,
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(
+                                              left: 15, top: 10),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "1000",
+                                                style: TextStyle(
+                                                  color: CustomTheme
+                                                      .appThemeContrast,
+                                                  fontSize: 40,
+
+                                                  //decoration: TextDecoration.underline,
+                                                ),
+                                              ),
+                                              Text(
+                                                "Rupees",
+                                                style: TextStyle(
+                                                  color: CustomTheme
+                                                      .appThemeContrast,
+                                                  fontSize: 16,
+
+                                                  //decoration: TextDecoration.underline,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(
+                                              left: 15, top: 10),
+                                          child: Text(
+                                            "Share with your Friend",
+                                            style: TextStyle(
+                                              color: Colors.black45,
+                                              fontSize: 18,
+
+                                              //decoration: TextDecoration.underline,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                        height: 200,
+                                        width: 180,
+                                        child:
+                                            Image.asset(Images.referIconHome))
+                                  ],
+                                )),
+                          )
                         ],
-                      )),
-                    )
-                  ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
-          drawer: _getDrawer(
-              context: context,
-              list: value
-                  .languageData), // This trailing comma makes auto-formatting nicer for build methods.
-        );
-      },
-    );
+                drawer: _getDrawer(
+                    context: context,
+                    list: value
+                        .languageData), // This trailing comma makes auto-formatting nicer for build methods.
+              );
+            },
+          )
+        : RMSWidgets.networkErrorPage(context: context);
   }
 
   Widget _getDrawer(
@@ -654,14 +732,19 @@ class _HomePageState extends State<HomePage> {
                 color: CustomTheme.appTheme,
                 size: 20,
               ),
-              title: nullCheck(list: list) ? '${list[12].name}' : 'My Site Visits',
+              title:
+                  nullCheck(list: list) ? '${list[12].name}' : 'My Site Visits',
               onTap: () => {
-                _handleURLButtonPress(context,
-                    myVisitsLink, nullCheck(list: list) ? '${list[12].name}'
-                        :'My Site Visits', token),
+                _handleURLButtonPress(
+                    context,
+                    myVisitsLink,
+                    nullCheck(list: list)
+                        ? '${list[12].name}'
+                        : 'My Site Visits',
+                    token),
               },
             ),
-            getTile(
+            /* getTile(
               context: context,
               leading: Icon(
                 Icons.view_agenda,
@@ -674,7 +757,7 @@ class _HomePageState extends State<HomePage> {
                     ownerViewLink, nullCheck(list: list) ? '${list[13].name}'
                         :'Owner View', token),
               },
-            ),
+            ),*/
             getTile(
               context: context,
               leading: Icon(
@@ -766,6 +849,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
   void _handleURLButtonPress(
       BuildContext context, String url, String title, String params) {
     String urlwithparams = url + params;
@@ -777,6 +861,7 @@ class _HomePageState extends State<HomePage> {
           builder: (context) => Web_View_Container(urlwithparams, title)),
     );
   }
+
   Future showExitDialog(BuildContext context) async {
     AlertDialog alert = AlertDialog(
       shape: RoundedRectangleBorder(

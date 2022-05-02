@@ -1,6 +1,10 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:RentMyStay_user/my_stays/model/ticket_response_model.dart';
 import 'package:RentMyStay_user/utils/service/date_time_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +31,49 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
   late ValueNotifier<bool> showOpenButton;
   late ValueNotifier<bool> showResolvedButton;
   late ValueNotifier<bool> showCancelButton;
+  late StreamSubscription<ConnectivityResult> _connectivitySubs;
+  final Connectivity _connectivity = Connectivity();
+  bool _connectionStatus = true;
+
+  Future<void> initConnectionStatus() async {
+    ConnectivityResult result = ConnectivityResult.none;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      log(e.toString());
+    }
+    if (!mounted) {
+      return null;
+    }
+
+    _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.mobile:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = false);
+        break;
+      case ConnectivityResult.ethernet:
+        setState(() => _connectionStatus = true);
+        break;
+      default:
+        setState(() => _connectionStatus = false);
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubs.cancel();
+    super.dispose();
+  }
 
   TextStyle get getKeyStyle =>
       TextStyle(color: Colors.grey, fontWeight: FontWeight.w500, fontSize: 14);
@@ -37,6 +84,9 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
   @override
   void initState() {
     super.initState();
+    initConnectionStatus();
+    _connectivitySubs =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
     showOpenButton = ValueNotifier(false);
     showResolvedButton = ValueNotifier(false);
@@ -60,7 +110,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
+    return _connectionStatus?Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
         title: Text(
@@ -306,6 +356,6 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
           ],
         ),
       ),
-    );
+    ):RMSWidgets.networkErrorPage(context: context);
   }
 }

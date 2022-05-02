@@ -4,6 +4,7 @@ import 'package:RentMyStay_user/theme/custom_theme.dart';
 import 'package:RentMyStay_user/utils/service/bottom_navigation_provider.dart';
 import 'package:RentMyStay_user/utils/service/location_service.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,13 +24,19 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  @override
 
+
+
+  @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
           create: (_) => BottomNavigationProvider(),
+        ),
+        StreamProvider<ConnectivityResult>(
+          initialData: ConnectivityResult.none,
+          create: (context) => Connectivity().onConnectivityChanged,
         ),
       ],
       child: MaterialApp(

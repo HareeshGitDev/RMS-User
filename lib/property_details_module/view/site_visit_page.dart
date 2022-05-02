@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:RentMyStay_user/property_details_module/viewModel/property_details_viewModel.dart';
 import 'package:RentMyStay_user/utils/color.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -45,10 +47,14 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
 
   @override
   void initState() {
+    super.initState();
+    initConnectionStatus();
+    _connectivitySubs =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _nameController.text = widget.name;
     _phoneNumberController.text = widget.phoneNumber;
     _emailController.text = widget.email;
-    super.initState();
+
   }
 
   final _emailController = TextEditingController();
@@ -63,9 +69,47 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
     true,
     false,
   ];
+  late StreamSubscription<ConnectivityResult> _connectivitySubs;
+  final Connectivity _connectivity = Connectivity();
+  bool _connectionStatus = true;
+
+  Future<void> initConnectionStatus() async {
+    ConnectivityResult result = ConnectivityResult.none;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      log(e.toString());
+    }
+    if (!mounted) {
+      return null;
+    }
+
+    _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.mobile:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = false);
+        break;
+      case ConnectivityResult.ethernet:
+        setState(() => _connectionStatus = true);
+        break;
+      default:
+        setState(() => _connectionStatus = false);
+        break;
+    }
+  }
 
   @override
   void dispose() {
+    _connectivitySubs.cancel();
     _nameController.dispose();
     super.dispose();
   }
@@ -74,7 +118,7 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
-    return Dialog(
+    return _connectionStatus?Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
@@ -85,22 +129,14 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
             children: <Widget>[
               const Center(
                 child: Text(
-                  "Site Visit",
+                  "SCHEDULE SITE VISIT",
                   style: TextStyle(
                       fontSize: 18,
                       color: Colors.black,
                       fontWeight: FontWeight.w600),
                 ),
               ),
-              Center(
-                child: Text(
-                  "Fill up to schedule a visit to a Place ",
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey),
-                ),
-              ),
+            SizedBox(height: 10,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -162,7 +198,7 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                 height: _mainHeight * 0.01,
               ),
               Container(
-                height: _mainHeight * 0.045,
+                height: _mainHeight * 0.060,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   color: Colors.white,
@@ -186,8 +222,8 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
               SizedBox(
                 height: _mainHeight * 0.02,
               ),
-              Container(
-                height: _mainHeight * 0.045,
+              Container( alignment: Alignment.centerLeft,
+                height: _mainHeight * 0.060,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   color: Colors.white,
@@ -214,7 +250,7 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                 height: _mainHeight * 0.02,
               ),
               Container(
-                height: _mainHeight * 0.045,
+                height: _mainHeight * 0.080,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   color: Colors.white,
@@ -224,13 +260,14 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                     depth: -2,
                     color: Colors.white,
                   ),
-                  child: TextFormField(
+                  child: TextFormField(textAlign: TextAlign.start,
                     controller: _phoneNumberController,
+                    maxLength: 12,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: "Phone Number",
                       prefixIcon: Icon(Icons.phone_android_outlined,
-                          color: Colors.grey, size: 20),
+                          color: Colors.grey, size: 20,),
                     ),
                   ),
                 ),
@@ -334,17 +371,25 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                       ),
                     ),
                     onPressed: () async {
+                      String p = "[a-zA-Z0-9\+\.\_\%\-\+]{1,256}" +
+                          "\\@" +
+                          "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                          "(" +
+                          "\\." +
+                          "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                          ")+";
+                      RegExp regExp = RegExp(p);
                       if (_nameController.text.isEmpty) {
                         RMSWidgets.getToast(
                             message: 'Please Enter Your Name',
                             color: Colors.grey);
                       } else {
-                        if (_emailController.text.isEmpty || (!_emailController.toString().contains('@') && !_emailController.toString().contains('.com')) ) {
+                        if (_emailController.text.isEmpty || !regExp.hasMatch(_emailController.text) ) {
                           RMSWidgets.getToast(
                               message: 'Please Enter Your Valid Email Address',
                               color: Colors.grey);
                         } else {
-                          if (_phoneNumberController.text.isEmpty || _phoneNumberController.text.length!=10) {
+                          if (_phoneNumberController.text.isEmpty || _phoneNumberController.text.length<10) {
                             RMSWidgets.getToast(
                                 message: 'Please Enter Your Correct Mobile Number',
                                 color: Colors.grey);
@@ -394,7 +439,7 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
           ),
         ),
       ),
-    );
+    ):RMSWidgets.networkErrorPage(context: context);
   }
 
   Widget _textInput(

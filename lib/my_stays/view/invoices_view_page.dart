@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:RentMyStay_user/my_stays/model/invoice_payment_model.dart';
 import 'package:RentMyStay_user/payment_module/view/razorpay_payement_page.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -50,10 +52,56 @@ class _InvoiceState extends State<InvoicePage> {
   var _mainWidth;
   late MyStayViewModel _viewModel;
   late SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+  late StreamSubscription<ConnectivityResult> _connectivitySubs;
+  final Connectivity _connectivity = Connectivity();
+  bool _connectionStatus = true;
+
+  Future<void> initConnectionStatus() async {
+    ConnectivityResult result = ConnectivityResult.none;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      log(e.toString());
+    }
+    if (!mounted) {
+      return null;
+    }
+
+    _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.mobile:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = false);
+        break;
+      case ConnectivityResult.ethernet:
+        setState(() => _connectionStatus = true);
+        break;
+      default:
+        setState(() => _connectionStatus = false);
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubs.cancel();
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
+    initConnectionStatus();
+    _connectivitySubs =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
     _viewModel.getInvoiceDetails(bookingId: widget.bookingId);
     getLanguageData();
@@ -77,7 +125,7 @@ class _InvoiceState extends State<InvoicePage> {
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
+    return _connectionStatus?Scaffold(
         appBar: AppBar(
           title: Text(
               nullCheck(list: context.watch<MyStayViewModel>().invoiceLang)
@@ -199,61 +247,75 @@ class _InvoiceState extends State<InvoicePage> {
                                   SizedBox(
                                     height: 5,
                                   ),
-                                  Container(
-                                    width: _mainWidth * 0.35,
-                                    height: 30,
-                                    child: ElevatedButton(
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all<Color>(
-                                                  data?.pendingBalance == 0
-                                                      ? Color(0xff7AB02A)
-                                                      : Color(0xffFF0000)),
-                                          shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(40)),
-                                          )),
-                                      onPressed: data?.pendingBalance == 0
-                                          ? () async {
-                                              RMSWidgets.showLoaderDialog(
-                                                  context: context,
-                                                  message: 'Loading');
-                                              String invoiceLink =
-                                                  await _viewModel
-                                                      .downloadInvoice(
-                                                          bookingId:
-                                                              widget.bookingId,
-                                                          invoiceId:
-                                                              data?.invoiceId ??
-                                                                  '');
-                                              Navigator.of(context).pop();
-                                              if (invoiceLink.isNotEmpty) {
-                                                if (await canLaunch(
-                                                    invoiceLink)) {
-                                                  launch(invoiceLink);
+                                  FittedBox(
+                                    child: SizedBox(
+                                      //width: _mainWidth * 0.35,
+                                      height: 30,
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all<Color>(
+                                                    data?.pendingBalance == 0
+                                                        ? Color(0xff7AB02A)
+                                                        : Color(0xffFF0000)),
+                                            shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(40)),
+                                            )),
+                                        onPressed: data?.pendingBalance == 0
+                                            ? () async {
+                                                RMSWidgets.showLoaderDialog(
+                                                    context: context,
+                                                    message: 'Loading');
+                                                String invoiceLink =
+                                                    await _viewModel
+                                                        .downloadInvoice(
+                                                            bookingId:
+                                                                widget.bookingId,
+                                                            invoiceId:
+                                                                data?.invoiceId ??
+                                                                    '');
+                                                Navigator.of(context).pop();
+                                                if (invoiceLink.isNotEmpty) {
+                                                  if (await canLaunch(
+                                                      invoiceLink)) {
+                                                    launch(invoiceLink);
+                                                  }
                                                 }
                                               }
-                                            }
-                                          : () {
-                                              choosePaymentDialog(
-                                                  context: context,
-                                                  model: data ??
-                                                      invoiceModelData.Data());
-                                            },
-                                      child: Container(
-                                          child: data?.pendingBalance == 0
-                                              ? Text(nullCheck(
-                                                      list:
-                                                          value.invoiceLang)
-                                                  ? ' ${value.invoiceLang[11].name} '
-                                                  : 'Download Invoice')
-                                              : Text(nullCheck(
-                                                      list:
-                                                          value.invoiceLang)
-                                                  ? ' ${value.invoiceLang[9].name} '
-                                                  : 'Pay Now')),
+                                            : () {
+                                                choosePaymentDialog(
+                                                    context: context,
+                                                    model: data ??
+                                                        invoiceModelData.Data());
+                                              },
+                                        child: Container(
+                                            child: data?.pendingBalance == 0
+                                                ?
+                          RichText(
+                          text: TextSpan(
+                          children: [
+                          WidgetSpan(
+                          child: Icon(Icons.download, size: 14),),
+                          TextSpan(
+                          text: nullCheck(
+                              list:
+                              value.invoiceLang)
+                              ? ' ${value.invoiceLang[11].name} '
+                              : 'Download Invoice'),],))
+                                            /*Text(nullCheck(
+                                                        list:
+                                                            value.invoiceLang)
+                                                    ? ' ${value.invoiceLang[11].name} '
+                                                    : 'Download Invoice')*/
+                                                : Text(nullCheck(
+                                                        list:
+                                                            value.invoiceLang)
+                                                    ? ' ${value.invoiceLang[9].name} '
+                                                    : 'Pay Now')),
+                                      ),
                                     ),
                                   ),
                                   SizedBox(
@@ -281,7 +343,7 @@ class _InvoiceState extends State<InvoicePage> {
                             'Something went Wrong.Invoice Details could not be found.')
                     : Center(child: RMSWidgets.getLoader());
           },
-        ));
+        )):RMSWidgets.networkErrorPage(context: context);
   }
 
   void choosePaymentDialog(
@@ -332,8 +394,8 @@ class _InvoiceState extends State<InvoicePage> {
                           response.data?.key != null &&
                           response.data?.orderId != null &&
                           response.data?.callbackApi != null) {
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            AppRoutes.razorpayPaymentPage, (route) => false,
+                        Navigator.of(context).pushNamed(
+                            AppRoutes.razorpayPaymentPage,
                             arguments: PaymentRequestModel(
                                 name: response.data?.prefill?.name ?? '',
                                 color: response.data?.theme?.color ?? '',
@@ -374,7 +436,7 @@ class _InvoiceState extends State<InvoicePage> {
                                   color: Colors.black87),
                             ),
                             Text(
-                              '2-3% Convenience fee will be charges ',
+                              'Extra 3% payment getway charges ',
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 14,

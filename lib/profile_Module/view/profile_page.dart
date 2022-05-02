@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
 import 'package:RentMyStay_user/utils/constants/app_consts.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutx/utils/spacing.dart';
@@ -36,15 +38,60 @@ class _ProfilePageState extends State<ProfilePage> {
   String? userid = "";
   String? token = "";
   late SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+  late StreamSubscription<ConnectivityResult> _connectivitySubs;
+  final Connectivity _connectivity = Connectivity();
+  bool _connectionStatus = true;
+
+  Future<void> initConnectionStatus() async {
+    ConnectivityResult result = ConnectivityResult.none;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      log(e.toString());
+    }
+    if (!mounted) {
+      return null;
+    }
+
+    _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.mobile:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = false);
+        break;
+      case ConnectivityResult.ethernet:
+        setState(() => _connectionStatus = true);
+        break;
+      default:
+        setState(() => _connectionStatus = false);
+        break;
+    }
+  }
+
 
   @override
   void initState() {
     super.initState();
+    initConnectionStatus();
+    _connectivitySubs =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _profileViewModel = Provider.of<ProfileViewModel>(context, listen: false);
     _profileViewModel.getProfileDetails();
     getLanguageData();
   }
-
+  @override
+  void dispose() {
+    _connectivitySubs.cancel();
+    super.dispose();
+  }
   getLanguageData() async {
     await _profileViewModel.getLanguagesData(
         language: await preferenceUtil.getString(rms_language) ?? 'english',
@@ -56,7 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ProfileViewModel>(builder: (context, value, child) {
+    return _connectionStatus?Consumer<ProfileViewModel>(builder: (context, value, child) {
       userid = value.profileModel.data != null
           ? value.profileModel.data?.result![0].userId.toString()
           : "";
@@ -261,7 +308,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     valueColor:
                         AlwaysStoppedAnimation<Color>(CustomTheme.appTheme))),
       );
-    });
+    }):RMSWidgets.networkErrorPage(context: context);
   }
 
   Widget _profileName(String name) {

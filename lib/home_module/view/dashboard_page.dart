@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:RentMyStay_user/home_module/view/home_page.dart';
@@ -6,6 +7,8 @@ import 'package:RentMyStay_user/my_stays/view/mystay_listing_page.dart';
 import 'package:RentMyStay_user/property_module/view/wish_list_page.dart';
 import 'package:RentMyStay_user/property_module/viewModel/property_viewModel.dart';
 import 'package:RentMyStay_user/utils/service/bottom_navigation_provider.dart';
+import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,17 +29,61 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   late BottomNavigationProvider _bottomNavigationProvider;
+  late StreamSubscription<ConnectivityResult> _connectivitySubs;
+  final Connectivity _connectivity = Connectivity();
+  bool _connectionStatus = true;
 
+  Future<void> initConnectionStatus() async {
+    ConnectivityResult result = ConnectivityResult.none;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      log(e.toString());
+    }
+    if (!mounted) {
+      return null;
+    }
+
+    _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.mobile:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = false);
+        break;
+      case ConnectivityResult.ethernet:
+        setState(() => _connectionStatus = true);
+        break;
+      default:
+        setState(() => _connectionStatus = false);
+        break;
+    }
+  }
   @override
   void initState() {
     super.initState();
+    initConnectionStatus();
+    _connectivitySubs =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _bottomNavigationProvider =
         Provider.of<BottomNavigationProvider>(context, listen: false);
+  }
+  @override
+  void dispose() {
+    _connectivitySubs.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _connectionStatus?Scaffold(
       body: Consumer<BottomNavigationProvider>(
         builder: (context, value, child) {
           switch (value.selectedIndex) {
@@ -101,7 +148,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 color: Colors.white,
               ),
               Icon(
-                Icons.house_outlined,
+                Icons.line_weight_rounded,
                 size: 30,
                 color: Colors.white,
               ),
@@ -114,6 +161,6 @@ class _DashboardPageState extends State<DashboardPage> {
           );
         },
       ),
-    );
+    ):RMSWidgets.networkErrorPage(context: context);
   }
 }

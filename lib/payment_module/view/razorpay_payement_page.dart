@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:RentMyStay_user/payment_module/model/payment_request_model.dart';
 import 'package:RentMyStay_user/payment_module/viewModel/payment_viewModel.dart';
 import 'package:RentMyStay_user/theme/app_theme.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
@@ -24,10 +25,50 @@ class RazorpayPaymentPage extends StatefulWidget {
 class _RazorpayPaymentPageState extends State<RazorpayPaymentPage> {
   late Razorpay _razorpay;
   late PaymentViewModel _viewModel;
+  late StreamSubscription<ConnectivityResult> _connectivitySubs;
+  final Connectivity _connectivity = Connectivity();
+  bool _connectionStatus = true;
+
+  Future<void> initConnectionStatus() async {
+    ConnectivityResult result = ConnectivityResult.none;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      log(e.toString());
+    }
+    if (!mounted) {
+      return null;
+    }
+
+    _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.mobile:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = false);
+        break;
+      case ConnectivityResult.ethernet:
+        setState(() => _connectionStatus = true);
+        break;
+      default:
+        setState(() => _connectionStatus = false);
+        break;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    initConnectionStatus();
+    _connectivitySubs =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
 
     _razorpay = Razorpay();
     _viewModel = Provider.of<PaymentViewModel>(context, listen: false);
@@ -41,12 +82,13 @@ class _RazorpayPaymentPageState extends State<RazorpayPaymentPage> {
   @override
   void dispose() {
     _razorpay.clear();
+    _connectivitySubs.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _connectionStatus?Scaffold(
       appBar: AppBar(
         title: Text('Payment Screen'),
         backgroundColor: CustomTheme.appTheme,
@@ -55,7 +97,7 @@ class _RazorpayPaymentPageState extends State<RazorpayPaymentPage> {
           width: 15,
         ),
       ),
-    );
+    ):RMSWidgets.networkErrorPage(context: context);
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
@@ -122,7 +164,7 @@ class _RazorpayPaymentPageState extends State<RazorpayPaymentPage> {
       'name': model.name,
       'description': model.description,
       'retry': {'enabled': true, 'max_count': 1},
-      'send_sms_hash': true,
+     // 'send_sms_hash': true,
       "theme": {
         "color": model.color,
       },

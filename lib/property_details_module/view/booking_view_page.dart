@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:ui';
 
@@ -13,6 +14,7 @@ import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -62,13 +64,61 @@ class _BookingPageState extends State<BookingPage> {
   final _phoneNumberController = TextEditingController();
   late PropertyDetailsViewModel _viewModel;
   SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+  late StreamSubscription<ConnectivityResult> _connectivitySubs;
+  final Connectivity _connectivity = Connectivity();
+  bool _connectionStatus = true;
+
+  Future<void> initConnectionStatus() async {
+    ConnectivityResult result = ConnectivityResult.none;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      log(e.toString());
+    }
+    if (!mounted) {
+      return null;
+    }
+
+    _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.mobile:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = false);
+        break;
+      case ConnectivityResult.ethernet:
+        setState(() => _connectionStatus = true);
+        break;
+      default:
+        setState(() => _connectionStatus = false);
+        break;
+    }
+  }
+
+
 
   @override
   void initState() {
     super.initState();
+    initConnectionStatus();
+    _connectivitySubs =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _viewModel = Provider.of<PropertyDetailsViewModel>(context, listen: false);
     getLanguageData();
     initMethod();
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubs.cancel();
+    super.dispose();
   }
 
   getLanguageData() async {
@@ -103,15 +153,10 @@ class _BookingPageState extends State<BookingPage> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
-    return Consumer<PropertyDetailsViewModel>(
+    return _connectionStatus?Consumer<PropertyDetailsViewModel>(
       builder: (context, value, child) {
         return Scaffold(
           backgroundColor: Colors.white,
@@ -292,7 +337,7 @@ class _BookingPageState extends State<BookingPage> {
                                         BookingAmountsResponseModel(),
                                     value: value),
                               ),
-                              Step(
+                              Step(subtitle: Text(_nameController.text),
                                 isActive: true,
                                 state: StepState.complete,
                                 title: Text(
@@ -332,6 +377,7 @@ class _BookingPageState extends State<BookingPage> {
                                 ),
                               ),
                               Step(
+                                subtitle: Text(_phoneNumberController.text),
                                 isActive: true,
                                 state: StepState.complete,
                                 title: Text(
@@ -353,13 +399,6 @@ class _BookingPageState extends State<BookingPage> {
                                       color: Colors.white,
                                     ),
                                     child: TextFormField(
-                                      validator: (value) {
-                                        if (value != null && value.length != 10) {
-                                          return "Enter Valid Mobile Number";
-                                        }
-                                        return null;
-                                      },
-
                                       autovalidateMode: AutovalidateMode.onUserInteraction,
                                       keyboardType: TextInputType.phone,
                                       maxLength: 10,
@@ -377,6 +416,7 @@ class _BookingPageState extends State<BookingPage> {
                                 ),
                               ),
                               Step(
+                                subtitle: Text(_emailController.text),
                                 isActive: true,
                                 state: StepState.complete,
                                 title: Text(
@@ -616,6 +656,29 @@ class _BookingPageState extends State<BookingPage> {
                                   value.bookingAmountsResponseModel?.data !=
                                       null
                               ? () async {
+
+                              String p = "[a-zA-Z0-9\+\.\_\%\-\+]{1,256}" +
+                                  "\\@" +
+                                  "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                                  "(" +
+                                  "\\." +
+                                  "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                                  ")+";
+                              RegExp regExp = RegExp(p);
+
+                              if(_nameController.text.isEmpty){
+                                RMSWidgets.getToast(message: 'Please Enter Valid Name.', color: CustomTheme.errorColor);
+                                return;
+                              }
+                              if(_phoneNumberController.text.length <10 ){
+                                RMSWidgets.getToast(message: 'Please Enter Valid Mobile Number.', color: CustomTheme.errorColor);
+                                return;
+                              }
+                              if(_emailController.text.isEmpty || !regExp.hasMatch(_emailController.text)){
+                                RMSWidgets.getToast(message: 'Please Enter Valid Email.', color: CustomTheme.errorColor);
+                                return;
+                              }
+
                                   RMSWidgets.showLoaderDialog(
                                       context: context, message: 'Loading');
                                   BookingCredentialResponseModel response =
@@ -724,7 +787,7 @@ class _BookingPageState extends State<BookingPage> {
           ),
         );
       },
-    );
+    ):RMSWidgets.networkErrorPage(context: context);
   }
 
   static String showformatDate(String da) {

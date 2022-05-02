@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:developer' as logger;
+import 'dart:developer';
 import 'dart:math' as math;
 
 import 'package:RentMyStay_user/profile_Module/model/filter_sort_request_model.dart';
@@ -13,6 +15,7 @@ import 'package:RentMyStay_user/utils/service/system_service.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -74,10 +77,56 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
   bool oneBHKSelected = false;
   bool twoBHKSelected = false;
   bool threeBHKSelected = false;
+  late StreamSubscription<ConnectivityResult> _connectivitySubs;
+  final Connectivity _connectivity = Connectivity();
+  bool _connectionStatus = true;
+
+  Future<void> initConnectionStatus() async {
+    ConnectivityResult result = ConnectivityResult.none;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      log(e.toString());
+    }
+    if (!mounted) {
+      return null;
+    }
+
+    _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.mobile:
+        setState(() => _connectionStatus = true);
+        break;
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = false);
+        break;
+      case ConnectivityResult.ethernet:
+        setState(() => _connectionStatus = true);
+        break;
+      default:
+        setState(() => _connectionStatus = false);
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubs.cancel();
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
+    initConnectionStatus();
+    _connectivitySubs =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _searchController = TextEditingController();
     _searchController.text = widget.locationName;
 
@@ -132,7 +181,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
+    return _connectionStatus?Scaffold(
       appBar: _getAppBar(context: context),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
@@ -917,7 +966,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
           },
         ),
       ),
-    );
+    ):RMSWidgets.networkErrorPage(context: context);
   }
 
   AppBar _getAppBar({required BuildContext context}) {
