@@ -632,7 +632,7 @@ class _HomePageState extends State<HomePage> {
                 AppRoutes.ticketListPage,
               ),
             ),
-            getTile(
+           /* getTile(
               context: context,
               leading: Icon(
                 Icons.favorite_outline,
@@ -646,7 +646,7 @@ class _HomePageState extends State<HomePage> {
                       'fromBottom': false,
                     }),
               },
-            ),
+            ), */
             getTile(
               context: context,
               leading: Icon(

@@ -363,7 +363,7 @@ class _ProfilePageState extends State<ProfilePage> {
           : const BackButton(),
       centerTitle: widget.fromBottom,
       actions: [
-        GestureDetector(
+      /*  GestureDetector(
           onTap: () {
             Navigator.pushNamed(context, AppRoutes.editProfilePage, arguments: {
               'fromBottom': false,
@@ -377,7 +377,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             margin: EdgeInsets.only(right: 20, top: 16),
           ),
-        ),
+        ), */
       ],
 
       titleSpacing: 0,
