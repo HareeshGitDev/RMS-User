@@ -19,6 +19,7 @@ import 'package:RentMyStay_user/payment_module/view/razorpay_payement_page.dart'
 import 'package:RentMyStay_user/payment_module/viewModel/payment_viewModel.dart';
 import 'package:RentMyStay_user/property_details_module/model/property_details_util_model.dart';
 import 'package:RentMyStay_user/property_details_module/view/property_details_page.dart';
+import 'package:RentMyStay_user/property_details_module/view/property_gallery_view_page.dart';
 import 'package:RentMyStay_user/property_details_module/viewModel/property_details_viewModel.dart';
 import 'package:RentMyStay_user/property_module/view/property_listing_page.dart';
 import 'package:RentMyStay_user/property_module/view/wish_list_page.dart';
@@ -68,11 +69,11 @@ class NavigationService {
           ),
         );
       case AppRoutes.languageScreen:
-        String lang=settings.arguments as String;
+        String lang = settings.arguments as String;
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
             create: (_) => LanguageViewModel(),
-            child:LanguageScreen(language: lang),
+            child: LanguageScreen(language: lang),
           ),
         );
       case AppRoutes.registrationPage:
@@ -166,14 +167,14 @@ class NavigationService {
                 ));
 
       case AppRoutes.updateInvoiceUTRPage:
-        final data = settings.arguments as Map<String,dynamic>;
+        final data = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
                   create: (_) => MyStayViewModel(),
                   child: UpdateInvoiceUTRPage(
                     bookingId: data['bookingId'],
-                    invoiceId:  data['invoiceId'],
-                    amount:  data['amount'],
+                    invoiceId: data['invoiceId'],
+                    amount: data['amount'],
                   ),
                 ));
 
@@ -289,7 +290,16 @@ class NavigationService {
               create: (_) => PaymentViewModel(),
               child: RazorpayPaymentPage(paymentRequestModel: data)),
         );
-
+      case AppRoutes.propertyGalleryPage:
+        final data = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+              create: (_) => PropertyDetailsViewModel(),
+              child: PropertyGalleryViewPage(
+                imageList: data['imageList'],
+                videoLink: data['videoLink'],
+              )),
+        );
       default:
         return MaterialPageRoute(
           builder: (context) => const Scaffold(
@@ -329,4 +339,5 @@ class AppRoutes {
   static const String ticketDetailsPage = 'ticketDetailsPage';
   static const String razorpayPaymentPage = 'razorpayPaymentPage';
   static const String languageScreen = 'languageScreen';
+  static const String propertyGalleryPage = 'PropertyGalleryPage';
 }

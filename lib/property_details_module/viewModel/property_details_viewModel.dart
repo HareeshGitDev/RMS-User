@@ -53,7 +53,7 @@ class PropertyDetailsViewModel extends ChangeNotifier {
             (propertyDetailsModel?.data?.details?.videoLink).toString(),
         flags: const YoutubePlayerFlags(
           autoPlay: true,
-          mute: false,
+          mute: true,
           controlsVisibleAtStart: false,
         ),
       );

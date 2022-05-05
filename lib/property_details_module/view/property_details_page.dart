@@ -103,7 +103,6 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
     }
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -114,6 +113,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
     _viewModel.getPropertyDetails(propId: widget.propId);
     getLanguageData();
   }
+
   @override
   void dispose() {
     showPics.dispose();
@@ -130,758 +130,830 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
   bool nullCheck({required List<LanguageModel> list}) =>
       list.isNotEmpty ? true : false;
 
-
   @override
   Widget build(BuildContext context) {
     _mainWidth = MediaQuery.of(context).size.width;
     _mainHeight = MediaQuery.of(context).size.height;
-    return _connectionStatus?Consumer<PropertyDetailsViewModel>(
-      builder: (context, value, child) {
-        return SafeArea(
-          child: value.propertyDetailsModel != null &&
-                  value.propertyDetailsModel?.msg != null &&
-                  value.propertyDetailsModel?.data != null
-              ? Scaffold(
-                  resizeToAvoidBottomInset: true,
-                  body: CustomScrollView(
-                    slivers: [
-                      SliverAppBar(
-                        expandedHeight: _mainHeight * 0.30,
-                        floating: true,
-                        backgroundColor: CustomTheme.appTheme,
-                        // pinned: true,
-                        actions: [
-                          GestureDetector(
-                            onTap: () async {
-                              if (value.propertyDetailsModel?.data?.details !=
-                                      null &&
-                                  value.propertyDetailsModel?.data?.details
-                                          ?.wishlist ==
-                                      1) {
-                                if (value.propertyDetailsModel?.data?.details !=
-                                        null &&
-                                    value.propertyDetailsModel?.data?.details
-                                            ?.propId !=
-                                        null) {
-                                  int response = await _viewModel.addToWishlist(
-                                      propertyId: value.propertyDetailsModel
-                                              ?.data?.details?.propId ??
-                                          '');
-                                  if (response == 200) {
-                                    setState(() {
-                                      value.propertyDetailsModel?.data?.details
-                                          ?.wishlist = 0;
-                                    });
-                                    RMSWidgets.showSnackbar(
-                                        context: context,
-                                        message:
-                                            'Successfully Removed From Wishlist',
-                                        color: CustomTheme.appTheme);
-                                  }
-                                }
-                              } else if (value.propertyDetailsModel?.data
-                                          ?.details !=
-                                      null &&
-                                  value.propertyDetailsModel?.data?.details
-                                          ?.wishlist ==
-                                      0) {
-                                if (value.propertyDetailsModel?.data?.details !=
-                                        null &&
-                                    value.propertyDetailsModel?.data?.details
-                                            ?.propId !=
-                                        null) {
-                                  int response = await _viewModel.addToWishlist(
-                                      propertyId: value.propertyDetailsModel
-                                              ?.data?.details?.propId ??
-                                          '');
-                                  if (response == 200) {
-                                    setState(() {
-                                      value.propertyDetailsModel?.data?.details
-                                          ?.wishlist = 1;
-                                    });
-                                    RMSWidgets.showSnackbar(
-                                        context: context,
-                                        message:
-                                            'Successfully Added to Wishlist',
-                                        color: CustomTheme.appTheme);
-                                  }
-                                }
-                              }
-                            },
-                            child: CircleAvatar(
-                                backgroundColor: Colors.white,
-                                radius: 15,
-                                child:
-                                    value.propertyDetailsModel?.data?.details !=
-                                                null &&
-                                            value.propertyDetailsModel?.data
-                                                    ?.details?.wishlist ==
-                                                1
-                                        ? Icon(
-                                            Icons.favorite,
-                                            color: CustomTheme.appTheme,
-                                          )
-                                        : Icon(
-                                            Icons.favorite_outline_rounded,
-                                            color: CustomTheme.appTheme,
-                                          )),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          GestureDetector(
-                            onTap: () async {
-                              await Share.share(
-                                  value.propertyDetailsModel!.data?.shareLink ??
-                                      " ");
-                            },
-                            child: CircleAvatar(
-                                backgroundColor: Colors.white,
-                                radius: 15,
-                                child: Icon(
-                                  Icons.share_outlined,
-                                  color: CustomTheme.appTheme,
-                                )),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          )
-                        ],
-                        flexibleSpace: FlexibleSpaceBar(
-                          background: ValueListenableBuilder(
-                            builder: (context, bool data, child) {
-                              return Visibility(
-                                visible: data,
-                                replacement: YoutubePlayerBuilder(
-                                  onEnterFullScreen: () {
-                                    log('FullScreen');
-                                  },
-                                  player: YoutubePlayer(
-                                    aspectRatio: 1.2,
-                                    controller: value.youTubeController,
-                                    showVideoProgressIndicator: true,
-                                    topActions: const [
-                                      Text(
-                                        'Powered by RMS',
-                                        style: TextStyle(
-                                          fontFamily: fontFamily,
-                                          fontSize: 16,
-                                          color: Colors.white,
-                                          fontStyle: FontStyle.italic,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  builder:
-                                      (BuildContext context, Widget player) {
-                                    return player;
-                                  },
-                                ),
-                                child: CarouselSlider(
-                                  items: value.propertyDetailsModel?.data
+    return _connectionStatus
+        ? Consumer<PropertyDetailsViewModel>(
+            builder: (context, value, child) {
+              return SafeArea(
+                child: value.propertyDetailsModel != null &&
+                        value.propertyDetailsModel?.msg != null &&
+                        value.propertyDetailsModel?.data != null
+                    ? Scaffold(
+                        resizeToAvoidBottomInset: true,
+                        body: CustomScrollView(
+                          slivers: [
+                            SliverAppBar(
+                              expandedHeight: _mainHeight * 0.30,
+                              floating: true,
+                              backgroundColor: CustomTheme.appTheme,
+                              // pinned: true,
+                              actions: [
+                                GestureDetector(
+                                  onTap: () async {
+                                    if (value.propertyDetailsModel?.data
+                                                ?.details !=
+                                            null &&
+                                        value.propertyDetailsModel?.data
+                                                ?.details?.wishlist ==
+                                            1) {
+                                      if (value.propertyDetailsModel?.data
                                                   ?.details !=
                                               null &&
                                           value.propertyDetailsModel?.data
-                                                  ?.details?.pic !=
-                                              null
-                                      ? value.propertyDetailsModel?.data
-                                              ?.details?.pic
-                                              ?.map((e) => CachedNetworkImage(
-                                                    imageUrl:
-                                                        e.picWp.toString(),
-                                                    imageBuilder: (context,
-                                                            imageProvider) =>
-                                                        Container(
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            const BorderRadius
-                                                                    .only(
-                                                                topLeft: Radius
-                                                                    .circular(
-                                                                        10),
-                                                                topRight: Radius
-                                                                    .circular(
-                                                                        10)),
-                                                        image: DecorationImage(
-                                                          image: imageProvider,
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    placeholder: (context,
-                                                            url) =>
-                                                        Shimmer.fromColors(
-                                                            child: Container(
-                                                              height:
-                                                                  _mainHeight *
-                                                                      0.3,
-                                                              color:
-                                                                  Colors.grey,
-                                                            ),
-                                                            baseColor:
-                                                                Colors.grey[200]
-                                                                    as Color,
-                                                            highlightColor:
-                                                                Colors.grey[350]
-                                                                    as Color),
-                                                    errorWidget: (context, url,
-                                                            error) =>
-                                                        const Icon(Icons.error),
-                                                  ))
-                                              .toList() ??
-                                          []
-                                      : [Container()],
-                                  options: CarouselOptions(
-                                      height: _mainHeight * 0.3,
-                                      enlargeCenterPage: false,
-                                      autoPlayInterval:
-                                          const Duration(seconds: 3),
-                                      autoPlay: true,
-                                      aspectRatio: 16 / 9,
-                                      autoPlayCurve: Curves.decelerate,
-                                      enableInfiniteScroll: true,
-                                      viewportFraction: 1),
-                                ),
-                              );
-                            },
-                            valueListenable: showPics,
-                          ),
-                          titlePadding: EdgeInsets.all(0),
-                          title: Align(
-                            alignment: Alignment.bottomLeft,
-                            child: Visibility(
-                              visible: value.propertyDetailsModel?.data?.details?.videoLink!='',
-                              child: IconButton(
-                                icon: value.propertyDetailsModel?.data?.shareLink !=
-                                            null &&
-                                        value.propertyDetailsModel?.data?.shareLink
-                                                ?.trim() !=
-                                            ''
-                                    ? Icon(
-                                        Icons.play_circle_outline,
-                                        color: Colors.white,
-                                        size: 20,
-                                      )
-                                    : Container(),
-                                onPressed: value.propertyDetailsModel?.data
-                                                ?.shareLink !=
-                                            null &&
-                                        value.propertyDetailsModel?.data?.shareLink
-                                                ?.trim() !=
-                                            ''
-                                    ? () {
-                                        showPics.value = !showPics.value;
-                                        value.youTubeController.reset();
+                                                  ?.details?.propId !=
+                                              null) {
+                                        int response =
+                                            await _viewModel.addToWishlist(
+                                                propertyId: value
+                                                        .propertyDetailsModel
+                                                        ?.data
+                                                        ?.details
+                                                        ?.propId ??
+                                                    '');
+                                        if (response == 200) {
+                                          setState(() {
+                                            value.propertyDetailsModel?.data
+                                                ?.details?.wishlist = 0;
+                                          });
+                                          RMSWidgets.showSnackbar(
+                                              context: context,
+                                              message:
+                                                  'Successfully Removed From Wishlist',
+                                              color: CustomTheme.appTheme);
+                                        }
                                       }
-                                    : () {},
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SliverList(
-                          delegate: SliverChildListDelegate.fixed([
-                        SizedBox(
-                          height: _mainHeight * 0.01,
-                        ),
-                        SizedBox(
-                          height: _mainHeight * 0.01,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          margin: EdgeInsets.only(
-                            left: _mainWidth * 0.02,
-                            right: _mainWidth * 0.02,
-                          ),
-                          padding: EdgeInsets.only(
-                            left: _mainWidth * 0.02,
-                            right: _mainWidth * 0.02,
-                          ),
-                          child: RichText(
-                              text: TextSpan(
-                                  text:
-                                      '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[0].name : 'Please note'} : ',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 12,
-                                      fontFamily: fontFamily,
-                                      color: Colors.black),
-                                  children: <TextSpan>[
-                                TextSpan(
-                                  text:
-                                      '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[1].name : 'The furniture and furnishings may appear different from what’s shown in the pictures. Dewan/sofa may be provided as available.'}',
-                                  style: TextStyle(
-                                    color: Color(0xff56596A),
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: fontFamily,
-                                  ),
-                                ),
-                              ])),
-                        ),
-                        SizedBox(
-                          height: _mainHeight * 0.015,
-                        ),
-                        Container(
-                          //height: _mainHeight * 0.05,
-                          margin: EdgeInsets.only(
-                            left: _mainWidth * 0.04,
-                            right: _mainWidth * 0.02,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                width: _mainWidth * 0.8,
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      value.propertyDetailsModel?.data
+                                    } else if (value.propertyDetailsModel?.data
+                                                ?.details !=
+                                            null &&
+                                        value.propertyDetailsModel?.data
+                                                ?.details?.wishlist ==
+                                            0) {
+                                      if (value.propertyDetailsModel?.data
+                                                  ?.details !=
+                                              null &&
+                                          value.propertyDetailsModel?.data
+                                                  ?.details?.propId !=
+                                              null) {
+                                        int response =
+                                            await _viewModel.addToWishlist(
+                                                propertyId: value
+                                                        .propertyDetailsModel
+                                                        ?.data
+                                                        ?.details
+                                                        ?.propId ??
+                                                    '');
+                                        if (response == 200) {
+                                          setState(() {
+                                            value.propertyDetailsModel?.data
+                                                ?.details?.wishlist = 1;
+                                          });
+                                          RMSWidgets.showSnackbar(
+                                              context: context,
+                                              message:
+                                                  'Successfully Added to Wishlist',
+                                              color: CustomTheme.appTheme);
+                                        }
+                                      }
+                                    }
+                                  },
+                                  child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      radius: 15,
+                                      child: value.propertyDetailsModel?.data
                                                       ?.details !=
                                                   null &&
                                               value.propertyDetailsModel?.data
-                                                      ?.details?.title !=
-                                                  null
-                                          ? (value.propertyDetailsModel?.data
-                                                  ?.details?.title)
-                                              .toString()
-                                          : '',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontFamily: fontFamily,
-                                          fontWeight: FontWeight.w600),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    Row(children: [
-                                      Text(
-                                      value.propertyDetailsModel?.data
-                                          ?.details !=
-                                          null &&
-                                          value.propertyDetailsModel?.data
-                                              ?.details?.bname !=
-                                              null
-                                          ? (value.propertyDetailsModel?.data
-                                          ?.details?.bname)
-                                          .toString()
-                                          : '',
-                                      style: TextStyle(
-                                          color: Colors.black54,
-                                          fontSize: 14,
-                                          fontFamily: fontFamily,
-                                          fontWeight: FontWeight.w600),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                      Text(
-                                      value.propertyDetailsModel?.data
-                                          ?.details !=
-                                          null &&
-                                          value.propertyDetailsModel?.data
-                                              ?.details?.propId !=
-                                              null
-                                          ? ' ( ${(value.propertyDetailsModel?.data
-                                          ?.details?.propId)} )'
-                                          .toString()
-                                          : '',
-                                      style: TextStyle(
-                                          color: Colors.black54,
-                                          fontSize: 14,
-                                          fontFamily: fontFamily,
-                                          fontWeight: FontWeight.w600),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),],
+                                                      ?.details?.wishlist ==
+                                                  1
+                                          ? Icon(
+                                              Icons.favorite,
+                                              color: CustomTheme.appTheme,
+                                            )
+                                          : Icon(
+                                              Icons.favorite_outline_rounded,
+                                              color: CustomTheme.appTheme,
+                                            )),
+                                ),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    await Share.share(value
+                                            .propertyDetailsModel!
+                                            .data
+                                            ?.shareLink ??
+                                        " ");
+                                  },
+                                  child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      radius: 15,
+                                      child: Icon(
+                                        Icons.share_outlined,
+                                        color: CustomTheme.appTheme,
+                                      )),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                )
+                              ],
+                              flexibleSpace: FlexibleSpaceBar(
+                                background: ValueListenableBuilder(
+                                  builder: (context, bool data, child) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        if (value.propertyDetailsModel?.data
+                                                    ?.details !=
+                                                null &&
+                                            value.propertyDetailsModel?.data
+                                                    ?.details?.pic !=
+                                                null) {
+                                          Navigator.of(context).pushNamed(
+                                              AppRoutes.propertyGalleryPage,
+                                              arguments: {
+                                                'videoLink': value
+                                                    .propertyDetailsModel
+                                                    ?.data
+                                                    ?.shareLink,
+                                                'imageList': value
+                                                    .propertyDetailsModel
+                                                    ?.data
+                                                    ?.details
+                                                    ?.pic,
+                                              });
+                                        }
+                                      },
+                                      child: Visibility(
+                                        visible: data,
+                                        replacement: YoutubePlayerBuilder(
+                                          onEnterFullScreen: () {
+                                            log('FullScreen');
+                                          },
+                                          player: YoutubePlayer(
+                                            aspectRatio: 1.2,
+                                            controller: value.youTubeController,
+                                            showVideoProgressIndicator: true,
+                                            topActions: const [
+                                              Text(
+                                                'Powered by RMS',
+                                                style: TextStyle(
+                                                  fontFamily: fontFamily,
+                                                  fontSize: 16,
+                                                  color: Colors.white,
+                                                  fontStyle: FontStyle.italic,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          builder: (BuildContext context,
+                                              Widget player) {
+                                            return player;
+                                          },
+                                        ),
+                                        child: CarouselSlider(
+                                          items: value.propertyDetailsModel
+                                                          ?.data?.details !=
+                                                      null &&
+                                                  value
+                                                          .propertyDetailsModel
+                                                          ?.data
+                                                          ?.details
+                                                          ?.pic !=
+                                                      null
+                                              ? value.propertyDetailsModel?.data
+                                                      ?.details?.pic
+                                                      ?.map((e) =>
+                                                          CachedNetworkImage(
+                                                            imageUrl: e.picWp
+                                                                .toString(),
+                                                            imageBuilder: (context,
+                                                                    imageProvider) =>
+                                                                Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius: const BorderRadius
+                                                                        .only(
+                                                                    topLeft: Radius
+                                                                        .circular(
+                                                                            10),
+                                                                    topRight: Radius
+                                                                        .circular(
+                                                                            10)),
+                                                                image:
+                                                                    DecorationImage(
+                                                                  image:
+                                                                      imageProvider,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            placeholder: (context, url) => Shimmer
+                                                                .fromColors(
+                                                                    child:
+                                                                        Container(
+                                                                      height:
+                                                                          _mainHeight *
+                                                                              0.3,
+                                                                      color: Colors
+                                                                          .grey,
+                                                                    ),
+                                                                    baseColor: Colors
+                                                                            .grey[200]
+                                                                        as Color,
+                                                                    highlightColor:
+                                                                        Colors.grey[350]
+                                                                            as Color),
+                                                            errorWidget: (context,
+                                                                    url,
+                                                                    error) =>
+                                                                const Icon(Icons
+                                                                    .error),
+                                                          ))
+                                                      .toList() ??
+                                                  []
+                                              : [Container()],
+                                          options: CarouselOptions(
+                                              height: _mainHeight * 0.3,
+                                              enlargeCenterPage: false,
+                                              autoPlayInterval:
+                                                  const Duration(seconds: 3),
+                                              autoPlay: true,
+                                              aspectRatio: 16 / 9,
+                                              autoPlayCurve: Curves.decelerate,
+                                              enableInfiniteScroll: true,
+                                              viewportFraction: 1),
+                                        ),
                                       ),
-                                  ],
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                    );
+                                  },
+                                  valueListenable: showPics,
+                                ),
+                                titlePadding: EdgeInsets.all(0),
+                                title: Align(
+                                  alignment: Alignment.bottomLeft,
+                                  child: Visibility(
+                                    visible: value.propertyDetailsModel?.data
+                                            ?.details?.videoLink !=
+                                        '',
+                                    child: IconButton(
+                                      icon: value.propertyDetailsModel?.data
+                                                      ?.shareLink !=
+                                                  null &&
+                                              value.propertyDetailsModel?.data
+                                                      ?.shareLink
+                                                      ?.trim() !=
+                                                  ''
+                                          ? Icon(
+                                              Icons.play_circle_outline,
+                                              color: Colors.white,
+                                              size: 20,
+                                            )
+                                          : Container(),
+                                      onPressed: value.propertyDetailsModel
+                                                      ?.data?.shareLink !=
+                                                  null &&
+                                              value.propertyDetailsModel?.data
+                                                      ?.shareLink
+                                                      ?.trim() !=
+                                                  ''
+                                          ? () {
+                                              showPics.value = !showPics.value;
+                                              value.youTubeController.reset();
+                                            }
+                                          : () {},
+                                    ),
+                                  ),
                                 ),
                               ),
-                              GestureDetector(
-                                onTap: () async {
-                                  if ((value.propertyDetailsModel?.data
-                                                  ?.details !=
-                                              null &&
-                                          value.propertyDetailsModel?.data
-                                                  ?.details?.glat !=
-                                              null) &&
-                                      (value.propertyDetailsModel?.data
-                                                  ?.details !=
-                                              null &&
-                                          value.propertyDetailsModel?.data
-                                                  ?.details?.glng !=
-                                              null)) {
-                                    var latitude = (value.propertyDetailsModel
-                                            ?.data?.details?.glat)
-                                        .toString();
-                                    var longitude = (value.propertyDetailsModel
-                                            ?.data?.details?.glng)
-                                        .toString();
-                                    await SystemService.launchGoogleMaps(
-                                        latitude: latitude,
-                                        longitude: longitude);
-                                  }
-                                },
-                                child: Container(
-                                  width: _mainWidth * 0.08,
-                                  child: Column(
+                            ),
+                            SliverList(
+                                delegate: SliverChildListDelegate.fixed([
+                              SizedBox(
+                                height: _mainHeight * 0.01,
+                              ),
+                              SizedBox(
+                                height: _mainHeight * 0.01,
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                margin: EdgeInsets.only(
+                                  left: _mainWidth * 0.02,
+                                  right: _mainWidth * 0.02,
+                                ),
+                                padding: EdgeInsets.only(
+                                  left: _mainWidth * 0.02,
+                                  right: _mainWidth * 0.02,
+                                ),
+                                child: RichText(
+                                    text: TextSpan(
+                                        text:
+                                            '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[0].name : 'Please note'} : ',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 12,
+                                            fontFamily: fontFamily,
+                                            color: Colors.black),
+                                        children: <TextSpan>[
+                                      TextSpan(
+                                        text:
+                                            '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[1].name : 'The furniture and furnishings may appear different from what’s shown in the pictures. Dewan/sofa may be provided as available.'}',
+                                        style: TextStyle(
+                                          color: Color(0xff56596A),
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: fontFamily,
+                                        ),
+                                      ),
+                                    ])),
+                              ),
+                              SizedBox(
+                                height: _mainHeight * 0.015,
+                              ),
+                              Container(
+                                //height: _mainHeight * 0.05,
+                                margin: EdgeInsets.only(
+                                  left: _mainWidth * 0.04,
+                                  right: _mainWidth * 0.02,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      width: _mainWidth * 0.8,
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            value.propertyDetailsModel?.data
+                                                            ?.details !=
+                                                        null &&
+                                                    value
+                                                            .propertyDetailsModel
+                                                            ?.data
+                                                            ?.details
+                                                            ?.title !=
+                                                        null
+                                                ? (value.propertyDetailsModel
+                                                        ?.data?.details?.title)
+                                                    .toString()
+                                                : '',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 16,
+                                                fontFamily: fontFamily,
+                                                fontWeight: FontWeight.w600),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                value.propertyDetailsModel?.data
+                                                                ?.details !=
+                                                            null &&
+                                                        value
+                                                                .propertyDetailsModel
+                                                                ?.data
+                                                                ?.details
+                                                                ?.bname !=
+                                                            null
+                                                    ? (value
+                                                            .propertyDetailsModel
+                                                            ?.data
+                                                            ?.details
+                                                            ?.bname)
+                                                        .toString()
+                                                    : '',
+                                                style: TextStyle(
+                                                    color: Colors.black54,
+                                                    fontSize: 14,
+                                                    fontFamily: fontFamily,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              Text(
+                                                value.propertyDetailsModel?.data
+                                                                ?.details !=
+                                                            null &&
+                                                        value
+                                                                .propertyDetailsModel
+                                                                ?.data
+                                                                ?.details
+                                                                ?.propId !=
+                                                            null
+                                                    ? ' ( ${(value.propertyDetailsModel?.data?.details?.propId)} )'
+                                                        .toString()
+                                                    : '',
+                                                style: TextStyle(
+                                                    color: Colors.black54,
+                                                    fontSize: 14,
+                                                    fontFamily: fontFamily,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () async {
+                                        if ((value.propertyDetailsModel?.data
+                                                        ?.details !=
+                                                    null &&
+                                                value.propertyDetailsModel?.data
+                                                        ?.details?.glat !=
+                                                    null) &&
+                                            (value.propertyDetailsModel?.data
+                                                        ?.details !=
+                                                    null &&
+                                                value.propertyDetailsModel?.data
+                                                        ?.details?.glng !=
+                                                    null)) {
+                                          var latitude = (value
+                                                  .propertyDetailsModel
+                                                  ?.data
+                                                  ?.details
+                                                  ?.glat)
+                                              .toString();
+                                          var longitude = (value
+                                                  .propertyDetailsModel
+                                                  ?.data
+                                                  ?.details
+                                                  ?.glng)
+                                              .toString();
+                                          await SystemService.launchGoogleMaps(
+                                              latitude: latitude,
+                                              longitude: longitude);
+                                        }
+                                      },
+                                      child: Container(
+                                        width: _mainWidth * 0.08,
+                                        child: Column(
+                                          children: [
+                                            Icon(
+                                              Icons.location_on_outlined,
+                                              color: CustomTheme.appTheme,
+                                              size: _mainHeight * 0.02,
+                                            ),
+                                            Text(
+                                              '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[2].name : 'Map'}',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                  fontFamily: fontFamily,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: _mainHeight * 0.01,
+                              ),
+                              _getAmountView(
+                                  context: context,
+                                  model: value.propertyDetailsModel,
+                                  value: value),
+                              const Divider(
+                                thickness: 2,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Column(
                                     children: [
-                                      Icon(
-                                        Icons.location_on_outlined,
-                                        color: CustomTheme.appTheme,
-                                        size: _mainHeight * 0.02,
+                                      const Icon(
+                                        Icons.person_outline_outlined,
+                                        size: 20,
+                                        color: Colors.black38,
                                       ),
                                       Text(
-                                        '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[2].name : 'Map'}',
+                                        value.propertyDetailsModel?.data
+                                                        ?.details !=
+                                                    null &&
+                                                value.propertyDetailsModel?.data
+                                                        ?.details?.maxGuests !=
+                                                    null
+                                            ? (value.propertyDetailsModel?.data
+                                                        ?.details?.maxGuests)
+                                                    .toString() +
+                                                '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[10].name : ' Guest'}'
+                                            : ' ',
                                         style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             fontFamily: fontFamily,
+                                            color: Colors.grey.shade600,
                                             fontWeight: FontWeight.w500),
                                       ),
                                     ],
                                   ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: _mainHeight * 0.01,
-                        ),
-                        _getAmountView(
-                            context: context,
-                            model: value.propertyDetailsModel,
-                            value: value),
-                        const Divider(
-                          thickness: 2,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              children: [
-                                const Icon(
-                                  Icons.person_outline_outlined,
-                                  size: 20,
-                                  color: Colors.black38,
-                                ),
-                                Text(
-                                  value.propertyDetailsModel?.data?.details !=
-                                              null &&
-                                          value.propertyDetailsModel?.data
-                                                  ?.details?.maxGuests !=
-                                              null
-                                      ? (value.propertyDetailsModel?.data
-                                                  ?.details?.maxGuests)
-                                              .toString() +
-                                      '${nullCheck(list: value.propertyDetailsLang) ?
-                                      value.propertyDetailsLang[10].name
-                                          :' Guest'}'
-                                      : ' ',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontFamily: fontFamily,
-                                      color: Colors.grey.shade600,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                const Icon(
-                                  Icons.bed_rounded,
-                                  size: 20,
-                                  color: Colors.black38,
-                                ),
-                                Text(
-                                  value.propertyDetailsModel?.data?.details !=
-                                              null &&
-                                          value.propertyDetailsModel?.data
-                                                  ?.details?.bedrooms !=
-                                              null
-                                      ? (value.propertyDetailsModel?.data
-                                                  ?.details?.bedrooms)
-                                              .toString() +
-                                      ' ${nullCheck(list: value.propertyDetailsLang) ?
-                                      value.propertyDetailsLang[11].name
-                                          :' BedRoom'}'
-                                      : ' ',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontFamily: fontFamily,
-                                      color: Colors.grey.shade600,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                const Icon(
-                                  Icons.bathroom_outlined,
-                                  size: 20,
-                                  color: Colors.black38,
-                                ),
-                                Text(
-                                  value.propertyDetailsModel?.data?.details !=
-                                              null &&
-                                          value.propertyDetailsModel?.data
-                                                  ?.details?.bathrooms !=
-                                              null
-                                      ? (value.propertyDetailsModel?.data
-                                                  ?.details?.bathrooms)
-                                              .toString() +
-                                      ' ${nullCheck(list: value.propertyDetailsLang) ?
-                                      value.propertyDetailsLang[12].name
-                                          :' BathRoom'}'
-                                      : ' ',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontFamily: fontFamily,
-                                      color: Colors.grey.shade600,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: _mainHeight * 0.015,
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(
-                            left: _mainWidth * 0.04,
-                          ),
-                          child:  Text(
-                            '${nullCheck(list: value.propertyDetailsLang) ?
-                            value.propertyDetailsLang[13].name
-                                :'Available Amenities'}',
-                            style: const TextStyle(
-                                fontSize: 14,
-                                fontFamily: fontFamily,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                        SizedBox(
-                          height: _mainHeight * 0.01,
-                        ),
-                        getAvailableAmenities(list: value.amenitiesList),
-                        SizedBox(
-                          height: _mainHeight * 0.01,
-                        ),
-                        value.amenitiesList.length > 5
-                            ? GestureDetector(
-                                onTap: () => setState(() {
-                                  showAllAmenities = !showAllAmenities;
-                                }),
-                                child: Container(
-                                  padding: EdgeInsets.only(
-                                    left: _mainWidth * 0.04,
+                                  Column(
+                                    children: [
+                                      const Icon(
+                                        Icons.bed_rounded,
+                                        size: 20,
+                                        color: Colors.black38,
+                                      ),
+                                      Text(
+                                        value.propertyDetailsModel?.data
+                                                        ?.details !=
+                                                    null &&
+                                                value.propertyDetailsModel?.data
+                                                        ?.details?.bedrooms !=
+                                                    null
+                                            ? (value.propertyDetailsModel?.data
+                                                        ?.details?.bedrooms)
+                                                    .toString() +
+                                                ' ${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[11].name : ' BedRoom'}'
+                                            : ' ',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontFamily: fontFamily,
+                                            color: Colors.grey.shade600,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
                                   ),
-                                  child: Text(
-                                    showAllAmenities
-                                        ? 'View Less Amenities'
-                                        : 'View All Amenities',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontFamily: fontFamily,
-                                        color: Colors.orange,
-                                        fontWeight: FontWeight.w700),
-                                  ),
+                                  Column(
+                                    children: [
+                                      const Icon(
+                                        Icons.bathroom_outlined,
+                                        size: 20,
+                                        color: Colors.black38,
+                                      ),
+                                      Text(
+                                        value.propertyDetailsModel?.data
+                                                        ?.details !=
+                                                    null &&
+                                                value.propertyDetailsModel?.data
+                                                        ?.details?.bathrooms !=
+                                                    null
+                                            ? (value.propertyDetailsModel?.data
+                                                        ?.details?.bathrooms)
+                                                    .toString() +
+                                                ' ${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[12].name : ' BathRoom'}'
+                                            : ' ',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontFamily: fontFamily,
+                                            color: Colors.grey.shade600,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: _mainHeight * 0.015,
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(
+                                  left: _mainWidth * 0.04,
                                 ),
-                              )
-                            : Container(),
-                        SizedBox(
-                          height: _mainHeight * 0.01,
-                        ),
-                        const Divider(
-                          thickness: 2,
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(
-                            left: _mainWidth * 0.04,
-                            right: _mainWidth * 0.04,
-                          ),
-                          height: _mainHeight * 0.03,
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  '${nullCheck(list: value.propertyDetailsLang) ?
-                                  value.propertyDetailsLang[14].name
-                                      :'Contact us'}',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
+                                child: Text(
+                                  '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[13].name : 'Available Amenities'}',
+                                  style: const TextStyle(
                                       fontSize: 14,
                                       fontFamily: fontFamily,
-                                      color: Colors.black),
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600),
                                 ),
-                                Spacer(),
-                                IconButton(
-                                  padding:
-                                      EdgeInsets.only(left: _mainWidth * 0.08),
-                                  icon: Icon(
-                                    Icons.call,
-                                    color: CustomTheme.appTheme,
-                                    size: _mainWidth * 0.05,
-                                  ),
-                                  onPressed: () {
-                                    if (value.propertyDetailsModel != null &&
-                                        value.propertyDetailsModel?.data
-                                                ?.details !=
-                                            null &&
-                                        value.propertyDetailsModel?.data
-                                                ?.details?.salesNumber !=
-                                            null) {
-                                      launch(
-                                          'tel:${value.propertyDetailsModel?.data?.details?.salesNumber}');
-                                    }
-                                  },
+                              ),
+                              SizedBox(
+                                height: _mainHeight * 0.01,
+                              ),
+                              getAvailableAmenities(list: value.amenitiesList),
+                              SizedBox(
+                                height: _mainHeight * 0.01,
+                              ),
+                              value.amenitiesList.length > 5
+                                  ? GestureDetector(
+                                      onTap: () => setState(() {
+                                        showAllAmenities = !showAllAmenities;
+                                      }),
+                                      child: Container(
+                                        padding: EdgeInsets.only(
+                                          left: _mainWidth * 0.04,
+                                        ),
+                                        child: Text(
+                                          showAllAmenities
+                                              ? 'View Less Amenities'
+                                              : 'View All Amenities',
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontFamily: fontFamily,
+                                              color: Colors.orange,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                      ),
+                                    )
+                                  : Container(),
+                              SizedBox(
+                                height: _mainHeight * 0.01,
+                              ),
+                              const Divider(
+                                thickness: 2,
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(
+                                  left: _mainWidth * 0.04,
+                                  right: _mainWidth * 0.04,
                                 ),
-                                SizedBox(
-                                  width: _mainWidth * 0.02,
-                                ),
-                                IconButton(
-                                  padding:
-                                      EdgeInsets.only(left: _mainWidth * 0.06),
-                                  icon: Image(
-                                    image: NetworkImage(
-                                        'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/whatsapplogo.png?alt=media&token=41df11ff-b9e7-4f5b-a4fc-30b47cfe1435'),
-                                  ),
+                                height: _mainHeight * 0.03,
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[14].name : 'Contact us'}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 14,
+                                            fontFamily: fontFamily,
+                                            color: Colors.black),
+                                      ),
+                                      Spacer(),
+                                      IconButton(
+                                        padding: EdgeInsets.only(
+                                            left: _mainWidth * 0.08),
+                                        icon: Icon(
+                                          Icons.call,
+                                          color: CustomTheme.appTheme,
+                                          size: _mainWidth * 0.05,
+                                        ),
+                                        onPressed: () {
+                                          if (value.propertyDetailsModel !=
+                                                  null &&
+                                              value.propertyDetailsModel?.data
+                                                      ?.details !=
+                                                  null &&
+                                              value.propertyDetailsModel?.data
+                                                      ?.details?.salesNumber !=
+                                                  null) {
+                                            launch(
+                                                'tel:${value.propertyDetailsModel?.data?.details?.salesNumber}');
+                                          }
+                                        },
+                                      ),
+                                      SizedBox(
+                                        width: _mainWidth * 0.02,
+                                      ),
+                                      IconButton(
+                                        padding: EdgeInsets.only(
+                                            left: _mainWidth * 0.06),
+                                        icon: Image(
+                                          image: NetworkImage(
+                                              'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/whatsapplogo.png?alt=media&token=41df11ff-b9e7-4f5b-a4fc-30b47cfe1435'),
+                                        ),
 
-                                  /*Icon(Icons.email_outlined,
+                                        /*Icon(Icons.email_outlined,
                                       color: CustomTheme.appTheme,
                                       size: _mainWidth * 0.06),
 
                                    */
-                                  onPressed: () {
-                                    if (value.propertyDetailsModel != null &&
-                                        value.propertyDetailsModel?.data
-                                                ?.details !=
-                                            null &&
-                                        value.propertyDetailsModel?.data
-                                                ?.details?.salesNumber !=
-                                            null) {
-                                      launch(
-                                          'https://wa.me/${value.propertyDetailsModel?.data?.details?.salesNumber}?text=${value.propertyDetailsModel?.data?.shareLink ?? 'Hello'}');
-                                    }
-                                  },
+                                        onPressed: () {
+                                          if (value.propertyDetailsModel !=
+                                                  null &&
+                                              value.propertyDetailsModel?.data
+                                                      ?.details !=
+                                                  null &&
+                                              value.propertyDetailsModel?.data
+                                                      ?.details?.salesNumber !=
+                                                  null) {
+                                            launch(
+                                                'https://wa.me/${value.propertyDetailsModel?.data?.details?.salesNumber}?text=${value.propertyDetailsModel?.data?.shareLink ?? 'Hello'}');
+                                          }
+                                        },
+                                      ),
+                                    ]),
+                              ),
+                              const Divider(
+                                thickness: 2,
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(
+                                  left: _mainWidth * 0.04,
+                                  right: _mainWidth * 0.04,
                                 ),
-                              ]),
-                        ),
-                        const Divider(
-                          thickness: 2,
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(
-                            left: _mainWidth * 0.04,
-                            right: _mainWidth * 0.04,
-                          ),
-                          height: _mainHeight * 0.03,
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                 Text(
-                                  '${nullCheck(list: value.propertyDetailsLang) ?
-                                  value.propertyDetailsLang[15].name
-                                      :'Select Date'}',
+                                height: _mainHeight * 0.03,
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[15].name : 'Select Date'}',
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 14,
+                                            fontFamily: fontFamily,
+                                            color: Colors.black),
+                                      ),
+                                      Container(
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            PickerDateRange? dateRange =
+                                                await Navigator.of(context)
+                                                    .push(MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CalenderPage(
+                                                      initialDatesRange:
+                                                          PickerDateRange(
+                                                DateTime.parse(checkInDate),
+                                                DateTime.parse(checkOutDate),
+                                              )),
+                                            ));
+                                            if (dateRange != null) {
+                                              setState(() {
+                                                checkInDate = DateTimeService
+                                                    .ddMMYYYYformatDate(
+                                                        dateRange.startDate ??
+                                                            DateTime.now());
+                                                checkOutDate = DateTimeService
+                                                    .ddMMYYYYformatDate(
+                                                        dateRange.endDate ??
+                                                            DateTime.now().add(
+                                                                const Duration(
+                                                                    days: 1)));
+                                              });
+                                            }
+                                            await preferenceUtil.setString(
+                                                rms_checkInDate, checkInDate);
+                                            await preferenceUtil.setString(
+                                                rms_checkOutDate, checkOutDate);
+                                          },
+                                          child: Icon(Icons.calendar_today,
+                                              color: CustomTheme.appTheme,
+                                              size: _mainWidth * 0.06),
+                                        ),
+                                      ),
+                                    ]),
+                              ),
+                              const Divider(
+                                thickness: 2,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: _mainWidth * 0.04,
+                                  right: _mainWidth * 0.04,
+                                ),
+                                child: Text(
+                                  '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[16].name : 'Details'}',
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w700,
                                       fontSize: 14,
                                       fontFamily: fontFamily,
                                       color: Colors.black),
                                 ),
-                                Container(
-                                  child: GestureDetector(
-                                    onTap: () async {
-                                      PickerDateRange? dateRange =
-                                          await Navigator.of(context)
-                                              .push(MaterialPageRoute(
-                                        builder: (context) => CalenderPage(
-                                            initialDatesRange: PickerDateRange(
-                                          DateTime.parse(checkInDate),
-                                          DateTime.parse(checkOutDate),
-                                        )),
-                                      ));
-                                      if (dateRange != null) {
-                                        setState(() {
-                                          checkInDate = DateTimeService
-                                              .ddMMYYYYformatDate(
-                                                  dateRange.startDate ??
-                                                      DateTime.now());
-                                          checkOutDate = DateTimeService
-                                              .ddMMYYYYformatDate(dateRange
-                                                      .endDate ??
-                                                  DateTime.now().add(
-                                                      const Duration(days: 1)));
-                                        });
-                                      }
-                                      await preferenceUtil.setString(
-                                          rms_checkInDate, checkInDate);
-                                      await preferenceUtil.setString(
-                                          rms_checkOutDate, checkOutDate);
-                                    },
-                                    child: Icon(Icons.calendar_today,
-                                        color: CustomTheme.appTheme,
-                                        size: _mainWidth * 0.06),
-                                  ),
+                              ),
+                              SizedBox(
+                                height: _mainHeight * 0.005,
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(
+                                  left: _mainWidth * 0.04,
+                                  right: _mainWidth * 0.04,
                                 ),
-                              ]),
-                        ),
-                        const Divider(
-                          thickness: 2,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: _mainWidth * 0.04,
-                            right: _mainWidth * 0.04,
-                          ),
-                          child: Text(
-                            '${nullCheck(list: value.propertyDetailsLang) ?
-                            value.propertyDetailsLang[16].name
-                                :'Details'}',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 14,
-                                fontFamily: fontFamily,
-                                color: Colors.black),
-                          ),
-                        ),
-                        SizedBox(
-                          height: _mainHeight * 0.005,
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(
-                            left: _mainWidth * 0.04,
-                            right: _mainWidth * 0.04,
-                          ),
-                          child: Html(
-                            data: value.propertyDetailsModel?.data?.details !=
-                                        null &&
-                                    value.propertyDetailsModel?.data?.details
-                                            ?.description !=
-                                        null
-                                ? (value.propertyDetailsModel?.data?.details
-                                        ?.description)
-                                    .toString()
-                                : ' ',
-                            style: {
-                              "body": Style(
-                                  fontSize: FontSize(12.0),
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black54,
-                                  wordSpacing: 0.5,
-                                  display: Display.INLINE,
-                                  fontFamily: fontFamily),
-                            },
-                          )
-                          /*ReadMoreText(
+                                child: Html(
+                                  data: value.propertyDetailsModel?.data
+                                                  ?.details !=
+                                              null &&
+                                          value.propertyDetailsModel?.data
+                                                  ?.details?.description !=
+                                              null
+                                      ? (value.propertyDetailsModel?.data
+                                              ?.details?.description)
+                                          .toString()
+                                      : ' ',
+                                  style: {
+                                    "body": Style(
+                                        fontSize: FontSize(12.0),
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black54,
+                                        wordSpacing: 0.5,
+                                        display: Display.INLINE,
+                                        fontFamily: fontFamily),
+                                  },
+                                )
+                                /*ReadMoreText(
                             value.propertyDetailsModel?.details != null &&
                                 value.propertyDetailsModel?.details
                                     ?.description !=
@@ -907,56 +979,55 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                 fontFamily: fontFamily,
                                 color: Color(0xff7ab02a)),
                           )*/
-                          ,
-                        ),
-                        SizedBox(
-                          height: _mainHeight * 0.01,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: _mainWidth * 0.04,
-                            right: _mainWidth * 0.04,
-                          ),
-                          child: Text(
-                            '${nullCheck(list: value.propertyDetailsLang) ?
-                            value.propertyDetailsLang[17].name
-                                :'House Rules'}',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16,
-                                fontFamily: fontFamily,
-                                color: Colors.black),
-                          ),
-                        ),
-                        SizedBox(
-                          height: _mainHeight * 0.005,
-                        ),
-                        Container(
-                            padding: EdgeInsets.only(
-                              left: _mainWidth * 0.04,
-                              right: _mainWidth * 0.04,
-                            ),
-                            child: Html(
-                              data: value.propertyDetailsModel?.data?.details !=
-                                          null &&
-                                      value.propertyDetailsModel?.data?.details
-                                              ?.things2note !=
-                                          null
-                                  ? (value.propertyDetailsModel?.data?.details
-                                          ?.things2note)
-                                      .toString()
-                                  : ' ',
-                              style: {
-                                "body": Style(
-                                    fontSize: FontSize(12.0),
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black54,
-                                    wordSpacing: 0.5,
-                                    display: Display.INLINE,
-                                    fontFamily: fontFamily),
-                              },
-                            )
-                            /*const ReadMoreText(
+                                ,
+                              ),
+                              SizedBox(
+                                height: _mainHeight * 0.01,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: _mainWidth * 0.04,
+                                  right: _mainWidth * 0.04,
+                                ),
+                                child: Text(
+                                  '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[17].name : 'House Rules'}',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                      fontFamily: fontFamily,
+                                      color: Colors.black),
+                                ),
+                              ),
+                              SizedBox(
+                                height: _mainHeight * 0.005,
+                              ),
+                              Container(
+                                  padding: EdgeInsets.only(
+                                    left: _mainWidth * 0.04,
+                                    right: _mainWidth * 0.04,
+                                  ),
+                                  child: Html(
+                                    data: value.propertyDetailsModel?.data
+                                                    ?.details !=
+                                                null &&
+                                            value.propertyDetailsModel?.data
+                                                    ?.details?.things2note !=
+                                                null
+                                        ? (value.propertyDetailsModel?.data
+                                                ?.details?.things2note)
+                                            .toString()
+                                        : ' ',
+                                    style: {
+                                      "body": Style(
+                                          fontSize: FontSize(12.0),
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black54,
+                                          wordSpacing: 0.5,
+                                          display: Display.INLINE,
+                                          fontFamily: fontFamily),
+                                    },
+                                  )
+                                  /*const ReadMoreText(
                             'In the Second Age of Middle-earth, the lords of Elves, Dwarves, and Men are given Rings of Power. Unbeknownst to them, the Dark Lord Sauron forges the One Ring in Mount Doom, instilling into it a great part of his power, in order to dominate the other Rings so he might conquer Middle-earth. A final alliance of Men and Elves battles Saurons forces in Mordor. Isildur of Gondor severs Saurons finger and the Ring with it, thereby vanquishing Sauron and returning him to spirit form. With Sauron first defeat, the Third Age of Middle-earth begins. The Rings influence corrupts Isildur, who takes it for himself and is later killed by Orcs. The Ring is lost in a river for 2,500 years until it is found by Gollum, who owns it for over four and a half centuries. The ring abandons Gollum and it is subsequently found by a hobbit named Bilbo Baggins, who is unaware of its history.',
                             trimLines: 3,
                             style: TextStyle(
@@ -974,172 +1045,171 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                 fontFamily: fontFamily,
                                 color: Color(0xff7ab02a)),
                           ),*/
-                            ),
-                        SizedBox(
-                          height: _mainHeight * 0.01,
+                                  ),
+                              SizedBox(
+                                height: _mainHeight * 0.01,
+                              ),
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                margin: EdgeInsets.only(
+                                  left: _mainWidth * 0.04,
+                                  right: _mainWidth * 0.04,
+                                ),
+                                padding: EdgeInsets.only(
+                                  left: _mainWidth * 0.04,
+                                  right: _mainWidth * 0.04,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: CustomTheme.appTheme,
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      height: _mainHeight * 0.005,
+                                    ),
+                                    Text(
+                                      '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[18].name : 'Five Reasons to Choose RentMyStay'}',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 16,
+                                          fontFamily: fontFamily,
+                                          color: Colors.black),
+                                    ),
+                                    SizedBox(
+                                      height: _mainHeight * 0.005,
+                                    ),
+                                    Text(
+                                      getMoreText,
+                                      style: const TextStyle(
+                                          color: Colors.black54,
+                                          fontFamily: fontFamily,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Divider(
+                                thickness: 2,
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(
+                                  left: _mainWidth * 0.04,
+                                  right: _mainWidth * 0.04,
+                                ),
+                                height: _mainHeight * 0.03,
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[19].name : 'FAQ'}',
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 14,
+                                            fontFamily: fontFamily,
+                                            color: Colors.black),
+                                      ),
+                                      Text(
+                                        '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[20].name : 'Read'}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 14,
+                                            fontFamily: fontFamily,
+                                            color: CustomTheme.appTheme),
+                                      ),
+                                    ]),
+                              ),
+                              const Divider(
+                                thickness: 2,
+                              ),
+                              Center(
+                                child: Text(
+                                  '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[21].name : 'Similar Properties'}',
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: fontFamily,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                              SizedBox(
+                                height: _mainHeight * 0.005,
+                              ),
+                              _getSimilarProperties(
+                                  context: context, model: value),
+                              SizedBox(
+                                height: _mainHeight * 0.02,
+                              ),
+                            ]))
+                          ],
                         ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          margin: EdgeInsets.only(
-                            left: _mainWidth * 0.04,
-                            right: _mainWidth * 0.04,
-                          ),
+                        bottomNavigationBar: Container(
+                          height: _mainHeight * 0.06,
+                          width: MediaQuery.of(context).size.width,
                           padding: EdgeInsets.only(
-                            left: _mainWidth * 0.04,
-                            right: _mainWidth * 0.04,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: CustomTheme.appTheme,
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                              left: _mainWidth * 0.02,
+                              right: _mainWidth * 0.02,
+                              bottom: _mainHeight * 0.01),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               SizedBox(
-                                height: _mainHeight * 0.005,
-                              ),
-                              Text(
-                                '${nullCheck(list: value.propertyDetailsLang) ?
-                                value.propertyDetailsLang[18].name
-                                    :'Five Reasons to Choose RentMyStay'}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16,
-                                    fontFamily: fontFamily,
-                                    color: Colors.black),
-                              ),
-                              SizedBox(
-                                height: _mainHeight * 0.005,
-                              ),
-                              Text(
-                                getMoreText,
-                                style: const TextStyle(
-                                    color: Colors.black54,
-                                    fontFamily: fontFamily,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Divider(
-                          thickness: 2,
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(
-                            left: _mainWidth * 0.04,
-                            right: _mainWidth * 0.04,
-                          ),
-                          height: _mainHeight * 0.03,
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                 Text(
-                                  '${nullCheck(list: value.propertyDetailsLang) ?
-                                  value.propertyDetailsLang[19].name
-                                      :'FAQ'}',
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14,
-                                      fontFamily: fontFamily,
-                                      color: Colors.black),
-                                ),
-                                Text(
-                                  '${nullCheck(list: value.propertyDetailsLang) ?
-                                  value.propertyDetailsLang[20].name
-                                      :'Read'}',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14,
-                                      fontFamily: fontFamily,
-                                      color: CustomTheme.appTheme),
-                                ),
-                              ]),
-                        ),
-                        const Divider(
-                          thickness: 2,
-                        ),
-                         Center(
-                          child: Text(
-                            '${nullCheck(list: value.propertyDetailsLang) ?
-                            value.propertyDetailsLang[21].name
-                                :'Similar Properties'}',
-                            style: const TextStyle(
-                                color: Colors.black,
-                                fontFamily: fontFamily,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700),
-                          ),
-                        ),
-                        SizedBox(
-                          height: _mainHeight * 0.005,
-                        ),
-                        _getSimilarProperties(context: context, model: value),
-                        SizedBox(
-                          height: _mainHeight * 0.02,
-                        ),
-                      ]))
-                    ],
-                  ),
-                  bottomNavigationBar: Container(
-                    height: _mainHeight * 0.06,
-                    width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.only(
-                        left: _mainWidth * 0.02,
-                        right: _mainWidth * 0.02,
-                        bottom: _mainHeight * 0.01),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                            width: _mainWidth * 0.4,
-                            height: _mainHeight * 0.05,
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                RMSWidgets.showLoaderDialog(
-                                    context: context, message: 'Loading...');
-                                SharedPreferenceUtil sharedPreferenceUtil =
-                                    SharedPreferenceUtil();
-                                var name = (await sharedPreferenceUtil
-                                            .getString(rms_name) ??
-                                        '')
-                                    .toString();
-                                var email = (await sharedPreferenceUtil
-                                            .getString(rms_email) ??
-                                        '')
-                                    .toString();
-                                var phone = (await sharedPreferenceUtil
-                                            .getString(rms_phoneNumber) ??
-                                        '')
-                                    .toString();
-                                Navigator.of(context).pop();
-                                _showDialog(
-                                  propId: value.propertyDetailsModel?.data
-                                          ?.details?.propId ??
-                                      ' ',
-                                  name: name,
-                                  phone: phone,
-                                  email: email,
-                                );
-                              },
-                              child: Text(
-                                '${nullCheck(list: value.propertyDetailsLang) ?
-                                value.propertyDetailsLang[22].name
-                                    :'Site Visit'}',
-                                style: TextStyle(
-                                    color: CustomTheme.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              style:ElevatedButton.styleFrom(primary: Colors.white,
-                                side: BorderSide(width: 1.0,color: CustomTheme.appTheme,),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),),
-                              ),
-                              /*style:
+                                  width: _mainWidth * 0.4,
+                                  height: _mainHeight * 0.05,
+                                  child: ElevatedButton(
+                                    onPressed: () async {
+                                      RMSWidgets.showLoaderDialog(
+                                          context: context,
+                                          message: 'Loading...');
+                                      SharedPreferenceUtil
+                                          sharedPreferenceUtil =
+                                          SharedPreferenceUtil();
+                                      var name = (await sharedPreferenceUtil
+                                                  .getString(rms_name) ??
+                                              '')
+                                          .toString();
+                                      var email = (await sharedPreferenceUtil
+                                                  .getString(rms_email) ??
+                                              '')
+                                          .toString();
+                                      var phone = (await sharedPreferenceUtil
+                                                  .getString(rms_phoneNumber) ??
+                                              '')
+                                          .toString();
+                                      Navigator.of(context).pop();
+                                      _showDialog(
+                                        propId: value.propertyDetailsModel?.data
+                                                ?.details?.propId ??
+                                            ' ',
+                                        name: name,
+                                        phone: phone,
+                                        email: email,
+                                      );
+                                    },
+                                    child: Text(
+                                      '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[22].name : 'Site Visit'}',
+                                      style: TextStyle(
+                                          color: CustomTheme.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Colors.white,
+                                      side: BorderSide(
+                                        width: 1.0,
+                                        color: CustomTheme.appTheme,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    /*style:
 
                                ButtonStyle(
                                   backgroundColor:
@@ -1151,125 +1221,133 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                   )), */
-                            )),
-                        Container(
-                            width: _mainWidth * 0.4,
-                            height: _mainHeight * 0.05,
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                if (value.propertyDetailsModel == null ||
-                                    value.propertyDetailsModel?.data?.details ==
-                                        null) {
-                                  RMSWidgets.showSnackbar(
-                                      context: context,
-                                      message:
-                                          'Something went wrong. Property Details not Found.',
-                                      color: CustomTheme.errorColor);
-                                  return;
-                                }
-                                RMSWidgets.showLoaderDialog(
-                                    context: context, message: 'Loading...');
-                                SharedPreferenceUtil sharedPreferenceUtil =
-                                    SharedPreferenceUtil();
-                                var name = (await sharedPreferenceUtil
-                                            .getString(rms_name) ??
-                                        '')
-                                    .toString();
-                                var email = (await sharedPreferenceUtil
-                                            .getString(rms_email) ??
-                                        '')
-                                    .toString();
-                                var phone = (await sharedPreferenceUtil
-                                            .getString(rms_phoneNumber) ??
-                                        '')
-                                    .toString();
-                                var token =
-                                    (await sharedPreferenceUtil.getString(
-                                                rms_registeredUserToken) ??
-                                            '')
-                                        .toString();
-                                Navigator.of(context).pop();
-                                PropertyDetailsUtilModel model =
-                                    PropertyDetailsUtilModel(
-                                  name: name,
-                                  email: email,
-                                  mobile: phone,
-                                  token: token,
-                                  propId: int.parse((value.propertyDetailsModel
-                                          ?.data?.details?.propId)
-                                      .toString()),
-                                  buildingName: (value.propertyDetailsModel
-                                          ?.data?.details?.bname)
-                                      .toString(),
-                                  title: (value.propertyDetailsModel?.data
-                                          ?.details?.title)
-                                      .toString(),
-                                  freeGuest: int.parse((value
-                                          .propertyDetailsModel
-                                          ?.data
-                                          ?.details
-                                          ?.freeGuests)
-                                      .toString()),
-                                  maxGuest: int.parse((value
-                                          .propertyDetailsModel
-                                          ?.data
-                                          ?.details
-                                          ?.maxGuests)
-                                      .toString()),
-                                );
-                                Navigator.pushNamed(
-                                    context, AppRoutes.bookingPage,
-                                    arguments: model);
-                              },
-                              child: Text(
-                                '${nullCheck(list: value.propertyDetailsLang) ?
-                                value.propertyDetailsLang[23].name
-                                    :'Book Now'}',
-                                style: TextStyle(
-                                    color: CustomTheme.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          CustomTheme.appTheme),
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
                                   )),
+                              Container(
+                                  width: _mainWidth * 0.4,
+                                  height: _mainHeight * 0.05,
+                                  child: ElevatedButton(
+                                    onPressed: () async {
+                                      if (value.propertyDetailsModel == null ||
+                                          value.propertyDetailsModel?.data
+                                                  ?.details ==
+                                              null) {
+                                        RMSWidgets.showSnackbar(
+                                            context: context,
+                                            message:
+                                                'Something went wrong. Property Details not Found.',
+                                            color: CustomTheme.errorColor);
+                                        return;
+                                      }
+                                      RMSWidgets.showLoaderDialog(
+                                          context: context,
+                                          message: 'Loading...');
+                                      SharedPreferenceUtil
+                                          sharedPreferenceUtil =
+                                          SharedPreferenceUtil();
+                                      var name = (await sharedPreferenceUtil
+                                                  .getString(rms_name) ??
+                                              '')
+                                          .toString();
+                                      var email = (await sharedPreferenceUtil
+                                                  .getString(rms_email) ??
+                                              '')
+                                          .toString();
+                                      var phone = (await sharedPreferenceUtil
+                                                  .getString(rms_phoneNumber) ??
+                                              '')
+                                          .toString();
+                                      var token =
+                                          (await sharedPreferenceUtil.getString(
+                                                      rms_registeredUserToken) ??
+                                                  '')
+                                              .toString();
+                                      Navigator.of(context).pop();
+                                      PropertyDetailsUtilModel model =
+                                          PropertyDetailsUtilModel(
+                                        name: name,
+                                        email: email,
+                                        mobile: phone,
+                                        token: token,
+                                        propId: int.parse((value
+                                                .propertyDetailsModel
+                                                ?.data
+                                                ?.details
+                                                ?.propId)
+                                            .toString()),
+                                        buildingName: (value
+                                                .propertyDetailsModel
+                                                ?.data
+                                                ?.details
+                                                ?.bname)
+                                            .toString(),
+                                        title: (value.propertyDetailsModel?.data
+                                                ?.details?.title)
+                                            .toString(),
+                                        freeGuest: int.parse((value
+                                                .propertyDetailsModel
+                                                ?.data
+                                                ?.details
+                                                ?.freeGuests)
+                                            .toString()),
+                                        maxGuest: int.parse((value
+                                                .propertyDetailsModel
+                                                ?.data
+                                                ?.details
+                                                ?.maxGuests)
+                                            .toString()),
+                                      );
+                                      Navigator.pushNamed(
+                                          context, AppRoutes.bookingPage,
+                                          arguments: model);
+                                    },
+                                    child: Text(
+                                      '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[23].name : 'Book Now'}',
+                                      style: TextStyle(
+                                          color: CustomTheme.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                                CustomTheme.appTheme),
+                                        shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                        )),
+                                  )),
+                            ],
+                          ),
+                        ),
+                      )
+                    : value.propertyDetailsModel != null &&
+                            value.propertyDetailsModel?.msg != null &&
+                            value.propertyDetailsModel?.data == null
+                        ? Scaffold(
+                            appBar: AppBar(
+                              backgroundColor: CustomTheme.appTheme,
+                            ),
+                            body: Center(
+                                child: RMSWidgets.someError(
+                              context: context,
                             )),
-                      ],
-                    ),
-                  ),
-                )
-              : value.propertyDetailsModel != null &&
-                      value.propertyDetailsModel?.msg != null &&
-                      value.propertyDetailsModel?.data == null
-                  ? Scaffold(
-                      appBar: AppBar(
-                        backgroundColor: CustomTheme.appTheme,
-                      ),
-                      body: Center(
-                          child: RMSWidgets.someError(
-                        context: context,
-                      )),
-                    )
-                  : Scaffold(
-                      appBar: AppBar(
-                        backgroundColor: CustomTheme.appTheme,
-                      ),
-                      body: Center(
-                        child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                CustomTheme.appTheme)),
-                      ),
-                    ),
-        );
-      },
-    ):RMSWidgets.networkErrorPage(context: context);
+                          )
+                        : Scaffold(
+                            appBar: AppBar(
+                              backgroundColor: CustomTheme.appTheme,
+                            ),
+                            body: Center(
+                              child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      CustomTheme.appTheme)),
+                            ),
+                          ),
+              );
+            },
+          )
+        : RMSWidgets.networkErrorPage(context: context);
   }
 
   Widget getAvailableAmenities({required List<AmenitiesModel> list}) {
@@ -1423,9 +1501,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                           ? CustomTheme.appTheme
                           : Colors.blueGrey.shade100,
                       child: Text(
-                        '${nullCheck(list: value.propertyDetailsLang) ?
-                        value.propertyDetailsLang[4].name
-                            :'Monthly'}',
+                        '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[4].name : 'Monthly'}',
                         style: TextStyle(
                             fontSize: 14,
                             fontFamily: fontFamily,
@@ -1459,9 +1535,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             bottomRight: Radius.circular(50),
                           )),
                       child: Text(
-                        '${nullCheck(list: value.propertyDetailsLang) ?
-                        value.propertyDetailsLang[5].name
-                            :'3+ Months'}',
+                        '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[5].name : '3+ Months'}',
                         style: TextStyle(
                             fontSize: 14,
                             fontFamily: fontFamily,
@@ -1478,14 +1552,12 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
             SizedBox(
               height: _mainHeight * 0.015,
             ),
-            _getRentView(context: context, model: model,value: value),
+            _getRentView(context: context, model: model, value: value),
             SizedBox(
               height: _mainHeight * 0.01,
             ),
             Text(
-              '${nullCheck(list: value.propertyDetailsLang) ?
-              value.propertyDetailsLang[8].name
-                  :'Free Cancellation within 24 hours of booking.Click here to view.'}',
+              '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[8].name : 'Free Cancellation within 24 hours of booking.Click here to view.'}',
               style: TextStyle(
                   fontSize: 12,
                   fontFamily: fontFamily,
@@ -1496,9 +1568,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
               onTap: () => _handleURLButtonPress(
                   context, cancellationPolicy, 'Cancellation Policy'),
               child: Text(
-                '${nullCheck(list: value.propertyDetailsLang) ?
-                value.propertyDetailsLang[9].name
-                    :'Cancellation Policy'}',
+                '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[9].name : 'Cancellation Policy'}',
                 style: const TextStyle(
                     color: Colors.orange,
                     fontFamily: fontFamily,
@@ -1649,15 +1719,15 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
   }
 
   Widget _getRentView(
-      {required BuildContext context, PropertyDetailsModel? model,required PropertyDetailsViewModel value}) {
+      {required BuildContext context,
+      PropertyDetailsModel? model,
+      required PropertyDetailsViewModel value}) {
     if (dailyFlag && (monthlyFlag == false && moreThanThreeFlag == false)) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            '${nullCheck(list: value.propertyDetailsLang) ?
-            value.propertyDetailsLang[6].name
-                :'Rent'}',
+            '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[6].name : 'Rent'}',
             style: const TextStyle(
                 fontSize: 14,
                 fontFamily: fontFamily,
@@ -1686,9 +1756,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${nullCheck(list: value.propertyDetailsLang) ?
-                value.propertyDetailsLang[6].name
-                    :'Rent'}',
+                '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[6].name : 'Rent'}',
                 style: const TextStyle(
                     fontSize: 14,
                     fontFamily: fontFamily,
@@ -1712,10 +1780,8 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-               Text(
-                '${nullCheck(list: value.propertyDetailsLang) ?
-                value.propertyDetailsLang[7].name
-                    :'Deposit'}',
+              Text(
+                '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[7].name : 'Deposit'}',
                 style: const TextStyle(
                     fontSize: 14,
                     fontFamily: fontFamily,
@@ -1740,10 +1806,8 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-               Text(
-                '${nullCheck(list: value.propertyDetailsLang) ?
-                value.propertyDetailsLang[6].name
-                    :'Rent'}',
+              Text(
+                '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[6].name : 'Rent'}',
                 style: const TextStyle(
                     fontSize: 14,
                     fontFamily: fontFamily,
@@ -1770,10 +1834,8 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                 Text(
-                  '${nullCheck(list: value.propertyDetailsLang) ?
-                  value.propertyDetailsLang[7].name
-                      :'Deposit'}',
+                Text(
+                  '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[7].name : 'Deposit'}',
                   style: const TextStyle(
                       fontSize: 14,
                       fontFamily: fontFamily,
