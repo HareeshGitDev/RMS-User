@@ -277,7 +277,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                 'videoLink': value
                                                     .propertyDetailsModel
                                                     ?.data
-                                                    ?.shareLink,
+                                                    ?.details?.videoLink,
                                                 'imageList': value
                                                     .propertyDetailsModel
                                                     ?.data

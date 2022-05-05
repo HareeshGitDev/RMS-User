@@ -31,6 +31,7 @@ class _PropertyGalleryViewPageState extends State<PropertyGalleryViewPage> {
   @override
   void initState() {
     super.initState();
+    log('${widget.videoLink}');
     youTubeController = YoutubePlayerController(
       initialVideoId:widget.videoLink ??'',
       flags: const YoutubePlayerFlags(
@@ -50,7 +51,7 @@ class _PropertyGalleryViewPageState extends State<PropertyGalleryViewPage> {
         titleSpacing: 0,
         title: Text('Property Gallery'),
         actions: [
-          GestureDetector(
+          widget.videoLink == null || widget.videoLink == '' ?Container():GestureDetector(
             onTap: () => setState(() => showVideo = !showVideo),
             child: Container(
               decoration: BoxDecoration(
@@ -96,9 +97,9 @@ class _PropertyGalleryViewPageState extends State<PropertyGalleryViewPage> {
                             panEnabled: true,
                             child: Container(
                               decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.only(
+                                /*borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10)),
+                                    topRight: Radius.circular(10)),*/
                                 image: DecorationImage(
                                   image: imageProvider,
                                   fit: BoxFit.cover,
