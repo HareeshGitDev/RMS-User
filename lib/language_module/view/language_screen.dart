@@ -88,6 +88,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
         ? Scaffold(
             appBar: AppBar(
               backgroundColor: CustomTheme.appTheme,
+              centerTitle: false,
               titleSpacing: 0,
               title: Text('Select Language'),
             ),

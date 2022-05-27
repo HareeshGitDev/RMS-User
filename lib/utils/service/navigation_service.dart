@@ -14,6 +14,13 @@ import 'package:RentMyStay_user/my_stays/view/refund_splitup_view_page.dart';
 import 'package:RentMyStay_user/my_stays/view/ticket_details_page.dart';
 import 'package:RentMyStay_user/my_stays/view/ticket_list_page.dart';
 import 'package:RentMyStay_user/my_stays/viewmodel/mystay_viewmodel.dart';
+import 'package:RentMyStay_user/owner_property_module/view/property_description_page.dart';
+import 'package:RentMyStay_user/owner_property_module/view/property_photos_page.dart';
+import 'package:RentMyStay_user/owner_property_module/view/property_host_page.dart';
+import 'package:RentMyStay_user/owner_property_module/view/owner_property_listing_page.dart';
+import 'package:RentMyStay_user/owner_property_module/view/property_amenities_page.dart';
+import 'package:RentMyStay_user/owner_property_module/view/property_rent_page.dart';
+import 'package:RentMyStay_user/owner_property_module/view/property_rooms_beds_page.dart';
 import 'package:RentMyStay_user/payment_module/model/payment_request_model.dart';
 import 'package:RentMyStay_user/payment_module/view/razorpay_payement_page.dart';
 import 'package:RentMyStay_user/payment_module/viewModel/payment_viewModel.dart';
@@ -31,6 +38,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
 import '../../my_stays/view/update_Invoice_UTR.dart';
+import '../../owner_property_module/view/add_property_page.dart';
+import '../../owner_property_module/view/owner_property_details_page.dart';
+import '../../owner_property_module/view/property_location_page.dart';
+import '../../owner_property_module/view/property_rules_page.dart';
+import '../../owner_property_module/viewModel/owner_property_viewModel.dart';
 import '../../property_details_module/view/booking_view_page.dart';
 import '../../home_module/view/home_page.dart';
 import '../../login_module/view/mobile_otp_page.dart';
@@ -300,6 +312,78 @@ class NavigationService {
                 videoLink: data['videoLink'],
               )),
         );
+      case AppRoutes.ownerPropertyListingPage:
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+              create: (_) => OwnerPropertyViewModel(),
+              child: const OwnerPropertyListingPage()),
+        );
+      case AppRoutes.ownerPropertyDetailsPage:
+        final data=settings.arguments as String;
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+              create: (_) => OwnerPropertyViewModel(),
+              child: OwnerPropertyDetailsPage(propId: data,)),
+        );
+      case AppRoutes.hostPropertyPage:
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+              create: (_) => OwnerPropertyViewModel(),
+              child: const HostPropertyPage()),
+        );
+      case AppRoutes.addPropertyPage:
+        final data=settings.arguments as Map<String,dynamic>;
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+              create: (_) => OwnerPropertyViewModel(),
+              child: AddPropertyPage(fromPropertyDetails: data['fromPropertyDetails'],propId: data['propId'],title: data['title'],propertyType: data['propertyType'],)),
+        );
+      case AppRoutes.propertyRentPage:
+        final data=settings.arguments as Map<String,dynamic>;
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+              create: (_) => OwnerPropertyViewModel(),
+              child: PropertyRentPage(propId:data['propId'],fromPropertyDetails:data['fromPropertyDetails'],dailyRent: data['dailyRent'],monthlyRent: data['monthlyRent'], longTermDeposit:data['longTermDeposit'] ,longTermRent:data['longTermRent'] , ),
+        ),);
+      case AppRoutes.propertyRoomsBedsPage:
+        final data=settings.arguments as Map<String,dynamic>;
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+            create: (_) => OwnerPropertyViewModel(),
+            child: PropertyRoomsBedsPage(propId: data['propId'],fromPropertyDetails:data['fromPropertyDetails'] , guestCount: data['guestCount'],bathRoomsCount: data['bathRoomsCount'],bedRoomsCount: data['bedRoomsCount'], ),),);
+      case AppRoutes.editPropertyPhotosPage:
+        final data=settings.arguments as Map<String,dynamic>;
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+            create: (_) => OwnerPropertyViewModel(),
+            child: EditPropertyPhotosPage(propId: data['propId'],fromPropertyDetails:data['fromPropertyDetails'] , videoLink: data['videoLink'],photosList: data['photosList'], ),),);
+      case AppRoutes.amenitiesPage:
+        final data=settings.arguments as Map<String,dynamic>;
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+            create: (_) => OwnerPropertyViewModel(),
+            child: PropertyAmenitiesPage(propId: data['propId'],fromPropertyDetails:data['fromPropertyDetails'] , amenitiesList:data['amenitiesList'], ),),);
+      case AppRoutes.propertyDescriptionPage:
+        final data=settings.arguments as Map<String,dynamic>;
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+            create: (_) => OwnerPropertyViewModel(),
+            child: PropertyDescriptionPage(propId: data['propId'],fromPropertyDetails:data['fromPropertyDetails'] , description:data['description'], ),),);
+      case AppRoutes.propertyRulesPage:
+        final data=settings.arguments as Map<String,dynamic>;
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+            create: (_) => OwnerPropertyViewModel(),
+            child: PropertyRulesPage(propId: data['propId'],fromPropertyDetails:data['fromPropertyDetails'] , houseRules:data['houseRules'], ),),);
+      case AppRoutes.propertyLocationPage:
+        final data=settings.arguments as Map<String,dynamic>;
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+            create: (_) => OwnerPropertyViewModel(),
+            child: PropertyLocationPage(propId: data['propId'],fromPropertyDetails:data['fromPropertyDetails'] , propertyLocation:data['propertyLocation'],latitude: data['latitude'],longitude: data['longitude'], ),),);
+
+
+
       default:
         return MaterialPageRoute(
           builder: (context) => const Scaffold(
@@ -339,5 +423,16 @@ class AppRoutes {
   static const String ticketDetailsPage = 'ticketDetailsPage';
   static const String razorpayPaymentPage = 'razorpayPaymentPage';
   static const String languageScreen = 'languageScreen';
-  static const String propertyGalleryPage = 'PropertyGalleryPage';
+  static const String propertyGalleryPage = 'propertyGalleryPage';
+  static const String ownerPropertyListingPage = 'ownerPropertyListingPage';
+  static const String hostPropertyPage = 'hostPropertyPage';
+  static const String ownerPropertyDetailsPage = 'ownerPropertyDetailsPage';
+  static const String addPropertyPage = 'addPropertyPage';
+  static const String propertyRentPage = 'propertyRentPage';
+  static const String propertyRoomsBedsPage = 'propertyRoomsBedsPage';
+  static const String editPropertyPhotosPage = 'editPropertyPhotosPage';
+  static const String amenitiesPage = 'amenitiesPage';
+  static const String propertyDescriptionPage = 'propertyDescriptionPage';
+  static const String propertyRulesPage = 'propertyRulesPage';
+  static const String propertyLocationPage = 'propertyLocationPage';
 }

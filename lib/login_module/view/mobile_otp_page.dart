@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:RentMyStay_user/images.dart';
 import 'package:RentMyStay_user/login_module/model/otp_registration_otp_model.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
-import 'package:RentMyStay_user/theme/app_theme.dart';
+
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:provider/provider.dart';
 
+import '../../theme/custom_theme.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/navigation_service.dart';
 import '../../utils/service/shared_prefrences_util.dart';
@@ -101,6 +102,7 @@ class _OtpState extends State<MobileOtpPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         titleSpacing: 0,
+        centerTitle: false,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(15),

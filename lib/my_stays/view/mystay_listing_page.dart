@@ -10,12 +10,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../language_module/model/language_model.dart';
-import '../../theme/app_theme.dart';
 import '../../theme/custom_theme.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/bottom_navigation_provider.dart';
@@ -121,6 +119,10 @@ class _MyStayListPageState extends State<MyStayListPage> {
                       return false;
                     })
                 : const BackButton(),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(15),
+                    bottomRight: Radius.circular(15))),
             backgroundColor: CustomTheme.appTheme,
             toolbarHeight: _mainHeight * 0.05,
             centerTitle: widget.fromBottom,

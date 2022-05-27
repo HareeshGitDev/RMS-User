@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:RentMyStay_user/property_module/viewModel/property_viewModel.dart';
-import 'package:RentMyStay_user/theme/app_theme.dart';
+
 import 'package:RentMyStay_user/utils/color.dart';
 import 'package:RentMyStay_user/utils/constants/enum_consts.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
@@ -15,12 +15,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:flutx/flutx.dart';
-import 'package:flutx/widgets/star_rating/star_rating.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../images.dart';
+import '../../theme/custom_theme.dart';
 import '../../utils/constants/app_consts.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../language_module/model/language_model.dart';
@@ -710,7 +709,7 @@ class _WishListPageState extends State<WishListPage> {
               } else {
                 return Scaffold(
                     appBar: _getAppBar(context: context, value: value),
-                    body: Center(child: CircularProgressIndicator()));
+                    body: Center(child: RMSWidgets.getLoader()));
               }
             },
           )

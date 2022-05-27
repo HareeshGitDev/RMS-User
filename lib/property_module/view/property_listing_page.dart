@@ -5,7 +5,7 @@ import 'dart:math' as math;
 
 import 'package:RentMyStay_user/profile_Module/model/filter_sort_request_model.dart';
 import 'package:RentMyStay_user/property_module/viewModel/property_viewModel.dart';
-import 'package:RentMyStay_user/theme/app_theme.dart';
+
 import 'package:RentMyStay_user/utils/color.dart';
 import 'package:RentMyStay_user/utils/constants/enum_consts.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
@@ -18,11 +18,14 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 import '../../language_module/model/language_model.dart';
+import '../../theme/custom_theme.dart';
 import '../../utils/constants/app_consts.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/date_time_service.dart';
@@ -66,8 +69,6 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
       DateTime.now().add(const Duration(days: 1)));
   bool showSearchResults = false;
   late TextEditingController _searchController;
-  late double _lowerValue = 5000;
-  late double _upperValue = 50000;
   bool fullyFurnishedSelected = false;
   bool semiFurnishedSelected = false;
   bool entireHouseSelected = false;
@@ -80,6 +81,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
   late StreamSubscription<ConnectivityResult> _connectivitySubs;
   final Connectivity _connectivity = Connectivity();
   bool _connectionStatus = true;
+
+  SfRangeValues _values = SfRangeValues(500, 40000);
 
   Future<void> initConnectionStatus() async {
     ConnectivityResult result = ConnectivityResult.none;
@@ -181,792 +184,840 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
-    return _connectionStatus?Scaffold(
-      appBar: _getAppBar(context: context),
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-        child: Consumer<PropertyViewModel>(
-          builder: (context, value, child) {
-            return value.propertyListModel.msg != null &&
-                    value.propertyListModel.msg?.toLowerCase() == 'success'
-                ? Visibility(
-                    visible: !showSearchResults,
-                    replacement: Container(
-                        padding: EdgeInsets.only(
-                            left: _mainWidth * 0.03,
-                            right: _mainWidth * 0.03,
-                            top: _mainHeight * 0.02),
-                        height: _mainHeight,
-                        color: Colors.white,
-                        child: ListView.separated(
-                          padding: EdgeInsets.zero,
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap: () async {
-                                RMSWidgets.showLoaderDialog(
-                                    context: context, message: 'Loading');
-
-                                _searchController.text = value.locations[index];
-                                await _propertyViewModel.getPropertyDetailsList(
-                                    address: value.locations[index],
-                                    property: Property.fromSearch,
-                                    toDate: widget.checkOutDate,
-                                    fromDate: widget.checkInDate);
-                                showSearchResults = false;
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
-                                Navigator.of(context).pop();
-                              },
-                              child: Container(
-                                padding: EdgeInsets.only(
+    return _connectionStatus
+        ? Scaffold(
+            appBar: _getAppBar(context: context),
+            body: GestureDetector(
+              onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+              child: Consumer<PropertyViewModel>(
+                builder: (context, value, child) {
+                  return value.propertyListModel.msg != null &&
+                          value.propertyListModel.msg?.toLowerCase() ==
+                              'success'
+                      ? Visibility(
+                          visible: !showSearchResults,
+                          replacement: Container(
+                              padding: EdgeInsets.only(
                                   left: _mainWidth * 0.03,
-                                ),
-                                height: _mainHeight * 0.045,
-                                alignment: Alignment.centerLeft,
-                                decoration: BoxDecoration(
-                                    //  color: Colors.white,//CustomTheme.appTheme.withAlpha(20),
-                                    border: Border.all(
-                                        color: CustomTheme.appTheme
-                                            .withAlpha(100)),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Icon(
-                                      Icons.location_on_outlined,
-                                      size: 20,
-                                      color: CustomTheme.appTheme,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Container(
-                                      width: _mainWidth * 0.8,
-                                      child: Text(
-                                        value.locations[index],
-                                        style: TextStyle(
-                                            fontFamily: fontFamily,
-                                            fontSize: 14,
-                                            color: Colors.black54,
-                                            fontWeight: FontWeight.w600),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
+                                  right: _mainWidth * 0.03,
+                                  top: _mainHeight * 0.02),
+                              height: _mainHeight,
+                              color: Colors.white,
+                              child: ListView.separated(
+                                padding: EdgeInsets.zero,
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    onTap: () async {
+                                      RMSWidgets.showLoaderDialog(
+                                          context: context, message: 'Loading');
+
+                                      _searchController.text =
+                                          value.locations[index].location;
+                                      await _propertyViewModel
+                                          .getPropertyDetailsList(
+                                              address: value
+                                                  .locations[index].location,
+                                              property: Property.fromSearch,
+                                              toDate: widget.checkOutDate,
+                                              fromDate: widget.checkInDate);
+                                      showSearchResults = false;
+                                      FocusScope.of(context)
+                                          .requestFocus(FocusNode());
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.only(
+                                        left: _mainWidth * 0.03,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                          itemCount: value.locations.length,
-                          separatorBuilder: (context, index) => SizedBox(
-                            height: 10,
-                          ),
-                        )),
-                    child: Container(
-                      color: Colors.white,
-                      height: _mainHeight,
-                      width: _mainWidth,
-                      padding: EdgeInsets.only(
-                          left: _mainWidth * 0.03,
-                          right: _mainWidth * 0.03,
-                          top: _mainHeight * 0.01,
-                          bottom: 0),
-                      child: Stack(
-                        children: [
-                          ListView.separated(
-                            itemBuilder: (context, index) {
-                              var data = value.propertyListModel.data![index];
-                              return GestureDetector(
-                                onTap: () => Navigator.of(context).pushNamed(
-                                    AppRoutes.propertyDetailsPage,
-                                    arguments: data.propId),
-                                child: Card(
-                                  elevation: 4,
-                                  shadowColor: CustomTheme.appTheme,
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10))),
-                                  child: Stack(
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                      height: _mainHeight * 0.045,
+                                      alignment: Alignment.centerLeft,
+                                      decoration: BoxDecoration(
+                                          //  color: Colors.white,//CustomTheme.appTheme.withAlpha(20),
+                                          border: Border.all(
+                                              color: CustomTheme.appTheme
+                                                  .withAlpha(100)),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         children: [
-                                          CarouselSlider(
-                                            items: data.propPics
-                                                    ?.map(
-                                                        (e) =>
-                                                            CachedNetworkImage(
-                                                              imageUrl: e
-                                                                  .picLink
-                                                                  .toString(),
-                                                              imageBuilder:
-                                                                  (context,
-                                                                          imageProvider) =>
-                                                                      Container(
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  borderRadius: const BorderRadius.only(
-                                                                      topLeft: Radius
-                                                                          .circular(
-                                                                              10),
-                                                                      topRight:
-                                                                          Radius.circular(
-                                                                              10)),
-                                                                  image:
-                                                                      DecorationImage(
-                                                                    image:
-                                                                        imageProvider,
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              placeholder: (context, url) => Shimmer
-                                                                  .fromColors(
-                                                                      child:
-                                                                          Container(
-                                                                        height: _mainHeight *
-                                                                            0.27,
-                                                                        color: Colors
-                                                                            .grey,
-                                                                      ),
-                                                                      baseColor:
-                                                                          Colors.grey[200]
-                                                                              as Color,
-                                                                      highlightColor:
-                                                                          Colors.grey[350]
-                                                                              as Color),
-                                                              errorWidget: (context,
-                                                                      url,
-                                                                      error) =>
-                                                                  const Icon(Icons
-                                                                      .error),
-                                                            ))
-                                                    .toList() ??
-                                                [],
-                                            options: CarouselOptions(
-                                                height: _mainHeight * 0.27,
-                                                enlargeCenterPage: true,
-                                                autoPlay: true,
-                                                aspectRatio: 16 / 9,
-                                                autoPlayInterval: Duration(
-                                                    milliseconds: math.Random()
-                                                            .nextInt(6000) +
-                                                        1500),
-                                                autoPlayCurve:
-                                                    Curves.fastOutSlowIn,
-                                                enableInfiniteScroll: true,
-                                                viewportFraction: 1),
+                                          Icon(
+                                            Icons.location_on_outlined,
+                                            size: 20,
+                                            color: CustomTheme.appTheme,
                                           ),
                                           SizedBox(
-                                            height: _mainHeight * 0.01,
-                                          ),
-                                          Visibility(
-                                            child: Container(
-                                              height: _mainHeight * 0.025,
-                                              padding: EdgeInsets.only(
-                                                  left: _mainWidth * 0.02,
-                                                  right: _mainWidth * 0.02),
-                                              child: Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.home_work_outlined,
-                                                    color: CustomTheme.appTheme,
-                                                    size: 18,
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 5,
-                                                  ),
-                                                  Expanded(
-                                                    child: Text(
-                                                      data.buildingName ?? " ",
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                      style: TextStyle(
-                                                        fontSize: 14,
-                                                        color: Colors.black87,
-                                                        fontFamily: fontFamily,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    data.unitType ?? " ",
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    maxLines: 1,
-                                                    style: const TextStyle(
-                                                        fontSize: 12,
-                                                        fontFamily: fontFamily,
-                                                        fontWeight:
-                                                            FontWeight.w700),
-                                                  ),
-                                                ],
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                              ),
-                                            ),
-                                            visible: data.rmsProp != null &&
-                                                data.rmsProp == "RMS Prop",
-                                          ),
-                                          Visibility(
-                                            visible: data.rmsProp != null &&
-                                                data.rmsProp == "RMS Prop",
-                                            child: Container(
-                                              child: const Text(
-                                                'Multiple Units Available',
-                                                style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 12,
-                                                    fontFamily: fontFamily),
-                                              ),
-                                              alignment: Alignment.centerRight,
-                                              padding: EdgeInsets.only(
-                                                  right: _mainWidth * 0.02),
-                                            ),
+                                            width: 5,
                                           ),
                                           Container(
-                                            margin: EdgeInsets.only(
-                                                left: _mainWidth * 0.02),
-                                            width: _mainWidth * 0.75,
+                                            width: _mainWidth * 0.8,
                                             child: Text(
-                                              data.title ?? " ",
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
+                                              value.locations[index].location,
                                               style: TextStyle(
-                                                  fontSize: 12,
                                                   fontFamily: fontFamily,
-                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                  color: Colors.black54,
                                                   fontWeight: FontWeight.w600),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
-                                          GestureDetector(
-                                            onTap: () async {
-                                              if ((data.glat != null) &&
-                                                  (data.glng != null)) {
-                                                var latitude =
-                                                    (data.glat).toString();
-                                                var longitude =
-                                                    (data.glng).toString();
-                                                await SystemService
-                                                    .launchGoogleMaps(
-                                                        latitude: latitude,
-                                                        longitude: longitude);
-                                              }
-                                            },
-                                            child: Container(
-                                              width: _mainWidth,
-                                              color: Colors.white,
-                                              child: Row(
-                                                children: [
-                                                  Padding(
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                itemCount: value.locations.length,
+                                separatorBuilder: (context, index) => SizedBox(
+                                  height: 10,
+                                ),
+                              )),
+                          child: Container(
+                            color: Colors.white,
+                            height: _mainHeight,
+                            width: _mainWidth,
+                            padding: EdgeInsets.only(
+                                left: _mainWidth * 0.03,
+                                right: _mainWidth * 0.03,
+                                top: _mainHeight * 0.01,
+                                bottom: 0),
+                            child: Stack(
+                              children: [
+                                ListView.separated(
+                                  itemBuilder: (context, index) {
+                                    var data =
+                                        value.propertyListModel.data![index];
+                                    return GestureDetector(
+                                      onTap: () => Navigator.of(context)
+                                          .pushNamed(
+                                              AppRoutes.propertyDetailsPage,
+                                              arguments: data.propId),
+                                      child: Card(
+                                        elevation: 4,
+                                        shadowColor: CustomTheme.appTheme,
+                                        shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10))),
+                                        child: Stack(
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                CarouselSlider(
+                                                  items: data.propPics
+                                                          ?.map((e) =>
+                                                              CachedNetworkImage(
+                                                                imageUrl: e
+                                                                    .picLink
+                                                                    .toString(),
+                                                                imageBuilder:
+                                                                    (context,
+                                                                            imageProvider) =>
+                                                                        Container(
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    borderRadius: const BorderRadius
+                                                                            .only(
+                                                                        topLeft:
+                                                                            Radius.circular(
+                                                                                10),
+                                                                        topRight:
+                                                                            Radius.circular(10)),
+                                                                    image:
+                                                                        DecorationImage(
+                                                                      image:
+                                                                          imageProvider,
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                placeholder: (context, url) => Shimmer
+                                                                    .fromColors(
+                                                                        child:
+                                                                            Container(
+                                                                          height:
+                                                                              _mainHeight * 0.27,
+                                                                          color:
+                                                                              Colors.grey,
+                                                                        ),
+                                                                        baseColor:
+                                                                            Colors.grey[200]
+                                                                                as Color,
+                                                                        highlightColor:
+                                                                            Colors.grey[350]
+                                                                                as Color),
+                                                                errorWidget: (context,
+                                                                        url,
+                                                                        error) =>
+                                                                    const Icon(Icons
+                                                                        .error),
+                                                              ))
+                                                          .toList() ??
+                                                      [],
+                                                  options: CarouselOptions(
+                                                      height:
+                                                          _mainHeight * 0.27,
+                                                      enlargeCenterPage: true,
+                                                      autoPlay: true,
+                                                      aspectRatio: 16 / 9,
+                                                      autoPlayInterval: Duration(
+                                                          milliseconds: math
+                                                                      .Random()
+                                                                  .nextInt(
+                                                                      6000) +
+                                                              1500),
+                                                      autoPlayCurve:
+                                                          Curves.fastOutSlowIn,
+                                                      enableInfiniteScroll:
+                                                          true,
+                                                      viewportFraction: 1),
+                                                ),
+                                                SizedBox(
+                                                  height: _mainHeight * 0.01,
+                                                ),
+                                                Visibility(
+                                                  child: Container(
+                                                    height: _mainHeight * 0.025,
                                                     padding: EdgeInsets.only(
                                                         left: _mainWidth * 0.02,
-                                                        top: _mainHeight *
-                                                            0.005),
-                                                    child: RichText(
-                                                      text: TextSpan(children: [
-                                                        WidgetSpan(
-                                                          child: Icon(
-                                                            Icons
-                                                                .location_on_outlined,
-                                                            color: CustomTheme
-                                                                .appTheme,
-                                                            size: _mainHeight *
-                                                                0.02,
-                                                          ),
+                                                        right:
+                                                            _mainWidth * 0.02),
+                                                    child: Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons
+                                                              .home_work_outlined,
+                                                          color: CustomTheme
+                                                              .appTheme,
+                                                          size: 18,
                                                         ),
-                                                        TextSpan(
-                                                          text: (data.areas ??
-                                                                  data.city) ??
-                                                              " ",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontFamily:
-                                                                  fontFamily,
-                                                              fontSize: 12),
+                                                        const SizedBox(
+                                                          width: 5,
                                                         ),
-                                                      ]),
-                                                    ),
-                                                  ),
-                                                  data.avl?.toLowerCase() ==
-                                                          'booked'
-                                                      ? Padding(
-                                                          padding: EdgeInsets.only(
-                                                              right:
-                                                                  _mainWidth *
-                                                                      0.02,
-                                                              top: _mainHeight *
-                                                                  0.005),
+                                                        Expanded(
                                                           child: Text(
-                                                            'Booked',
+                                                            data.buildingName ??
+                                                                " ",
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            maxLines: 1,
                                                             style: TextStyle(
-                                                                color: Color(
-                                                                    0xffFF0000),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700,
-                                                                fontSize: 14),
-                                                          ),
-                                                        )
-                                                      : Text('')
-                                                ],
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: _mainHeight * 0.007,
-                                          ),
-                                          Divider(
-                                            color: CustomTheme.appTheme,
-                                            height: 1,
-                                          ),
-                                          SizedBox(
-                                            height: _mainHeight * 0.007,
-                                          ),
-                                          FittedBox(
-                                            child: Container(
-                                              padding:
-                                                  EdgeInsets.only(bottom: 10),
-                                              child: Row(
-                                                children: [
-                                                  Visibility(
-                                                    visible:
-                                                        data.rent != null &&
-                                                            data.rent != "0",
-                                                    child: Container(
-                                                        margin: EdgeInsets.only(
-                                                            left: _mainWidth *
-                                                                0.02,
-                                                            right: _mainWidth *
-                                                                0.02),
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            const Text(
-                                                              'Rent Per Day',
-                                                              style: TextStyle(
-                                                                fontFamily:
-                                                                    fontFamily,
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                              ),
-                                                            ),
-                                                            data.orgRent ==
-                                                                    data.rent
-                                                                ? Text(
-                                                                    ' $rupee ${data.rent ?? " "}',
-                                                                    style: TextStyle(
-                                                                        color: CustomTheme
-                                                                            .appTheme,
-                                                                        fontFamily:
-                                                                            fontFamily,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w500,
-                                                                        fontSize:
-                                                                            14))
-                                                                : RichText(
-                                                                    text: TextSpan(
-                                                                        children: [
-                                                                          TextSpan(
-                                                                              text: '$rupee ${data.orgRent ?? " "}',
-                                                                              style: const TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w500, fontFamily: fontFamily, decoration: TextDecoration.lineThrough)),
-                                                                          TextSpan(
-                                                                              text: ' $rupee ${data.rent ?? " "}',
-                                                                              style: TextStyle(color: CustomTheme.appTheme, fontFamily: fontFamily, fontWeight: FontWeight.w500, fontSize: 14)),
-                                                                        ]),
-                                                                  ),
-                                                          ],
-                                                        )),
-                                                  ),
-                                                  Visibility(
-                                                    visible:
-                                                        data.rent != null &&
-                                                            data.rent != "0",
-                                                    child: SizedBox(
-                                                      height:
-                                                          _mainHeight * 0.03,
-                                                      child: VerticalDivider(
-                                                        color: CustomTheme
-                                                            .appTheme,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                      margin: EdgeInsets.only(
-                                                          left:
-                                                              _mainWidth * 0.02,
-                                                          right: _mainWidth *
-                                                              0.02),
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            'Rent (Stay < 3 Month)',
-                                                            style: TextStyle(
+                                                              fontSize: 14,
+                                                              color: Colors
+                                                                  .black87,
                                                               fontFamily:
                                                                   fontFamily,
-                                                              fontSize: 14,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w500,
                                                             ),
                                                           ),
-                                                          data.orgMonthRent ==
-                                                                  data
-                                                                      .monthlyRent
-                                                              ? Text(
-                                                                  ' $rupee ${data.monthlyRent ?? " "}',
-                                                                  style: TextStyle(
-                                                                      color: CustomTheme
-                                                                          .appTheme,
-                                                                      fontFamily:
-                                                                          fontFamily,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                      fontSize:
-                                                                          14))
-                                                              : RichText(
-                                                                  text: TextSpan(
-                                                                      children: [
-                                                                        TextSpan(
-                                                                            text:
-                                                                                '$rupee ${data.orgMonthRent ?? " "}',
-                                                                            style: TextStyle(
-                                                                                color: Colors.grey,
-                                                                                fontSize: 12,
-                                                                                fontWeight: FontWeight.w500,
-                                                                                fontFamily: fontFamily,
-                                                                                decoration: TextDecoration.lineThrough)),
-                                                                        TextSpan(
-                                                                            text:
-                                                                                ' $rupee ${data.monthlyRent ?? " "}',
-                                                                            style: TextStyle(
-                                                                                color: CustomTheme.appTheme,
-                                                                                fontFamily: fontFamily,
-                                                                                fontWeight: FontWeight.w500,
-                                                                                fontSize: 14)),
-                                                                      ]),
-                                                                ),
-                                                        ],
-                                                      )),
-                                                  SizedBox(
-                                                    height: _mainHeight * 0.03,
-                                                    child: VerticalDivider(
-                                                      color:
-                                                          CustomTheme.appTheme,
+                                                        ),
+                                                        Text(
+                                                          data.unitType ?? " ",
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          maxLines: 1,
+                                                          style: const TextStyle(
+                                                              fontSize: 12,
+                                                              fontFamily:
+                                                                  fontFamily,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700),
+                                                        ),
+                                                      ],
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
                                                     ),
                                                   ),
-                                                  Container(
-                                                      margin: EdgeInsets.only(
-                                                          left:
-                                                              _mainWidth * 0.02,
-                                                          right: _mainWidth *
-                                                              0.02),
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                              'Rent (Stay > 3 Month)',
-                                                              style: TextStyle(
-                                                                fontFamily:
-                                                                    fontFamily,
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                              )),
-                                                          data.orgRmsRent ==
-                                                                  data.rmsRent
-                                                              ? Text(
-                                                                  ' $rupee ${data.rmsRent ?? " "}',
-                                                                  style: TextStyle(
+                                                  visible:
+                                                      data.rmsProp != null &&
+                                                          data.rmsProp ==
+                                                              "RMS Prop",
+                                                ),
+                                                Visibility(
+                                                  visible:
+                                                      data.rmsProp != null &&
+                                                          data.rmsProp ==
+                                                              "RMS Prop",
+                                                  child: Container(
+                                                    child: const Text(
+                                                      'Multiple Units Available',
+                                                      style: TextStyle(
+                                                          color: Colors.grey,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          fontSize: 12,
+                                                          fontFamily:
+                                                              fontFamily),
+                                                    ),
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    padding: EdgeInsets.only(
+                                                        right:
+                                                            _mainWidth * 0.02),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  margin: EdgeInsets.only(
+                                                      left: _mainWidth * 0.02),
+                                                  width: _mainWidth * 0.75,
+                                                  child: Text(
+                                                    data.title ?? " ",
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontFamily: fontFamily,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  ),
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () async {
+                                                    if ((data.glat != null) &&
+                                                        (data.glng != null)) {
+                                                      var latitude = (data.glat)
+                                                          .toString();
+                                                      var longitude =
+                                                          (data.glng)
+                                                              .toString();
+                                                      await SystemService
+                                                          .launchGoogleMaps(
+                                                              latitude:
+                                                                  latitude,
+                                                              longitude:
+                                                                  longitude);
+                                                    }
+                                                  },
+                                                  child: Container(
+                                                    width: _mainWidth,
+                                                    color: Colors.white,
+                                                    child: Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding: EdgeInsets.only(
+                                                              left: _mainWidth *
+                                                                  0.02,
+                                                              top: _mainHeight *
+                                                                  0.005),
+                                                          child: RichText(
+                                                            text: TextSpan(
+                                                                children: [
+                                                                  WidgetSpan(
+                                                                    child: Icon(
+                                                                      Icons
+                                                                          .location_on_outlined,
                                                                       color: CustomTheme
                                                                           .appTheme,
+                                                                      size: _mainHeight *
+                                                                          0.02,
+                                                                    ),
+                                                                  ),
+                                                                  TextSpan(
+                                                                    text: (data.areas ??
+                                                                            data.city) ??
+                                                                        " ",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w600,
+                                                                        fontFamily:
+                                                                            fontFamily,
+                                                                        fontSize:
+                                                                            12),
+                                                                  ),
+                                                                ]),
+                                                          ),
+                                                        ),
+                                                        data.avl?.toLowerCase() ==
+                                                                'booked'
+                                                            ? Padding(
+                                                                padding: EdgeInsets.only(
+                                                                    right:
+                                                                        _mainWidth *
+                                                                            0.02,
+                                                                    top: _mainHeight *
+                                                                        0.005),
+                                                                child: Text(
+                                                                  'Booked',
+                                                                  style: TextStyle(
+                                                                      color: Color(
+                                                                          0xffFF0000),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w700,
+                                                                      fontSize:
+                                                                          14),
+                                                                ),
+                                                              )
+                                                            : Text('')
+                                                      ],
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: _mainHeight * 0.007,
+                                                ),
+                                                Divider(
+                                                  color: CustomTheme.appTheme,
+                                                  height: 1,
+                                                ),
+                                                SizedBox(
+                                                  height: _mainHeight * 0.007,
+                                                ),
+                                                FittedBox(
+                                                  child: Container(
+                                                    padding: EdgeInsets.only(
+                                                        bottom: 10),
+                                                    child: Row(
+                                                      children: [
+                                                        Visibility(
+                                                          visible: data.rent !=
+                                                                  null &&
+                                                              data.rent != "0",
+                                                          child: Container(
+                                                              margin: EdgeInsets.only(
+                                                                  left:
+                                                                      _mainWidth *
+                                                                          0.02,
+                                                                  right:
+                                                                      _mainWidth *
+                                                                          0.02),
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  const Text(
+                                                                    'Rent Per Day',
+                                                                    style:
+                                                                        TextStyle(
                                                                       fontFamily:
                                                                           fontFamily,
+                                                                      fontSize:
+                                                                          14,
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w500,
-                                                                      fontSize:
-                                                                          14))
-                                                              : RichText(
-                                                                  text: TextSpan(
-                                                                      children: [
-                                                                        TextSpan(
-                                                                            text:
-                                                                                '$rupee ${data.orgRmsRent ?? " "}',
-                                                                            style: TextStyle(
-                                                                                color: Colors.grey,
-                                                                                fontSize: 12,
-                                                                                fontWeight: FontWeight.w500,
-                                                                                fontFamily: fontFamily,
-                                                                                decoration: TextDecoration.lineThrough)),
-                                                                        TextSpan(
-                                                                            text:
-                                                                                ' $rupee ${data.rmsRent ?? " "}',
-                                                                            style: TextStyle(
-                                                                                color: CustomTheme.appTheme,
-                                                                                fontFamily: fontFamily,
-                                                                                fontWeight: FontWeight.w500,
-                                                                                fontSize: 14)),
-                                                                      ]),
+                                                                    ),
+                                                                  ),
+                                                                  data.orgRent ==
+                                                                          data
+                                                                              .rent
+                                                                      ? Text(
+                                                                          ' $rupee ${data.rent ?? " "}',
+                                                                          style: TextStyle(
+                                                                              color: CustomTheme.appTheme,
+                                                                              fontFamily: fontFamily,
+                                                                              fontWeight: FontWeight.w500,
+                                                                              fontSize: 14))
+                                                                      : RichText(
+                                                                          text:
+                                                                              TextSpan(children: [
+                                                                            TextSpan(
+                                                                                text: '$rupee ${data.orgRent ?? " "}',
+                                                                                style: const TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w500, fontFamily: fontFamily, decoration: TextDecoration.lineThrough)),
+                                                                            TextSpan(
+                                                                                text: ' $rupee ${data.rent ?? " "}',
+                                                                                style: TextStyle(color: CustomTheme.appTheme, fontFamily: fontFamily, fontWeight: FontWeight.w500, fontSize: 14)),
+                                                                          ]),
+                                                                        ),
+                                                                ],
+                                                              )),
+                                                        ),
+                                                        Visibility(
+                                                          visible: data.rent !=
+                                                                  null &&
+                                                              data.rent != "0",
+                                                          child: SizedBox(
+                                                            height:
+                                                                _mainHeight *
+                                                                    0.03,
+                                                            child:
+                                                                VerticalDivider(
+                                                              color: CustomTheme
+                                                                  .appTheme,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                            margin: EdgeInsets.only(
+                                                                left:
+                                                                    _mainWidth *
+                                                                        0.02,
+                                                                right:
+                                                                    _mainWidth *
+                                                                        0.02),
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  'Rent (Stay < 3 Month)',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        fontFamily,
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                  ),
                                                                 ),
-                                                        ],
-                                                      )),
+                                                                data.orgMonthRent ==
+                                                                        data
+                                                                            .monthlyRent
+                                                                    ? Text(
+                                                                        ' $rupee ${data.monthlyRent ?? " "}',
+                                                                        style: TextStyle(
+                                                                            color: CustomTheme
+                                                                                .appTheme,
+                                                                            fontFamily:
+                                                                                fontFamily,
+                                                                            fontWeight:
+                                                                                FontWeight.w500,
+                                                                            fontSize: 14))
+                                                                    : RichText(
+                                                                        text: TextSpan(
+                                                                            children: [
+                                                                              TextSpan(text: '$rupee ${data.orgMonthRent ?? " "}', style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w500, fontFamily: fontFamily, decoration: TextDecoration.lineThrough)),
+                                                                              TextSpan(text: ' $rupee ${data.monthlyRent ?? " "}', style: TextStyle(color: CustomTheme.appTheme, fontFamily: fontFamily, fontWeight: FontWeight.w500, fontSize: 14)),
+                                                                            ]),
+                                                                      ),
+                                                              ],
+                                                            )),
+                                                        SizedBox(
+                                                          height: _mainHeight *
+                                                              0.03,
+                                                          child:
+                                                              VerticalDivider(
+                                                            color: CustomTheme
+                                                                .appTheme,
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                            margin: EdgeInsets.only(
+                                                                left:
+                                                                    _mainWidth *
+                                                                        0.02,
+                                                                right:
+                                                                    _mainWidth *
+                                                                        0.02),
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                    'Rent (Stay > 3 Month)',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontFamily:
+                                                                          fontFamily,
+                                                                      fontSize:
+                                                                          14,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                    )),
+                                                                data.orgRmsRent ==
+                                                                        data
+                                                                            .rmsRent
+                                                                    ? Text(
+                                                                        ' $rupee ${data.rmsRent ?? " "}',
+                                                                        style: TextStyle(
+                                                                            color: CustomTheme
+                                                                                .appTheme,
+                                                                            fontFamily:
+                                                                                fontFamily,
+                                                                            fontWeight:
+                                                                                FontWeight.w500,
+                                                                            fontSize: 14))
+                                                                    : RichText(
+                                                                        text: TextSpan(
+                                                                            children: [
+                                                                              TextSpan(text: '$rupee ${data.orgRmsRent ?? " "}', style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w500, fontFamily: fontFamily, decoration: TextDecoration.lineThrough)),
+                                                                              TextSpan(text: ' $rupee ${data.rmsRent ?? " "}', style: TextStyle(color: CustomTheme.appTheme, fontFamily: fontFamily, fontWeight: FontWeight.w500, fontSize: 14)),
+                                                                            ]),
+                                                                      ),
+                                                              ],
+                                                            )),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Container(
+                                              height: _mainHeight * 0.05,
+                                              width: _mainWidth,
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Visibility(
+                                                    visible:
+                                                        data.rmsProp != null &&
+                                                            data.rmsProp ==
+                                                                "RMS Prop",
+                                                    child: Container(
+                                                      padding: EdgeInsets.only(
+                                                          right: _mainWidth *
+                                                              0.02),
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.white60,
+                                                          border: Border.all(
+                                                              color: CustomTheme
+                                                                  .appTheme),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10)),
+                                                      child: Row(children: [
+                                                        CircleAvatar(
+                                                            radius:
+                                                                _mainHeight *
+                                                                    0.012,
+                                                            backgroundColor:
+                                                                CustomTheme
+                                                                    .appTheme,
+                                                            child: Icon(
+                                                              Icons.check,
+                                                              size:
+                                                                  _mainHeight *
+                                                                      0.017,
+                                                              color:
+                                                                  Colors.white,
+                                                            )),
+                                                        SizedBox(
+                                                          width:
+                                                              _mainWidth * 0.01,
+                                                        ),
+                                                        Text(
+                                                          '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[1].name : 'Managed by RMS'}',
+                                                          style: TextStyle(
+                                                              fontStyle:
+                                                                  FontStyle
+                                                                      .italic,
+                                                              color:
+                                                                  Colors.black,
+                                                              fontFamily:
+                                                                  fontFamily,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontSize: 14),
+                                                        ),
+                                                      ]),
+                                                    ),
+                                                  ),
+                                                  Spacer(),
+                                                  GestureDetector(
+                                                    onTap: () async {
+                                                      if (data.wishlist == 1) {
+                                                        if (data.propId !=
+                                                            null) {
+                                                          int response =
+                                                              await _propertyViewModel
+                                                                  .addToWishlist(
+                                                                      propertyId:
+                                                                          data.propId ??
+                                                                              '');
+                                                          if (response == 200) {
+                                                            setState(() {
+                                                              data.wishlist = 0;
+                                                            });
+                                                            RMSWidgets.showSnackbar(
+                                                                context:
+                                                                    context,
+                                                                message:
+                                                                    'Successfully Removed From Wishlist',
+                                                                color: CustomTheme
+                                                                    .appTheme);
+                                                          }
+                                                        }
+                                                      } else if (data
+                                                              .wishlist ==
+                                                          0) {
+                                                        if (data.propId !=
+                                                            null) {
+                                                          int response =
+                                                              await _propertyViewModel
+                                                                  .addToWishlist(
+                                                                      propertyId:
+                                                                          data.propId ??
+                                                                              '');
+                                                          if (response == 200) {
+                                                            setState(() {
+                                                              data.wishlist = 1;
+                                                            });
+                                                            RMSWidgets.showSnackbar(
+                                                                context:
+                                                                    context,
+                                                                message:
+                                                                    'Successfully Added to Wishlist',
+                                                                color: CustomTheme
+                                                                    .appTheme);
+                                                          }
+                                                        }
+                                                      }
+                                                    },
+                                                    child: CircleAvatar(
+                                                        backgroundColor:
+                                                            Colors.white60,
+                                                        radius: 15,
+                                                        child: data.wishlist ==
+                                                                1
+                                                            ? Icon(
+                                                                Icons.favorite,
+                                                                color: CustomTheme
+                                                                    .appTheme,
+                                                              )
+                                                            : Icon(
+                                                                Icons
+                                                                    .favorite_outline_rounded,
+                                                                color: CustomTheme
+                                                                    .appTheme,
+                                                              )),
+                                                  ),
                                                 ],
-                                                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Container(
-                                        height: _mainHeight * 0.05,
-                                        width: _mainWidth,
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Visibility(
-                                              visible: data.rmsProp != null &&
-                                                  data.rmsProp == "RMS Prop",
-                                              child: Container(
-                                                padding: EdgeInsets.only(
-                                                    right: _mainWidth * 0.02),
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white60,
-                                                    border: Border.all(
-                                                        color: CustomTheme
-                                                            .appTheme),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
-                                                child: Row(children: [
-                                                  CircleAvatar(
-                                                      radius:
-                                                          _mainHeight * 0.012,
-                                                      backgroundColor:
-                                                          CustomTheme.appTheme,
-                                                      child: Icon(
-                                                        Icons.check,
-                                                        size:
-                                                            _mainHeight * 0.017,
-                                                        color: Colors.white,
-                                                      )),
-                                                  SizedBox(
-                                                    width: _mainWidth * 0.01,
-                                                  ),
-                                                  Text(
-                                                    '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[1].name : 'Managed by RMS'}',
-                                                    style: TextStyle(
-                                                        fontStyle:
-                                                            FontStyle.italic,
-                                                        color: Colors.black,
-                                                        fontFamily: fontFamily,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontSize: 14),
-                                                  ),
-                                                ]),
-                                              ),
-                                            ),
-                                            Spacer(),
-                                            GestureDetector(
-                                              onTap: () async {
-                                                if (data.wishlist == 1) {
-                                                  if (data.propId != null) {
-                                                    int response =
-                                                        await _propertyViewModel
-                                                            .addToWishlist(
-                                                                propertyId:
-                                                                    data.propId ??
-                                                                        '');
-                                                    if (response == 200) {
-                                                      setState(() {
-                                                        data.wishlist = 0;
-                                                      });
-                                                      RMSWidgets.showSnackbar(
-                                                          context: context,
-                                                          message:
-                                                              'Successfully Removed From Wishlist',
-                                                          color: CustomTheme
-                                                              .appTheme);
-                                                    }
-                                                  }
-                                                } else if (data.wishlist == 0) {
-                                                  if (data.propId != null) {
-                                                    int response =
-                                                        await _propertyViewModel
-                                                            .addToWishlist(
-                                                                propertyId:
-                                                                    data.propId ??
-                                                                        '');
-                                                    if (response == 200) {
-                                                      setState(() {
-                                                        data.wishlist = 1;
-                                                      });
-                                                      RMSWidgets.showSnackbar(
-                                                          context: context,
-                                                          message:
-                                                              'Successfully Added to Wishlist',
-                                                          color: CustomTheme
-                                                              .appTheme);
-                                                    }
-                                                  }
-                                                }
-                                              },
-                                              child: CircleAvatar(
-                                                  backgroundColor:
-                                                      Colors.white60,
-                                                  radius: 15,
-                                                  child: data.wishlist == 1
-                                                      ? Icon(
-                                                          Icons.favorite,
-                                                          color: CustomTheme
-                                                              .appTheme,
-                                                        )
-                                                      : Icon(
-                                                          Icons
-                                                              .favorite_outline_rounded,
-                                                          color: CustomTheme
-                                                              .appTheme,
-                                                        )),
                                             ),
                                           ],
                                         ),
                                       ),
-                                    ],
+                                    );
+                                  },
+                                  itemCount:
+                                      value.propertyListModel.data?.length ?? 0,
+                                  separatorBuilder: (context, index) =>
+                                      SizedBox(
+                                    height: _mainHeight * 0.008,
                                   ),
                                 ),
-                              );
-                            },
-                            itemCount:
-                                value.propertyListModel.data?.length ?? 0,
-                            separatorBuilder: (context, index) => SizedBox(
-                              height: _mainHeight * 0.008,
+                                _getFilterSortSetting(
+                                    context: context, value: value),
+                              ],
                             ),
                           ),
-                          _getFilterSortSetting(context: context, value: value),
-                        ],
-                      ),
-                    ),
-                  )
-                : value.propertyListModel.msg != null &&
-                        value.propertyListModel.msg?.toLowerCase() == 'failure'
-                    ? Visibility(
-                        visible: !showSearchResults,
-                        replacement: Container(
-                            padding: EdgeInsets.only(
-                                left: _mainWidth * 0.03,
-                                right: _mainWidth * 0.03,
-                                top: _mainHeight * 0.02),
-                            height: _mainHeight,
-                            color: Colors.white,
-                            child: ListView.separated(
-                              padding: EdgeInsets.zero,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () async {
-                                    RMSWidgets.showLoaderDialog(
-                                        context: context, message: 'Loading');
-
-                                    _searchController.text =
-                                        value.locations[index];
-
-                                    await _propertyViewModel
-                                        .getPropertyDetailsList(
-                                            address: value.locations[index],
-                                            property: Property.fromSearch,
-                                            toDate: widget.checkOutDate,
-                                            fromDate: widget.checkInDate);
-                                    showSearchResults = false;
-                                    FocusScope.of(context)
-                                        .requestFocus(FocusNode());
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.only(
+                        )
+                      : value.propertyListModel.msg != null &&
+                              value.propertyListModel.msg?.toLowerCase() ==
+                                  'failure'
+                          ? Visibility(
+                              visible: !showSearchResults,
+                              replacement: Container(
+                                  padding: EdgeInsets.only(
                                       left: _mainWidth * 0.03,
-                                    ),
-                                    height: _mainHeight * 0.045,
-                                    alignment: Alignment.centerLeft,
-                                    decoration: BoxDecoration(
-                                        //  color: Colors.white,//CustomTheme.appTheme.withAlpha(20),
-                                        border: Border.all(
-                                            color: CustomTheme.appTheme
-                                                .withAlpha(100)),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Icon(
-                                          Icons.location_on_outlined,
-                                          size: 20,
-                                          color: CustomTheme.appTheme,
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Container(
-                                          width: _mainWidth * 0.8,
-                                          child: Text(
-                                            value.locations[index],
-                                            style: TextStyle(
-                                                fontFamily: fontFamily,
-                                                fontSize: 14,
-                                                color: Colors.black54,
-                                                fontWeight: FontWeight.w600),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
+                                      right: _mainWidth * 0.03,
+                                      top: _mainHeight * 0.02),
+                                  height: _mainHeight,
+                                  color: Colors.white,
+                                  child: ListView.separated(
+                                    padding: EdgeInsets.zero,
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap: () async {
+                                          RMSWidgets.showLoaderDialog(
+                                              context: context,
+                                              message: 'Loading');
+
+                                          _searchController.text =
+                                              value.locations[index].location;
+
+                                          await _propertyViewModel
+                                              .getPropertyDetailsList(
+                                                  address: value
+                                                      .locations[index]
+                                                      .location,
+                                                  property: Property.fromSearch,
+                                                  toDate: widget.checkOutDate,
+                                                  fromDate: widget.checkInDate);
+                                          showSearchResults = false;
+                                          FocusScope.of(context)
+                                              .requestFocus(FocusNode());
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.only(
+                                            left: _mainWidth * 0.03,
+                                          ),
+                                          height: _mainHeight * 0.045,
+                                          alignment: Alignment.centerLeft,
+                                          decoration: BoxDecoration(
+                                              //  color: Colors.white,//CustomTheme.appTheme.withAlpha(20),
+                                              border: Border.all(
+                                                  color: CustomTheme.appTheme
+                                                      .withAlpha(100)),
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Icon(
+                                                Icons.location_on_outlined,
+                                                size: 20,
+                                                color: CustomTheme.appTheme,
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Container(
+                                                width: _mainWidth * 0.8,
+                                                child: Text(
+                                                  value.locations[index]
+                                                      .location,
+                                                  style: TextStyle(
+                                                      fontFamily: fontFamily,
+                                                      fontSize: 14,
+                                                      color: Colors.black54,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ],
+                                      );
+                                    },
+                                    itemCount: value.locations.length,
+                                    separatorBuilder: (context, index) =>
+                                        SizedBox(
+                                      height: 10,
                                     ),
-                                  ),
-                                );
-                              },
-                              itemCount: value.locations.length,
-                              separatorBuilder: (context, index) => SizedBox(
-                                height: 10,
-                              ),
-                            )),
-                        child: Center(
-                            child: RMSWidgets.someError(
-                          context: context,
-                        )))
-                    : Center(
-                        child:
-                            RMSWidgets.getLoader(color: CustomTheme.appTheme));
-          },
-        ),
-      ),
-    ):RMSWidgets.networkErrorPage(context: context);
+                                  )),
+                              child: Center(
+                                  child: RMSWidgets.someError(
+                                context: context,
+                              )))
+                          : Center(
+                              child: RMSWidgets.getLoader(
+                                  color: CustomTheme.appTheme));
+                },
+              ),
+            ),
+          )
+        : RMSWidgets.networkErrorPage(context: context);
   }
 
   AppBar _getAppBar({required BuildContext context}) {
@@ -1049,6 +1100,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
             child: Container(
               width: _mainWidth * 0.2,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
                     Icons.filter_alt_outlined,
@@ -1097,6 +1149,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
             child: Container(
               width: _mainWidth * 0.2,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
                     Icons.waves,
@@ -1280,7 +1333,26 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
         });
   }
 
-  void applyFilter(BuildContext context, PropertyViewModel value) {
+  void applyFilter(BuildContext context, PropertyViewModel value) async {
+    checkInDate = (await preferenceUtil.getString(rms_checkInDate)).toString();
+    checkOutDate =
+        (await preferenceUtil.getString(rms_checkOutDate)).toString();
+    var data = DateTime.parse(checkOutDate)
+        .difference(DateTime.parse(checkInDate))
+        .inDays;
+    double min = 500;
+    double max = 40000;
+    if (data < 30) {
+      min = 500;
+      max = 5000;
+      _values = SfRangeValues(500, 5000);
+    } else {
+      min = 5000;
+      max = 40000;
+      _values = SfRangeValues(5000, 40000);
+    }
+
+    log(data.toString());
     showModalBottomSheet(
         isScrollControlled: true,
         shape: RoundedRectangleBorder(
@@ -1292,7 +1364,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
           return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return Container(
-                height: _mainHeight * 0.65,
+                height: _mainHeight * 0.55,
                 width: _mainWidth,
                 padding: EdgeInsets.only(left: 15, right: 15),
                 child: Column(
@@ -1376,14 +1448,25 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                               if (threeBHKSelected) {
                                 model.s3bhk = '1';
                               }
+                              if (data < 30) {
+                                model.term = 'DailyBasis';
+                              } else if (data >= 30 && data <= 90) {
+                                model.term = 'MonthlyBasis';
+                              } else if (data > 90) {
+                                model.term = 'LongTerm';
+                              }
                               model.sortOrder = sortOrder;
-                              model.pricefrom = _lowerValue.toString();
-                              model.priceto = _upperValue.toString();
+                              model.pricefrom =
+                                  double.parse(_values.start.toString())
+                                      .toStringAsFixed(0)
+                                      .toString();
+                              model.priceto =
+                                  double.parse(_values.end.toString())
+                                      .toStringAsFixed(0)
+                                      .toString();
                               model.fromDate = checkInDate;
                               model.toDate = checkOutDate;
                               model.address = _searchController.text;
-                              model.term =
-                                  'MonthlyBasis'; //MonthlyBasis/DailyBasis/LongTerm
 
                               await _propertyViewModel.filterSortPropertyList(
                                   requestModel: model);
@@ -1424,19 +1507,28 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                         ));
 
                         if (dateRange != null) {
-                          setState(() {
-                            checkInDate = DateTimeService.ddMMYYYYformatDate(
-                                dateRange.startDate ?? DateTime.now());
-                            checkOutDate = DateTimeService.ddMMYYYYformatDate(
-                                dateRange.endDate ??
-                                    DateTime.now()
-                                        .add(const Duration(days: 1)));
-                          });
-
+                          checkInDate = DateTimeService.ddMMYYYYformatDate(
+                              dateRange.startDate ?? DateTime.now());
+                          checkOutDate = DateTimeService.ddMMYYYYformatDate(
+                              dateRange.endDate ??
+                                  DateTime.now().add(const Duration(days: 31)));
+                          data = DateTime.parse(checkOutDate)
+                              .difference(DateTime.parse(checkInDate))
+                              .inDays;
                           await preferenceUtil.setString(
                               rms_checkInDate, checkInDate);
                           await preferenceUtil.setString(
                               rms_checkOutDate, checkOutDate);
+                          if (data < 30) {
+                            min = 500;
+                            max = 5000;
+                            _values = SfRangeValues(500, 5000);
+                          } else {
+                            min = 5000;
+                            max = 40000;
+                            _values=SfRangeValues(5000, 40000);
+                          }
+                          setState(() {});
                         }
                       },
                       child: Container(
@@ -1513,23 +1605,19 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                       //height: _mainHeight * 0.1,
                       child: Column(
                         children: [
-                          RangeSlider(
-                            min: 5000,
-                            max: 50000,
-                            divisions: 9,
-                            activeColor: CustomTheme.appTheme,
-                            inactiveColor:
-                                CustomTheme.appThemeContrast.withAlpha(50),
-                            labels: RangeLabels(
-                                _lowerValue.toStringAsFixed(0).toString(),
-                                _upperValue.toStringAsFixed(0).toString()),
-                            onChanged: (RangeValues rangeValues) {
+                          SfRangeSlider(
+
+                            min: min,
+                            max: max,
+
+
+                            values: _values,
+                            enableTooltip: true,
+                            onChanged: (SfRangeValues values) {
                               setState(() {
-                                _lowerValue = rangeValues.start;
-                                _upperValue = rangeValues.end;
+                                _values = values;
                               });
                             },
-                            values: RangeValues(_lowerValue, _upperValue),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1544,7 +1632,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                         fontSize: 14),
                                   ),
                                   Text(
-                                    '$rupee ${_lowerValue.toStringAsFixed(0)}',
+                                    '$rupee ${double.parse(_values.start.toString()).toStringAsFixed(0)}',
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w600,
@@ -1562,7 +1650,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                         fontSize: 14),
                                   ),
                                   Text(
-                                    '$rupee ${_upperValue.toStringAsFixed(0)}',
+                                    '$rupee ${double.parse(_values.end.toString()).toStringAsFixed(0)}',
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w600,
@@ -1800,5 +1888,5 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
   }
 
   Future<String> getCurrentLocationProperties() async =>
-      await LocationService.getCurrentPlace();
+      (await LocationService.getCurrentPlace()).address.toString();
 }

@@ -17,6 +17,12 @@ class HomeViewModel extends ChangeNotifier {
   ReferAndEarnModel? referAndEarnModel ;
   List<LanguageModel> languageData = [];
   List<LanguageModel> referAndEarnLang = [];
+  bool ownerModeSelected=true;
+
+  void switchMode({required bool ownerMode}){
+    ownerModeSelected=ownerMode;
+    notifyListeners();
+  }
 
   List<CitySuggestionModel> getCitySuggestionList(
       {required BuildContext context}) {

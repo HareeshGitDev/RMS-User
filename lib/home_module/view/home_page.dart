@@ -6,6 +6,7 @@ import 'dart:math' as math;
 import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
 import 'package:RentMyStay_user/login_module/service/google_auth_service.dart';
 import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
+import 'package:RentMyStay_user/utils/service/date_time_service.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -16,9 +17,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../Web_View_Container.dart';
+import '../../theme/custom_theme.dart';
+import '../../webView_page.dart';
 import '../../images.dart';
-import '../../theme/app_theme.dart';
 import '../../utils/constants/app_consts.dart';
 import '../../utils/constants/enum_consts.dart';
 import '../../language_module/model/language_model.dart';
@@ -40,6 +41,7 @@ class _HomePageState extends State<HomePage> {
   late HomeViewModel _homeViewModel;
   var _mainHeight;
   var _mainWidth;
+  ValueNotifier<bool> isExpanded = ValueNotifier(false);
   SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
   late Future<Map<String, String>> userDetails;
   late StreamSubscription<ConnectivityResult> _connectivitySubs;
@@ -106,6 +108,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<Map<String, String>> getSharedPreferencesValues() async {
+    var checkInDate = await preferenceUtil.getString(rms_checkInDate);
+    var checkOutDate = await preferenceUtil.getString(rms_checkOutDate);
+
+    if (checkInDate == null && checkOutDate == null) {
+      await preferenceUtil.setString(
+          rms_checkInDate, DateTimeService.ddMMYYYYformatDate(DateTime.now()));
+      await preferenceUtil.setString(
+          rms_checkOutDate,
+          DateTimeService.ddMMYYYYformatDate(
+              DateTime.now().add(const Duration(days: 32))));
+    }
+
     return {
       'email': (await preferenceUtil.getString(rms_email)).toString(),
       'name': (await preferenceUtil.getString(rms_name)).toString(),
@@ -193,10 +207,10 @@ class _HomePageState extends State<HomePage> {
                         children: <Widget>[
                           Container(
                             padding: EdgeInsets.only(
-                                top: _mainHeight * 0.015,
+                                //top: _mainHeight * 0.015,
                                 left: _mainWidth * 0.03,
                                 right: _mainWidth * 0.03),
-                            height: _mainHeight * 0.12,
+                            height: _mainHeight * 0.15,
                             width: MediaQuery.of(context).size.width,
                             child: ListView.separated(
                               scrollDirection: Axis.horizontal,
@@ -229,8 +243,8 @@ class _HomePageState extends State<HomePage> {
                                   child: Column(
                                     children: [
                                       Container(
-                                        height: 60,
-                                        width: 70,
+                                        height: _mainHeight * 0.09,
+                                        width: _mainWidth * 0.12,
                                         child: index == 0
                                             ? Transform.rotate(
                                                 angle: math.pi / 4,
@@ -260,8 +274,10 @@ class _HomePageState extends State<HomePage> {
                                                 placeholder: (context, url) =>
                                                     Shimmer.fromColors(
                                                         child: Container(
-                                                          height: 60,
-                                                          width: 75,
+                                                          height: _mainHeight *
+                                                              0.11,
+                                                          width:
+                                                              _mainWidth * 0.12,
                                                           decoration:
                                                               BoxDecoration(
                                                             shape:
@@ -280,7 +296,7 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                       ),
                                       SizedBox(
-                                        height: 5,
+                                        height: 0,
                                       ),
                                       Visibility(
                                         visible: index == 0,
@@ -313,7 +329,6 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.only(top: 10),
                             width: MediaQuery.of(context).size.width,
                             child: CarouselSlider(
                               items: _homeViewModel
@@ -352,7 +367,7 @@ class _HomePageState extends State<HomePage> {
                                   )
                                   .toList(),
                               options: CarouselOptions(
-                                  height: 180,
+                                  height: _mainWidth * 0.4,
                                   enlargeCenterPage: true,
                                   autoPlay: true,
                                   aspectRatio: 16 / 9,
@@ -378,7 +393,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Container(
                               padding: EdgeInsets.only(left: 10),
-                              height: 260,
+                              height: _mainHeight * 0.3,
                               width: MediaQuery.of(context).size.width,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
@@ -401,37 +416,35 @@ class _HomePageState extends State<HomePage> {
                                               Radius.circular(10))),
                                       elevation: 3,
                                       shadowColor: CustomTheme.appTheme,
-                                      margin: EdgeInsets.all(10),
                                       child: Container(
-                                        //margin: EdgeInsets.all(10),
-                                        width: 220,
+                                        width: _mainWidth * 0.62,
                                         child: Column(
                                           children: [
-                                            Expanded(
-                                              child: Container(
-                                                height: 140,
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                            topLeft: Radius
-                                                                .circular(10),
-                                                            topRight:
-                                                                Radius.circular(
-                                                                    10)),
-                                                    image: DecorationImage(
-                                                        image: AssetImage(
-                                                            data.imageUrl!),
-                                                        fit: BoxFit.cover
-                                                        //NetworkImage(data.imageUrl!),fit: BoxFit.cover,
-                                                        )),
-                                              ),
+                                            Container(
+                                              height: _mainHeight * 0.16,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  10),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  10)),
+                                                  image: DecorationImage(
+                                                      image: AssetImage(
+                                                          data.imageUrl!),
+                                                      fit: BoxFit.cover
+                                                      //NetworkImage(data.imageUrl!),fit: BoxFit.cover,
+                                                      )),
                                             ),
                                             Container(
                                                 margin: EdgeInsets.only(
-                                                    left: 5, top: 5),
+                                                    left: 5,
+                                                    top: _mainHeight * 0.002),
                                                 alignment: Alignment.topLeft,
                                                 child: Text(data.propertyType!,
                                                     style: TextStyle(
@@ -441,7 +454,8 @@ class _HomePageState extends State<HomePage> {
                                                     ))),
                                             Container(
                                                 margin: EdgeInsets.only(
-                                                    left: 5, top: 5),
+                                                    left: 5,
+                                                    top: _mainHeight * 0.002),
                                                 alignment: Alignment.topLeft,
                                                 child: Text(
                                                   data.propertyDesc!,
@@ -452,9 +466,8 @@ class _HomePageState extends State<HomePage> {
                                                       fontSize: 12),
                                                 )),
                                             Container(
-                                                margin: EdgeInsets.only(
-                                                  right: 10,
-                                                ),
+                                                margin:
+                                                    EdgeInsets.only(right: 10),
                                                 alignment: Alignment.topRight,
                                                 child: Text(
                                                     '${nullCheck(list: value.languageData) ? value.languageData[3].name : 'More Info'}',
@@ -474,7 +487,7 @@ class _HomePageState extends State<HomePage> {
                                     .length,
                               )),
                           Padding(
-                            padding: EdgeInsets.only(left: 15, top: 10),
+                            padding: EdgeInsets.only(left: 15, top: 15),
                             child: Text(
                               '${nullCheck(list: value.languageData) ? value.languageData[4].name : "Refer & Earn"}',
                               style: TextStyle(
@@ -491,6 +504,8 @@ class _HomePageState extends State<HomePage> {
                             child: Container(
                                 width: _mainWidth,
                                 child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
                                   children: [
                                     Column(
                                       crossAxisAlignment:
@@ -554,10 +569,11 @@ class _HomePageState extends State<HomePage> {
                                       ],
                                     ),
                                     Container(
-                                        height: 200,
-                                        width: 180,
-                                        child:
-                                            Image.asset(Images.referIconHome))
+                                        height: _mainHeight * 0.2,
+                                        child: Image.asset(
+                                          Images.referIconHome,
+                                          fit: BoxFit.fill,
+                                        ))
                                   ],
                                 )),
                           )
@@ -568,8 +584,9 @@ class _HomePageState extends State<HomePage> {
                 ),
                 drawer: _getDrawer(
                     context: context,
-                    list: value
-                        .languageData), // This trailing comma makes auto-formatting nicer for build methods.
+                    list: value.languageData,
+                    value:
+                        value), // This trailing comma makes auto-formatting nicer for build methods.
               );
             },
           )
@@ -577,7 +594,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _getDrawer(
-      {required BuildContext context, required List<LanguageModel> list}) {
+      {required BuildContext context,
+      required List<LanguageModel> list,
+      required HomeViewModel value}) {
     return Drawer(
       key: _drawerKey,
       backgroundColor: CustomTheme.white,
@@ -588,7 +607,7 @@ class _HomePageState extends State<HomePage> {
             FutureBuilder<Map<String, dynamic>>(
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return Center(
+                  return const Center(
                     child: Text('Error'),
                   );
                 } else if (snapshot.connectionState ==
@@ -600,30 +619,38 @@ class _HomePageState extends State<HomePage> {
                       color: CustomTheme.white,
                       height: _mainHeight * 0.2,
                       child: UserAccountsDrawerHeader(
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                            colors: [
-                              CustomTheme.appTheme,
-                              CustomTheme.appTheme.withAlpha(150),
-                              CustomTheme.appTheme.withAlpha(50),
-                            ],
-                          )),
-                          accountEmail: Text(
-                            '${snapshot.data!['email'] ?? ''}',
-                            style: TextStyle(
-                                color: CustomTheme.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14),
-                          ),
-                          accountName: Text(
-                            '${snapshot.data!['name'] ?? ''}',
-                            style: TextStyle(
-                                color: CustomTheme.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14),
-                          ),
-                          currentAccountPicture: CircleAvatar(
-                            child: Container(
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                          colors: [
+                            CustomTheme.appTheme,
+                            CustomTheme.appTheme.withAlpha(150),
+                            CustomTheme.appTheme.withAlpha(50),
+                          ],
+                        )),
+                        accountEmail: Text(
+                          '${snapshot.data!['email'] ?? ''}',
+                          style: TextStyle(
+                              color: CustomTheme.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14),
+                        ),
+                        accountName: Text(
+                          '${snapshot.data!['name'] ?? ''}',
+                          style: TextStyle(
+                              color: CustomTheme.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14),
+                        ),
+                        currentAccountPicture: CircleAvatar(
+                          child: Container(
+                            child: GestureDetector(
+                              onTap: () => Navigator.pushNamed(
+                                context,
+                                AppRoutes.profilePage,
+                                arguments: {
+                                  'fromBottom': false,
+                                },
+                              ),
                               child: CachedNetworkImage(
                                 imageUrl: (snapshot.data!['pic']).toString(),
                                 imageBuilder: (context, imageProvider) =>
@@ -651,35 +678,29 @@ class _HomePageState extends State<HomePage> {
                                     const Icon(Icons.error),
                               ),
                             ),
-                            radius: 45,
-                          ) /*,otherAccountsPictures: [
-                         Image.asset(Images.brandLogo,color: CustomTheme.white,),
-
-                      ],*/
-
                           ),
+                          radius: 45,
+                        ),
+                        otherAccountsPictures: [
+                          GestureDetector(
+                            onTap: () => Navigator.pushNamed(
+                              context,
+                              AppRoutes.profilePage,
+                              arguments: {
+                                'fromBottom': false,
+                              },
+                            ),
+                            child: Icon(Icons.mode_edit,
+                                color: CustomTheme.appTheme),
+                          ),
+                        ],
+                      ),
                     );
                   }
                 }
                 return Text('No Data');
               },
               future: userDetails,
-            ),
-            getTile(
-              context: context,
-              leading: Icon(
-                Icons.person_outline,
-                color: CustomTheme.appTheme,
-                size: 20,
-              ),
-              title: nullCheck(list: list) ? '${list[5].name}' : 'Profile',
-              onTap: () => Navigator.pushNamed(
-                context,
-                AppRoutes.profilePage,
-                arguments: {
-                  'fromBottom': false,
-                },
-              ),
             ),
             getTile(
               context: context,
@@ -710,21 +731,6 @@ class _HomePageState extends State<HomePage> {
                 AppRoutes.ticketListPage,
               ),
             ),
-           /* getTile(
-              context: context,
-              leading: Icon(
-                Icons.favorite_outline,
-                color: CustomTheme.appTheme,
-                size: 20,
-              ),
-              title: nullCheck(list: list) ? '${list[8].name}' : 'My WishList',
-              onTap: () => {
-                Navigator.pushNamed(context, AppRoutes.wishListPage,
-                    arguments: {
-                      'fromBottom': false,
-                    }),
-              },
-            ), */
             getTile(
               context: context,
               leading: Icon(
@@ -737,37 +743,85 @@ class _HomePageState extends State<HomePage> {
               onTap: () => {
                 _handleURLButtonPress(
                     context,
-                    myVisitsLink,
+                    myVisitsUrl,
                     nullCheck(list: list)
                         ? '${list[12].name}'
                         : 'My Site Visits',
                     token),
               },
             ),
-            /* getTile(
-              context: context,
-              leading: Icon(
-                Icons.view_agenda,
-                color: CustomTheme.appTheme,
-                size: 20,
-              ),
-              title: nullCheck(list: list) ? '${list[13].name}' : 'Owner View',
-              onTap: () => {
-                _handleURLButtonPress(context,
-                    ownerViewLink, nullCheck(list: list) ? '${list[13].name}'
-                        :'Owner View', token),
+            ValueListenableBuilder<bool>(
+              valueListenable: isExpanded,
+              builder: (_, expanded, __) {
+                return ExpansionTile(
+ tilePadding: EdgeInsets.only(
+   left: _mainWidth*0.04,right: _mainWidth*0.05,
+ ),
+                  onExpansionChanged: (val) => isExpanded.value = val,
+                  trailing: Icon(
+                      expanded ? Icons.arrow_drop_down : Icons.arrow_right,color: Colors.grey),
+                  childrenPadding: EdgeInsets.only(
+                    left: _mainWidth * 0.07,
+                    bottom: _mainHeight * 0.015,
+                  ),
+                  leading: Container(
+                      margin: EdgeInsets.only(left: _mainWidth * 0.01),
+                      height: _mainHeight * 0.05,
+                      width: _mainWidth * 0.1,
+                      decoration: BoxDecoration(
+                          color: CustomTheme.appTheme.withAlpha(20),
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Icon(
+                        Icons.add_road_rounded,
+                        color: CustomTheme.appTheme,
+                        size: 20,
+                      )),
+                  title:
+                      Container(width: _mainWidth, child: Text('Owner Dashboard')),
+                  children: [
+                    getTile(
+                      context: context,
+                      leading: Icon(
+                        Icons.view_agenda,
+                        color: CustomTheme.appThemeContrast,
+                        size: 20,
+                      ),
+                      title: /*nullCheck(list: list) ? '${list[13].name}' :*/ 'Property View',
+                      onTap: () => {
+                        _handleURLButtonPress(
+                            context,
+                            ownerViewUrl,
+                            nullCheck(list: list)
+                                ? '${list[13].name}'
+                                : 'Owner View',
+                            token),
+                      },
+                    ),
+                    getTile(
+                      context: context,
+                      leading: Icon(
+                        Icons.wysiwyg,
+                        color: CustomTheme.appThemeContrast,
+                        size: 20,
+                      ),
+                      title: 'My Properties',
+                      onTap: () => Navigator.of(context)
+                          .pushNamed(AppRoutes.ownerPropertyListingPage),
+                    ),
+                    getTile(
+                      context: context,
+                      leading: Icon(
+                        Icons.adjust_rounded,
+                        color: CustomTheme.appThemeContrast,
+                        size: 20,
+                      ),
+                      title: 'Tenants Leads',
+                      onTap: () => Navigator.of(context)
+                          .pushNamed(AppRoutes.referAndEarn),
+                    ),
+                  ],
+                );
               },
-            ),*/
-            getTile(
-              context: context,
-              leading: Icon(
-                Icons.share,
-                color: CustomTheme.appTheme,
-                size: 20,
-              ),
-              title: nullCheck(list: list) ? '${list[9].name}' : 'Refer & Earn',
-              onTap: () =>
-                  Navigator.of(context).pushNamed(AppRoutes.referAndEarn),
             ),
             getTile(
               context: context,
@@ -792,7 +846,7 @@ class _HomePageState extends State<HomePage> {
               title: nullCheck(list: list) ? '${list[11].name}' : 'Logout',
               onTap: () async {
                 RMSWidgets.showLoaderDialog(
-                    context: context, message: 'Logging out...');
+                    context: context, message: 'Logging out');
                 SharedPreferenceUtil shared = SharedPreferenceUtil();
                 await GoogleAuthService.logOut();
                 await GoogleAuthService.logoutFromFirebase();
@@ -818,20 +872,15 @@ class _HomePageState extends State<HomePage> {
       required String title,
       required Function onTap}) {
     return Container(
-      margin: EdgeInsets.only(left: 5, right: 5, top: 5),
-
-      /*decoration: BoxDecoration(
-          color: CustomTheme.appTheme.withAlpha(20),
-          border: Border.all(color: Colors.white),
-          borderRadius: BorderRadius.circular(10),
-
-      ),*/
-
+      margin: EdgeInsets.only(
+          left: _mainWidth * 0.01,
+          right: _mainWidth * 0.01,
+          top: _mainHeight * 0.006),
       height: _mainHeight * 0.06,
       child: ListTile(
         leading: Container(
-            height: 40,
-            width: 40,
+            height: _mainHeight * 0.05,
+            width: _mainWidth * 0.1,
             decoration: BoxDecoration(
                 color: CustomTheme.appTheme.withAlpha(20),
                 borderRadius: BorderRadius.circular(5)),

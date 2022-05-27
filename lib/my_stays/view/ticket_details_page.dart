@@ -91,7 +91,8 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
     showOpenButton = ValueNotifier(false);
     showResolvedButton = ValueNotifier(false);
     showCancelButton = ValueNotifier(false);
-    if (widget.ticketModel.status?.toLowerCase() == 'open' || widget.ticketModel.status?.toLowerCase() =='reopen') {
+    if (widget.ticketModel.status?.toLowerCase() == 'open' ||
+        widget.ticketModel.status?.toLowerCase() == 'reopen') {
       showResolvedButton.value = true;
       showCancelButton.value = true;
       showOpenButton.value = false;
@@ -110,252 +111,406 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
-    return _connectionStatus?Scaffold(
-      appBar: AppBar(
-        titleSpacing: 0,
-        title: Text(
-          'Ticket Details',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        backgroundColor: CustomTheme.appTheme,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(15),
-          ),
-        ),
-      ),
-      body: Container(
-        height: _mainHeight,
-        width: _mainWidth,
-        padding: EdgeInsets.only(
-            left: _mainWidth * 0.03,
-            right: _mainWidth * 0.03,
-            top: _mainHeight * 0.015,
-            bottom: _mainHeight * 0.01),
-        color: Colors.white,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Issue Description : ',
+    return _connectionStatus
+        ? Scaffold(
+            appBar: AppBar(
+              titleSpacing: 0,
+              centerTitle: false,
+              title: Text(
+                'Ticket Details',
                 style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500)),
-            Text('${widget.ticketModel.description ?? ''}',
-                style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500)),
-            SizedBox(
-              height: 20,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              backgroundColor: CustomTheme.appTheme,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(15),
+                ),
+              ),
             ),
-            widget.ticketModel.images != null
-                ? Container(
-                    height: _mainHeight * 0.2,
-                    width: _mainWidth,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return CachedNetworkImage(
-                          imageUrl:
-                              widget.ticketModel.images?[index]??
-                                  '',
-                          imageBuilder: (context, imageProvider) => Container(
-                            height: _mainHeight * 0.1,
-                            width: _mainWidth * 0.4,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
+            body: Container(
+              height: _mainHeight,
+              width: _mainWidth,
+              padding: EdgeInsets.only(
+                  left: _mainWidth * 0.03,
+                  right: _mainWidth * 0.03,
+                  top: _mainHeight * 0.015,
+                  bottom: _mainHeight * 0.01),
+              color: Colors.white,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        // color: Colors.amber,
+                        border: Border.all(color: Colors.grey, width: 0.5),
+                        borderRadius: BorderRadius.circular(10)),
+                    padding: EdgeInsets.only(
+                      left: _mainWidth * 0.05,
+                      top: _mainHeight * 0.01,
+                      bottom: _mainHeight * 0.01,
+                      right: _mainWidth * 0.05,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${widget.ticketModel.category ?? ''}',
+                          style: TextStyle(
+                              color: CustomTheme.appTheme,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 20),
+                        ),
+                        SizedBox(
+                          height: _mainHeight * 0.005,
+                        ),
+                        Container(
+                          //color: Colors.amber,
+                          //height: _mainHeight * 0.03,
+                          width: _mainWidth,
+                          child: Row(
+                            children: [
+                              Text('Time : ',
+                                  style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12)),
+                              Text(
+                                  '${DateTimeService.checkDateFormat(widget.ticketModel.date) ?? ''}',
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14)),
+                              const Spacer(),
+                              Text('Status : ',
+                                  style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12)),
+                              Text('${widget.ticketModel.status ?? ''}',
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14))
+                            ],
+                          ),
+                        ),
+                        Divider(
+                          thickness: 0.7,
+                        ),
+                        SizedBox(
+                          height: _mainHeight * 0.001,
+                        ),
+                        widget.ticketModel.unitNumber != null &&
+                            widget.ticketModel.unitNumber?.trim() != ''
+                            ? Container(
+                                //color: Colors.amber,
+                                //height: _mainHeight * 0.03,
+                                width: _mainWidth,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('Unit No. : ',
+                                        style: const TextStyle(
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 14)),
+                                    Text(
+                                        '${widget.ticketModel.unitNumber ?? ''}',
+                                        style: const TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 14)),
+                                  ],
+                                ),
+                              )
+                           : Container(),
+                        widget.ticketModel.unitNumber != null &&
+                            widget.ticketModel.unitNumber?.trim() != ''
+                            ?SizedBox(height: _mainHeight*0.005,):Container(),
+                        Container(
+                          //color: Colors.amber,
+                          //height: _mainHeight * 0.03,
+                          width: _mainWidth,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Ticket Id : ',
+                                  style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14)),
+                              Text('${widget.ticketModel.id ?? ''}',
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14)),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: _mainHeight*0.005,
+                        ),
+                        Container(
+                          // color: Colors.amber,
+                          //height: _mainHeight * 0.03,
+                          width: _mainWidth,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Mobile : ',
+                                  style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14)),
+                              Text('${widget.ticketModel.mobileNumber ?? ''}',
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14))
+                            ],
+                          ),
+                        ),
+                        Divider(
+                          thickness: 0.7,
+                        ),
+                        Container(
+                          //color: Colors.amber,
+                          //height: _mainHeight * 0.03,
+                          width: _mainWidth,
+                          child: RichText(
+                            text: TextSpan(children: [
+                              const TextSpan(
+                                text: "Issue Description : ",
+                                style: TextStyle(
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 12),
                               ),
+                              TextSpan(
+                                text:
+                                    '${widget.ticketModel.description ?? ''} ',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 12),
+                              ),
+                            ]),
+                          ),
+                        ),
+                        const Divider(
+                          thickness: 0.7,
+                        ),
+                       showResolvedButton.value || showOpenButton.value || showCancelButton.value? Container(
+                          height: _mainHeight * 0.035,
+                          width: _mainWidth,
+                          child: Row(
+                            //mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              showOpenButton.value
+                                  ? ValueListenableBuilder(
+                                      valueListenable: showOpenButton,
+                                      builder: (context, bool value, child) {
+                                        return ElevatedButton(
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty
+                                                      .all<Color>(CustomTheme
+                                                          .appThemeContrast),
+                                              shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                              )),
+                                          onPressed: () async {
+                                            String status = 'ReOpen';
+                                            String ticketId =
+                                                widget.ticketModel.id ?? '';
+                                            RMSWidgets.showLoaderDialog(
+                                                context: context,
+                                                message: 'Loading');
+                                            int response = await _viewModel
+                                                .updateTicketStatus(
+                                                    status: status,
+                                                    ticketId: ticketId);
+                                            Navigator.of(context).pop();
+                                            if (response == 200) {
+                                              Navigator.of(context).pop();
+                                            }
+                                          },
+                                          child: Center(
+                                              child: Text(
+                                            'Re-Open',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          )),
+                                        );
+                                      })
+                                  : Container(),
+                              showOpenButton.value
+                                  ? SizedBox(
+                                      width: _mainWidth * 0.1,
+                                    )
+                                  : Container(),
+                              showResolvedButton.value
+                                  ? ValueListenableBuilder(
+                                      valueListenable: showResolvedButton,
+                                      builder: (context, bool value, child) {
+                                        return ElevatedButton(
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all<
+                                                          Color>(
+                                                      CustomTheme.myFavColor),
+                                              shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                              )),
+                                          onPressed: () async {
+                                            String status = 'Resolved';
+
+                                            String ticketId =
+                                                widget.ticketModel.id ?? '';
+                                            RMSWidgets.showLoaderDialog(
+                                                context: context,
+                                                message: 'Loading');
+                                            int response = await _viewModel
+                                                .updateTicketStatus(
+                                                    status: status,
+                                                    ticketId: ticketId);
+                                            Navigator.of(context).pop();
+                                            if (response == 200) {
+                                              Navigator.of(context).pop();
+                                            }
+                                          },
+                                          child: Center(
+                                              child: Text(
+                                            'Resolve',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          )),
+                                        );
+                                      })
+                                  : Container(),
+                              SizedBox(
+                                width: _mainWidth * 0.1,
+                              ),
+                              showCancelButton.value
+                                  ? ValueListenableBuilder(
+                                      valueListenable: showCancelButton,
+                                      builder: (context, bool value, child) {
+                                        return ElevatedButton(
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all<
+                                                          Color>(
+                                                      CustomTheme.appTheme),
+                                              shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                              )),
+                                          onPressed: () async {
+                                            String status = 'Cancelled';
+                                            String ticketId =
+                                                widget.ticketModel.id ?? '';
+                                            RMSWidgets.showLoaderDialog(
+                                                context: context,
+                                                message: 'Loading');
+                                            int response = await _viewModel
+                                                .updateTicketStatus(
+                                                    status: status,
+                                                    ticketId: ticketId);
+                                            Navigator.of(context).pop();
+                                            if (response == 200) {
+                                              Navigator.of(context).pop();
+                                            }
+                                          },
+                                          child: Center(
+                                              child: Text(
+                                            'Cancel',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          )),
+                                        );
+                                      })
+                                  : Container()
+                            ],
+                          ),
+                        ):Container(),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  widget.ticketModel.images != null &&  widget.ticketModel.images?.length != 0
+                      ? Container(
+                          height: _mainHeight * 0.12,
+                          width: _mainWidth,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return CachedNetworkImage(
+                                imageUrl: widget.ticketModel.images?[index] ?? '',
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  width: _mainWidth * 0.3,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                                placeholder: (context, url) =>
+                                    Shimmer.fromColors(
+                                        child: Container(
+                                          height: _mainHeight * 0.1,
+                                          width: _mainWidth * 0.3,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
+                                        ),
+                                        baseColor: Colors.grey[200] as Color,
+                                        highlightColor:
+                                            Colors.grey[350] as Color),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              );
+                            },
+                            itemCount:
+                                widget.ticketModel.images?.length ?? 0,
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(
+                              width: 10,
                             ),
                           ),
-                          placeholder: (context, url) => Shimmer.fromColors(
-                              child: Container(
-                                height: _mainHeight * 0.1,
-                                width: _mainWidth * 0.4,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                              ),
-                              baseColor: Colors.grey[200] as Color,
-                              highlightColor: Colors.grey[350] as Color),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                        );
-                      },
-                      itemCount: widget.ticketModel.images?.length ?? 0,
-                      separatorBuilder: (context, index) => SizedBox(
-                        width: 10,
-                      ),
-                    ),
-                  )
-                : Container(),
-            SizedBox(
-              height: 25,
-            ),
-            Container(
-              padding: EdgeInsets.only(
-                  left: _mainWidth * 0.01,
-                  right: _mainWidth * 0.01,
-                  top: _mainHeight * 0.007,
-                  bottom: _mainHeight * 0.007),
-              decoration: BoxDecoration(
-                border: Border.all(color: CustomTheme.appTheme, width: 0),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Table(
-                children: [
-                  TableRow(children: [
-                    Text(
-                      'Ticket Id : ',
-                      style: getKeyStyle,
-                    ),
-                    Text('${widget.ticketModel.id ?? ''}',
-                        style: getValueStyle),
-                    Text('Status : ', style: getKeyStyle),
-                    Text('${widget.ticketModel.status ?? ''}',
-                        style: getValueStyle)
-                  ]),
-                  TableRow(children: [
-                    Text('Time : ', style: getKeyStyle),
-                    Text(
-                        '${DateTimeService.checkDateFormat(widget.ticketModel.date) ?? ''}',
-                        style: getValueStyle),
-                    Text('Type : ', style: getKeyStyle),
-                    Text('${widget.ticketModel.category ?? ''}',
-                        style: getValueStyle)
-                  ]),
-                  TableRow(children: [
-                    Text('Unit No. : ', style: getKeyStyle),
-                    Text('${widget.ticketModel.unitNumber ?? ''}',
-                        style: getValueStyle),
-                    Text('Mobile : ', style: getKeyStyle),
-                    Text('${widget.ticketModel.mobileNumber ?? ''}',
-                        style: getValueStyle)
-                  ]),
+                        )
+                      : Container(),
                 ],
               ),
             ),
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              height: 35,
-              width: _mainWidth,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ValueListenableBuilder(
-                      valueListenable: showOpenButton,
-                      builder: (context, bool value, child) {
-                        return value
-                            ? ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            CustomTheme.appThemeContrast),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                    )),
-                                onPressed: () async {
-                                  String status = 'ReOpen';
-                                  String ticketId =
-                                      widget.ticketModel.id ?? '';
-                                  RMSWidgets.showLoaderDialog(context: context, message: 'Loading');
-                                 int response= await _viewModel.updateTicketStatus(status: status, ticketId: ticketId);
-                                  Navigator.of(context).pop();
-                                  if(response==200){
-                                    Navigator.of(context).pop();
-                                  }
-
-                                },
-                                child: Center(
-                                    child: Text(
-                                  'Re-Open',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                )),
-                              )
-                            : Container();
-                      }),
-                  ValueListenableBuilder(valueListenable: showResolvedButton, builder:(context,bool value,child){
-                    return value ? ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              CustomTheme.myFavColor),
-                          shape:
-                          MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                          )),
-                      onPressed: () async {
-                        String status = 'Resolved';
-
-                        String ticketId = widget.ticketModel.id ?? '';
-                        RMSWidgets.showLoaderDialog(context: context, message: 'Loading');
-                       int response= await _viewModel.updateTicketStatus(status: status, ticketId: ticketId);
-                        Navigator.of(context).pop();
-                        if(response==200){
-                          Navigator.of(context).pop();
-                        }
-                      },
-                      child: Center(
-                          child: Text(
-                            'Resolved',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          )),
-                    ):Container();
-                  }),
-                  ValueListenableBuilder(valueListenable: showCancelButton, builder: (context,bool value,child){
-                   return value ? ElevatedButton(
-                     style: ButtonStyle(
-                         backgroundColor: MaterialStateProperty.all<Color>(
-                             CustomTheme.appTheme),
-                         shape:
-                         MaterialStateProperty.all<RoundedRectangleBorder>(
-                           RoundedRectangleBorder(
-                               borderRadius: BorderRadius.circular(10)),
-                         )),
-                     onPressed: () async {
-                       String status = 'Cancelled';
-                       String ticketId = widget.ticketModel.id ?? '';
-                       RMSWidgets.showLoaderDialog(context: context, message: 'Loading');
-                       int response=await _viewModel.updateTicketStatus(status: status, ticketId: ticketId);
-                       Navigator.of(context).pop();
-                       if(response==200){
-                         Navigator.of(context).pop();
-                       }
-                     },
-                     child: Center(
-                         child: Text(
-                           'Cancel',
-                           style: TextStyle(
-                             fontSize: 14,
-                             fontWeight: FontWeight.w500,
-                           ),
-                         )),
-                   ):Container();  
-                  })
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    ):RMSWidgets.networkErrorPage(context: context);
+          )
+        : RMSWidgets.networkErrorPage(context: context);
   }
 }

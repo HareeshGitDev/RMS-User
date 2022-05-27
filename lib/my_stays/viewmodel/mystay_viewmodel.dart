@@ -124,14 +124,14 @@ class MyStayViewModel extends ChangeNotifier {
       required String propertyId,
       required String description,
       required String address,
-      String? imagePath}) async {
+      List<File>? imageList}) async {
     return await _myStayApiService.generateTicket(
       bookingId: bookingId,
       requirements: requirements,
       propertyId: propertyId,
       description: description,
       address: address,
-      imagePath: imagePath,
+      imageList: imageList,
     );
   }
 

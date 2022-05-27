@@ -1,21 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:RentMyStay_user/home_module/view/home_page.dart';
-import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
-import 'package:RentMyStay_user/theme/app_theme.dart';
-import 'package:RentMyStay_user/utils/service/location_service.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:provider/provider.dart';
-import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:flutter/material.dart';
 
-import '../../utils/color.dart';
-import '../../utils/constants/sp_constants.dart';
-import 'login_page.dart';
+import '../../theme/custom_theme.dart';
+
 
 class SplashPage extends StatefulWidget {
   @override

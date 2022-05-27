@@ -3,12 +3,12 @@ import 'dart:developer';
 
 import 'package:RentMyStay_user/payment_module/model/payment_request_model.dart';
 import 'package:RentMyStay_user/payment_module/viewModel/payment_viewModel.dart';
-import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
+import '../../theme/custom_theme.dart';
 import '../../utils/service/navigation_service.dart';
 import '../../utils/view/rms_widgets.dart';
 
@@ -88,16 +88,19 @@ class _RazorpayPaymentPageState extends State<RazorpayPaymentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return _connectionStatus?Scaffold(
-      appBar: AppBar(
-        title: Text('Payment Screen'),
-        backgroundColor: CustomTheme.appTheme,
-        titleSpacing: 0,
-        leading: SizedBox(
-          width: 15,
-        ),
-      ),
-    ):RMSWidgets.networkErrorPage(context: context);
+    return _connectionStatus
+        ? Scaffold(
+            appBar: AppBar(
+              title: Text('Payment Screen'),
+              backgroundColor: CustomTheme.appTheme,
+              titleSpacing: 0,
+              centerTitle: false,
+              leading: SizedBox(
+                width: 15,
+              ),
+            ),
+          )
+        : RMSWidgets.networkErrorPage(context: context);
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
@@ -106,41 +109,34 @@ class _RazorpayPaymentPageState extends State<RazorpayPaymentPage> {
         response.paymentId != null) {
       RMSWidgets.showLoaderDialog(
           context: context, message: 'Confirmation Pending...');
-      await _viewModel
-          .submitPaymentResponse(
-              paymentId: response.paymentId!,
-              paymentSignature: response.signature!,
-              redirectApi: widget.paymentRequestModel.redirectApi)
-          .then((value) {
-        Navigator.of(context).pop();
-        if (value == 200) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, AppRoutes.paymentStatusPage, (route) => false,
-              arguments: {
-                'status': 'success',
-                'paymentId': response.paymentId,
-                'amount': widget.paymentRequestModel.amount,
-                'title': widget.paymentRequestModel.description,
-              });
-        } else {
-          RMSWidgets.showSnackbar(
-              context: context,
-              message: 'Payment Failed.Money will be refund if Deducted',
-              color: CustomTheme.errorColor);
-          Timer(
-              const Duration(seconds: 2),
-              () => Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    AppRoutes.dashboardPage,
-                    (route) => false,
-                  ));
-        }
-      }).catchError(
-        (error) {
-          Navigator.of(context).pop();
-          log('Error :: ${error.toString()}');
-        },
-      );
+      int value = await _viewModel.submitPaymentResponse(
+          paymentId: response.paymentId!,
+          paymentSignature: response.signature!,
+          redirectApi: widget.paymentRequestModel.redirectApi);
+
+      Navigator.of(context).pop();
+      if (value == 200) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, AppRoutes.paymentStatusPage, (route) => false,
+            arguments: {
+              'status': 'success',
+              'paymentId': response.paymentId,
+              'amount': widget.paymentRequestModel.amount,
+              'title': widget.paymentRequestModel.description,
+            });
+      } else {
+        RMSWidgets.showSnackbar(
+            context: context,
+            message: 'Payment Failed.Money will be refund if Deducted',
+            color: CustomTheme.errorColor);
+        Timer(
+            const Duration(seconds: 4),
+            () => Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  AppRoutes.dashboardPage,
+                  (route) => false,
+                ));
+      }
     }
   }
 
@@ -164,7 +160,7 @@ class _RazorpayPaymentPageState extends State<RazorpayPaymentPage> {
       'name': model.name,
       'description': model.description,
       'retry': {'enabled': true, 'max_count': 1},
-     // 'send_sms_hash': true,
+      // 'send_sms_hash': true,
       "theme": {
         "color": model.color,
       },

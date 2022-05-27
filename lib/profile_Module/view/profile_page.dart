@@ -7,11 +7,9 @@ import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutx/utils/spacing.dart';
-import 'package:flutx/widgets/container/container.dart';
 import 'package:provider/provider.dart';
 
-import '../../Web_View_Container.dart';
+import '../../webView_page.dart';
 import '../../home_module/viewModel/home_viewModel.dart';
 import '../../language_module/model/language_model.dart';
 import '../../login_module/service/google_auth_service.dart';
@@ -359,7 +357,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             GestureDetector(
               onTap: () => _handleURLButtonPress(
-                  context, updateKYCLink, 'Update Your kyc'),
+                  context, updateKYCUrl, 'Update Your kyc'),
               child: ListTile(
                 //onTap: () => _handleURLButtonPress(context, , title),
                 leading: Icon(
@@ -375,22 +373,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
 
-            Divider(
-              height: 0.6,
-              color: Colors.black87,
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.camera_alt_outlined,
-                color: CustomTheme.appTheme,
-              ),
-              title: Text(
-                nullCheck(list: value.languageData)
-                    ? '${value.languageData[5].name}'
-                    : "Upload ID-proof",
-                style: TextStyle(fontSize: 14),
-              ),
-            ),
           ],
         ),
       ),
@@ -409,25 +391,12 @@ class _ProfilePageState extends State<ProfilePage> {
               })
           : const BackButton(),
       centerTitle: widget.fromBottom,
-      actions: [
-      /*  GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(context, AppRoutes.editProfilePage, arguments: {
-              'fromBottom': false,
-            });
-          },
-          child: Container(
-            child: Text(
-              "EDIT",
-              style: TextStyle(color: Colors.white, fontSize: 16),
-              textAlign: TextAlign.center,
-            ),
-            margin: EdgeInsets.only(right: 20, top: 16),
-          ),
-        ), */
-      ],
-
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(15),
+              bottomRight: Radius.circular(15))),
       titleSpacing: 0,
+
       elevation: 0,
       backgroundColor: CustomTheme.appTheme,
       // centerTitle: true,

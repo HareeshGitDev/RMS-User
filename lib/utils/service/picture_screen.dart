@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-
-import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:camera/camera.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+
+import '../../theme/custom_theme.dart';
 
 // A screen that allows users to take a picture using a given camera.
 class PictureScreen extends StatefulWidget {

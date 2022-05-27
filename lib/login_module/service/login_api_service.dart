@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:RentMyStay_user/login_module/model/gmail_registration_request_model.dart';
 import 'package:RentMyStay_user/login_module/model/gmail_signin_request_model.dart';
@@ -22,6 +23,7 @@ class LoginApiService {
         bodyParams: {
           'email': email,
           'password': password,
+          'device':Platform.isIOS ?'ios':'android'
         },
         fromLogin: true);
     final data = response as Map<String, dynamic>;
@@ -102,7 +104,7 @@ class LoginApiService {
     String url = AppUrls.loginOtpUrl;
     final response = await _apiService.getApiCallWithQueryParams(
         endPoint: url,
-        queryParams: {'mobileno': mobileNumber, 'uid': uid},
+        queryParams: {'mobileno': mobileNumber, 'uid': uid ,'device':Platform.isIOS ?'ios':'android'},
         fromLogin: true);
 
     final data = response as Map<String, dynamic>;

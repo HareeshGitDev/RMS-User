@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-
-import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/service/bottom_navigation_provider.dart';
 import 'package:RentMyStay_user/utils/service/capture_photos_page.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
@@ -11,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 
+import '../../theme/custom_theme.dart';
 import '../../utils/service/navigation_service.dart';
 import '../viewmodel/mystay_viewmodel.dart';
 
@@ -39,6 +38,7 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
   late MyStayViewModel _viewModel;
 
   String? image;
+  List<File> imageList = [];
 
   List<String> get getIssueList => [
         'Pest Control',
@@ -124,6 +124,7 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
             color: Colors.white,
           ),
         ),
+        centerTitle: false,
         backgroundColor: CustomTheme.appTheme,
         titleSpacing: 0,
         shape: RoundedRectangleBorder(
@@ -260,172 +261,148 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: CustomTheme.appTheme),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                        ),
-                        child: TextButton.icon(
-                          onPressed: () async {
-                            final String? model =
-                                await CapturePhotoPage.captureImageByGallery(
-                              context: context,
-                              function: (imagePath) async {},
-                            );
-                            if (model != null) {
-                              setState(() {
-                                image=model;
-                              });
-                              log(model);
-                            }
-                          },
-                          icon: Icon(
-                            Icons.folder_open,
-                            color: CustomTheme.appThemeContrast,
-                          ),
-                          label: Container(
-                            width: _mainWidth * 0.29,
-                            child: Wrap(
-                              children: [
-                                Text(
-                                  "Select from Gallery",
-                                  style: TextStyle(
-                                      color: CustomTheme.appThemeContrast,
-                                      fontFamily: "Nunito",
-                                      fontSize: 14,
-                                      height: 1.1),
-                                ),
-                              ],
+                      GestureDetector(
+                        onTap: () async {
+                          final String? model =
+                          await CapturePhotoPage.captureImageByGallery(
+                            context: context,
+                            function: (imagePath) async {},
+                          );
+                          log(model.toString());
+                          if (model != null) {
+                            setState(() {
+                              imageList.add(File(model));
+                            });
+                          }
+                        },
+                        child: Container(
+                          width: _mainWidth * 0.4,
+                          height: _mainHeight * 0.05,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: CustomTheme.appTheme),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
                             ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.folder_open,
+                                color: CustomTheme.appTheme,
+                              ),
+                              SizedBox(
+                                width: _mainWidth * 0.03,
+                              ),
+                              Container(
+                                child: Text(
+                                  "Gallery",
+                                  style: TextStyle(
+                                    color: CustomTheme.appTheme,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                      Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: CustomTheme.appTheme),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                        ),
-                        child: TextButton.icon(
-                          onPressed: () async {
-                            final String? model =
-                                await CapturePhotoPage.captureImageByCamera(
-                              context: context,
-                              function: (imagePath) async {},
-                            );
-                            if (model != null) {
-                              setState(() {
-                                image=model;
-                              });
-                              log(model);
-                            }
-                          },
-                          icon: Icon(
-                            Icons.camera_alt_outlined,
-                            color: CustomTheme.appThemeContrast,
-                          ),
-                          label: Container(
-                            width: _mainWidth * 0.29,
-                            child: Text(
-                              "Click Photo",
-                              style: TextStyle(
-                                color: CustomTheme.appThemeContrast,
-                                fontFamily: "Nunito",
-                                fontSize: 14,
-                              ),
+                      GestureDetector(
+                        onTap: () async {
+                          final String? model =
+                          await CapturePhotoPage.captureImageByCamera(
+                            context: context,
+                            function: (imagePath) async {},
+                          );
+                          if (model != null) {
+                            setState(() {
+                              imageList.add(File(model));
+                            });
+                          }
+                        },
+                        child: Container(
+                          width: _mainWidth * 0.4,
+                          height: _mainHeight * 0.05,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: CustomTheme.appTheme),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
                             ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.camera_alt_outlined,
+                                color: CustomTheme.appTheme,
+                              ),
+                              SizedBox(
+                                width: _mainWidth * 0.03,
+                              ),
+                              Container(
+                                child: Text(
+                                  "Camera",
+                                  style: TextStyle(
+                                    color: CustomTheme.appTheme,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
+
                 SizedBox(
                   height: 30,
                 ),
-                Visibility(
-                  visible: image != null,
-                  replacement: Container(),
-                  child: Container(
-                    padding: EdgeInsets.only(
-                      left: 15,
-                      right: 15,
-                    ),
-                    height: _mainHeight * 0.2,
-                    width: _mainWidth,
-                    child:Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: Image.file(
-                            image != null? File(image.toString()):File(''),
-                            fit: BoxFit.cover,
-                            width: _mainWidth * 0.4,
-                          ),
-                        ),
-                        Positioned(
-                          child: GestureDetector(
-                            onTap: () =>
-                                setState(() => image=null),
-                            child: CircleAvatar(
-                              child: Icon(
-                                Icons.clear,
-                                color: CustomTheme.appTheme,
-                                size: 16,
-                              ),
-                              backgroundColor:
-                              CustomTheme.white.withAlpha(250),
-                              radius: 12,
-                            ),
-                          ),
-                          left: 0,
-                        )
-                      ],
-                    )/* ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return Stack(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: Image.file(
-                                imageList[index],
-                                fit: BoxFit.cover,
-                                width: _mainWidth * 0.4,
-                              ),
-                            ),
-                            Positioned(
-                              child: GestureDetector(
-                                onTap: () =>
-                                    setState(() => imageList.removeAt(index)),
-                                child: CircleAvatar(
-                                  child: Icon(
-                                    Icons.clear,
-                                    color: CustomTheme.appTheme,
-                                    size: 16,
-                                  ),
-                                  backgroundColor:
-                                      CustomTheme.white.withAlpha(250),
-                                  radius: 12,
-                                ),
-                              ),
-                              right: 0,
-                            )
-                          ],
-                        );
-                      },
-                      itemCount: imageList.length,
-                      separatorBuilder: (context, index) => SizedBox(
-                        width: 10,
-                      ),
-                    ),*/
+                Container(
+                  padding: EdgeInsets.only(
+                    left: 15,
+                    right: 15,
                   ),
-                )
+                  height: _mainHeight * 0.15,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Image.file(
+                              imageList[index],
+                              fit: BoxFit.cover,
+                              width: _mainWidth * 0.4,
+                            ),
+                          ),
+                          Positioned(
+                            child: GestureDetector(
+                              onTap: () =>
+                                  setState(() => imageList.removeAt(index)),
+                              child: CircleAvatar(
+                                child: Icon(
+                                  Icons.clear,
+                                  color: CustomTheme.appTheme,
+                                  size: 16,
+                                ),
+                                backgroundColor: CustomTheme.white.withAlpha(250),
+                                radius: 12,
+                              ),
+                            ),
+                            right: 0,
+                          )
+                        ],
+                      );
+                    },
+                    itemCount: imageList.length,
+                    separatorBuilder: (context, index) => const SizedBox(
+                      width: 10,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -453,7 +430,7 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
                 propertyId: widget.propertyId,
                 description: _descriptionController.text,
                 address: widget.address,
-                imagePath: image);
+                imageList: imageList);
             Navigator.of(context).pop();
             if(response==200){
               RMSWidgets.showSnackbar(context: context, message: 'Ticket has been created Successfully', color: CustomTheme.myFavColor);

@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:RentMyStay_user/property_details_module/view/site_visit_page.dart';
 import 'package:RentMyStay_user/property_details_module/viewModel/property_details_viewModel.dart';
-import 'package:RentMyStay_user/theme/app_theme.dart';
+
 import 'package:RentMyStay_user/utils/color.dart';
 import 'package:RentMyStay_user/utils/service/system_service.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
@@ -19,14 +19,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
-import 'package:readmore/readmore.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-import '../../Web_View_Container.dart';
+import '../../theme/custom_theme.dart';
+import '../../webView_page.dart';
 import '../../images.dart';
 import '../../language_module/model/language_model.dart';
 import '../../utils/constants/app_consts.dart';
@@ -53,8 +53,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
   String checkInDate = DateTimeService.ddMMYYYYformatDate(DateTime.now());
   String checkOutDate = DateTimeService.ddMMYYYYformatDate(
       DateTime.now().add(const Duration(days: 31)));
-  String cancellationPolicy =
-      'https://www.rentmystay.com/info/cancellation_policy/1';
+
   var _mainHeight;
   var _mainWidth;
   static const String fontFamily = 'hk-grotest';
@@ -798,7 +797,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                         icon: Icon(
                                           Icons.call,
                                           color: CustomTheme.appTheme,
-                                          size: _mainWidth * 0.05,
+                                          size: _mainWidth * 0.03,
                                         ),
                                         onPressed: () {
                                           if (value.propertyDetailsModel !=
@@ -821,9 +820,12 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                         padding: EdgeInsets.only(
                                             left: _mainWidth * 0.06),
                                         icon: Image(
+                                          height: _mainHeight * 0.1,
+                                          width: _mainWidth * 0.03,
                                           image: NetworkImage(
-                                              'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/whatsapplogo.png?alt=media&token=41df11ff-b9e7-4f5b-a4fc-30b47cfe1435'),
-                                        ),
+
+                                              'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/whatsapplogo.png?alt=media&token=41df11ff-b9e7-4f5b-a4fc-30b47cfe1435',),
+                                       ),
 
                                         /*Icon(Icons.email_outlined,
                                       color: CustomTheme.appTheme,
@@ -902,7 +904,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                           },
                                           child: Icon(Icons.calendar_today,
                                               color: CustomTheme.appTheme,
-                                              size: _mainWidth * 0.06),
+                                            size: _mainWidth * 0.03,),
                                         ),
                                       ),
                                     ]),
@@ -1339,9 +1341,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                               backgroundColor: CustomTheme.appTheme,
                             ),
                             body: Center(
-                              child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      CustomTheme.appTheme)),
+                              child: RMSWidgets.getLoader(),
                             ),
                           ),
               );
@@ -1566,7 +1566,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
             ),
             GestureDetector(
               onTap: () => _handleURLButtonPress(
-                  context, cancellationPolicy, 'Cancellation Policy'),
+                  context, cancellationPolicyUrl, 'Cancellation Policy'),
               child: Text(
                 '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[9].name : 'Cancellation Policy'}',
                 style: const TextStyle(

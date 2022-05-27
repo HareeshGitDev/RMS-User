@@ -99,6 +99,7 @@ class _UpdateInvoiceUTRPageState extends State<UpdateInvoiceUTRPage> {
         title: Text('Bank Transfer '),
         titleSpacing: 0,
         backgroundColor: CustomTheme.appTheme,
+        centerTitle: false,
       ),
       body: Container(
         height: _mainHeight,

@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-
-import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/color.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -13,6 +11,7 @@ import 'package:provider/provider.dart';
 
 import '../../images.dart';
 import '../../language_module/model/language_model.dart';
+import '../../theme/custom_theme.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/shared_prefrences_util.dart';
 import '../viewmodel/mystay_viewmodel.dart';
@@ -50,7 +49,9 @@ class _FeedbackState extends State<FeedbackPage> {
   var _mainWidth;
   static const String fontFamily = 'hk-grotest';
   late MyStayViewModel _viewModel;
+
   ValueNotifier<bool> isChecked = ValueNotifier(false);
+
   double rmsRating = 0.0;
   double buildingRating = 0.0;
   ValueNotifier<bool> shouldRecommendFriend = ValueNotifier(true);
@@ -129,6 +130,7 @@ class _FeedbackState extends State<FeedbackPage> {
                 ? '${context.watch<MyStayViewModel>().feedBackLang[0].name}'
                 : 'Feedback Form '),
         backgroundColor: CustomTheme.appTheme,
+        centerTitle: false,
         titleSpacing: 0,
       ),
       body: Consumer<MyStayViewModel>(
@@ -230,6 +232,7 @@ class _FeedbackState extends State<FeedbackPage> {
                       ),
                       ValueListenableBuilder(
                           valueListenable: isChecked,
+
                           builder: (context, bool checkedValue, child) {
                             return Visibility(
                               visible: isChecked.value == false,

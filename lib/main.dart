@@ -34,10 +34,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => BottomNavigationProvider(),
         ),
-        StreamProvider<ConnectivityResult>(
-          initialData: ConnectivityResult.none,
-          create: (context) => Connectivity().onConnectivityChanged,
-        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -53,20 +49,20 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-Map<int, Color> colorMap = {
-  50: Color.fromRGBO(37,150,190, .1),
-  100: Color.fromRGBO(37,150,190, .2),
-  200: Color.fromRGBO(37,150,190, .3),
-  300: Color.fromRGBO(37,150,190, .4),
-  400: Color.fromRGBO(37,150,190, .5),
-  500: Color.fromRGBO(37,150,190, .6),
-  600: Color.fromRGBO(37,150,190, .7),
-  700: Color.fromRGBO(37,150,190, .8),
-  800: Color.fromRGBO(37,150,190, .9),
-  900: Color.fromRGBO(37,150,190, 1),
+Map<int, Color> colorMap =const {
+  50: Color.fromRGBO(51,101,138, .1),
+  100: Color.fromRGBO(51,101,138, .2),
+  200: Color.fromRGBO(51,101,138, .3),
+  300: Color.fromRGBO(51,101,138, .4),
+  400: Color.fromRGBO(51,101,138, .5),
+  500: Color.fromRGBO(51,101,138, .6),
+  600: Color.fromRGBO(51,101,138, .7),
+  700: Color.fromRGBO(51,101,138, .8),
+  800: Color.fromRGBO(51,101,138, .9),
+  900: Color.fromRGBO(51,101,138, 1),
 };
 // Green color code: 93cd48 and first two characters (FF) are alpha values (transparency)
-MaterialColor customColor = MaterialColor(0xff2596be, colorMap);
+MaterialColor customColor = MaterialColor(0xff33658a, colorMap);
 void _portraitModeOnly() {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

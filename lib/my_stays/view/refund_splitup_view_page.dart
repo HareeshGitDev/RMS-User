@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:RentMyStay_user/my_stays/viewmodel/mystay_viewmodel.dart';
-import 'package:RentMyStay_user/theme/app_theme.dart';
+
 import 'package:RentMyStay_user/utils/constants/app_consts.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +11,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 
 import '../../language_module/model/language_model.dart';
+import '../../theme/custom_theme.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/shared_prefrences_util.dart';
 import '../../utils/view/rms_widgets.dart';
@@ -106,6 +107,7 @@ class _RefundSplitPageState extends State<RefundSplitPage> {
               ? '${context.watch<MyStayViewModel>().refundSplitUpLang[3].name}'
               : 'Refund SplitUp '),
           titleSpacing: 0,
+          centerTitle: false,
           backgroundColor: CustomTheme.appTheme,
         ),
         body: Consumer<MyStayViewModel>(

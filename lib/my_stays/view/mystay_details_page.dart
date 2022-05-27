@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:RentMyStay_user/Web_View_Container.dart';
+import 'package:RentMyStay_user/webView_page.dart';
 import 'package:RentMyStay_user/my_stays/model/mystay_details_model.dart';
 import 'package:RentMyStay_user/utils/constants/app_consts.dart';
 import 'package:RentMyStay_user/utils/service/date_time_service.dart';
@@ -733,6 +733,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                           color: CustomTheme.appTheme,
                           height: _mainHeight * 0.03,
                           child: Row(
+
                             children: [
                               Text(
                                 nullCheck(list: value.bookingDetailsLang)
@@ -755,6 +756,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                           )),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
                         children: [
                           _gridInput(
                               hint: nullCheck(list: value.bookingDetailsLang)
@@ -830,7 +832,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                     }
                                   : () => _handleURLButtonPress(
                                       context,
-                                      agreementLink,
+                                      agreementUrl,
                                   nullCheck(list: value.bookingDetailsLang)
                                       ? ' ${value.bookingDetailsLang[12].name} '
                                       :'Agreement Sign',
@@ -857,6 +859,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
                         children: [
                           GestureDetector(
                             child: _gridInput(
@@ -872,7 +875,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                           value.myStayDetailsModel?.data
                                                   ?.checkOutStatus ==
                                               '1'
-                                      ? CustomTheme.appThemeContrast
+                                      ? Colors.grey
                                       : CustomTheme.appTheme,
                                 ),
                                 callBack: value.myStayDetailsModel?.data
@@ -887,7 +890,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                             message:
                                                 'This Booking is Completed So You can not raise Ticket',
                                             color:
-                                                CustomTheme.appThemeContrast);
+                                                CustomTheme.errorColor);
                                       }
                                     : () => Navigator.of(context).pushNamed(
                                             AppRoutes.generateTicketPage,
@@ -957,7 +960,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                             ),
                             callBack: () =>  _updateKyc(
                                 context,
-                                updateKYCLink,
+                                updateKYCUrl,
                                 'Update Your kyc',
                                 value.myStayDetailsModel?.data?.userId ??
                                     ''),
@@ -989,6 +992,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
       leading: BackButton(
         color: Colors.white,
       ),
+      centerTitle: false,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(15),
@@ -1009,27 +1013,30 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
       {required String hint, required Icon icon, required Function callBack}) {
     return GestureDetector(
       onTap: () => callBack(),
-      child: Container(
-        width: _mainWidth * 0.3,
-        height: _mainHeight * 0.07,
-        decoration: BoxDecoration(
-          //color: CustomTheme.appTheme.withAlpha(25),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            icon,
-            SizedBox(
-              height: _mainHeight * 0.005,
-            ),
-            Text(hint,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500),
-                textAlign: TextAlign.center),
-          ],
+      child: FittedBox(
+        child: Container(
+          width: _mainWidth * 0.32,
+         height: _mainHeight * 0.09,
+          padding: EdgeInsets.only(top: 5,bottom: 5,left: 5,right: 5),
+          decoration: BoxDecoration(
+          //  color: CustomTheme.appTheme.withAlpha(25),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              icon,
+              SizedBox(
+                height: _mainHeight * 0.005,
+              ),
+              Text(hint,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center),
+            ],
+          ),
         ),
       ),
     );

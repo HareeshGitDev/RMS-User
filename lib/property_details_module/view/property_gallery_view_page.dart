@@ -1,13 +1,15 @@
 import 'dart:developer';
 
 import 'package:RentMyStay_user/property_details_module/model/property_details_model.dart';
-import 'package:RentMyStay_user/theme/app_theme.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+
+import '../../theme/custom_theme.dart';
 
 class PropertyGalleryViewPage extends StatefulWidget {
   final List<Pic> imageList;
@@ -49,6 +51,7 @@ class _PropertyGalleryViewPageState extends State<PropertyGalleryViewPage> {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
+        centerTitle: false,
         title: Text('Property Gallery'),
         actions: [
           widget.videoLink == null || widget.videoLink == '' ?Container():GestureDetector(

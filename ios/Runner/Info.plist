@@ -47,17 +47,17 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Rent My Stay requires camera access to capture photos</string>
+	<string>RentMyStay requires camera access to capture photos to let you upload profile pic and id and any query image  </string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Enabling this helps Rent My Stay find and recommend property near you</string>
+	<string>Enabling this helps RentMyStay find and recommend property near you</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Enabling this helps Rent My Stay find and recommend property near you</string>
+	<string>Enabling this helps RentMyStay find and recommend property near you</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Enabling this helps Rent My Stay find and recommend property near you</string>
+	<string>Enabling this helps RentMyStay find and recommend property near you</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Rent My Stay requires Microphone Permission to record audio and video</string>
+	<string>RentMyStay requires Microphone Permission to record audio and video</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Rent My Stay requires access to the photo library  to let you upload pictures</string>
+	<string>RentMyStay requires access to the photo library  to let you upload profile pictures and id and any query image </string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

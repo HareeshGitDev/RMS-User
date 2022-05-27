@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:ui';
 
-import 'package:RentMyStay_user/Web_View_Container.dart';
+import 'package:RentMyStay_user/webView_page.dart';
 import 'package:RentMyStay_user/property_details_module/model/booking_amount_request_model.dart';
 import 'package:RentMyStay_user/property_details_module/model/booking_amounts_response_model.dart';
 import 'package:RentMyStay_user/property_details_module/model/booking_credential_response_model.dart';
 import 'package:RentMyStay_user/property_details_module/viewModel/property_details_viewModel.dart';
-import 'package:RentMyStay_user/theme/app_theme.dart';
+
 import 'package:RentMyStay_user/utils/color.dart';
 import 'package:RentMyStay_user/utils/constants/app_consts.dart';
 import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
@@ -20,9 +20,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutx/utils/spacing.dart';
-import 'package:flutx/widgets/button/button.dart';
-import 'package:flutx/widgets/text/text.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -30,6 +27,7 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../../images.dart';
 import '../../language_module/model/language_model.dart';
 import '../../payment_module/model/payment_request_model.dart';
+import '../../theme/custom_theme.dart';
 import '../model/property_details_util_model.dart';
 import '../../utils/constants/enum_consts.dart';
 import '../../utils/date_range/blackout_date_range.dart';
@@ -128,7 +126,7 @@ class _BookingPageState extends State<BookingPage> {
   }
 
   bool nullCheck({required List<LanguageModel> list}) =>
-      list.isNotEmpty ? true : false;
+      list.isNotEmpty  ? true : false;
 
   Future<void> initMethod() async {
     _emailController.text = (widget.propertyDetailsUtilModel.email).toString();
@@ -167,15 +165,18 @@ class _BookingPageState extends State<BookingPage> {
                 fontFamily: fontFamily,
               ),
             ),
+            centerTitle: false,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(15),
+                    bottomRight: Radius.circular(15))),
             titleSpacing: 0,
             backgroundColor: CustomTheme.appTheme,
           ),
           body: Container(
             height: _mainHeight,
             width: _mainWidth,
-            padding: EdgeInsets.only(
-              top: 0,
-            ),
+
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -201,10 +202,10 @@ class _BookingPageState extends State<BookingPage> {
                                   overflow: TextOverflow.ellipsis),
                             ),
                   SizedBox(
-                    height: 15,
+                    height: 5,
                   ),
                   Text(
-                    '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[0].name : "You Are almost Done !"}',
+                    '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[0].name : "You are almost done !"}',
                     style: TextStyle(
                         fontSize: 24,
                         fontFamily: fontFamily,
@@ -577,7 +578,7 @@ class _BookingPageState extends State<BookingPage> {
             ),
           ),
           bottomNavigationBar: Container(
-            height: 100,
+            height: _mainHeight*0.11,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -593,11 +594,12 @@ class _BookingPageState extends State<BookingPage> {
                         }
                       : () {},
                   child: Container(
-                    height: 30,
+                    height: _mainHeight*0.04,
                     color: Colors.blueGrey.shade50,
                     alignment: Alignment.center,
                     width: _mainWidth,
                     child: RichText(
+
                         text: TextSpan(
                             text:
                                 '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[10].name : 'Click to see '}',
@@ -632,6 +634,7 @@ class _BookingPageState extends State<BookingPage> {
                           bottom: _mainHeight * 0.01),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+
                         children: [
                           Text(
                             '$rupee ${value.bookingAmountsResponseModel?.data?.advanceAmount ?? 0}',
@@ -874,119 +877,122 @@ class _BookingPageState extends State<BookingPage> {
       child: model.msg == null
           ? RMSWidgets.showShimmer(
               height: _mainHeight * 0.26, width: _mainWidth, borderCorner: 15)
-          : Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.blueGrey.shade100),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              padding:
-                  EdgeInsets.only(left: _mainWidth * 0.02, top: 10, bottom: 10),
-              height: _mainHeight * 0.26,
-              width: _mainWidth,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(right: 25),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          children: [
-                            Text(showformatDate(checkInDate),
-                                style: TextStyle(fontSize: 16)),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text('CheckIn: 12:00PM',
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.grey)),
-                          ],
-                        ),
-                        Text(
-                          'Edit',
-                          style: TextStyle(color: CustomTheme.appThemeContrast),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
+          : Neumorphic(
+            padding: EdgeInsets.all(10),
+            margin: EdgeInsets.only(top: 5),
+            style: NeumorphicStyle(
+              shadowLightColor: CustomTheme.appTheme.withAlpha(180),
+              //CustomTheme.appTheme.withAlpha(150),
+              shadowDarkColor: Colors.grey.shade400,
+
+              color: Colors.white,
+              lightSource: LightSource.bottom,
+              intensity: 5,
+              depth: 2,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(right: 25),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         children: [
+                          Text(showformatDate(checkInDate),
+                              style: TextStyle(fontSize: 16)),
                           SizedBox(
-                              height: 40,
-                              child: VerticalDivider(
-                                width: 40,
-                                thickness: 1,
-                                color: Colors.grey,
-                                endIndent: 5,
-                                indent: 5,
-                              )),
-                          RichText(
-                              text: TextSpan(
-                                  text:
-                                      '${model.data?.nights != null ? model.data?.nights.toString() : 0}',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 12,
-                                      fontFamily: fontFamily,
-                                      color: Colors.grey),
-                                  children: <TextSpan>[
-                                TextSpan(
-                                  text:
-                                      ' ${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[2].name : ' Nights'}',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 12,
-                                      fontFamily: fontFamily,
-                                      color: Colors.grey),
-                                ),
-                              ])),
-                          SizedBox(
-                              height: 40,
-                              child: VerticalDivider(
-                                width: 40,
-                                thickness: 1,
-                                color: Colors.grey,
-                                endIndent: 5,
-                                indent: 5,
-                              )),
+                            height: 5,
+                          ),
+                          Text('CheckIn: 12:00PM',
+                              style: TextStyle(
+                                  fontSize: 12, color: Colors.grey)),
                         ],
+                      ),
+                      Text(
+                        'Edit',
+                        style: TextStyle(color: CustomTheme.appThemeContrast),
                       ),
                     ],
                   ),
-                  Container(
-                    margin: EdgeInsets.only(right: 25),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
                       children: [
-                        Column(
-                          children: [
-                            Text(showformatDate(checkOutDate),
-                                style: TextStyle(fontSize: 16)),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              'CheckOut: 11:00AM',
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 12),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          'Edit',
-                          style: TextStyle(color: CustomTheme.appThemeContrast),
-                        ),
+                        SizedBox(
+                            height: 40,
+                            child: VerticalDivider(
+                              width: 40,
+                              thickness: 1,
+                              color: Colors.grey,
+                              endIndent: 5,
+                              indent: 5,
+                            )),
+                        RichText(
+                            text: TextSpan(
+                                text:
+                                    '${model.data?.nights != null ? model.data?.nights.toString() : 0}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12,
+                                    fontFamily: fontFamily,
+                                    color: Colors.grey),
+                                children: <TextSpan>[
+                              TextSpan(
+                                text:
+                                    ' ${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[2].name : ' Nights'}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12,
+                                    fontFamily: fontFamily,
+                                    color: Colors.grey),
+                              ),
+                            ])),
+                        SizedBox(
+                            height: 40,
+                            child: VerticalDivider(
+                              width: 40,
+                              thickness: 1,
+                              color: Colors.grey,
+                              endIndent: 5,
+                              indent: 5,
+                            )),
                       ],
                     ),
+                  ],
+                ),
+                Container(
+                  margin: EdgeInsets.only(right: 25),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          Text(showformatDate(checkOutDate),
+                              style: TextStyle(fontSize: 16)),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            'CheckOut: 11:00AM',
+                            style:
+                                TextStyle(color: Colors.grey, fontSize: 12),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        'Edit',
+                        style: TextStyle(color: CustomTheme.appThemeContrast),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
+          ),
     );
   }
 
@@ -1004,7 +1010,7 @@ class _BookingPageState extends State<BookingPage> {
                     topLeft: Radius.circular(16),
                     topRight: Radius.circular(16))),
             child: Padding(
-              padding: FxSpacing.fromLTRB(24, 24, 24, 24),
+              padding: EdgeInsets.all(24,),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[

@@ -6,7 +6,7 @@ import 'dart:ui';
 import 'package:RentMyStay_user/images.dart';
 import 'package:RentMyStay_user/login_module/service/google_auth_service.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
-import 'package:RentMyStay_user/theme/app_theme.dart';
+
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -17,9 +17,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutx/utils/spacing.dart';
 import 'package:provider/provider.dart';
-import '../../Web_View_Container.dart';
+import '../../theme/custom_theme.dart';
+import '../../webView_page.dart';
 import '../../utils/color.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/shared_prefrences_util.dart';
@@ -90,7 +90,6 @@ class _LoginPageState extends State<LoginPage> {
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _loginViewModel = Provider.of<LoginViewModel>(context, listen: false);
 
-    theme = AppTheme.theme;
   }
 
   @override
@@ -251,7 +250,7 @@ class _LoginPageState extends State<LoginPage> {
                                   _formKey.currentState!.validate()) {
                                 RMSWidgets.showLoaderDialog(
                                     context: context,
-                                    message: 'Please wait...');
+                                    message: 'Please wait');
                                 final LoginResponseModel response =
                                 await _loginViewModel.getLoginDetails(
                                     email: _emailController.text,

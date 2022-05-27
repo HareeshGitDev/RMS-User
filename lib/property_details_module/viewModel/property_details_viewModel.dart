@@ -276,7 +276,7 @@ class PropertyDetailsViewModel extends ChangeNotifier {
       {required String language, required String pageName}) async {
     final response = await _languageApiService.fetchLanguagesData(
         language: language, pageName: pageName);
-    bookingAmountLang = response;
+    bookingAmountLang = response ;
     notifyListeners();
   }
 }

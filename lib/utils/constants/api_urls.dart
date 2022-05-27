@@ -30,4 +30,7 @@ class AppUrls {
   static const String invoiceDownloadUrl = '/v2/invoicePDF';
   static const String invoicePaymentUrl = '/v2/processInvoice';
   static const String utrInvoiceUpdateUrl = '/v2/utr';
+  static const String ownerPropertyListingUrl = '/v2/myListing';
+  static const String ownerPropertyUrl = '/v2/prop';
+  static const String uploadPropertyPhotosUrl = '/v2/PropPic';
 }

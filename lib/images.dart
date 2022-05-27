@@ -45,6 +45,7 @@ class Images {
   static const String successfulIcon='assets/icons/checkCircle.gif';
   static const String failedIcon='assets/icons/payment_failed_icon.png';
   static const String paidIcon='assets/icons/paid_Icon.webp';
+  static const String googleMapImage='assets/brand/google_map.jpeg';
 
 
 }

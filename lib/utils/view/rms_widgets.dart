@@ -1,8 +1,10 @@
-import 'package:RentMyStay_user/theme/app_theme.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../../theme/custom_theme.dart';
 
 class RMSWidgets {
   static void showLoaderDialog(
@@ -12,7 +14,7 @@ class RMSWidgets {
         width: MediaQuery.of(context).size.width,
         child: Row(
           children: [
-            CircularProgressIndicator(
+            CircularProgressIndicator.adaptive(
                 valueColor:
                     AlwaysStoppedAnimation<Color>(CustomTheme.appTheme)),
             SizedBox(
@@ -40,7 +42,7 @@ class RMSWidgets {
     AlertDialog alert = AlertDialog(
       content: Row(
         children: [
-          const CircularProgressIndicator(
+          const CircularProgressIndicator.adaptive(
               valueColor: AlwaysStoppedAnimation<Color>(Color(0xff7AB02A))),
           SizedBox(
             width: 5,
@@ -74,9 +76,9 @@ class RMSWidgets {
   }
 
   static Widget getLoader({Color? color}) {
-    return CircularProgressIndicator(
+    return CircularProgressIndicator.adaptive(
         valueColor:
-            AlwaysStoppedAnimation<Color>(color ?? CustomTheme.appTheme));
+            AlwaysStoppedAnimation<Color>( color ?? CustomTheme.appTheme));
   }
 
   static Widget noData(
@@ -94,7 +96,7 @@ class RMSWidgets {
           style: TextStyle(
               fontSize: fontSize ?? 20,
               fontWeight: fontWeight,
-              color: fontColor),
+              color: fontColor ?? CustomTheme.appTheme),
         ),
       ),
     );

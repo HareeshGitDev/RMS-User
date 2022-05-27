@@ -23,11 +23,10 @@ class RMSUserApiService {
   }
 
   Future<Map<String, String>> get getHeaders async {
-
     return {
-        'authorization':
-        (registeredToken ?? await _getRegisteredToken()).toString()
-      };
+      'authorization':
+          (registeredToken ?? await _getRegisteredToken()).toString()
+    };
   }
 
   Future downloadFile({required String url, required String fileName}) async {
@@ -68,7 +67,7 @@ class RMSUserApiService {
   Future<dynamic> getApiCall({
     required String endPoint,
   }) async {
-    log('URL :: $_baseURL/$endPoint  -- ${await getHeaders}');
+    log('URL :: $_baseURL$endPoint  -- ${await getHeaders}');
     try {
       final response = await http.get(Uri.https(_baseURL, endPoint),
           headers: await getHeaders);
@@ -83,16 +82,15 @@ class RMSUserApiService {
     return null;
   }
 
-  Future<dynamic> getApiCallWithQueryParams({
-    required String endPoint,
-    required Map<String, dynamic> queryParams,
-    bool fromLogin=false
-  }) async {
-    log('URL :: $_baseURL$endPoint ---- QueryParams :: ${queryParams.toString()} -- ${fromLogin?{}:await getHeaders} ');
+  Future<dynamic> getApiCallWithQueryParams(
+      {required String endPoint,
+      required Map<String, dynamic> queryParams,
+      bool fromLogin = false}) async {
+    log('URL :: $_baseURL$endPoint ---- QueryParams :: ${queryParams.toString()} -- ${fromLogin ? {} : await getHeaders} ');
     try {
       final response = await http.get(
           Uri.https(_baseURL, endPoint, queryParams),
-          headers: fromLogin?{}:await getHeaders);
+          headers: fromLogin ? {} : await getHeaders);
 
       return await _response(response,
           url: Uri.https(_baseURL, endPoint).toString());
@@ -110,10 +108,10 @@ class RMSUserApiService {
     log('URL :: $endPoint ');
     try {
       final response = await http.get(
-          Uri.parse(
-            endPoint,
-          ),
-          headers: await getHeaders);
+        Uri.parse(
+          endPoint,
+        ),
+      );
 
       return await _response(response,
           url: Uri.https(_baseURL, endPoint).toString());
@@ -127,14 +125,15 @@ class RMSUserApiService {
 
   Future<dynamic> postApiCall(
       {required String endPoint,
-      required Map<String, dynamic> bodyParams,bool fromLogin=false}) async {
-    log('URL :: $_baseURL/$endPoint ---- Model :: ${bodyParams.toString()} -- ${fromLogin?'':await getHeaders}');
+      required Map<String, dynamic> bodyParams,
+      bool fromLogin = false}) async {
+    log('URL :: $_baseURL/$endPoint ---- Model :: ${bodyParams.toString()} -- ${fromLogin ? '' : await getHeaders}');
 
     try {
       final response = await http.post(
         Uri.https(_baseURL, endPoint),
         body: bodyParams,
-        headers: fromLogin?{}:await getHeaders,
+        headers: fromLogin ? {} : await getHeaders,
       );
       return await _response(response,
           url: Uri.https(_baseURL, endPoint).toString());
@@ -154,6 +153,7 @@ class RMSUserApiService {
       Dio dio = Dio();
       final response = await dio.post(Uri.https(_baseURL, endPoint).toString(),
           options: Options(headers: await getHeaders), data: formData);
+      log(response.statusCode.toString());
       return response.statusCode == 200
           ? {'msg': 'success'}
           : {'msg': 'failure'};
@@ -169,37 +169,44 @@ class RMSUserApiService {
     required String endPoint,
     required Map<String, dynamic> bodyParams,
   }) async {
-    log('URL :: $_baseURL/$endPoint ---- Model :: ${bodyParams.toString()} -- ${await getHeaders}');
+    log('URL :: $_baseURL$endPoint ---- Model :: ${bodyParams.toString()} -- ${await getHeaders}');
     try {
-      final response = await http.put(
+      Dio dio = Dio();
+      final response = await dio.put(Uri.https(_baseURL, endPoint).toString(),
+          options: Options(
+            headers: await getHeaders,
+          ),
+          data: bodyParams);
+      // await dio.put(end);
+      /* final response = await http.put(
         Uri.https(_baseURL, endPoint),
         headers: await getHeaders,
         body: bodyParams,
-      );
+      );*/
 
-      return await _response(response,
-          url: Uri.https(_baseURL, endPoint).toString());
+      return response.statusCode == 200
+          ? {'msg': 'success'}
+          : {'msg': 'failure'};
+      /*return await _response(response,
+          url: Uri.https(_baseURL, endPoint).toString());*/
     } on SocketException {
       log('SocketException Happened');
     } catch (e) {
-      log('Error : ${e.toString()}');
+      log('Error: ${e.toString()}');
     }
     return {'msg': 'failure'};
   }
 
-  dynamic deleteApiCall({required String endPoint}) async {
+  dynamic deleteApiCall({
+    required String endPoint,
+    required Map<String, dynamic> bodyParams,
+  }) async {
     try {
-      final response = await http.delete(
-        Uri.https(_baseURL, endPoint),
-        headers: await getHeaders,
-      );
-
-      if (response.statusCode == 200) {
-        if (response.body.isNotEmpty) {
-          log('Logout Res ::  ' + response.body);
-          return true;
-        }
-      }
+      final response = await http.delete(Uri.https(_baseURL, endPoint),
+          headers: await getHeaders, body: bodyParams);
+      return response.statusCode == 200
+          ? {'msg': 'success'}
+          : {'msg': 'failure'};
     } on SocketException {
       log('SocketException Happened');
     } catch (e) {
@@ -248,6 +255,6 @@ class RMSUserApiService {
     RMSWidgets.getToast(
         message: error['msg'] ?? 'failure', color: Color(0xffFF0000));
 
-    return {'msg': 'failure '+ error['msg']};
+    return {'msg': 'failure ' + error['msg']};
   }
 }

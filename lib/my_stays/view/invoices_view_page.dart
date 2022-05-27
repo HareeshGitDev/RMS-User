@@ -125,227 +125,355 @@ class _InvoiceState extends State<InvoicePage> {
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
-    return _connectionStatus?Scaffold(
-        appBar: AppBar(
-          title: Text(
-              nullCheck(list: context.watch<MyStayViewModel>().invoiceLang)
+    return _connectionStatus
+        ? Scaffold(
+            appBar: AppBar(
+              title: Text(nullCheck(
+                      list: context.watch<MyStayViewModel>().invoiceLang)
                   ? '${context.watch<MyStayViewModel>().invoiceLang[0].name}'
                   : 'Invoices '),
-          titleSpacing: 0,
-          backgroundColor: CustomTheme.appTheme,
-        ),
-        body: Consumer<MyStayViewModel>(
-          builder: (context, value, child) {
-            return value.invoiceDetailsModel != null &&
-                    value.invoiceDetailsModel?.msg != null &&
-                    value.invoiceDetailsModel?.data != null
-                ? Container(
-                    height: _mainHeight,
-                    width: _mainWidth,
-                    color: Colors.white,
-                    padding: EdgeInsets.only(
-                        left: 10, right: 10, top: 10, bottom: 15),
-                    child: ListView.separated(
-                        itemBuilder: (context, index) {
-                          var data = value.invoiceDetailsModel?.data![index];
-                          return Container(
-                            padding: EdgeInsets.only(left: 5, right: 5, top: 5),
-                            child: Neumorphic(
-                              padding: EdgeInsets.only(
-                                  left: 10, top: 5, right: 5, bottom: 5),
-                              style: NeumorphicStyle(
-                                  color: Colors.white,
-                                  depth: 2,
-                                  shadowLightColor: Colors.blueGrey.shade200,
-                                  shadowDarkColor:
-                                      CustomTheme.appTheme.withAlpha(100)),
-                              child: Column(
-                                children: [
-                                  Table(
-                                    children: [
-                                      TableRow(children: [
-                                        Text(
-                                            '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[1].name : 'Category'} : ',
-                                            style: getKeyStyle),
-                                        Text(
-                                          '${data?.transactionType ?? ''}',
-                                          style: getValueStyle,
-                                          maxLines: 2,
-                                        ),
-                                        Text(
-                                            '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[2].name : 'Invoice Id'} :',
-                                            style: getKeyStyle),
-                                        Text(
-                                          '${data?.invoiceId ?? ''}',
-                                          style: getValueStyle,
-                                        )
-                                      ]),
-                                      TableRow(children: [
-                                        Text(
-                                            '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[3].name : 'From'} :',
-                                            style: getKeyStyle),
-                                        Text('${data?.fromDate ?? ''}',
-                                            style: getValueStyle),
-                                        Text(
-                                            '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[4].name : 'To'} :',
-                                            style: getKeyStyle),
-                                        Text('${data?.tillDate ?? ''}',
-                                            style: getValueStyle)
-                                      ]),
-                                      TableRow(children: [
-                                        Text(
-                                            '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[5].name : 'Amount'} :',
-                                            style: getKeyStyle),
-                                        Text('$rupee ${data?.amount ?? ' '}',
-                                            style: getValueStyle),
-                                        Text(
-                                            '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[6].name : 'Received'} :',
-                                            style: getKeyStyle),
-                                        Text(
-                                            '$rupee ${data?.amountRecieved ?? ''}',
-                                            style: getValueStyle)
-                                      ]),
-                                      TableRow(children: [
-                                        Text(
-                                            '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[7].name : 'Referral'} :',
-                                            style: getKeyStyle),
-                                        Text(
-                                            '$rupee ${data?.refferalDiscount ?? ''}',
-                                            style: getValueStyle),
-                                        Text(
-                                            '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[8].name : 'Pending'} :',
-                                            style: getKeyStyle),
-                                        Text(
-                                            '$rupee ${data?.pendingBalance ?? ''}',
-                                            style: getValueStyle)
-                                      ]),
-                                      TableRow(children: [
-                                        Visibility(
-                                            visible: data?.pendingBalance != 0,
-                                            child: Text(
-                                                '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[9].name : 'Pay Now'} :',
-                                                style: getKeyStyle)),
-                                        Visibility(
-                                          visible: data?.pendingBalance != 0,
-                                          child: Text(
-                                              '$rupee ${data?.pendingBalance ?? '0'}',
-                                              style: getValueStyle),
-                                        ),
-                                        Visibility(
-                                            visible: data?.pendingBalance != 0,
-                                            child: Text(
-                                                '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[10].name : 'Status'} :',
-                                                style: getKeyStyle)),
-                                        Visibility(
-                                          visible: data?.pendingBalance != 0,
-                                          child: Text('${data?.status ?? ''}',
-                                              style: getValueStyle),
-                                        ),
-                                      ]),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  FittedBox(
-                                    child: SizedBox(
-                                      //width: _mainWidth * 0.35,
-                                      height: 30,
-                                      child: ElevatedButton(
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all<Color>(
-                                                    data?.pendingBalance == 0
-                                                        ? Color(0xff7AB02A)
-                                                        : Color(0xffFF0000)),
-                                            shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                              RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(40)),
-                                            )),
-                                        onPressed: data?.pendingBalance == 0
-                                            ? () async {
-                                                RMSWidgets.showLoaderDialog(
-                                                    context: context,
-                                                    message: 'Loading');
-                                                String invoiceLink =
-                                                    await _viewModel
-                                                        .downloadInvoice(
-                                                            bookingId:
-                                                                widget.bookingId,
-                                                            invoiceId:
-                                                                data?.invoiceId ??
-                                                                    '');
-                                                Navigator.of(context).pop();
-                                                if (invoiceLink.isNotEmpty) {
-                                                  if (await canLaunch(
-                                                      invoiceLink)) {
-                                                    launch(invoiceLink);
-                                                  }
-                                                }
-                                              }
-                                            : () {
-                                                choosePaymentDialog(
-                                                    context: context,
-                                                    model: data ??
-                                                        invoiceModelData.Data());
-                                              },
-                                        child: Container(
-                                            child: data?.pendingBalance == 0
-                                                ?
-                          RichText(
-                          text: TextSpan(
-                          children: [
-                          WidgetSpan(
-                          child: Icon(Icons.download, size: 14),),
-                          TextSpan(
-                          text: nullCheck(
-                              list:
-                              value.invoiceLang)
-                              ? ' ${value.invoiceLang[11].name} '
-                              : 'Download Invoice'),],))
-                                            /*Text(nullCheck(
-                                                        list:
-                                                            value.invoiceLang)
-                                                    ? ' ${value.invoiceLang[11].name} '
-                                                    : 'Download Invoice')*/
-                                                : Text(nullCheck(
-                                                        list:
-                                                            value.invoiceLang)
-                                                    ? ' ${value.invoiceLang[9].name} '
-                                                    : 'Pay Now')),
+              titleSpacing: 0,
+              backgroundColor: CustomTheme.appTheme,
+              centerTitle: false,
+            ),
+            body: Consumer<MyStayViewModel>(
+              builder: (context, value, child) {
+                return value.invoiceDetailsModel != null &&
+                        value.invoiceDetailsModel?.msg != null &&
+                        value.invoiceDetailsModel?.data != null
+                    ? Container(
+                        height: _mainHeight,
+                        width: _mainWidth,
+                        color: Colors.white,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: _mainWidth * 0.04,
+                            vertical: _mainHeight * 0.02),
+                        child: ListView.separated(
+                            itemBuilder: (context, index) {
+                              var data =
+                                  value.invoiceDetailsModel?.data![index];
+                              return Container(
+
+                                decoration: BoxDecoration(
+                                 // color: Colors.amber,
+                                  border: Border.all(color:Colors.grey,width: 0.5),
+                                  borderRadius: BorderRadius.circular(10)
+                                ),
+                                padding: EdgeInsets.only(
+                                    left: _mainWidth * 0.05,
+                                    top: _mainHeight * 0.01,
+                                  bottom: _mainHeight * 0.01,
+                                    right: _mainWidth * 0.05,),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      data?.transactionType ?? '',
+                                      style: TextStyle(
+                                          color: CustomTheme.appTheme,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 20),
+                                    ),
+                                    SizedBox(
+                                      height: _mainHeight * 0.005,
+                                    ),
+                                    Container(
+                                      //color: Colors.amber,
+                                      //height: _mainHeight * 0.03,
+                                      width: _mainWidth,
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                              '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[3].name : 'From'}   ',
+                                              style: const TextStyle(
+                                                  color: Colors.grey,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14)),
+                                          Text(data?.fromDate ?? '',
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14)),
+                                          const Spacer(),
+                                          Text(
+                                              '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[4].name : 'To'}    ',
+                                              style: const TextStyle(
+                                                  color: Colors.grey,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14)),
+                                          Text(data?.tillDate ?? '',
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14)),
+                                        ],
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return SizedBox(
-                            height: 15,
-                          );
-                        },
-                        itemCount:
-                            value.invoiceDetailsModel?.data!.length ?? 0),
-                  )
-                : value.invoiceDetailsModel != null &&
-                        value.invoiceDetailsModel?.msg != null &&
-                        value.invoiceDetailsModel?.data == null
-                    ? RMSWidgets.noData(
-                        context: context,
-                        message:
-                            'Something went Wrong.Invoice Details could not be found.')
-                    : Center(child: RMSWidgets.getLoader());
-          },
-        )):RMSWidgets.networkErrorPage(context: context);
-  }
+                                    Divider(
+                                      thickness: 0.7,
+                                    ),
+                                    SizedBox(
+                                      height: _mainHeight * 0.001,
+                                    ),
+                                    Container(
+                                      //color: Colors.amber,
+                                      //height: _mainHeight * 0.03,
+                                      width: _mainWidth,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                              '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[5].name : 'Amount'} ',
+                                              style: const TextStyle(
+                                                  color: Colors.grey,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14)),
+                                          Text(
+                                              '$rupee ${data?.amount ?? ' '}',
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 14)),
 
+                                        ],
+                                      ),
+                                    ),
+
+                                    Container(
+                                      //color: Colors.amber,
+                                      //height: _mainHeight * 0.03,
+                                      width: _mainWidth,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                              '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[6].name : 'Received'} ',
+                                              style: const TextStyle(
+                                                  color: Colors.grey,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14)),
+                                          Text(
+                                              '$rupee ${data?.amountRecieved ?? ''}',
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 14)),
+
+                                        ],
+                                      ),
+                                    ),
+
+                                    data?.refferalDiscount != null && data?.refferalDiscount.toString() != '0'?  Container(
+                                     // color: Colors.amber,
+                                      //height: _mainHeight * 0.03,
+                                      width: _mainWidth,
+                                      child: Row(
+
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                              '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[7].name : 'Referral'} ',
+                                              style: const TextStyle(
+                                                  color: Colors.grey,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14)),
+                                          Text(
+                                              '$rupee ${data?.refferalDiscount ?? ''}',
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 14)),
+
+                                        ],
+                                      ),
+                                    ):Container(),
+                                    Divider(
+                                      thickness: 0.7,
+                                    ),
+
+                                    Container(
+                                      //color: Colors.amber,
+                                      //height: _mainHeight * 0.03,
+                                      width: _mainWidth,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                              '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[8].name : 'Pending'} ',
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 14)),
+                                          Text(
+                                              '$rupee ${data?.pendingBalance ?? ''}',
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 16)),
+
+                                        ],
+                                      ),
+                                    ),
+                                    const Divider(
+                                      thickness: 0.7,
+                                    ),
+                                    SizedBox(
+                                      height: _mainHeight * 0.00,
+                                    ),
+                                    Container(
+                                     // height: _mainHeight * 0.04,
+                                      width: _mainWidth,
+                                      child: Row(
+
+                                        children: [
+                                          Text(
+                                              '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[2].name : 'Invoice Id'} - ',
+                                              style:  TextStyle(
+                                                  color: CustomTheme.appTheme,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14)),
+                                          Text(
+                                            data?.invoiceId ?? '',
+                                              style: TextStyle(
+                                                  color: CustomTheme.appTheme,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14)),
+                                          Spacer(),
+                                          FittedBox(
+                                            child: SizedBox(
+
+                                              height: _mainHeight*0.035,
+                                              child: ElevatedButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                    MaterialStateProperty.all<
+                                                        Color>(
+                                                        data?.pendingBalance ==
+                                                            0
+                                                            ? CustomTheme.myFavColor
+                                                            : CustomTheme.appThemeContrast),
+                                                    shape:
+                                                    MaterialStateProperty.all<
+                                                        RoundedRectangleBorder>(
+                                                      RoundedRectangleBorder(
+                                                          borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                    )),
+                                                onPressed: data?.pendingBalance == 0
+                                                    ? () async {
+                                                  RMSWidgets.showLoaderDialog(
+                                                      context: context,
+                                                      message: 'Loading');
+                                                  String invoiceLink =
+                                                  await _viewModel
+                                                      .downloadInvoice(
+                                                      bookingId: widget
+                                                          .bookingId,
+                                                      invoiceId:
+                                                      data?.invoiceId ??
+                                                          '');
+                                                  Navigator.of(context).pop();
+                                                  if (invoiceLink
+                                                      .isNotEmpty) {
+                                                    if (await canLaunch(
+                                                        invoiceLink)) {
+                                                      launch(invoiceLink);
+                                                    }
+                                                  }
+                                                }
+                                                    : () {
+                                                  choosePaymentDialog(
+                                                      context: context,
+                                                      model: data ??
+                                                          invoiceModelData
+                                                              .Data());
+                                                },
+                                                child: Container(
+                                                    child: data?.pendingBalance == 0
+                                                        ? RichText(
+                                                        text: TextSpan(
+                                                          children: [
+
+                                                            TextSpan(
+                                                                text: nullCheck(
+                                                                    list: value
+                                                                        .invoiceLang)
+                                                                    ? ' ${value.invoiceLang[11].name} '
+                                                                    : 'Download'),
+                                                            WidgetSpan(
+                                                              child: Icon(
+                                                                  Icons.download,
+                                                                  size: _mainHeight*0.018),
+                                                            ),
+                                                          ],
+                                                        ))
+                                                        : Text(nullCheck(
+                                                        list: value
+                                                            .invoiceLang)
+                                                        ? ' ${value.invoiceLang[9].name} '
+                                                        : 'Pay Now')),
+                                              ),
+                                            ),
+                                          ),
+
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return SizedBox(
+                                height: 15,
+                              );
+                            },
+                            itemCount:
+                                value.invoiceDetailsModel?.data!.length ?? 0),
+                      )
+                    : value.invoiceDetailsModel != null &&
+                            value.invoiceDetailsModel?.msg != null &&
+                            value.invoiceDetailsModel?.data == null
+                        ? RMSWidgets.noData(
+                            context: context,
+                            message:
+                                'Something went Wrong.Invoice Details could not be found.')
+                        : Center(child: RMSWidgets.getLoader());
+              },
+            ))
+        : RMSWidgets.networkErrorPage(context: context);
+  }
+/*TableRow(
+                                              children: [
+                                            Visibility(
+                                                visible:
+                                                    data?.pendingBalance != 0,
+                                                child: Text(
+                                                    '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[9].name : 'Pay Now'} :',
+                                                    style: getKeyStyle)),
+                                            Visibility(
+                                              visible:
+                                                  data?.pendingBalance != 0,
+                                              child: Text(
+                                                  '$rupee ${data?.pendingBalance ?? '0'}',
+                                                  style: getValueStyle),
+                                            ),
+                                            Visibility(
+                                                visible:
+                                                    data?.pendingBalance != 0,
+                                                child: Text(
+                                                    '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[10].name : 'Status'} :',
+                                                    style: getKeyStyle)),
+                                            Visibility(
+                                              visible:
+                                                  data?.pendingBalance != 0,
+                                              child: Text(
+                                                  '${data?.status ?? ''}',
+                                                  style: getValueStyle),
+                                            ),
+                                          ]),*/
   void choosePaymentDialog(
       {required BuildContext context, required invoiceModelData.Data model}) {
     showDialog(
@@ -359,7 +487,7 @@ class _InvoiceState extends State<InvoicePage> {
               child: Text(
                 'Choose Payment Mode',
                 style: TextStyle(
-                    color: Color(0xff226E79),
+                    color: CustomTheme.appTheme,
                     fontWeight: FontWeight.w600,
                     fontSize: 20),
               ),

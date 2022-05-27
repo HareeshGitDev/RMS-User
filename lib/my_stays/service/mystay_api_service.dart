@@ -4,9 +4,7 @@ import 'dart:io';
 
 import 'package:RentMyStay_user/my_stays/model/invoice_payment_model.dart';
 import 'package:RentMyStay_user/my_stays/model/ticket_response_model.dart';
-import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
-import 'package:http/http.dart';
 
 import '../../property_details_module/model/booking_amount_request_model.dart';
 import '../../property_details_module/model/booking_credential_response_model.dart';
@@ -155,23 +153,31 @@ class MyStayApiService {
       required String propertyId,
       required String description,
       required String address,
-       String? imagePath}) async {
+       List<File>? imageList}) async {
     String url = AppUrls.generateTicketUrl;
+    List<MultipartFile> list = [];
+    if(imageList != null && imageList.isNotEmpty){
+      for (var data in imageList) {
+        final image=await MultipartFile.fromFile(data.path);
+        log(image.filename.toString());
+        list.add(image);
+      }
+    }
 
-    FormData formData = imagePath != null? FormData.fromMap({
+    FormData formData = imageList != null && imageList.isNotEmpty? FormData.fromMap({
       'booking_id': bookingId,
       'requirement': requirements,
       'prop_id': propertyId,
       'description': description,
       'address': address,
-      'issue_img': await dio.MultipartFile.fromFile(File(imagePath).path),
-    }): FormData.fromMap({
+      'issue_img': list,
+    },ListFormat.multiCompatible): FormData.fromMap({
       'booking_id': bookingId,
       'requirement': requirements,
       'prop_id': propertyId,
       'description': description,
       'address': address,
-    });
+    },ListFormat.multiCompatible);
 
     final response = await _apiService.postApiCallFormData(
         endPoint: url, formData: formData);

@@ -2,11 +2,12 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:RentMyStay_user/images.dart';
-import 'package:RentMyStay_user/theme/app_theme.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+
+import '../../theme/custom_theme.dart';
 
 class EditProfile extends StatefulWidget {
   static const routeName = "/editprofile";
