@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
@@ -15,22 +16,37 @@ class CapturePhotoPage {
   static Future<dynamic> captureImageByGallery(
       {required BuildContext context,
         required Function(String) function}) async {
-    if (Platform.isIOS) {
-      final image = await ImagePicker.platform
-          .pickImage(source: ImageSource.gallery, imageQuality: 5);
-      if (image != null &&
-          image.path != null &&
-          image.path.toString().length > 5) {
-        // RMSWidgets.showLoaderDialog(context: context, message: "Uploading");
-        // dynamic response = await function(image.path);
-        // Navigator.of(context).pop();
+    PermissionStatus storePermission = await Permission.storage.request();
 
-        return image.path;
-      } else {
-        return null;
+    if (Platform.isIOS) {
+
+      if (storePermission.isDenied || storePermission.isPermanentlyDenied) {
+        RMSWidgets.getToast(
+            message:
+            'Files and Media permissions are denied.Please enable it from settings.',
+            color: Color(0xffF40909));
+
+        await storagePermissionDialog(context: context);
       }
+      else{
+
+        final image = await ImagePicker.platform
+            .pickImage(source: ImageSource.gallery, imageQuality: 5);
+        if (image != null &&
+            image.path != null &&
+            image.path.toString().length > 5) {
+          // RMSWidgets.showLoaderDialog(context: context, message: "Uploading");
+          // dynamic response = await function(image.path);
+          // Navigator.of(context).pop();
+
+          return image.path;
+        } else {
+          return null;
+        }
+      }
+
     } else if (Platform.isAndroid) {
-      PermissionStatus storePermission = await Permission.storage.request();
+
       if (storePermission.isDenied || storePermission.isPermanentlyDenied) {
         RMSWidgets.getToast(
             message:
@@ -122,27 +138,66 @@ class CapturePhotoPage {
         }
       }
     } else if (Platform.isIOS) {
-      WidgetsFlutterBinding.ensureInitialized();
+      PermissionStatus isDenied = await Permission.camera.request();
+      PermissionStatus isDeniedMicrophone =
+      await Permission.microphone.request();
 
-      // Obtain a list of the available cameras on the device.
-      final cameras = await availableCameras();
+      if (isDenied.isDenied && isDeniedMicrophone.isDenied ||
+          isDenied.isPermanentlyDenied &&
+              isDeniedMicrophone.isPermanentlyDenied) {
+        RMSWidgets.getToast(
+            message:
+            'Camera and Audio access permissions are denied.Please enable it from settings.',
+            color: Color(0xffF40909));
+        await cameraAndMicrophonePermissionDialog(
+            photoPermission: false,
+            microphonePermission: false,
+            context: context);
+      } else if (isDenied.isGranted &&
+          (isDeniedMicrophone.isDenied ||
+              isDeniedMicrophone.isPermanentlyDenied)) {
+        RMSWidgets.getToast(
+            message:
+            'Audio access permissions are denied.Please enable it from settings.',
+            color: Color(0xffF40909));
+        await cameraAndMicrophonePermissionDialog(
+            photoPermission: true,
+            microphonePermission: false,
+            context: context);
+      } else if ((isDenied.isDenied || isDenied.isPermanentlyDenied) &&
+          (isDeniedMicrophone.isGranted)) {
+        RMSWidgets.getToast(
+            message:
+            'Camera access permissions are denied.Please enable it from settings.',
+            color: Color(0xffF40909));
+        await cameraAndMicrophonePermissionDialog(
+            photoPermission: false,
+            microphonePermission: true,
+            context: context);
+      } else if (isDenied.isGranted && isDeniedMicrophone.isGranted) {
+        WidgetsFlutterBinding.ensureInitialized();
 
-      // Get a specific camera from the list of available cameras.
-      final firstCamera = cameras.first;
+        // Obtain a list of the available cameras on the device.
+        final cameras = await availableCameras();
 
-      String filePath = (await Navigator.of(context)
-          .pushNamed(AppRoutes.pictureScreenPage, arguments: firstCamera))
-          .toString();
+        // Get a specific camera from the list of available cameras.
+        final firstCamera = cameras.first;
 
-      if (filePath != null && filePath.toString().length > 5) {
-        // RMSWidgets.showLoaderDialog(context: context, message: "Uploading");
-        // dynamic response = await function(filePath);
-        // Navigator.of(context).pop();
+        String filePath = (await Navigator.of(context)
+            .pushNamed(AppRoutes.pictureScreenPage, arguments: firstCamera))
+            .toString();
 
-        return filePath;
-      } else {
-        return null;
+        if (filePath != null && filePath.toString().length > 5) {
+          // RMSWidgets.showLoaderDialog(context: context, message: "Uploading");
+          // dynamic response = await function(filePath);
+          // Navigator.of(context).pop();
+
+          return filePath;
+        } else {
+          return null;
+        }
       }
+
     }
   }
 
@@ -228,8 +283,8 @@ class CapturePhotoPage {
         barrierDismissible:false ,
         context: context,
         builder: (BuildContext context) => AlertDialog(
-          title: Text('Files and Media Permission'),
-          content: Text(
+          title: const Text('Files and Media Permission'),
+          content: const Text(
               'This app needs Files and Media Permission to access Photos.'),
           actions: <Widget>[
             TextButton(

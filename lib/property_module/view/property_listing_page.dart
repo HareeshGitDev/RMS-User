@@ -802,10 +802,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                     child: showSuggestions(value: value,context: context)),
                               )
                             : Container(),
-                        value.propertyListModel.data!.isNotEmpty
-                            ? _getFilterSortSetting(
+                         _getFilterSortSetting(
                                 context: context, value: value)
-                            : Container(),
+                            ,
                       ],
                     );
                   } else if (value.propertyListModel.msg != null &&
@@ -824,6 +823,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                             : Container(),
                         Center(
                             child: RMSWidgets.someError(context: context)),
+                        _getFilterSortSetting(
+                            context: context, value: value)
+                        ,
                       ],
                     );
                   } else if (value.propertyListModel.msg != null &&
@@ -845,6 +847,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                             child: RMSWidgets.noData(
                                 context: context,
                                 message: 'No Any Properties Found.')),
+                        _getFilterSortSetting(
+                            context: context, value: value)
+                        ,
                       ],
                     );
                   } else {

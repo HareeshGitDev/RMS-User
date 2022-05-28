@@ -4,6 +4,7 @@ import 'package:RentMyStay_user/theme/custom_theme.dart';
 import 'package:RentMyStay_user/utils/service/bottom_navigation_provider.dart';
 import 'package:RentMyStay_user/utils/service/location_service.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
+import 'package:RentMyStay_user/utils/service/navigator_key_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -11,6 +12,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'login_module/view/splash_page.dart';
+
+import 'package:uni_links/uni_links.dart';
+import 'package:flutter/services.dart' show PlatformException;
 //import 'firebase_options.dart';
 
 Future<void>  _onFirebaseMessage(RemoteMessage message)async {
@@ -31,6 +35,7 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   await Firebase.initializeApp();
+
   configuration();
   runApp(MyApp());
 
@@ -38,6 +43,9 @@ void main() async {
 void configuration()async{
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   //messaging.getInitialMessage();
+  String? token=await messaging.getToken();
+  String? apnsToken=await messaging.getAPNSToken();
+  print('TOKEN :: $token  ---- APNS $apnsToken');
 
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
@@ -73,8 +81,26 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
+
+// ...
+
+  Future<void> initUniLinks() async {
+
+    try {
+      final String? initialLink = await getInitialLink();
+      if(initialLink != null){
+        log("LINK :: "+initialLink.toString());
+        NavigatorKeyService.navigateTo(routeName: AppRoutes.propertyDetailsPage,propId: '1375');
+      }
+     } on PlatformException {
+      log('Platform Exception Happened');
+    }
+  }
+
+
   @override
   void initState() {
+    initUniLinks();
     terminatedMessage();
     super.initState();
   }
@@ -99,6 +125,7 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'RentMyStay ',
+        navigatorKey: NavigatorKeyService.navigatorKey,
         theme: ThemeData(
           primarySwatch: customColor,
           fontFamily: 'hk-grotest',
