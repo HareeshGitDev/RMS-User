@@ -46,6 +46,7 @@ android {
         applicationId "com.rms.rentmystayuserflutter"
         minSdkVersion 21
         targetSdkVersion 32
+        multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

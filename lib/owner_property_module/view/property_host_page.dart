@@ -1,7 +1,13 @@
+import 'package:RentMyStay_user/owner_property_module/viewModel/owner_property_viewModel.dart';
+import 'package:RentMyStay_user/utils/model/current_location_model.dart';
+import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:provider/provider.dart';
 
 import '../../theme/custom_theme.dart';
+import '../../utils/service/location_service.dart';
+import '../../utils/service/navigation_service.dart';
 
 class HostPropertyPage extends StatefulWidget {
   const HostPropertyPage({Key? key}) : super(key: key);
@@ -12,13 +18,23 @@ class HostPropertyPage extends StatefulWidget {
 
 class _HostPropertyPageState extends State<HostPropertyPage> {
   var _mainHeight;
+  late OwnerPropertyViewModel _viewModel;
   var _mainWidth;
 
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _nameController = TextEditingController();
   final _addressController = TextEditingController();
+  final _commentsController = TextEditingController();
   int units = 0;
+  String? lat;
+  String? lang;
+
+  @override
+  void initState() {
+    super.initState();
+    _viewModel = Provider.of<OwnerPropertyViewModel>(context, listen: false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +47,7 @@ class _HostPropertyPageState extends State<HostPropertyPage> {
         centerTitle: false,
       ),
       body: GestureDetector(
-        onTap: ()=>FocusScope.of(context).requestFocus(FocusNode()),
+        onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         child: Container(
           height: _mainHeight,
           width: _mainWidth,
@@ -112,8 +128,8 @@ class _HostPropertyPageState extends State<HostPropertyPage> {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Phone Number",
-                        prefixIcon:
-                            Icon(Icons.phone_android, color: Colors.grey, size: 20),
+                        prefixIcon: Icon(Icons.phone_android,
+                            color: Colors.grey, size: 20),
                       ),
                     ),
                   ),
@@ -139,46 +155,54 @@ class _HostPropertyPageState extends State<HostPropertyPage> {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Property Address",
-                        prefixIcon:
-                            Icon(Icons.my_location, color: Colors.grey, size: 20),
+                        prefixIcon: Icon(Icons.my_location,
+                            color: Colors.grey, size: 20),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(
-                  height: _mainHeight*0.02,
+                  height: _mainHeight * 0.02,
                 ),
                 Container(
-
                   height: 50,
                   width: _mainWidth,
                   child: Row(
                     children: [
-                      Text('Number of Units : ',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,),),
-                      SizedBox(width: 20,),
-
+                      Text(
+                        'Number of Units : ',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
                       DropdownButton<int>(
                           borderRadius: BorderRadius.circular(20),
                           elevation: 65,
                           value: units,
                           iconEnabledColor: CustomTheme.appThemeContrast,
-
-                          style: TextStyle(
-                              color: CustomTheme.appTheme
-                          ),
-                          menuMaxHeight: _mainHeight*0.35,
+                          style: TextStyle(color: CustomTheme.appTheme),
+                          menuMaxHeight: _mainHeight * 0.35,
                           items: List.generate(51, (index) => index)
-                              .map((e) =>
-                              DropdownMenuItem<int>(value: e, child: Text(e.toString(),style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16
-                              ),),),)
+                              .map(
+                                (e) => DropdownMenuItem<int>(
+                                  value: e,
+                                  child: Text(
+                                    e.toString(),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16),
+                                  ),
+                                ),
+                              )
                               .toList(),
                           onChanged: (int? val) {
                             setState(() {
                               units = int.parse(val.toString());
                             });
-
                           }),
                     ],
                   ),
@@ -197,95 +221,86 @@ class _HostPropertyPageState extends State<HostPropertyPage> {
                     ),
                     child: TextFormField(
                       maxLines: 5,
-                      controller: _emailController,
+                      controller: _commentsController,
                       keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(contentPadding: EdgeInsets.only(left: 10,top: 10),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(left: 10, top: 10),
                         border: InputBorder.none,
                         hintText: "Any Comment...",
                       ),
                     ),
                   ),
                 ),
-                Container(
-
-                 height: 50,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-
-                        height: 45,
-                        child: ElevatedButton(
-
-                          style: ButtonStyle(
-                              backgroundColor:
-                              MaterialStateProperty.all<Color>(
-                                  CustomTheme.appThemeContrast),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15)),
-                              )),
-                          onPressed: () async {
-
-
-                          },
-                          child: Center(child: Text("Capture Image")),
-                        ),
-                      ),Container(
-
-                        height: 45,
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor:
-                              MaterialStateProperty.all<Color>(
-                                  CustomTheme.appThemeContrast),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15)),
-                              )),
-                          onPressed: () async {
-
-
-                          },
-                          child: Center(child: Text("Capture Location")),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-
-
               ],
             ),
           ),
         ),
-      ),bottomNavigationBar: Container(
-      margin: EdgeInsets.only(
-          left: _mainWidth * 0.04,
-          right: _mainWidth * 0.04,
-          bottom: _mainHeight * 0.02),
-      width: _mainWidth,
-      height: _mainHeight * 0.05,
-      child: ElevatedButton(
-        style: ButtonStyle(
-            backgroundColor:
-            MaterialStateProperty.all<Color>(
-                CustomTheme.appTheme),
-            shape: MaterialStateProperty.all<
-                RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40)),
-            )),
-        onPressed: () async {
-
-
-        },
-        child: Center(child: Text("Submit")),
       ),
-    ),
+      bottomNavigationBar: Container(
+        margin: EdgeInsets.only(
+            left: _mainWidth * 0.04,
+            right: _mainWidth * 0.04,
+            bottom: _mainHeight * 0.02),
+        height: _mainHeight * 0.05,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              width: _mainWidth * 0.4,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        CustomTheme.appThemeContrast),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40)),
+                    )),
+                onPressed: () async {
+                  CurrentLocationModel location =
+                      await LocationService.getCurrentPlace(context: context);
+                  if (location.fullAddress != null) {
+                    lat = location.latitude;
+                    lang = location.longitude;
+                    _addressController.text = location.fullAddress.toString();
+                  }
+                },
+                child: Center(child: Text("Capture Location")),
+              ),
+            ),
+            Container(
+              width: _mainWidth * 0.4,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(CustomTheme.appTheme),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40)),
+                    )),
+                onPressed: () async {
+                  RMSWidgets.showLoaderDialog(
+                      context: context, message: 'Loading');
+                  int response = await _viewModel.hostProperty(
+                      ownerName: _nameController.text,
+                      email: _emailController.text,
+                      phone: _phoneController.text,
+                      address: _addressController.text,
+                      units: units.toString(),
+                      comment: _commentsController.text,
+                      lat: lat,
+                      lang: lang);
+                  Navigator.of(context).pop();
+                  if (response == 200) {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        AppRoutes.dashboardPage, (route) => false);
+                  }
+                },
+                child: Center(child: Text("Submit")),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

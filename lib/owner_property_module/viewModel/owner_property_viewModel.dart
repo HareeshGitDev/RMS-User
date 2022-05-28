@@ -478,29 +478,51 @@ class OwnerPropertyViewModel extends ChangeNotifier {
     }
   }
 
-  Future<Map<String,double>?> getAddressByPlaceID(String placeId) async {
+  Future<Map<String, double>?> getAddressByPlaceID(String placeId) async {
     RMSUserApiService apiService = RMSUserApiService();
     log('Place ID :: $placeId');
     String url =
         'https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId.trim()}&fields=geometry&key=$googleMapKey';
     final data = await apiService.getApiCallWithURL(endPoint: url)
         as Map<String, dynamic>;
-    
+
     if (data['status'] == 'OK' &&
         data['result'] != null &&
         data['result']['geometry'] != null &&
         data['result']['geometry']['location'] != null) {
       return {
-        'lat':data['result']['geometry']['location']['lat'],
-        'lng':data['result']['geometry']['location']['lng']
+        'lat': data['result']['geometry']['location']['lat'],
+        'lng': data['result']['geometry']['location']['lng']
       };
     }
     return null;
   }
-  Future<int> uploadPropPics({required String propId, required List<File> imageList}) async =>
+
+  Future<int> uploadPropPics(
+          {required String propId, required List<File> imageList}) async =>
       await _apiService.uploadPropPics(propId: propId, imageList: imageList);
 
-  Future<int> deletePropPics({required String picId,}) async =>
+  Future<int> deletePropPics({
+    required String picId,
+  }) async =>
       await _apiService.deletePropPics(picId: picId);
 
+  Future<int> hostProperty(
+          {required String ownerName,
+          required String email,
+          required String phone,
+          required String address,
+          String? comment,
+          required String units,
+          String? lat,
+          String? lang}) async =>
+      _apiService.hostProperty(
+          ownerName: ownerName,
+          email: email,
+          phone: phone,
+          address: address,
+          units: units,
+          lang: lang,
+          lat: lat,
+          comment: comment);
 }

@@ -256,7 +256,7 @@ class _PaymentStatusPageState extends State<PaymentStatusPage> {
                           ),
                           Text(
                               'Payment of $rupee ' +
-                                  (double.parse(widget.amount) / 100)
+                                  (double.parse(widget.amount))
                                       .toString() +
                                   '   Success ',
                               style: TextStyle(fontSize: 18)),

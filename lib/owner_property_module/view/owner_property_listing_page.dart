@@ -80,7 +80,7 @@ class _OwnerPropertyListingPageState extends State<OwnerPropertyListingPage> {
                                       bottom: _mainHeight * 0.005,
                                       left: _mainWidth * 0.02),
                                   child: CachedNetworkImage(
-                                    imageUrl: data?.picLink != null && data?.picLink!.length != 0 ? data!.picLink![0].picLink.toString() : 'https://cdn3.iconfinder.com/data/icons/business-life-1/538/house_home_dashboard_default-512.png',
+                                    imageUrl: data?.picLink != null && data?.picLink!.length != 0 ? data!.picLink![0].picLink.toString() : '',
                                     imageBuilder: (context, imageProvider) =>
                                         Container(
                                           decoration: BoxDecoration(
@@ -234,7 +234,7 @@ class _OwnerPropertyListingPageState extends State<OwnerPropertyListingPage> {
               ),
             ),
             content: Container(
-              height: _mainHeight * 0.11,
+              height: _mainHeight * 0.13,
               width: MediaQuery.of(context).size.width,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -244,25 +244,23 @@ class _OwnerPropertyListingPageState extends State<OwnerPropertyListingPage> {
                       Navigator.of(context).pop();
                       Navigator.of(context).pushNamed(AppRoutes.hostPropertyPage);
                     },
-                    child: Neumorphic(
+                    child: Container(
+                      //width: _mainWidth,
 
-                      style: NeumorphicStyle(
-                          depth: 2,
-                          color: Colors.white,
-                          //shadowDarkColor: CustomTheme.appTheme.withAlpha(100),
-                          shadowLightColor: Colors.blueGrey.shade200),
-                      child: Container(
-                        //width: _mainWidth,
-                        alignment: Alignment.centerLeft,
-                       height: _mainHeight*0.04,
-                        child: Center(
-                          child: Text(
-                            'Host Your Property',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: Colors.black87),
-                          ),
+                      decoration: BoxDecoration(
+
+                        border: Border.all(color: CustomTheme.appTheme),
+                        borderRadius: BorderRadius.circular(15)
+                      ),
+                      alignment: Alignment.centerLeft,
+                     height: _mainHeight*0.05,
+                      child: Center(
+                        child: Text(
+                          'Host Your Property',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              color: CustomTheme.appTheme),
                         ),
                       ),
                     ),
@@ -279,23 +277,20 @@ class _OwnerPropertyListingPageState extends State<OwnerPropertyListingPage> {
 
 
                     },
-                    child: Neumorphic(
-                      style: NeumorphicStyle(
-                          depth: 2,
-                          color: Colors.white,
-                          // shadowDarkColor: CustomTheme.appTheme.withAlpha(100),
-                          shadowLightColor: Colors.blueGrey.shade200),
-                      child: Container(
-                       // width: _mainWidth,
-                        height: _mainHeight*0.04,
-                        child: Center(
-                          child: Text(
-                            'Add Your Property',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: Colors.black87),
-                          ),
+                    child: Container(
+                     // width: _mainWidth,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: CustomTheme.appTheme),
+                          borderRadius: BorderRadius.circular(15)
+                      ),
+                      height: _mainHeight*0.05,
+                      child: Center(
+                        child: Text(
+                          'Add Your Property',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              color: CustomTheme.appTheme),
                         ),
                       ),
                     ),

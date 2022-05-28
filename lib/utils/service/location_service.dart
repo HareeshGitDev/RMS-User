@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:RentMyStay_user/property_module/model/location_model.dart';
 import 'package:RentMyStay_user/utils/model/current_location_model.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
@@ -29,48 +30,65 @@ class LocationService {
   }
 
   static Future<bool?> checkPermission({required BuildContext context}) async {
-    await requestInitialLocationPermission();
-    PermissionWithService location = Permission.location;
-    if (await location.isGranted) {
-      return true;
-    } else if (await location.isDenied) {
-      await locationPermissionDialog(context: context);
+    PermissionStatus permissionStatus=await requestInitialLocationPermission();
+    log(permissionStatus.toString());
+    if (Platform.isAndroid) {
+      if (permissionStatus.isGranted) {
+        return true;
+      } else if (permissionStatus.isDenied) {
+        await requestInitialLocationPermission();
+      } else if (permissionStatus.isPermanentlyDenied) {
+        await locationPermissionDialog(context: context);
+      }
+    } else if (Platform.isIOS) {
+      if (permissionStatus.isGranted) {
+        return true;
+      } else if (permissionStatus.isDenied || permissionStatus.isPermanentlyDenied) {
+        await locationPermissionDialog(context: context);
+      }
     }
+
     return null;
   }
 
   static Future<CurrentLocationModel> getCurrentPlace(
-      {double? lat, double? lang}) async {
-    List<Placemark> placeMarks = [];
-    CurrentLocationModel locationModel = CurrentLocationModel();
-    try {
-      Position position = await LocationService.getCurrentPosition();
-      await preferenceUtil.setString(
-          rms_user_longitude, position.longitude.toString());
-      await preferenceUtil.setString(
-          rms_user_latitude, position.latitude.toString());
-      placeMarks = await placemarkFromCoordinates(
-          lat ?? position.latitude, lang ?? position.longitude);
-      locationModel.address =
-          '${placeMarks[0].subLocality?.replaceAll(' ', '-')}-${placeMarks[0].locality?.replaceAll(' ', '-')}-${placeMarks[0].administrativeArea?.replaceAll(' ', '-')}-${placeMarks[0].country?.replaceAll(' ', '-')}';
+      {double? lat, double? lang, required BuildContext context}) async {
+    bool? permission = await checkPermission(context: context);
+    if (permission != null && permission) {
+      List<Placemark> placeMarks = [];
+      CurrentLocationModel locationModel = CurrentLocationModel();
+      try {
+        Position position = await LocationService.getCurrentPosition();
+        await preferenceUtil.setString(
+            rms_user_longitude, position.longitude.toString());
+        await preferenceUtil.setString(
+            rms_user_latitude, position.latitude.toString());
+        placeMarks = await placemarkFromCoordinates(
+            lat ?? position.latitude, lang ?? position.longitude);
+        locationModel.address =
+            '${placeMarks[0].subLocality?.replaceAll(' ', '-')}-${placeMarks[0].locality?.replaceAll(' ', '-')}-${placeMarks[0].administrativeArea?.replaceAll(' ', '-')}-${placeMarks[0].country?.replaceAll(' ', '-')}';
 
-      locationModel.fullAddress =
-          '${placeMarks[0].name?.replaceAll(' ', '-')},${placeMarks[0].subLocality?.replaceAll(' ', '-')},${placeMarks[0].locality?.replaceAll(' ', '-')},${placeMarks[0].administrativeArea?.replaceAll(' ', '-')},${placeMarks[0].country?.replaceAll(' ', '-')},${placeMarks[0].postalCode?.replaceAll(' ', '-')}';
-      locationModel.zipCode =
-          '${placeMarks[0].postalCode?.replaceAll(' ', '-')}';
-      locationModel.longitude = lang.toString();
-      locationModel.latitude = lat.toString();
-      locationModel.country = '${placeMarks[0].country?.replaceAll(' ', '-')}';
-      locationModel.state =
-          '${placeMarks[0].administrativeArea?.replaceAll(' ', '-')}';
-      locationModel.city =
-          '${placeMarks[0].locality?.replaceAll(' ', '-')}';
-    } catch (e) {
-      RMSWidgets.getToast(message: e.toString(), color: CustomTheme.errorColor);
-      log(e.toString());
+        locationModel.fullAddress =
+            '${placeMarks[0].name?.replaceAll(' ', '-')},${placeMarks[0].subLocality?.replaceAll(' ', '-')},${placeMarks[0].locality?.replaceAll(' ', '-')},${placeMarks[0].administrativeArea?.replaceAll(' ', '-')},${placeMarks[0].country?.replaceAll(' ', '-')},${placeMarks[0].postalCode?.replaceAll(' ', '-')}';
+        locationModel.zipCode =
+            '${placeMarks[0].postalCode?.replaceAll(' ', '-')}';
+        locationModel.longitude = lang.toString();
+        locationModel.latitude = lat.toString();
+        locationModel.country =
+            '${placeMarks[0].country?.replaceAll(' ', '-')}';
+        locationModel.state =
+            '${placeMarks[0].administrativeArea?.replaceAll(' ', '-')}';
+        locationModel.city = '${placeMarks[0].locality?.replaceAll(' ', '-')}';
+      } catch (e) {
+        RMSWidgets.getToast(
+            message: e.toString(), color: CustomTheme.errorColor);
+        log(e.toString());
+      }
+
+      return locationModel;
+    } else {
+      return CurrentLocationModel();
     }
-
-    return locationModel;
   }
 
   static Future locationPermissionDialog(

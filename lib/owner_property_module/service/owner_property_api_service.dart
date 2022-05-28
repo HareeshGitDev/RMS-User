@@ -136,10 +136,10 @@ class OwnerPropertyApiService {
       propJson['rms_deposit'] = requestModel.rmsDeposit;
     }
     if (requestModel.amenity != null) {
-      propJson['amenity'] =requestModel.amenity;
+      propJson['amenity'] = requestModel.amenity;
     }
-    final response = await _apiService.putApiCall(
-        endPoint: url, bodyParams: propJson);
+    final response =
+        await _apiService.putApiCall(endPoint: url, bodyParams: propJson);
     final data = response as Map<String, dynamic>;
     return data['msg'].toString().toLowerCase().contains('failure') ? 404 : 200;
   }
@@ -149,7 +149,7 @@ class OwnerPropertyApiService {
     String url = AppUrls.uploadPropertyPhotosUrl;
     List<MultipartFile> list = [];
     for (var data in imageList) {
-      final image=await MultipartFile.fromFile(data.path);
+      final image = await MultipartFile.fromFile(data.path);
       log(image.filename.toString());
       list.add(image);
     }
@@ -157,7 +157,7 @@ class OwnerPropertyApiService {
     FormData formData = FormData.fromMap({
       'prop_id': propId,
       'images': list,
-    },ListFormat.multiCompatible);
+    }, ListFormat.multiCompatible);
 
     final response = await _apiService.postApiCallFormData(
         endPoint: url, formData: formData);
@@ -166,11 +166,40 @@ class OwnerPropertyApiService {
 
     return data['msg'].toString().toLowerCase().contains('failure') ? 404 : 200;
   }
-  Future<int> deletePropPics(
-      {required String picId}) async {
+
+  Future<int> deletePropPics({required String picId}) async {
     String url = AppUrls.uploadPropertyPhotosUrl;
-    
-    final response = await _apiService.deleteApiCall(endPoint: url,bodyParams: {'pic_id':picId});
+
+    final response = await _apiService
+        .deleteApiCall(endPoint: url, bodyParams: {'pic_id': picId});
+
+    final data = response as Map<String, dynamic>;
+
+    return data['msg'].toString().toLowerCase().contains('failure') ? 404 : 200;
+  }
+
+  Future<int> hostProperty(
+      {required String ownerName,
+      required String email,
+      required String phone,
+      required String address,
+      String? comment,
+      required String units,
+      String? lat,
+      String? lang}) async {
+    String url = AppUrls.hostPropertyUrl;
+
+    final response =
+        await _apiService.postApiCall(endPoint: url, bodyParams: {
+          'email_id':email,
+          'owner_name':ownerName,
+          'contact_no':phone,
+          'location':address,
+          'comment':comment,
+          'glat':lat,
+          "glng":lang,
+          'units':units
+        });
 
     final data = response as Map<String, dynamic>;
 

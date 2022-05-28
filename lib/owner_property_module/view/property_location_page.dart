@@ -181,7 +181,7 @@ class _PropertyLocationPageState extends State<PropertyLocationPage> {
                 onPressed: () async {
                   RMSWidgets.showLoaderDialog(
                       context: context, message: 'Loading');
-                  currentLocation = await LocationService.getCurrentPlace();
+                  currentLocation = await LocationService.getCurrentPlace(context: context);
                   Navigator.of(context).pop();
                   if (currentLocation.fullAddress != null) {
                     _addressController.text =

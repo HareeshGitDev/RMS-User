@@ -33,4 +33,5 @@ class AppUrls {
   static const String ownerPropertyListingUrl = '/v2/myListing';
   static const String ownerPropertyUrl = '/v2/prop';
   static const String uploadPropertyPhotosUrl = '/v2/PropPic';
+  static const String hostPropertyUrl = '/v2/host';
 }

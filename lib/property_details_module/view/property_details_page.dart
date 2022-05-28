@@ -500,7 +500,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                             ?.title !=
                                                         null
                                                 ? (value.propertyDetailsModel
-                                                        ?.data?.details?.title)
+                                                        ?.data?.details?.title?.trim())
                                                     .toString()
                                                 : '',
                                             style: TextStyle(
@@ -1099,33 +1099,38 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                               const Divider(
                                 thickness: 2,
                               ),
-                              Container(
-                                padding: EdgeInsets.only(
-                                  left: _mainWidth * 0.04,
-                                  right: _mainWidth * 0.04,
+                              GestureDetector(
+                                onTap: () => _handleURLButtonPress(
+                                    context, faqUrl, 'FAQ'),
+                                child: Container(
+                                  color: Colors.white,
+                                  padding: EdgeInsets.only(
+                                    left: _mainWidth * 0.04,
+                                    right: _mainWidth * 0.04,
+                                  ),
+
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[19].name : 'FAQ'}',
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 14,
+                                              fontFamily: fontFamily,
+                                              color: Colors.black),
+                                        ),
+                                        Text(
+                                          '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[20].name : 'Read'}',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 14,
+                                              fontFamily: fontFamily,
+                                              color: CustomTheme.appTheme),
+                                        ),
+                                      ]),
                                 ),
-                                height: _mainHeight * 0.03,
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[19].name : 'FAQ'}',
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 14,
-                                            fontFamily: fontFamily,
-                                            color: Colors.black),
-                                      ),
-                                      Text(
-                                        '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[20].name : 'Read'}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 14,
-                                            fontFamily: fontFamily,
-                                            color: CustomTheme.appTheme),
-                                      ),
-                                    ]),
                               ),
                               const Divider(
                                 thickness: 2,

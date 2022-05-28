@@ -142,13 +142,11 @@ class _SearchPageState extends State<SearchPage> {
         Container(
           width: _mainWidth,
           color: Colors.white,
-
           padding: EdgeInsets.only(
-            left: _mainHeight * 0.015,
-            right: _mainHeight * 0.015,
-            top: _mainHeight * 0.015,
-            bottom: _mainHeight * 0.015
-          ),
+              left: _mainHeight * 0.015,
+              right: _mainHeight * 0.015,
+              top: _mainHeight * 0.015,
+              bottom: _mainHeight * 0.015),
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -186,7 +184,6 @@ class _SearchPageState extends State<SearchPage> {
                           width: _mainWidth * 0.78,
                           height: 45,
                           child: TextFormField(
-
                             controller: _searchController,
                             onChanged: (text) async {
                               if (text.length < 3) {
@@ -196,7 +193,6 @@ class _SearchPageState extends State<SearchPage> {
                               await value.getSearchedPlace(text);
                             },
                             decoration: InputDecoration(
-
                                 border: InputBorder.none,
                                 hintText: nullCheck(list: value.searchPageLang)
                                     ? '${value.searchPageLang[0].name}'
@@ -559,14 +555,12 @@ class _SearchPageState extends State<SearchPage> {
       style: NeumorphicStyle(
         shadowLightColor: CustomTheme.appTheme.withAlpha(150),
         shadowDarkColor: CustomTheme.appTheme.withAlpha(150),
-
         color: Colors.white,
         lightSource: LightSource.bottom,
         intensity: 5,
         depth: 2,
       ),
       child: Container(
-
           padding: EdgeInsets.only(top: 10),
           child: ListView.separated(
             padding: EdgeInsets.zero,
@@ -581,7 +575,6 @@ class _SearchPageState extends State<SearchPage> {
                   });
                 },
                 child: Container(
-                  //color: Colors.cyanAccent,
                   padding: EdgeInsets.only(
                     left: _mainWidth * 0.02,
                   ),

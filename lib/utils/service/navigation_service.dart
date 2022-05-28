@@ -3,7 +3,6 @@ import 'package:RentMyStay_user/home_module/view/refer_earn_page.dart';
 import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
 import 'package:RentMyStay_user/language_module/view/language_screen.dart';
 import 'package:RentMyStay_user/language_module/viewModel/language_viewModel.dart';
-
 import 'package:RentMyStay_user/login_module/view/login_page.dart';
 import 'package:RentMyStay_user/login_module/view/firebase_registration_page.dart';
 import 'package:RentMyStay_user/login_module/view/payment_status_page.dart';
@@ -34,9 +33,7 @@ import 'package:RentMyStay_user/property_module/viewModel/property_viewModel.dar
 import 'package:RentMyStay_user/utils/service/picture_screen.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
-
 import '../../my_stays/view/update_Invoice_UTR.dart';
 import '../../owner_property_module/view/add_property_page.dart';
 import '../../owner_property_module/view/owner_property_details_page.dart';

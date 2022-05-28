@@ -189,13 +189,13 @@ class _BookingPageState extends State<BookingPage> {
                                   'success'
                           ? const Text('')
                           : Container(
-                              height: 35,
+                              height: _mainHeight*0.045,
                               width: _mainWidth,
                               padding: EdgeInsets.only(left: 15, right: 5),
                               color: CustomTheme.errorColor,
                               alignment: Alignment.center,
                               child: Text(
-                                  '${value.bookingAmountsResponseModel?.msg} Please Select Other Dates.',
+                                  '${value.bookingAmountsResponseModel?.msg?.replaceFirst('failure', '').trim()} Please Select Other Dates.',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 14),
                                   maxLines: 2,
@@ -213,13 +213,13 @@ class _BookingPageState extends State<BookingPage> {
                   ),
                   Container(
                     margin: EdgeInsets.only(
-                      top: 10,
-                      bottom: 10,
+                      top: _mainHeight*0.01,
+
                     ),
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          padding:EdgeInsets.only(left: _mainWidth*0.02, right: _mainWidth*0.025),
                           child: Text(
                             widget.propertyDetailsUtilModel.title ?? '',
                             style: const TextStyle(
@@ -231,9 +231,7 @@ class _BookingPageState extends State<BookingPage> {
                           ),
                         ),
                         Container(
-                          // color: Colors.amber,
-                          // height: _mainHeight*0.55,
-                          margin: EdgeInsets.only(top: 10, bottom: 10),
+                          margin: EdgeInsets.only(bottom: _mainHeight*0.01,),
                           child: Stepper(
                             controlsBuilder: (context, details) {
                               if (details.stepIndex == 5) {

@@ -754,12 +754,14 @@ class _HomePageState extends State<HomePage> {
               valueListenable: isExpanded,
               builder: (_, expanded, __) {
                 return ExpansionTile(
- tilePadding: EdgeInsets.only(
-   left: _mainWidth*0.04,right: _mainWidth*0.05,
- ),
+                  tilePadding: EdgeInsets.only(
+                    left: _mainWidth * 0.04,
+                    right: _mainWidth * 0.05,
+                  ),
                   onExpansionChanged: (val) => isExpanded.value = val,
                   trailing: Icon(
-                      expanded ? Icons.arrow_drop_down : Icons.arrow_right,color: Colors.grey),
+                      expanded ? Icons.arrow_drop_down : Icons.arrow_right,
+                      color: Colors.grey),
                   childrenPadding: EdgeInsets.only(
                     left: _mainWidth * 0.07,
                     bottom: _mainHeight * 0.015,
@@ -776,14 +778,14 @@ class _HomePageState extends State<HomePage> {
                         color: CustomTheme.appTheme,
                         size: 20,
                       )),
-                  title:
-                      Container(width: _mainWidth, child: Text('Owner Dashboard')),
+                  title: Container(
+                      width: _mainWidth, child: Text('Owner Dashboard')),
                   children: [
                     getTile(
                       context: context,
                       leading: Icon(
                         Icons.view_agenda,
-                        color: CustomTheme.appThemeContrast,
+                        color: CustomTheme.appTheme,
                         size: 20,
                       ),
                       title: /*nullCheck(list: list) ? '${list[13].name}' :*/ 'Property View',
@@ -801,7 +803,7 @@ class _HomePageState extends State<HomePage> {
                       context: context,
                       leading: Icon(
                         Icons.wysiwyg,
-                        color: CustomTheme.appThemeContrast,
+                        color: CustomTheme.appTheme,
                         size: 20,
                       ),
                       title: 'My Properties',
@@ -812,7 +814,7 @@ class _HomePageState extends State<HomePage> {
                       context: context,
                       leading: Icon(
                         Icons.adjust_rounded,
-                        color: CustomTheme.appThemeContrast,
+                        color: CustomTheme.appTheme,
                         size: 20,
                       ),
                       title: 'Tenants Leads',

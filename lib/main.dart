@@ -6,11 +6,23 @@ import 'package:RentMyStay_user/utils/service/location_service.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'login_module/view/splash_page.dart';
 //import 'firebase_options.dart';
+
+Future<void>  _onFirebaseMessage(RemoteMessage message)async {
+  log('${message.data['name']}--FOREGROUND-- ${message.data['id']}');
+}
+Future<void>  _onFirebaseBackgroundMessage(RemoteMessage message)async {
+  await Firebase.initializeApp();
+  log('${message.data['name']}--BACKGROUND-- ${message.data['id']}');
+}
+Future<void>  _onFirebaseOpenedMessage(RemoteMessage message)async {
+  log('${message.data['name']}--OPENED-- ${message.data['id']}');
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,13 +31,62 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   await Firebase.initializeApp();
+  configuration();
   runApp(MyApp());
 
 }
+void configuration()async{
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  //messaging.getInitialMessage();
 
-class MyApp extends StatelessWidget {
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+  log('User granted permission: ${settings.authorizationStatus}');
+  FirebaseMessaging.onMessage.listen(_onFirebaseMessage);
+
+  FirebaseMessaging.onMessageOpenedApp.listen(_onFirebaseOpenedMessage);
+
+  FirebaseMessaging.onBackgroundMessage(_onFirebaseBackgroundMessage);
 
 
+
+
+
+}
+
+
+class MyApp extends StatefulWidget {
+
+
+
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  @override
+  void initState() {
+    terminatedMessage();
+    super.initState();
+  }
+  Future<void> terminatedMessage()async{
+    await Firebase.initializeApp();
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    RemoteMessage? message=await messaging.getInitialMessage();
+    if(message != null){
+      log('${message.data['name']}--FROM TERMINATED STATE-- ${message.data['id']}');
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {

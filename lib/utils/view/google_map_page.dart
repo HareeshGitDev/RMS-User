@@ -196,7 +196,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
             child: const Text('Continue'),
             onPressed: ()async {
               RMSWidgets.showLoaderDialog(context: context, message: 'Loading');
-              CurrentLocationModel location=await LocationService.getCurrentPlace(lat: currentPosition.latitude,lang: currentPosition.longitude);
+              CurrentLocationModel location=await LocationService.getCurrentPlace(lat: currentPosition.latitude,lang: currentPosition.longitude,context: context);
               Navigator.of(context).pop();
              Navigator.of(context).pop(location);
             },
