@@ -23,7 +23,7 @@ class LoginApiService {
         bodyParams: {
           'email': email,
           'password': password,
-          'device':Platform.isIOS ?'ios':'android'
+          'device': Platform.isIOS ? 'ios' : 'android'
         },
         fromLogin: true);
     final data = response as Map<String, dynamic>;
@@ -104,7 +104,11 @@ class LoginApiService {
     String url = AppUrls.loginOtpUrl;
     final response = await _apiService.getApiCallWithQueryParams(
         endPoint: url,
-        queryParams: {'mobileno': mobileNumber, 'uid': uid ,'device':Platform.isIOS ?'ios':'android'},
+        queryParams: {
+          'mobileno': mobileNumber,
+          'uid': uid,
+          'device': Platform.isIOS ? 'ios' : 'android'
+        },
         fromLogin: true);
 
     final data = response as Map<String, dynamic>;
@@ -135,5 +139,15 @@ class LoginApiService {
             msg: 'failure',
           )
         : SignUpResponseModel.fromJson(data);
+  }
+
+  Future<int> updateFCMToken({required String fcmToken}) async {
+    String url = AppUrls.fcmTokenUrl;
+    final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
+      'token': fcmToken,
+    });
+
+    final data = response as Map<String, dynamic>;
+    return data['msg'].toString().toLowerCase().contains('failure') ? 404 : 200;
   }
 }

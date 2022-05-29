@@ -30,7 +30,8 @@ class LocationService {
   }
 
   static Future<bool?> checkPermission({required BuildContext context}) async {
-    PermissionStatus permissionStatus=await requestInitialLocationPermission();
+    PermissionStatus permissionStatus =
+        await requestInitialLocationPermission();
     log(permissionStatus.toString());
     if (Platform.isAndroid) {
       if (permissionStatus.isGranted) {
@@ -43,7 +44,8 @@ class LocationService {
     } else if (Platform.isIOS) {
       if (permissionStatus.isGranted) {
         return true;
-      } else if (permissionStatus.isDenied || permissionStatus.isPermanentlyDenied) {
+      } else if (permissionStatus.isDenied ||
+          permissionStatus.isPermanentlyDenied) {
         await locationPermissionDialog(context: context);
       }
     }
@@ -72,8 +74,10 @@ class LocationService {
             '${placeMarks[0].name?.replaceAll(' ', '-')},${placeMarks[0].subLocality?.replaceAll(' ', '-')},${placeMarks[0].locality?.replaceAll(' ', '-')},${placeMarks[0].administrativeArea?.replaceAll(' ', '-')},${placeMarks[0].country?.replaceAll(' ', '-')},${placeMarks[0].postalCode?.replaceAll(' ', '-')}';
         locationModel.zipCode =
             '${placeMarks[0].postalCode?.replaceAll(' ', '-')}';
-        locationModel.longitude = lang.toString();
-        locationModel.latitude = lat.toString();
+        locationModel.longitude =
+            lang != null ? lang.toString() : position.longitude.toString();
+        locationModel.latitude =
+            lat != null ? lat.toString() : position.latitude.toString();
         locationModel.country =
             '${placeMarks[0].country?.replaceAll(' ', '-')}';
         locationModel.state =

@@ -12,6 +12,7 @@ import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -44,7 +45,8 @@ class FirebaseRegistrationPage extends StatefulWidget {
 class _RegistrationPageState extends State<FirebaseRegistrationPage> {
   late LoginViewModel _loginViewModel;
   final _emailController = TextEditingController();
-
+  late FirebaseMessaging messaging =
+      FirebaseMessaging.instance;
   final _nameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
   final _referalController = TextEditingController();
@@ -556,6 +558,12 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
 
       if (response == 200) {
         await setSPValues();
+        String? fcmToken =
+        await messaging.getToken();
+        if (fcmToken != null) {
+          await _loginViewModel.updateFCMToken(
+              fcmToken: fcmToken);
+        }
         Navigator.pushNamedAndRemoveUntil(
           context,AppRoutes.dashboardPage,(route) => false,);
       }
@@ -607,6 +615,12 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
       if (response.msg?.toLowerCase() !='failure') {
         log('Called For OTP Registration');
         await setSPValuesForOTP(response: response);
+        String? fcmToken =
+        await messaging.getToken();
+        if (fcmToken != null) {
+          await _loginViewModel.updateFCMToken(
+              fcmToken: fcmToken);
+        }
         Navigator.pushNamedAndRemoveUntil(
           context,AppRoutes.dashboardPage,(route) => false,);
       } else {

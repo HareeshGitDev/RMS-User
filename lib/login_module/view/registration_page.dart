@@ -10,6 +10,7 @@ import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -28,6 +29,8 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
+  late FirebaseMessaging messaging =
+      FirebaseMessaging.instance;
   late LoginViewModel _loginViewModel;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -358,6 +361,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
                           if (response.msg?.toLowerCase() != 'failure') {
                             await setSPValues(response: response);
+                            String? fcmToken =
+                            await messaging.getToken();
+                            if (fcmToken != null) {
+                              await _loginViewModel.updateFCMToken(
+                                  fcmToken: fcmToken);
+                            }
                             RMSWidgets.getToast(
                                 message:'You have been Successfully registered',
                                 color: myFavColor);

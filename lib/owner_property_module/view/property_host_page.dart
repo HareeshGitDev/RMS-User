@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:RentMyStay_user/owner_property_module/viewModel/owner_property_viewModel.dart';
 import 'package:RentMyStay_user/utils/model/current_location_model.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
@@ -222,7 +224,6 @@ class _HostPropertyPageState extends State<HostPropertyPage> {
                     child: TextFormField(
                       maxLines: 5,
                       controller: _commentsController,
-                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(left: 10, top: 10),
                         border: InputBorder.none,
@@ -278,6 +279,60 @@ class _HostPropertyPageState extends State<HostPropertyPage> {
                           borderRadius: BorderRadius.circular(40)),
                     )),
                 onPressed: () async {
+                  if (_nameController.text.isEmpty) {
+                    RMSWidgets.showSnackbar(
+                        context: context,
+                        message: 'Please enter Owner Name',
+                        color: CustomTheme.errorColor);
+                    return;
+                  }
+                  if (_emailController.text.isEmpty) {
+                    RMSWidgets.showSnackbar(
+                        context: context,
+                        message: 'Please enter E-mail',
+                        color: CustomTheme.errorColor);
+                    return;
+                  }
+                  if (_phoneController.text.isEmpty ||
+                      (_phoneController.text.length < 10 ||
+                          _phoneController.text.length > 12)) {
+                    RMSWidgets.showSnackbar(
+                        context: context,
+                        message: 'Please enter Valid Phone Number',
+                        color: CustomTheme.errorColor);
+                    return;
+                  }
+                  if (_addressController.text.isEmpty) {
+                    RMSWidgets.showSnackbar(
+                        context: context,
+                        message: 'Please enter Property Address',
+                        color: CustomTheme.errorColor);
+                    return;
+                  }
+                  if (units == 0) {
+                    RMSWidgets.showSnackbar(
+                        context: context,
+                        message: 'Please Select no. of Property Units',
+                        color: CustomTheme.errorColor);
+                    return;
+                  }
+                  String p = "[a-zA-Z0-9\+\.\_\%\-\+]{1,256}" +
+                      "\\@" +
+                      "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                      "(" +
+                      "\\." +
+                      "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                      ")+";
+                  RegExp regExp = RegExp(p);
+
+                  if (!regExp.hasMatch(_emailController.text)) {
+                    RMSWidgets.showSnackbar(
+                        context: context,
+                        message: 'Please Enter Valid E-Mail',
+                        color: CustomTheme.errorColor);
+                    return;
+                  }
+
                   RMSWidgets.showLoaderDialog(
                       context: context, message: 'Loading');
                   int response = await _viewModel.hostProperty(
@@ -286,9 +341,11 @@ class _HostPropertyPageState extends State<HostPropertyPage> {
                       phone: _phoneController.text,
                       address: _addressController.text,
                       units: units.toString(),
-                      comment: _commentsController.text,
-                      lat: lat,
-                      lang: lang);
+                      comment: _commentsController.text.isEmpty
+                          ? _commentsController.text
+                          : '',
+                      lat: lat ?? '',
+                      lang: lang ?? '');
                   Navigator.of(context).pop();
                   if (response == 200) {
                     Navigator.of(context).pushNamedAndRemoveUntil(

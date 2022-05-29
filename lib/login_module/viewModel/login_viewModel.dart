@@ -55,4 +55,7 @@ class LoginViewModel extends ChangeNotifier {
         await _loginApiService.detailsValidationAfterOTP(model: model);
     return response;
   }
+
+  Future<int> updateFCMToken({required String fcmToken}) async =>
+      await _loginApiService.updateFCMToken(fcmToken: fcmToken);
 }

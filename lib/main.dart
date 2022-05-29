@@ -44,10 +44,7 @@ void main() async {
 
 void configuration() async {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-  //messaging.getInitialMessage();
-  String? token = await messaging.getToken();
-  String? apnsToken = await messaging.getAPNSToken();
-  print('TOKEN :: $token  ---- APNS $apnsToken');
+
 
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
