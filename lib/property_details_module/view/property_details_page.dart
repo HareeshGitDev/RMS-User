@@ -1296,12 +1296,12 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                 ?.details
                                                 ?.freeGuests)
                                             .toString()),
-                                        maxGuest: int.parse((value
+                                        maxGuest: int.parse(value
                                                 .propertyDetailsModel
                                                 ?.data
                                                 ?.details
-                                                ?.maxGuests)
-                                            .toString()),
+                                                ?.maxGuests ??'0'
+                                            ),
                                       );
                                       Navigator.pushNamed(
                                           context, AppRoutes.bookingPage,

@@ -74,6 +74,7 @@ class _RazorpayPaymentPageState extends State<RazorpayPaymentPage> {
     _viewModel = Provider.of<PaymentViewModel>(context, listen: false);
     WidgetsBinding.instance!.addPostFrameCallback(
         (_) => openCheckout(model: widget.paymentRequestModel));
+
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
@@ -89,17 +90,29 @@ class _RazorpayPaymentPageState extends State<RazorpayPaymentPage> {
   @override
   Widget build(BuildContext context) {
     return _connectionStatus
-        ? Scaffold(
-            appBar: AppBar(
-              title: Text('Payment Screen'),
-              backgroundColor: CustomTheme.appTheme,
-              titleSpacing: 0,
-              centerTitle: false,
-              leading: SizedBox(
-                width: 15,
+        ? WillPopScope(
+            child: Scaffold(
+              appBar: AppBar(
+                title: Text('Payment Screen'),
+                backgroundColor: CustomTheme.appTheme,
+                titleSpacing: 0,
+                centerTitle: false,
+                leading: SizedBox(
+                  width: 15,
+                ),
+              ),
+              body: Center(
+                child: Text(
+                  'Loading...',
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: CustomTheme.appTheme,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
-          )
+            onWillPop: () async => false)
         : RMSWidgets.networkErrorPage(context: context);
   }
 

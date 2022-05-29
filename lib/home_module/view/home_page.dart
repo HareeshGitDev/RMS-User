@@ -602,6 +602,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: CustomTheme.white,
       child: Container(
         height: _mainHeight,
+
         child: ListView(
           children: [
             FutureBuilder<Map<String, dynamic>>(
@@ -754,10 +755,10 @@ class _HomePageState extends State<HomePage> {
               valueListenable: isExpanded,
               builder: (_, expanded, __) {
                 return ExpansionTile(
-                  tilePadding: EdgeInsets.only(
+                  /*tilePadding: EdgeInsets.only(
                     left: _mainWidth * 0.04,
                     right: _mainWidth * 0.05,
-                  ),
+                  ),*/
                   onExpansionChanged: (val) => isExpanded.value = val,
                   trailing: Icon(
                       expanded ? Icons.arrow_drop_down : Icons.arrow_right,
@@ -879,6 +880,7 @@ class _HomePageState extends State<HomePage> {
           right: _mainWidth * 0.01,
           top: _mainHeight * 0.006),
       height: _mainHeight * 0.06,
+
       child: ListTile(
         leading: Container(
             height: _mainHeight * 0.05,
