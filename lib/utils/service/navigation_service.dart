@@ -274,7 +274,7 @@ class NavigationService {
         String propId = settings.arguments as String;
         log('Called For Navigation');
         return MaterialPageRoute(
-          builder: (context) => ChangeNotifierProvider(
+          builder: (_) => ChangeNotifierProvider(
               create: (_) => PropertyDetailsViewModel(),
               child: PropertyDetailsPage(
                 propId: propId,

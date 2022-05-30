@@ -8,14 +8,12 @@ import 'package:flutter/material.dart';
 
 import '../../theme/custom_theme.dart';
 
-
 class SplashPage extends StatefulWidget {
   @override
   _SplashPageState createState() => _SplashPageState();
 }
 
 class _SplashPageState extends State<SplashPage> {
-
   late StreamSubscription<ConnectivityResult> _connectivitySubs;
   final Connectivity _connectivity = Connectivity();
   bool _connectionStatus = true;
@@ -67,45 +65,57 @@ class _SplashPageState extends State<SplashPage> {
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     initMethod();
-
   }
 
   Future<void> initMethod() async {
-    SharedPreferenceUtil preferenceUtil=SharedPreferenceUtil();
-    String? token=await preferenceUtil.getToken();
+    SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+    String? token = await preferenceUtil.getToken();
 
-    if(token == null){
-      Timer(const Duration(milliseconds: 1000), () {
-        Navigator.pushNamedAndRemoveUntil(
-            context,
-            AppRoutes.loginPage,(route) => false,);
+    if (token == null) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        Timer(const Duration(milliseconds: 1000), () {
+          if (mounted) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              AppRoutes.loginPage,
+              (route) => false,
+            );
+          }
+        });
       });
-    }else{
-      Timer(const Duration(milliseconds: 1000), () {
-        Navigator.pushNamedAndRemoveUntil(
-            context,AppRoutes.dashboardPage,(route) => false,);
+    } else {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        Timer(const Duration(milliseconds: 1000), () {
+          if (mounted) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              AppRoutes.dashboardPage,
+              (route) => false,
+            );
+          }
+        });
       });
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
-    return _connectionStatus?Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          color: CustomTheme.appTheme
-          /*gradient: LinearGradient(
+    return _connectionStatus
+        ? Scaffold(
+            body: Container(
+              decoration: BoxDecoration(color: CustomTheme.appTheme
+                  /*gradient: LinearGradient(
               colors: [CustomTheme.appTheme.withAlpha(50), CustomTheme.appTheme],
               end: Alignment.bottomCenter,
               begin: Alignment.topCenter),*/
-        ),
-        child: Center(
-          child: Image.asset("assets/images/transparent_logo_rms.png"),
-          widthFactor: 100,
-          heightFactor: 100,
-        ),
-      ),
-    ):RMSWidgets.networkErrorPage(context: context);
+                  ),
+              child: Center(
+                child: Image.asset("assets/images/transparent_logo_rms.png"),
+                widthFactor: 100,
+                heightFactor: 100,
+              ),
+            ),
+          )
+        : RMSWidgets.networkErrorPage(context: context);
   }
 }
