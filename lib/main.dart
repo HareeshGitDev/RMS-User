@@ -2,7 +2,9 @@ import 'dart:developer';
 import 'dart:io' show Platform;
 import 'package:RentMyStay_user/theme/custom_theme.dart';
 import 'package:RentMyStay_user/utils/service/bottom_navigation_provider.dart';
+import 'package:RentMyStay_user/utils/service/deep_linking_service.dart';
 import 'package:RentMyStay_user/utils/service/location_service.dart';
+import 'package:RentMyStay_user/utils/service/locator_service.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:RentMyStay_user/utils/service/navigator_key_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -37,14 +39,14 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   await Firebase.initializeApp();
-
+  lateInitializeServices();
+  lazySingletonInstance<DeepLinkingService>().initDynamicLinks();
   configuration();
   runApp(MyApp());
 }
 
 void configuration() async {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-
 
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
@@ -69,19 +71,19 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-
   Future<void> initUniLinks() async {
     try {
       final String? initialLink = await getInitialLink();
-      final Uri? uri=await getInitialUri();
-      if(uri != null){
+      final Uri? uri = await getInitialUri();
+      if (uri != null) {
         log('URI :: ${uri.host}');
       }
       if (initialLink != null) {
         log("LINK :: " + initialLink.toString());
-        NavigatorKeyService.navigateTo(
-            routeName: AppRoutes.propertyDetailsPage, propId: '1375');
+        lazySingletonInstance<NavigatorKeyService>().navigateTo(
+            routeName: AppRoutes.propertyDetailsPage, propId: 1375.toString());
+        /* NavigatorKeyService.navigateTo(
+            routeName: AppRoutes.propertyDetailsPage, propId: '1375');*/
       }
     } on PlatformException {
       log('Platform Exception Happened');
@@ -90,7 +92,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    initUniLinks();
+    //   initUniLinks();
     terminatedMessage();
     super.initState();
   }
@@ -115,7 +117,7 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'RentMyStay ',
-        navigatorKey: NavigatorKeyService.navigatorKey,
+        navigatorKey: lazySingletonInstance<NavigatorKeyService>().navigatorKey,
         theme: ThemeData(
           primarySwatch: customColor,
           fontFamily: 'hk-grotest',

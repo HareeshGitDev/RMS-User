@@ -18,6 +18,8 @@
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
+	<key>NSAppleMusicUsageDescription</key>
+    <string>RentMyStay requires this access to let you upload photo and video for any query.</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -57,7 +59,7 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Enabling this helps RentMyStay find and recommend property near you</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>RentMyStay requires Microphone Permission to record audio and video for upload query</string>
+	<string>RentMyStay requires Microphone Permission to record audio and video for upload query in video format</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>RentMyStay requires access to the photo library  to let you upload profile pictures and id and any query image </string>
 	<key>UIBackgroundModes</key>

@@ -350,7 +350,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                     ),
                                     TextSpan(
                                       text:
-                                          '  ${value.myStayDetailsModel?.data?.numGuests ?? ''} ${nullCheck(list: value.bookingDetailsLang) ? '${value.bookingDetailsLang[3].name}' : 'Nights'}',
+                                          '  ${value.myStayDetailsModel?.data?.nights ?? ''} ${nullCheck(list: value.bookingDetailsLang) ? '${value.bookingDetailsLang[3].name}' : 'Nights'}',
                                     )
                                   ],
                                 ),
