@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:RentMyStay_user/utils/service/locator_service.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
@@ -37,7 +36,7 @@ class DeepLinkingService {
       encoded = '$encoded=';
     }
     String propId = utf8.decode(base64.decode(encoded));
-
+    ///logic implementation for which page to navigate
     navigateTo(routeName: AppRoutes.propertyDetailsPage, propId: propId);
   }
 

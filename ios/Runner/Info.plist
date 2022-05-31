@@ -22,6 +22,10 @@
     <string>RentMyStay requires this access to let you upload photo and video for any query.</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>FirebaseDynamicLinksCustomDomains</key>
+	<array>
+	    <string>https://rentmystay.com/rentals</string>
+	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
