@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:RentMyStay_user/owner_property_module/model/owner_property_details_model.dart';
 import 'package:RentMyStay_user/property_details_module/amenities_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ import '../viewModel/owner_property_viewModel.dart';
 
 class PropertyAmenitiesPage extends StatefulWidget {
   final String propId;
-  final List<AmenitiesModel> amenitiesList;
+  List<AmenitiesModel>? amenitiesList;
   final bool fromPropertyDetails;
 
   PropertyAmenitiesPage(
@@ -38,7 +39,17 @@ class _PropertyAmenitiesPageState extends State<PropertyAmenitiesPage> {
   void initState() {
     super.initState();
     _viewModel = Provider.of<OwnerPropertyViewModel>(context, listen: false);
-    updatedAmenitiesList = widget.amenitiesList;
+    if (widget.fromPropertyDetails) {
+      updatedAmenitiesList = widget.amenitiesList ?? [];
+    } else {
+    _viewModel.getAllAmenitiesList(Amenities());
+      for (var element in _viewModel.allAmenitiesList) {
+        updatedAmenitiesList.add(AmenitiesModel(
+            imageUrl: element.imageUrl,
+            name: element.name,
+            selected: element.selected));
+      }
+    }
   }
 
   @override
@@ -153,8 +164,11 @@ class _PropertyAmenitiesPageState extends State<PropertyAmenitiesPage> {
 
                   for (var element in updatedAmenitiesList) {
                     if (element.selected) {
-                      amenity[element.name.toLowerCase().replaceAll(' ', '_').toString().trim()] =
-                          "1";
+                      amenity[element.name
+                          .toLowerCase()
+                          .replaceAll(' ', '_')
+                          .toString()
+                          .trim()] = "1";
                     }
                   }
 
@@ -171,10 +185,9 @@ class _PropertyAmenitiesPageState extends State<PropertyAmenitiesPage> {
                   if (data == 200) {
                     widget.fromPropertyDetails
                         ? Navigator.of(context).pop()
-                        : Navigator.of(context)
-                        .pushNamed(AppRoutes.ownerPropertyDetailsPage, arguments: {
-                      'propId':widget.propId,
-                    });
+                        : Navigator.of(context).pushNamed(
+                            AppRoutes.ownerPropertyDetailsPage,
+                            arguments: widget.propId);
                   }
                 },
               ),

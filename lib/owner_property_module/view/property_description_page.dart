@@ -116,44 +116,43 @@ class _PropertyDescriptionPageState extends State<PropertyDescriptionPage> {
         ),
       ),
       bottomNavigationBar:   Container(
+        height: _mainHeight * 0.05,
+        width: _mainWidth ,
+
         margin: EdgeInsets.only(
             left: _mainWidth * 0.04,
             right: _mainWidth * 0.04,
             bottom: _mainHeight * 0.02
         ),
-        child: Container(
-          height: _mainHeight * 0.05,
-          width: _mainWidth ,
-          child: ElevatedButton(
-            style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                    CustomTheme.appTheme),
-                shape:
-                MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                )),
-            child: const Text('Save'),
-            onPressed: () async{
-              OwnerPropertyDetailsRequestModel model =
-              OwnerPropertyDetailsRequestModel();
-              model.description = _detailsController.text;
-              model.propId = widget.propId;
-              RMSWidgets.showLoaderDialog(
-                  context: context, message: 'Loading');
-              int data = await _viewModel.updatePropertyDetails(
-                  requestModel: model);
-              Navigator.of(context).pop();
-              if (data == 200) {
+        child: ElevatedButton(
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(
+                  CustomTheme.appTheme),
+              shape:
+              MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+              )),
+          child: const Text('Save'),
+          onPressed: () async{
+            OwnerPropertyDetailsRequestModel model =
+            OwnerPropertyDetailsRequestModel();
+            model.description = _detailsController.text;
+            model.propId = widget.propId;
+            RMSWidgets.showLoaderDialog(
+                context: context, message: 'Loading');
+            int data = await _viewModel.updatePropertyDetails(
+                requestModel: model);
+            Navigator.of(context).pop();
+            if (data == 200) {
 
-                widget.fromPropertyDetails?Navigator.of(context).pop():Navigator.of(context)
-                    .popAndPushNamed(AppRoutes.propertyRulesPage, arguments: {
-                  'fromPropertyDetails': false,
-                  'propId': widget.propId,
-                });
-              }
-            },
-          ),
+              widget.fromPropertyDetails?Navigator.of(context).pop():Navigator.of(context)
+                  .popAndPushNamed(AppRoutes.propertyRulesPage, arguments: {
+                'fromPropertyDetails': false,
+                'propId': widget.propId,
+              });
+            }
+          },
         ),
       ),
     );

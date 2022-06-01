@@ -138,6 +138,9 @@ class OwnerPropertyApiService {
     if (requestModel.amenity != null) {
       propJson['amenity'] = requestModel.amenity;
     }
+    if (requestModel.videoLink != null) {
+      propJson['video_link'] = requestModel.videoLink;
+    }
     final response =
         await _apiService.putApiCall(endPoint: url, bodyParams: propJson);
     final data = response as Map<String, dynamic>;

@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:RentMyStay_user/images.dart';
+import 'package:RentMyStay_user/owner_property_module/model/owner_property_details_model.dart';
 import 'package:RentMyStay_user/owner_property_module/viewModel/owner_property_viewModel.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -8,6 +11,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../property_details_module/amenities_model.dart';
 import '../../theme/custom_theme.dart';
 import '../../utils/view/rms_widgets.dart';
 
@@ -207,6 +211,10 @@ class _OwnerPropertyListingPageState extends State<OwnerPropertyListingPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+
+
+
+
          choosePropertyDialog(context: context,value:_viewModel);
         },
         backgroundColor: CustomTheme.appTheme,

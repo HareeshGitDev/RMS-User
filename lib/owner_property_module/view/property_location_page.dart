@@ -125,7 +125,7 @@ class _PropertyLocationPageState extends State<PropertyLocationPage> {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    currentLocation = await Navigator.of(context).push(
+                    var locationDetails = await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) =>
                             ChangeNotifierProvider<OwnerPropertyViewModel>(
@@ -137,8 +137,10 @@ class _PropertyLocationPageState extends State<PropertyLocationPage> {
                               OwnerPropertyViewModel(),
                         ),
                       ),
-                    );
-                    if (currentLocation.fullAddress != null) {
+                    ) as CurrentLocationModel?;
+                    if (locationDetails != null &&
+                        locationDetails.fullAddress != null) {
+                      currentLocation = locationDetails;
                       _addressController.text =
                           currentLocation.fullAddress.toString();
                     }
@@ -158,7 +160,6 @@ class _PropertyLocationPageState extends State<PropertyLocationPage> {
         ),
       ),
       bottomNavigationBar: Container(
-
         margin: EdgeInsets.only(
             left: _mainWidth * 0.04,
             right: _mainWidth * 0.04,
@@ -181,7 +182,8 @@ class _PropertyLocationPageState extends State<PropertyLocationPage> {
                 onPressed: () async {
                   RMSWidgets.showLoaderDialog(
                       context: context, message: 'Loading');
-                  currentLocation = await LocationService.getCurrentPlace(context: context);
+                  currentLocation =
+                      await LocationService.getCurrentPlace(context: context);
                   Navigator.of(context).pop();
                   if (currentLocation.fullAddress != null) {
                     _addressController.text =
@@ -204,14 +206,16 @@ class _PropertyLocationPageState extends State<PropertyLocationPage> {
                 child: const Text('Save'),
                 onPressed: () async {
                   if ((currentLocation.fullAddress != null &&
-                      currentLocation.fullAddress!.isNotEmpty) || _addressController.text.isNotEmpty) {
+                          currentLocation.fullAddress!.isNotEmpty) ||
+                      _addressController.text.isNotEmpty) {
                     OwnerPropertyDetailsRequestModel model =
                         OwnerPropertyDetailsRequestModel();
                     model.city = currentLocation.city;
                     model.state = currentLocation.state;
                     model.zipCode = currentLocation.zipCode;
                     model.country = currentLocation.country;
-                    model.addressDisplay = currentLocation.fullAddress ?? _addressController.text  ;
+                    model.addressDisplay =
+                        currentLocation.fullAddress ?? _addressController.text;
                     model.glat = currentLocation.latitude;
                     model.glng = currentLocation.longitude;
 
@@ -224,11 +228,12 @@ class _PropertyLocationPageState extends State<PropertyLocationPage> {
                     if (data == 200) {
                       widget.fromPropertyDetails
                           ? Navigator.of(context).pop()
-                          : Navigator.of(context)
-                          .popAndPushNamed(AppRoutes.editPropertyPhotosPage, arguments: {
-                        'fromPropertyDetails': false,
-                        'propId': widget.propId,
-                      });;
+                          : Navigator.of(context).popAndPushNamed(
+                              AppRoutes.editPropertyPhotosPage,
+                              arguments: {
+                                  'fromPropertyDetails': false,
+                                  'propId': widget.propId,
+                                });
                     }
                   }
                 },

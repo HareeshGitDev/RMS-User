@@ -22,12 +22,13 @@ class OwnerPropertyViewModel extends ChangeNotifier {
       OwnerPropertyDetailsModel();
   List<AmenitiesModel> availableAmenitiesList = [];
   List<AmenitiesModel> allAmenitiesList = [];
+
   double latitude = 12.967140;
   double longitude = 77.736558;
   String bName = '';
   List<LocationModel> locations = [];
   YoutubePlayerController youTubeController = YoutubePlayerController(
-    initialVideoId: 'w74c6Wnsz8g',
+    initialVideoId: '',
     flags: const YoutubePlayerFlags(
       autoPlay: true,
       mute: true,
@@ -63,6 +64,19 @@ class OwnerPropertyViewModel extends ChangeNotifier {
       longitude =
           double.parse('${ownerPropertyDetailsModel.data?.propDetails?.glng}');
       bName = '${ownerPropertyDetailsModel.data?.propDetails?.propertyName}';
+    }
+    if (ownerPropertyDetailsModel.data != null &&
+        ownerPropertyDetailsModel.data?.propDetails != null &&
+        ownerPropertyDetailsModel.data?.propDetails?.videoLink != null) {
+      youTubeController = YoutubePlayerController(
+        initialVideoId:
+        (ownerPropertyDetailsModel.data?.propDetails?.videoLink).toString(),
+        flags: const YoutubePlayerFlags(
+          autoPlay: true,
+          mute: true,
+          controlsVisibleAtStart: false,
+        ),
+      );
     }
     notifyListeners();
   }
