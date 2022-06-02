@@ -134,7 +134,10 @@ class _WishListPageState extends State<WishListPage> {
                         return GestureDetector(
                           onTap: () => Navigator.of(context).pushNamed(
                               AppRoutes.propertyDetailsPage,
-                              arguments: data.propId),
+                              arguments: {
+                                'propId':data.propId,
+                                'fromExternalLink':false,
+                              }),
                           child: Card(
                             elevation: 4,
                             shadowColor: CustomTheme.appTheme,

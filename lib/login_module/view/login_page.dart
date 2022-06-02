@@ -30,17 +30,21 @@ import '../model/login_response_model.dart';
 import '../model/signup_response_model.dart';
 
 class LoginPage extends StatefulWidget {
+  final bool fromExternalLink;
+  Function? onClick;
+
+  LoginPage({required this.fromExternalLink, this.onClick});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
- late FirebaseMessaging messaging =
-      FirebaseMessaging.instance;
+  late FirebaseMessaging messaging = FirebaseMessaging.instance;
   TextEditingController mob_controller = TextEditingController();
   final privacy_policy =
       "https://www.rentmystay.com/info/privacy-policy/123456";
-  late ThemeData theme;
+
   late LoginViewModel _loginViewModel;
   final _emailController = TextEditingController();
   final _resetEmailController = TextEditingController();
@@ -280,12 +284,16 @@ class _LoginPageState extends State<LoginPage> {
                                           await _loginViewModel.updateFCMToken(
                                               fcmToken: fcmToken);
                                         }
-
-                                        Navigator.pushNamedAndRemoveUntil(
-                                          context,
-                                          AppRoutes.dashboardPage,
-                                          (route) => false,
-                                        );
+                                        if (widget.fromExternalLink &&
+                                            widget.onClick != null) {
+                                          widget.onClick!();
+                                        } else {
+                                          Navigator.pushNamedAndRemoveUntil(
+                                            context,
+                                            AppRoutes.dashboardPage,
+                                            (route) => false,
+                                          );
+                                        }
                                       }
                                     }
                                     //
@@ -396,28 +404,37 @@ class _LoginPageState extends State<LoginPage> {
                                               await shared.setString(rms_userId,
                                                   '${response.data?.id}');
 
-
                                               Navigator.of(context).pushNamed(
                                                   AppRoutes
                                                       .firebaseRegistrationPage,
                                                   arguments: {
                                                     'gmailData': data,
                                                     'from': 'Gmail',
+                                                    'fromExternalApi':
+                                                        widget.fromExternalLink,
+                                                    'onClick': widget.onClick
                                                   });
                                             } else {
                                               await setSPValues(
                                                   response: response);
                                               String? fcmToken =
-                                              await messaging.getToken();
+                                                  await messaging.getToken();
                                               if (fcmToken != null) {
-                                                await _loginViewModel.updateFCMToken(
-                                                    fcmToken: fcmToken);
+                                                await _loginViewModel
+                                                    .updateFCMToken(
+                                                        fcmToken: fcmToken);
                                               }
-                                              Navigator.pushNamedAndRemoveUntil(
-                                                context,
-                                                AppRoutes.dashboardPage,
-                                                (route) => false,
-                                              );
+                                              if (widget.fromExternalLink &&
+                                                  widget.onClick != null) {
+                                                widget.onClick!();
+                                              } else {
+                                                Navigator
+                                                    .pushNamedAndRemoveUntil(
+                                                  context,
+                                                  AppRoutes.dashboardPage,
+                                                  (route) => false,
+                                                );
+                                              }
                                             }
                                           }
                                         } else {
@@ -460,8 +477,13 @@ class _LoginPageState extends State<LoginPage> {
                                 height: 20,
                               ),
                               GestureDetector(
-                                onTap: () => Navigator.of(context)
-                                    .pushNamed(AppRoutes.registrationPage),
+                                onTap: () => Navigator.of(context).pushNamed(
+                                    AppRoutes.registrationPage,
+                                    arguments: {
+                                      'fromExternalLink':
+                                          widget.fromExternalLink,
+                                      'onClick': widget.onClick
+                                    }),
                                 child: Container(
                                   color: Colors.white,
                                   child: RichText(
@@ -638,7 +660,7 @@ class _LoginPageState extends State<LoginPage> {
         builder: (context) {
           return Container(
             decoration: BoxDecoration(
-                color: theme.backgroundColor,
+
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(16),
                     topRight: Radius.circular(16))),
@@ -737,7 +759,10 @@ class _LoginPageState extends State<LoginPage> {
                                   Navigator.of(context).pushNamed(
                                       AppRoutes.otpVerifyPage,
                                       arguments: {
-                                        'mobile': mob_controller.text
+                                        'mobile': mob_controller.text,
+                                        'fromExternalLink':
+                                            widget.fromExternalLink,
+                                        'onClick': widget.onClick
                                       });
                                 } else {
                                   RMSWidgets.getToast(

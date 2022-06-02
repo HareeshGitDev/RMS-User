@@ -81,9 +81,10 @@ class _MyAppState extends State<MyApp> {
       if (initialLink != null) {
         log("LINK :: " + initialLink.toString());
         lazySingletonInstance<NavigatorKeyService>().navigateTo(
-            routeName: AppRoutes.propertyDetailsPage, propId: 1375.toString());
-        /* NavigatorKeyService.navigateTo(
-            routeName: AppRoutes.propertyDetailsPage, propId: '1375');*/
+            routeName: AppRoutes.propertyDetailsPage, data: {
+
+        });
+
       }
     } on PlatformException {
       log('Platform Exception Happened');

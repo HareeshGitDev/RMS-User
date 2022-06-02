@@ -7,6 +7,7 @@ import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:flutter/material.dart';
 
 import '../../theme/custom_theme.dart';
+import '../../utils/constants/sp_constants.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -70,15 +71,21 @@ class _SplashPageState extends State<SplashPage> {
   Future<void> initMethod() async {
     SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
     String? token = await preferenceUtil.getToken();
+    String lang=await preferenceUtil.getString(rms_language) ?? 'english';
 
     if (token == null) {
       WidgetsBinding.instance!.addPostFrameCallback((_) {
-        Timer(const Duration(milliseconds: 1000), () {
+        Timer(const Duration(milliseconds: 1000), ()  {
           if (mounted) {
             Navigator.pushNamedAndRemoveUntil(
               context,
-              AppRoutes.loginPage,
+              AppRoutes.languageScreen,
               (route) => false,
+                arguments:{
+                  'fromDashboard':false,
+                  'lang':lang
+
+                }
             );
           }
         });
