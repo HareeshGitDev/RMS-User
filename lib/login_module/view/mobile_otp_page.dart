@@ -20,8 +20,10 @@ import '../../utils/service/shared_prefrences_util.dart';
 class MobileOtpPage extends StatefulWidget {
   //const MobileOtpPage({Key? key}) : super(key: key);
   String number;
+  final bool fromExternalLink;
+  Function? onClick;
 
-  MobileOtpPage({required this.number});
+  MobileOtpPage({required this.number,required this.fromExternalLink,this.onClick});
 
   @override
   _OtpState createState() => _OtpState();
@@ -270,12 +272,22 @@ class _OtpState extends State<MobileOtpPage> {
               'uid':userCredential.user?.uid,
               'from':'OTP',
               'mobile':phoneNumber,
+              'fromExternalApi':
+              widget.fromExternalLink,
+              'onClick': widget.onClick
             },);
           } else if (response.msg?.toLowerCase() != 'failure' &&
               response.data?.action?.toLowerCase() == 'sign-in') {
             await setSPValues(response: response);
-            Navigator.pushNamedAndRemoveUntil(
-              context,AppRoutes.dashboardPage,(route) => false,);
+            if(widget.fromExternalLink && widget.onClick != null){
+              widget.onClick!();
+            }else{
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.dashboardPage,
+                    (route) => false,
+              );
+            }
           }
         } else {
           log('Error From Firebase OTP ');
@@ -326,13 +338,26 @@ class _OtpState extends State<MobileOtpPage> {
             'from': 'OTP',
             'uid':userCredential.user?.uid,
             'mobile':widget.number,
+            'fromExternalApi':
+            widget.fromExternalLink,
+            'onClick': widget.onClick
+
+
           });
         } else if (response.msg?.toLowerCase() != 'failure' &&
             response.data?.action?.toLowerCase() == 'sign-in') {
           await setSPValues(response: response);
           Navigator.pop(context);
-          Navigator.pushNamedAndRemoveUntil(
-            context,AppRoutes.dashboardPage,(route) => false,);
+
+          if(widget.fromExternalLink && widget.onClick != null){
+            widget.onClick!();
+          }else{
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              AppRoutes.dashboardPage,
+                  (route) => false,
+            );
+          }
         }
       }else{
         Navigator.pop(context);

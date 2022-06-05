@@ -14,8 +14,9 @@ import '../viewModel/language_viewModel.dart';
 
 class LanguageScreen extends StatefulWidget {
   String language;
+  bool fromDashboard;
 
-  LanguageScreen({Key? key, required this.language}) : super(key: key);
+  LanguageScreen({Key? key, required this.language,required this.fromDashboard}) : super(key: key);
 
   @override
   _LanguageScreenState createState() => _LanguageScreenState();
@@ -86,9 +87,16 @@ class _LanguageScreenState extends State<LanguageScreen> {
     _mainWidth = MediaQuery.of(context).size.width;
     return _connectionStatus
         ? Scaffold(
-            appBar: AppBar(
+            appBar: widget.fromDashboard?AppBar(
               backgroundColor: CustomTheme.appTheme,
               centerTitle: false,
+              titleSpacing: 0,
+              title: Text('Select Language'),
+            ):AppBar(
+              leading: Container(),
+
+              backgroundColor: CustomTheme.appTheme,
+              centerTitle: true,
               titleSpacing: 0,
               title: Text('Select Language'),
             ),
@@ -174,9 +182,21 @@ class _LanguageScreenState extends State<LanguageScreen> {
                           )),
                       onPressed: () async {
                         await shared.setString(rms_language, widget.language);
+                        if(widget.fromDashboard){
+                          Navigator.of(context)
+                              .popAndPushNamed(AppRoutes.dashboardPage);
+                        }else{
+                          Navigator.pushNamed(
+                              context,
+                              AppRoutes.loginPage,
+                              arguments:{
+                                'fromExternalLink':false,
+                              }
+                          );
 
-                        Navigator.of(context)
-                            .popAndPushNamed(AppRoutes.dashboardPage);
+                        }
+
+
                       },
                       child: Center(child: Text("Save")),
                     ),

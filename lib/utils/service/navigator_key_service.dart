@@ -6,9 +6,9 @@ class NavigatorKeyService {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   void navigateTo(
-      {required String routeName,required String propId}) {
+      {required String routeName,required Map<String,dynamic> data}) {
     navigatorKey.currentState?.pushNamedAndRemoveUntil(
         routeName, (route) => false,
-        arguments: propId);
+        arguments: data);
   }
 }

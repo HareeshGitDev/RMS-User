@@ -24,6 +24,11 @@ import '../model/login_response_model.dart';
 import '../model/signup_response_model.dart';
 
 class RegistrationPage extends StatefulWidget {
+  final bool fromExternalLink;
+  Function? onClick;
+
+  RegistrationPage({required this.fromExternalLink,this.onClick});
+
   @override
   _RegistrationPageState createState() => _RegistrationPageState();
 }
@@ -370,8 +375,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             RMSWidgets.getToast(
                                 message:'You have been Successfully registered',
                                 color: myFavColor);
-                            Navigator.pushNamedAndRemoveUntil(
-                              context,AppRoutes.dashboardPage,(route) => false,);
+                            if(widget.fromExternalLink && widget.onClick != null){
+                              widget.onClick!();
+                            }else{
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                AppRoutes.dashboardPage,
+                                    (route) => false,
+                              );
+                            }
+
                           }
                         }
                         },

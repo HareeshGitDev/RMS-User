@@ -59,10 +59,14 @@ class NavigationService {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case AppRoutes.loginPage:
+        final data = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
                   create: (_) => LoginViewModel(),
-                  child: LoginPage(),
+                  child: LoginPage(
+                    fromExternalLink: data['fromExternalLink'],
+                    onClick: data['onClick'],
+                  ),
                 ));
       case AppRoutes.homePage:
         return MaterialPageRoute(
@@ -80,18 +84,21 @@ class NavigationService {
           ),
         );
       case AppRoutes.languageScreen:
-        String lang = settings.arguments as String;
+        final data = settings.arguments as Map<String,dynamic>;
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
             create: (_) => LanguageViewModel(),
-            child: LanguageScreen(language: lang),
+            child: LanguageScreen(language:data['lang'],fromDashboard: data['fromDashboard']),
           ),
         );
       case AppRoutes.registrationPage:
+        final data = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
                   create: (_) => LoginViewModel(),
-                  child: RegistrationPage(),
+                  child: RegistrationPage(
+                      fromExternalLink: data['fromExternalLink'],
+                      onClick: data['onClick']),
                 ));
       case AppRoutes.pictureScreenPage:
         return MaterialPageRoute(
@@ -103,7 +110,10 @@ class NavigationService {
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
                   create: (_) => LoginViewModel(),
-                  child: MobileOtpPage(number: data['mobile']),
+                  child: MobileOtpPage(
+                      number: data['mobile'],
+                      fromExternalLink: data['fromExternalLink'],
+                      onClick: data['onClick']),
                 ));
 
       case AppRoutes.firebaseRegistrationPage:
@@ -115,7 +125,9 @@ class NavigationService {
                       googleData: data['gmailData'],
                       from: data['from'],
                       uid: data['uid'],
-                      mobile: data['mobile']),
+                      mobile: data['mobile'],
+                      fromExternalLink: data['fromExternalLink'],
+                      onClick: data['onClick']),
                 ));
 
       case AppRoutes.paymentStatusPage:
@@ -271,13 +283,14 @@ class NavigationService {
               )),
         );
       case AppRoutes.propertyDetailsPage:
-        String propId = settings.arguments as String;
-        log('Called For Navigation');
+        final data = settings.arguments as Map<String, dynamic>;
+
         return MaterialPageRoute(
           builder: (_) => ChangeNotifierProvider(
               create: (_) => PropertyDetailsViewModel(),
               child: PropertyDetailsPage(
-                propId: propId,
+                propId: data['propId'],
+                fromExternalApi: data['fromExternalLink'],
               )),
         );
       case AppRoutes.searchPage:
@@ -318,11 +331,13 @@ class NavigationService {
               child: const OwnerPropertyListingPage()),
         );
       case AppRoutes.ownerPropertyDetailsPage:
-        final data=settings.arguments as String;
+        final data = settings.arguments as String;
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
               create: (_) => OwnerPropertyViewModel(),
-              child: OwnerPropertyDetailsPage(propId: data,)),
+              child: OwnerPropertyDetailsPage(
+                propId: data,
+              )),
         );
       case AppRoutes.hostPropertyPage:
         return MaterialPageRoute(
@@ -331,57 +346,109 @@ class NavigationService {
               child: const HostPropertyPage()),
         );
       case AppRoutes.addPropertyPage:
-        final data=settings.arguments as Map<String,dynamic>;
+        final data = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
               create: (_) => OwnerPropertyViewModel(),
-              child: AddPropertyPage(fromPropertyDetails: data['fromPropertyDetails'],propId: data['propId'],title: data['title'],propertyType: data['propertyType'],)),
+              child: AddPropertyPage(
+                fromPropertyDetails: data['fromPropertyDetails'],
+                propId: data['propId'],
+                title: data['title'],
+                propertyType: data['propertyType'],
+              )),
         );
       case AppRoutes.propertyRentPage:
-        final data=settings.arguments as Map<String,dynamic>;
+        final data = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
-              create: (_) => OwnerPropertyViewModel(),
-              child: PropertyRentPage(propId:data['propId'],fromPropertyDetails:data['fromPropertyDetails'],dailyRent: data['dailyRent'],monthlyRent: data['monthlyRent'], longTermDeposit:data['longTermDeposit'] ,longTermRent:data['longTermRent'] , ),
-        ),);
+            create: (_) => OwnerPropertyViewModel(),
+            child: PropertyRentPage(
+              propId: data['propId'],
+              fromPropertyDetails: data['fromPropertyDetails'],
+              dailyRent: data['dailyRent'],
+              monthlyRent: data['monthlyRent'],
+              longTermDeposit: data['longTermDeposit'],
+              longTermRent: data['longTermRent'],
+            ),
+          ),
+        );
       case AppRoutes.propertyRoomsBedsPage:
-        final data=settings.arguments as Map<String,dynamic>;
+        final data = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
             create: (_) => OwnerPropertyViewModel(),
-            child: PropertyRoomsBedsPage(propId: data['propId'],fromPropertyDetails:data['fromPropertyDetails'] , guestCount: data['guestCount'],bathRoomsCount: data['bathRoomsCount'],bedRoomsCount: data['bedRoomsCount'], ),),);
+            child: PropertyRoomsBedsPage(
+              propId: data['propId'],
+              fromPropertyDetails: data['fromPropertyDetails'],
+              guestCount: data['guestCount'],
+              bathRoomsCount: data['bathRoomsCount'],
+              bedRoomsCount: data['bedRoomsCount'],
+            ),
+          ),
+        );
       case AppRoutes.editPropertyPhotosPage:
-        final data=settings.arguments as Map<String,dynamic>;
+        final data = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
             create: (_) => OwnerPropertyViewModel(),
-            child: EditPropertyPhotosPage(propId: data['propId'],fromPropertyDetails:data['fromPropertyDetails'] , videoLink: data['videoLink'],photosList: data['photosList'], ),),);
+            child: EditPropertyPhotosPage(
+              propId: data['propId'],
+              fromPropertyDetails: data['fromPropertyDetails'],
+              videoLink: data['videoLink'],
+              photosList: data['photosList'],
+            ),
+          ),
+        );
       case AppRoutes.amenitiesPage:
-        final data=settings.arguments as Map<String,dynamic>;
+        final data = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
             create: (_) => OwnerPropertyViewModel(),
-            child: PropertyAmenitiesPage(propId: data['propId'],fromPropertyDetails:data['fromPropertyDetails'] , amenitiesList:data['amenitiesList'], ),),);
+            child: PropertyAmenitiesPage(
+              propId: data['propId'],
+              fromPropertyDetails: data['fromPropertyDetails'],
+              amenitiesList: data['amenitiesList'],
+            ),
+          ),
+        );
       case AppRoutes.propertyDescriptionPage:
-        final data=settings.arguments as Map<String,dynamic>;
+        final data = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
             create: (_) => OwnerPropertyViewModel(),
-            child: PropertyDescriptionPage(propId: data['propId'],fromPropertyDetails:data['fromPropertyDetails'] , description:data['description'], ),),);
+            child: PropertyDescriptionPage(
+              propId: data['propId'],
+              fromPropertyDetails: data['fromPropertyDetails'],
+              description: data['description'],
+            ),
+          ),
+        );
       case AppRoutes.propertyRulesPage:
-        final data=settings.arguments as Map<String,dynamic>;
+        final data = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
             create: (_) => OwnerPropertyViewModel(),
-            child: PropertyRulesPage(propId: data['propId'],fromPropertyDetails:data['fromPropertyDetails'] , houseRules:data['houseRules'], ),),);
+            child: PropertyRulesPage(
+              propId: data['propId'],
+              fromPropertyDetails: data['fromPropertyDetails'],
+              houseRules: data['houseRules'],
+            ),
+          ),
+        );
       case AppRoutes.propertyLocationPage:
-        final data=settings.arguments as Map<String,dynamic>;
+        final data = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
             create: (_) => OwnerPropertyViewModel(),
-            child: PropertyLocationPage(propId: data['propId'],fromPropertyDetails:data['fromPropertyDetails'] , propertyLocation:data['propertyLocation'],latitude: data['latitude'],longitude: data['longitude'], ),),);
-
-
+            child: PropertyLocationPage(
+              propId: data['propId'],
+              fromPropertyDetails: data['fromPropertyDetails'],
+              propertyLocation: data['propertyLocation'],
+              latitude: data['latitude'],
+              longitude: data['longitude'],
+            ),
+          ),
+        );
 
       default:
         return MaterialPageRoute(

@@ -602,7 +602,6 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: CustomTheme.white,
       child: Container(
         height: _mainHeight,
-
         child: ListView(
           children: [
             FutureBuilder<Map<String, dynamic>>(
@@ -835,9 +834,13 @@ class _HomePageState extends State<HomePage> {
               ),
               title: nullCheck(list: list) ? '${list[10].name}' : 'Language',
               onTap: () async => Navigator.of(context).popAndPushNamed(
-                  AppRoutes.languageScreen,
-                  arguments: await preferenceUtil.getString(rms_language) ??
-                      'english'),
+                AppRoutes.languageScreen,
+                arguments: {
+                  'fromDashboard': true,
+                  'lang':
+                      await preferenceUtil.getString(rms_language) ?? 'english',
+                },
+              ),
             ),
             getTile(
               context: context,
@@ -857,7 +860,10 @@ class _HomePageState extends State<HomePage> {
                 Navigator.of(context).pop();
                 if (deletedAllValues) {
                   Navigator.of(context).pushNamedAndRemoveUntil(
-                      AppRoutes.loginPage, (route) => false);
+                      AppRoutes.loginPage, (route) => false,
+                      arguments: {
+                        'fromExternalLink': false,
+                      });
                 } else {
                   log('NOT ABLE TO DELETE VALUES FROM SP');
                 }
@@ -880,7 +886,6 @@ class _HomePageState extends State<HomePage> {
           right: _mainWidth * 0.01,
           top: _mainHeight * 0.006),
       height: _mainHeight * 0.06,
-
       child: ListTile(
         leading: Container(
             height: _mainHeight * 0.05,
