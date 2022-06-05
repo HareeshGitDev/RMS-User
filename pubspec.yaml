@@ -139,6 +139,12 @@ flutter:
         - asset: fonts/HkGrotesk-SemiBold.otf
         - asset: fonts/HkGrotesk-Medium.otf
 
+    - family: Montserrat
+      fonts:
+        - asset: fonts/Montserrat-Regular.ttf
+        - asset: fonts/Montserrat-Medium.ttf
+        - asset: fonts/Montserrat-SemiBold.ttf
+
 
   #   - family: Trajan Pro
   #     fonts:
