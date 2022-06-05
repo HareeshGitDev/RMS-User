@@ -35,7 +35,6 @@ class Images {
   static String mobOtp='assets/icons/mob_otp.png';
   static String loginIcon = 'assets/icons/login_outline.png';
   static String forgotPasswordIcon = 'assets/icons/forgot_password_outline.png';
-
   static String subscriptionIcon = 'assets/icons/subscription_outline.png';
   static String profileIcon = 'assets/icons/profile_outline.png';
   static String userRegisterIcon = 'assets/icons/user_logout_outline.png';
@@ -46,6 +45,11 @@ class Images {
   static const String failedIcon='assets/icons/payment_failed_icon.png';
   static const String paidIcon='assets/icons/paid_Icon.webp';
   static const String googleMapImage='assets/brand/google_map.jpeg';
+  static const String bathroomIcon='assets/icons/bathroom.png';
+  static const String bedroomIcon='assets/icons/bedroom.png';
+  static const String callIcon='assets/icons/call_icon.png';
+  static const String locationIcon='assets/icons/location_icon.png';
+  static const String personIcon='assets/icons/person.png';
 
 
 }

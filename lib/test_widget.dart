@@ -13,10 +13,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+
+import 'images.dart';
 
 class TestWidget extends StatefulWidget {
   const TestWidget({Key? key}) : super(key: key);
@@ -176,11 +179,12 @@ class _TestWidgetState extends State<TestWidget> {
                                                 ),
                                               ])),
                                         ),
-                                        Icon(
+                                        Image.asset(Images.locationIcon,height:_mainHeight * 0.06,width: _mainWidth * 0.06, ),
+                                      /*  Icon(
                                           Icons.location_on_outlined,
                                           color: CustomTheme.appTheme,
                                           size: _mainHeight * 0.03,
-                                        ),
+                                        ),*/
                                         SizedBox(
                                           width: _mainWidth * 0.01,
                                         ),
@@ -401,6 +405,7 @@ class _TestWidgetState extends State<TestWidget> {
                                               fontWeight: FontWeight.w500,
                                               color: Colors.black54,
                                               wordSpacing: 0.5,
+                                              letterSpacing: 0.5,
                                               display: Display.INLINE,
                                             ),
                                           },
@@ -455,15 +460,11 @@ class _TestWidgetState extends State<TestWidget> {
                                                     'tel:${value.propertyDetailsModel?.data?.details?.salesNumber}');
                                               }
                                             },
-                                            child: CircleAvatar(
-                                              //radius: _mainWidth*0.035,
-                                              child: Icon(
-                                                Icons.call,
-                                                color: CustomTheme.appTheme,
-                                                size: _mainWidth * 0.06,
-                                              ),
-                                              backgroundColor: Colors.white,
-                                            ),
+                                            child: Image.asset(Images.callIcon,width: _mainWidth * 0.06,height: _mainHeight * 0.06,)/*Icon(
+                                              Icons.call,
+                                              color: CustomTheme.appTheme,
+                                              size: _mainWidth * 0.06,
+                                            ),*/
                                           ),
                                           SizedBox(
                                             width: _mainWidth * 0.04,
@@ -485,13 +486,7 @@ class _TestWidgetState extends State<TestWidget> {
                                                     'https://wa.me/${value.propertyDetailsModel?.data?.details?.salesNumber}?text=${value.propertyDetailsModel?.data?.shareLink ?? 'Hello'}');
                                               }
                                             },
-                                            child: CircleAvatar(
-                                              radius: _mainWidth * 0.035,
-                                              backgroundColor: Colors.white,
-                                              backgroundImage: NetworkImage(
-                                                'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/whatsapplogo.png?alt=media&token=41df11ff-b9e7-4f5b-a4fc-30b47cfe1435',
-                                              ),
-                                            ),
+                                            child: Image.asset(Images.whatsapplogo,width: _mainWidth * 0.06,height: _mainHeight * 0.06,)
                                           ),
                                         ]),
                                   ),
@@ -607,6 +602,7 @@ class _TestWidgetState extends State<TestWidget> {
                                                 fontWeight: FontWeight.w500,
                                                 color: Colors.black54,
                                                 wordSpacing: 0.5,
+                                                letterSpacing: 0.5,
                                                 display: Display.INLINE,
                                               ),
                                             },
@@ -670,6 +666,9 @@ class _TestWidgetState extends State<TestWidget> {
                                   ),
                                   _getSimilarProperties(
                                       context: context, model: value),
+                                  SizedBox(
+                                    height: _mainHeight * 0.02,
+                                  )
                                 ],
                               ),
                               Positioned(
@@ -839,11 +838,12 @@ class _TestWidgetState extends State<TestWidget> {
       children: [
         Column(
           children: [
-            const Icon(
+         /*   const Icon(
               Icons.person_outline_outlined,
               size: 20,
               color: Colors.black38,
-            ),
+            ),*/
+            Image.asset(Images.personIcon,),
             Text(
               value.propertyDetailsModel?.data?.details != null &&
                       value.propertyDetailsModel?.data?.details?.maxGuests !=
@@ -861,11 +861,12 @@ class _TestWidgetState extends State<TestWidget> {
         ),
         Column(
           children: [
-            const Icon(
+          /*  const Icon(
               Icons.bed_rounded,
               size: 20,
               color: Colors.black38,
-            ),
+            ),*/
+            Image.asset(Images.bedroomIcon),
             Text(
               value.propertyDetailsModel?.data?.details != null &&
                       value.propertyDetailsModel?.data?.details?.bedrooms !=
@@ -883,11 +884,12 @@ class _TestWidgetState extends State<TestWidget> {
         ),
         Column(
           children: [
-            const Icon(
+           /* const Icon(
               Icons.bathroom_outlined,
               size: 20,
               color: Colors.black38,
-            ),
+            ),*/
+            Image.asset(Images.bathroomIcon),
             Text(
               value.propertyDetailsModel?.data?.details != null &&
                       value.propertyDetailsModel?.data?.details?.bathrooms !=
@@ -1100,6 +1102,7 @@ class _TestWidgetState extends State<TestWidget> {
               children: [
                 Card(
                   elevation: 2,
+
                   child: Container(
                       // height: _mainHeight * 0.2,
                       width: _mainWidth * 0.42,
@@ -1112,7 +1115,7 @@ class _TestWidgetState extends State<TestWidget> {
                             imageUrl: data.picThumbnail.toString(),
                             imageBuilder: (context, imageProvider) => Container(
                               height: _mainHeight * 0.125,
-                              width: _mainWidth * 0.4,
+                              //width: _mainWidth * 0.4,
                               decoration: BoxDecoration(
                                 borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(5),
