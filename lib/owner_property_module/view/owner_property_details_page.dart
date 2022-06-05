@@ -16,7 +16,7 @@ import '../../property_details_module/amenities_model.dart';
 import '../../theme/custom_theme.dart';
 import '../../utils/constants/app_consts.dart';
 import '../../utils/service/navigation_service.dart';
-import '../../webView_page.dart';
+import '../../utils/view/webView_page.dart';
 import '../viewModel/owner_property_viewModel.dart';
 
 class OwnerPropertyDetailsPage extends StatefulWidget {

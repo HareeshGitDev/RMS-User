@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../../theme/custom_theme.dart';
 import '../../utils/service/navigation_service.dart';
 import '../../utils/view/rms_widgets.dart';
-import '../../webView_page.dart';
+import '../../utils/view/webView_page.dart';
 import '../model/owner_property_details_request_model.dart';
 import '../viewModel/owner_property_viewModel.dart';
 

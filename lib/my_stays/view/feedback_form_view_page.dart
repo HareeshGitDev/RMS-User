@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:RentMyStay_user/utils/color.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
@@ -433,16 +432,16 @@ class _FeedbackState extends State<FeedbackPage> {
                                             yesValue
                                                 ? Icon(Icons.thumb_up,
                                                     size: _mainHeight * 0.03,
-                                                    color: myFavColor)
+                                                    color: CustomTheme.myFavColor)
                                                 : Icon(
                                                     Icons.thumb_up_alt_outlined,
                                                     size: _mainHeight * 0.03,
-                                                    color: myFavColor),
+                                                    color: CustomTheme.myFavColor),
                                             SizedBox(width: _mainWidth * 0.02),
                                             Text('YES',
                                                 style: TextStyle(
                                                     fontSize: 18,
-                                                    color: myFavColor,
+                                                    color: CustomTheme.myFavColor,
                                                     fontWeight:
                                                         FontWeight.w600)),
                                           ],

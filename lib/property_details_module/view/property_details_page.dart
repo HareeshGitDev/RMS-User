@@ -4,8 +4,6 @@ import 'dart:io';
 
 import 'package:RentMyStay_user/property_details_module/view/site_visit_page.dart';
 import 'package:RentMyStay_user/property_details_module/viewModel/property_details_viewModel.dart';
-
-import 'package:RentMyStay_user/utils/color.dart';
 import 'package:RentMyStay_user/utils/service/system_service.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -13,8 +11,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -26,8 +22,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../theme/custom_theme.dart';
-import '../../webView_page.dart';
-import '../../images.dart';
+import '../../utils/view/webView_page.dart';
 import '../../language_module/model/language_model.dart';
 import '../../utils/constants/app_consts.dart';
 import '../../utils/constants/sp_constants.dart';
@@ -1062,32 +1057,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   fontFamily: fontFamily),
                             },
                           )
-                          /*ReadMoreText(
-                              value.propertyDetailsModel?.details != null &&
-                                  value.propertyDetailsModel?.details
-                                      ?.description !=
-                                      null
-                                  ? (value.propertyDetailsModel?.details
-                                  ?.description)
-                                  .toString()
-                                  : ' '
 
-                            ,trimLines: 3,
-                              style: TextStyle(
-                                  color: Colors.black54,
-                                  fontFamily: fontFamily,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500),
-                              colorClickableText: Color(0xffe09c5f),
-                              trimMode: TrimMode.Line,
-                              trimCollapsedText: 'Show more',
-                              trimExpandedText: 'Show less',
-                              moreStyle: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: fontFamily,
-                                  color: Color(0xff7ab02a)),
-                            )*/
                           ,
                         ),
                         SizedBox(
@@ -1138,24 +1108,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                     fontFamily: fontFamily),
                               },
                             )
-                          /*const ReadMoreText(
-                              'In the Second Age of Middle-earth, the lords of Elves, Dwarves, and Men are given Rings of Power. Unbeknownst to them, the Dark Lord Sauron forges the One Ring in Mount Doom, instilling into it a great part of his power, in order to dominate the other Rings so he might conquer Middle-earth. A final alliance of Men and Elves battles Saurons forces in Mordor. Isildur of Gondor severs Saurons finger and the Ring with it, thereby vanquishing Sauron and returning him to spirit form. With Sauron first defeat, the Third Age of Middle-earth begins. The Rings influence corrupts Isildur, who takes it for himself and is later killed by Orcs. The Ring is lost in a river for 2,500 years until it is found by Gollum, who owns it for over four and a half centuries. The ring abandons Gollum and it is subsequently found by a hobbit named Bilbo Baggins, who is unaware of its history.',
-                              trimLines: 3,
-                              style: TextStyle(
-                                  color: Colors.black54,
-                                  fontFamily: fontFamily,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500),
-                              colorClickableText: Color(0xffe09c5f),
-                              trimMode: TrimMode.Line,
-                              trimCollapsedText: 'Show more',
-                              trimExpandedText: 'Show less',
-                              moreStyle: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: fontFamily,
-                                  color: Color(0xff7ab02a)),
-                            ),*/
+
                         ),
                         SizedBox(
                           height: _mainHeight * 0.01,

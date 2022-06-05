@@ -17,7 +17,6 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../../theme/custom_theme.dart';
-import '../../utils/color.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/shared_prefrences_util.dart';
 import '../model/login_response_model.dart';
@@ -374,7 +373,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             }
                             RMSWidgets.getToast(
                                 message:'You have been Successfully registered',
-                                color: myFavColor);
+                                color: CustomTheme.myFavColor);
                             if(widget.fromExternalLink && widget.onClick != null){
                               widget.onClick!();
                             }else{

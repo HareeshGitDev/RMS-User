@@ -9,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../webView_page.dart';
+import '../../utils/view/webView_page.dart';
 import '../../home_module/viewModel/home_viewModel.dart';
 import '../../language_module/model/language_model.dart';
 import '../../login_module/service/google_auth_service.dart';

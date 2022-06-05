@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../theme/custom_theme.dart';
-import '../color.dart';
 
 class CalenderPage extends StatelessWidget {
   final DateRangePickerNavigationMode _navigationMode =

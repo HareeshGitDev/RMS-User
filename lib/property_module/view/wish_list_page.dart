@@ -3,8 +3,6 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:RentMyStay_user/property_module/viewModel/property_viewModel.dart';
-
-import 'package:RentMyStay_user/utils/color.dart';
 import 'package:RentMyStay_user/utils/constants/enum_consts.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';

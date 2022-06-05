@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
 import 'package:RentMyStay_user/login_module/service/google_auth_service.dart';
+import 'package:RentMyStay_user/property_details_module/viewModel/property_details_viewModel.dart';
 import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
 import 'package:RentMyStay_user/utils/service/date_time_service.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
@@ -17,8 +18,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../test_widget.dart';
 import '../../theme/custom_theme.dart';
-import '../../webView_page.dart';
+import '../../utils/view/webView_page.dart';
 import '../../images.dart';
 import '../../utils/constants/app_consts.dart';
 import '../../utils/constants/enum_consts.dart';
@@ -818,8 +820,11 @@ class _HomePageState extends State<HomePage> {
                         size: 20,
                       ),
                       title: 'Tenants Leads',
-                      onTap: () => Navigator.of(context)
-                          .pushNamed(AppRoutes.referAndEarn),
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ChangeNotifierProvider(
+                            create: (context) => PropertyDetailsViewModel(),
+                            child: const TestWidget()),
+                      )),
                     ),
                   ],
                 );

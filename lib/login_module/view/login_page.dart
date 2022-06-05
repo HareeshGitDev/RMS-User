@@ -21,8 +21,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../../theme/custom_theme.dart';
-import '../../webView_page.dart';
-import '../../utils/color.dart';
+import '../../utils/view/webView_page.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/shared_prefrences_util.dart';
 import '../model/gmail_signin_request_model.dart';
@@ -492,12 +491,12 @@ class _LoginPageState extends State<LoginPage> {
                                           text: "Don't have an account ? ",
                                           style: TextStyle(
                                               color: Colors.black,
-                                              fontFamily: "HKGrotest-Light")),
+                                              )),
                                       TextSpan(
                                           text: "Register",
                                           style: TextStyle(
-                                              color: orangeColors,
-                                              fontFamily: "HKGrotest-Light")),
+                                              color: CustomTheme.appThemeContrast,
+                                             )),
                                     ]),
                                   ),
                                 ),
@@ -630,7 +629,7 @@ class _LoginPageState extends State<LoginPage> {
                       RMSWidgets.getToast(
                           message:
                               'An Email with instructions for resetting the password is sent to your email id.',
-                          color: myFavColor);
+                          color: CustomTheme.myFavColor);
                       _resetEmailController.clear();
                       Navigator.pop(context);
                     } else {

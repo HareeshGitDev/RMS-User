@@ -2,13 +2,11 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:ui';
 
-import 'package:RentMyStay_user/webView_page.dart';
+import 'package:RentMyStay_user/utils/view/webView_page.dart';
 import 'package:RentMyStay_user/property_details_module/model/booking_amount_request_model.dart';
 import 'package:RentMyStay_user/property_details_module/model/booking_amounts_response_model.dart';
 import 'package:RentMyStay_user/property_details_module/model/booking_credential_response_model.dart';
 import 'package:RentMyStay_user/property_details_module/viewModel/property_details_viewModel.dart';
-
-import 'package:RentMyStay_user/utils/color.dart';
 import 'package:RentMyStay_user/utils/constants/app_consts.dart';
 import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
@@ -611,7 +609,7 @@ class _BookingPageState extends State<BookingPage> {
                             text:
                                 ' ${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[11].name : ' Price BreakDown'}',
                             style: TextStyle(
-                              color: myFavColor,
+                              color: CustomTheme.myFavColor,
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
                               fontFamily: fontFamily,
