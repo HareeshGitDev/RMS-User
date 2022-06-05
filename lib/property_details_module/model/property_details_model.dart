@@ -25,13 +25,15 @@ class Data {
   PropOwner? propOwner;
   Amenities? amenities;
   List<SimilarProp>? similarProp;
+  List<NearBy>? nearBy;
 
   Data(
       {this.shareLink,
         this.details,
         this.propOwner,
         this.amenities,
-        this.similarProp});
+        this.similarProp,
+        this.nearBy});
 
   Data.fromJson(Map<String, dynamic> json) {
     shareLink = json['share_link'];
@@ -47,6 +49,12 @@ class Data {
       similarProp = <SimilarProp>[];
       json['similar_prop'].forEach((v) {
         similarProp!.add(new SimilarProp.fromJson(v));
+      });
+    }
+    if (json['near_by'] != null) {
+      nearBy = <NearBy>[];
+      json['near_by'].forEach((v) {
+        nearBy!.add(new NearBy.fromJson(v));
       });
     }
   }
@@ -65,6 +73,9 @@ class Data {
     }
     if (this.similarProp != null) {
       data['similar_prop'] = this.similarProp!.map((v) => v.toJson()).toList();
+    }
+    if (this.nearBy != null) {
+      data['near_by'] = this.nearBy!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -86,7 +97,7 @@ class Details {
   String? propFloor;
   String? propTypeId;
   String? roomTypeId;
-  String? deposit;
+  dynamic deposit;
   dynamic rent;
   dynamic orgRent;
   dynamic weeklyRent;
@@ -103,7 +114,7 @@ class Details {
   String? cleanliness;
   String? location;
   String? overall;
-  Null? advancePercentage;
+  dynamic advancePercentage;
   String? offerStatus;
   String? offerPrice;
   String? bookable;
@@ -124,7 +135,7 @@ class Details {
   String? glat;
   String? glng;
   String? pageViews;
-  Null? numBooking;
+  dynamic numBooking;
   String? applyServiceCharges;
   String? active;
   String? videoLink;
@@ -432,7 +443,7 @@ class Pic {
 }
 
 class PropOwner {
-  String? fullname;
+  Null? fullname;
   String? firstname;
   String? lastname;
   String? picture;
@@ -601,8 +612,7 @@ class SimilarProp {
   String? glng;
   String? propType;
   String? unitType;
-  String? newDetails;
-  String? neighbor;
+  Null? neighbor;
   String? area;
   String? city;
   String? roomType;
@@ -616,10 +626,9 @@ class SimilarProp {
   String? maxGuests;
   String? bedrooms;
   String? rmsDeposit;
-  String? distance;
   String? picThumbnail;
-  String? rmsProp;
-  String? picture;
+  String? enId;
+  int? wishlist;
 
   SimilarProp(
       {this.propId,
@@ -629,7 +638,6 @@ class SimilarProp {
         this.glng,
         this.propType,
         this.unitType,
-        this.newDetails,
         this.neighbor,
         this.area,
         this.city,
@@ -644,10 +652,9 @@ class SimilarProp {
         this.maxGuests,
         this.bedrooms,
         this.rmsDeposit,
-        this.distance,
         this.picThumbnail,
-        this.rmsProp,
-        this.picture});
+        this.enId,
+        this.wishlist});
 
   SimilarProp.fromJson(Map<String, dynamic> json) {
     propId = json['prop_id'];
@@ -657,7 +664,6 @@ class SimilarProp {
     glng = json['glng'];
     propType = json['prop_type'];
     unitType = json['unit_type'];
-    newDetails = json['new_details'];
     neighbor = json['neighbor'];
     area = json['area'];
     city = json['city'];
@@ -672,10 +678,9 @@ class SimilarProp {
     maxGuests = json['max_guests'];
     bedrooms = json['bedrooms'];
     rmsDeposit = json['rms_deposit'];
-    distance = json['distance'];
     picThumbnail = json['pic_thumbnail'];
-    rmsProp = json['rms_prop'];
-    picture = json['picture'];
+    enId = json['en_id'];
+    wishlist = json['wishlist'];
   }
 
   Map<String, dynamic> toJson() {
@@ -687,7 +692,6 @@ class SimilarProp {
     data['glng'] = this.glng;
     data['prop_type'] = this.propType;
     data['unit_type'] = this.unitType;
-    data['new_details'] = this.newDetails;
     data['neighbor'] = this.neighbor;
     data['area'] = this.area;
     data['city'] = this.city;
@@ -702,10 +706,57 @@ class SimilarProp {
     data['max_guests'] = this.maxGuests;
     data['bedrooms'] = this.bedrooms;
     data['rms_deposit'] = this.rmsDeposit;
-    data['distance'] = this.distance;
     data['pic_thumbnail'] = this.picThumbnail;
-    data['rms_prop'] = this.rmsProp;
-    data['picture'] = this.picture;
+    data['en_id'] = this.enId;
+    data['wishlist'] = this.wishlist;
+    return data;
+  }
+}
+
+class NearBy {
+  String? placeType;
+  List<PlaceList>? placeList;
+
+  NearBy({this.placeType, this.placeList});
+
+  NearBy.fromJson(Map<String, dynamic> json) {
+    placeType = json['place_type'];
+    if (json['place_list'] != null) {
+      placeList = <PlaceList>[];
+      json['place_list'].forEach((v) {
+        placeList!.add(new PlaceList.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['place_type'] = this.placeType;
+    if (this.placeList != null) {
+      data['place_list'] = this.placeList!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class PlaceList {
+  String? placeTitle;
+  String? placeAddress;
+  String? placeDesc;
+
+  PlaceList({this.placeTitle, this.placeAddress, this.placeDesc});
+
+  PlaceList.fromJson(Map<String, dynamic> json) {
+    placeTitle = json['place_title'];
+    placeAddress = json['place_address'];
+    placeDesc = json['place_desc'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['place_title'] = this.placeTitle;
+    data['place_address'] = this.placeAddress;
+    data['place_desc'] = this.placeDesc;
     return data;
   }
 }

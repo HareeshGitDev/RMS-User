@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io' show Platform;
 import 'package:RentMyStay_user/theme/custom_theme.dart';
+import 'package:RentMyStay_user/theme/fonts.dart';
 import 'package:RentMyStay_user/utils/service/bottom_navigation_provider.dart';
 import 'package:RentMyStay_user/utils/service/deep_linking_service.dart';
 import 'package:RentMyStay_user/utils/service/location_service.dart';
@@ -121,7 +122,7 @@ class _MyAppState extends State<MyApp> {
         navigatorKey: lazySingletonInstance<NavigatorKeyService>().navigatorKey,
         theme: ThemeData(
           primarySwatch: customColor,
-          fontFamily: 'hk-grotest',
+          fontFamily: getThemeFont,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: SplashPage(),

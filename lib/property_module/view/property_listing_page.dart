@@ -169,6 +169,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
     _mainWidth = MediaQuery.of(context).size.width;
     return _connectionStatus
         ? Scaffold(
+
             appBar: _getAppBar(
               context: context,
             ),

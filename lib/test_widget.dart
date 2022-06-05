@@ -4,6 +4,7 @@ import 'package:RentMyStay_user/property_details_module/amenities_model.dart';
 import 'package:RentMyStay_user/property_details_module/model/property_details_model.dart';
 import 'package:RentMyStay_user/property_details_module/viewModel/property_details_viewModel.dart';
 import 'package:RentMyStay_user/theme/custom_theme.dart';
+import 'package:RentMyStay_user/theme/fonts.dart';
 import 'package:RentMyStay_user/utils/constants/app_consts.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
@@ -42,10 +43,13 @@ class _TestWidgetState extends State<TestWidget> {
     _viewModel.getPropertyDetails(propId: 9133.toString());
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     _mainWidth = MediaQuery.of(context).size.width;
     _mainHeight = MediaQuery.of(context).size.height;
+    log('$_mainWidth  -- $_mainHeight');
 
     return SafeArea(
       child: Scaffold(
@@ -156,16 +160,17 @@ class _TestWidgetState extends State<TestWidget> {
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.w700,
-                                                      fontSize: 12,
+                                                      fontSize: getHeight(context: context, height:12),
+                                                      fontFamily: getThemeFont,
                                                       color: CustomTheme
                                                           .appThemeContrast),
-                                                  children: const <TextSpan>[
+                                                  children:  <TextSpan>[
                                                 TextSpan(
                                                   text:
                                                       'The furniture and furnishings may appear different from what’s shown in the pictures. Dewan/sofa may be provided as available.',
                                                   style: TextStyle(
                                                     color: Colors.grey,
-                                                    fontSize: 10,
+                                                    fontSize: getHeight(context: context, height:10),
                                                     fontWeight: FontWeight.w500,
                                                   ),
                                                 ),
@@ -207,7 +212,7 @@ class _TestWidgetState extends State<TestWidget> {
                                                 : '',
                                             style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 16,
+                                                fontSize: getHeight(context: context, height:16),
                                                 fontWeight: FontWeight.w600),
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
@@ -282,15 +287,17 @@ class _TestWidgetState extends State<TestWidget> {
                                                   'Free Cancellation within 24 hours of booking. ',
                                               style: TextStyle(
                                                   color: Colors.grey,
+                                                  fontFamily: getThemeFont,
                                                   fontWeight: FontWeight.w500,
-                                                  fontSize: 12),
+                                                  fontSize: getHeight(context: context, height:12)),
                                             ),
                                             TextSpan(
                                               text: 'Click here',
                                               style: TextStyle(
                                                   color: CustomTheme
                                                       .appThemeContrast,
-                                                  fontSize: 12,
+                                                  fontSize: getHeight(context: context, height:12),
+                                                  fontFamily: getThemeFont,
                                                   fontWeight: FontWeight.w600,
                                                   decoration:
                                                       TextDecoration.underline),
@@ -299,8 +306,9 @@ class _TestWidgetState extends State<TestWidget> {
                                               text: '  to View.',
                                               style: TextStyle(
                                                   color: Colors.grey,
+                                                  fontFamily: getThemeFont,
                                                   fontWeight: FontWeight.w500,
-                                                  fontSize: 12),
+                                                  fontSize: getHeight(context: context, height:12)),
                                             )
                                           ],
                                         ),
@@ -389,7 +397,7 @@ class _TestWidgetState extends State<TestWidget> {
                                               : ' ',
                                           style: {
                                             "body": Style(
-                                              fontSize: FontSize(12.0),
+                                              fontSize: FontSize(getHeight(context: context, height:12)),
                                               fontWeight: FontWeight.w500,
                                               color: Colors.black54,
                                               wordSpacing: 0.5,
@@ -516,7 +524,7 @@ class _TestWidgetState extends State<TestWidget> {
                                                 return Container(
                                                   alignment: Alignment.center,
                                                   padding: EdgeInsets.only(
-                                                    left: _mainWidth * 0.01,
+                                                    left: _mainWidth * 0.02,
                                                     right: _mainWidth * 0.01,
                                                     top: _mainHeight * 0.005,
                                                   ),
@@ -532,7 +540,7 @@ class _TestWidgetState extends State<TestWidget> {
                                                     getReasonsList[index],
                                                     style: TextStyle(
                                                         fontSize:
-                                                            _mainHeight * 0.015,
+                                                        getHeight(context: context, height:12),
                                                         color: Colors.black87,
                                                         fontWeight:
                                                             FontWeight.w500),
@@ -595,7 +603,7 @@ class _TestWidgetState extends State<TestWidget> {
                                                 : ' ',
                                             style: {
                                               "body": Style(
-                                                fontSize: FontSize(12.0),
+                                                fontSize: FontSize(getHeight(context: context, height:12)),
                                                 fontWeight: FontWeight.w500,
                                                 color: Colors.black54,
                                                 wordSpacing: 0.5,
@@ -651,7 +659,7 @@ class _TestWidgetState extends State<TestWidget> {
                                           style: TextStyle(
                                               color:
                                                   CustomTheme.appThemeContrast,
-                                              fontSize: 14,
+                                              fontSize: getHeight(context: context, height:14),
                                               fontWeight: FontWeight.w500),
                                         ),
                                       ],
@@ -845,7 +853,7 @@ class _TestWidgetState extends State<TestWidget> {
                       ' Guest'
                   : ' ',
               style: TextStyle(
-                  fontSize: 12,
+                  fontSize: getHeight(context: context, height:12),
                   color: Colors.grey.shade600,
                   fontWeight: FontWeight.w500),
             ),
@@ -867,7 +875,7 @@ class _TestWidgetState extends State<TestWidget> {
                       ' BedRoom'
                   : ' ',
               style: TextStyle(
-                  fontSize: 12,
+                  fontSize: getHeight(context: context, height:12),
                   color: Colors.grey.shade600,
                   fontWeight: FontWeight.w500),
             ),
@@ -889,7 +897,7 @@ class _TestWidgetState extends State<TestWidget> {
                       ' BathRoom'
                   : ' ',
               style: TextStyle(
-                  fontSize: 12,
+                  fontSize: getHeight(context: context, height:12),
                   color: Colors.grey.shade600,
                   fontWeight: FontWeight.w500),
             ),
@@ -1056,7 +1064,7 @@ class _TestWidgetState extends State<TestWidget> {
               style: TextStyle(
                   color: CustomTheme.appThemeContrast,
                   fontWeight: FontWeight.w500,
-                  fontSize: 14),
+                  fontSize: getHeight(context: context, height: 14)),
             ),
           ],
         );
@@ -1094,7 +1102,7 @@ class _TestWidgetState extends State<TestWidget> {
                   elevation: 2,
                   child: Container(
                       // height: _mainHeight * 0.2,
-                      width: _mainWidth * 0.4,
+                      width: _mainWidth * 0.42,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -1136,7 +1144,7 @@ class _TestWidgetState extends State<TestWidget> {
                                 child: Text(
                                   data.title ?? '',
                                   style: TextStyle(
-                                      fontSize: 12,
+                                      fontSize: getHeight(context: context, height: 12),
                                       color: CustomTheme.appTheme,
                                       fontWeight: FontWeight.w500),
                                   maxLines: 1,
@@ -1152,8 +1160,8 @@ class _TestWidgetState extends State<TestWidget> {
                                   data.buildingName != null
                                       ? data.buildingName.toString()
                                       : '',
-                                  style: const TextStyle(
-                                    fontSize: 12,
+                                  style: TextStyle(
+                                    fontSize: getHeight(context: context, height: 12),
                                     color: Colors.grey,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -1166,52 +1174,81 @@ class _TestWidgetState extends State<TestWidget> {
                                     right: _mainWidth * 0.01,
                                     top: _mainHeight * 0.005),
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Container(
+                                      width: _mainWidth * 0.13,
                                       alignment: Alignment.centerLeft,
                                       padding: EdgeInsets.only(
                                           right: _mainWidth * 0.01,
                                           top: _mainHeight * 0.003),
-                                      child: Text(
-                                        data.monthlyRent != null
-                                            ? rupee + ' ${data.monthlyRent}'
-                                            : '',
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.black,
-
-                                          fontWeight: FontWeight.w500,
-
-                                          //fontStyle: FontStyle.italic,
+                                      child: FittedBox(
+                                        child: Text(
+                                          data.monthlyRent != null
+                                              ? rupee + ' ${data.monthlyRent}'
+                                              : '',
+                                          style:TextStyle(
+                                            fontSize: getHeight(context: context, height: 12),
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
                                       ),
                                     ),
                                     SizedBox(
-                                      width: _mainWidth * 0.01,
+                                      width: _mainWidth * 0.005,
                                     ),
-                                     showRatingAndPrice(
-                                       monthlyRent: data.monthlyRent,
-                                       orgRent: data.orgRent
-                                     )
+                                    showRatingAndPrice(
+                                            monthlyRent: data.monthlyRent,
+                                            orgRent: data.orgRent)
                                         ? Container()
                                         : Container(
+
+                                            width: _mainWidth * 0.1,
                                             alignment: Alignment.centerLeft,
                                             padding: EdgeInsets.only(
                                                 right: _mainWidth * 0.01,
                                                 top: _mainHeight * 0.003),
-                                            child: Text(
-                                              data.orgRent != null
-                                                  ? rupee +
-                                                      '${data.orgRent}'
-                                                  : '',
-                                              style: const TextStyle(
-                                                fontSize: 10,
-                                                color: Colors.grey,
-                                                decoration:
-                                                    TextDecoration.lineThrough,
-                                                fontWeight: FontWeight.w600,
+                                            child: FittedBox(
+                                              child: Text(
+                                                data.orgRent != null
+                                                    ? rupee + '${data.orgRent}'
+                                                    : '',
+                                                style: TextStyle(
+                                                  fontSize:getHeight(context: context, height: 10) ,
+                                                  color: Colors.grey,
+                                                  decoration: TextDecoration
+                                                      .lineThrough,
+                                                  fontWeight: FontWeight.w600,
 
-                                                //fontStyle: FontStyle.italic,
+                                                  //fontStyle: FontStyle.italic,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                    SizedBox(
+                                      width: _mainWidth * 0.005,
+                                    ),
+                                    showRatingAndPrice(
+                                            monthlyRent: data.monthlyRent,
+                                            orgRent: data.orgRent)
+                                        ? Container()
+                                        : Container(
+                                            width: _mainWidth * 0.15,
+                                            alignment: Alignment.centerLeft,
+                                            padding: EdgeInsets.only(
+                                                right: _mainWidth * 0.01,
+                                                top: _mainHeight * 0.003),
+                                            child: FittedBox(
+                                              child: Text(
+                                                '70% OFF',
+                                                style: TextStyle(
+                                                  fontSize: getHeight(context: context, height: 12),
+                                                  color: CustomTheme.myFavColor,
+                                                  fontWeight: FontWeight.w600,
+
+                                                  //fontStyle: FontStyle.italic,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -1226,7 +1263,7 @@ class _TestWidgetState extends State<TestWidget> {
                                 child: Text(
                                   'More',
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: getHeight(context: context, height:14),
                                     color: CustomTheme.appThemeContrast,
 
                                     fontWeight: FontWeight.w600,
@@ -1241,7 +1278,7 @@ class _TestWidgetState extends State<TestWidget> {
                       )),
                 ),
                 Positioned(
-                    right: _mainHeight * 0.01,
+                    right: _mainHeight * 0.015,
                     top: _mainHeight * 0.01,
                     child: Icon(
                       Icons.favorite_outline,
@@ -1258,17 +1295,20 @@ class _TestWidgetState extends State<TestWidget> {
     );
   }
 
-  bool showRatingAndPrice({String? monthlyRent,String? orgRent}){
-    log('${orgRent.toString()} -- ${monthlyRent.toString()}');
-
-   return orgRent != null && orgRent != '0' &&
-        monthlyRent != null && monthlyRent != '0' &&
-        (monthlyRent.toString() ==
-            orgRent.toString());
+  bool showRatingAndPrice({String? monthlyRent, String? orgRent}) {
+    if (orgRent != null && orgRent == '0') {
+      return true;
+    } else if (orgRent == null) {
+      return true;
+    }
+    return orgRent != '0' &&
+        monthlyRent != null &&
+        monthlyRent != '0' &&
+        (monthlyRent.toString() == orgRent.toString());
   }
 
   TextStyle get getHeadingStyle => TextStyle(
-      color: CustomTheme.appTheme, fontSize: 16, fontWeight: FontWeight.w500);
+      color: CustomTheme.appTheme, fontSize: getHeight(context: context, height:16), fontWeight: FontWeight.w500);
 
   EdgeInsets get getHeadingPadding =>
       EdgeInsets.only(left: _mainWidth * 0.03, right: _mainWidth * 0.03);
@@ -1316,7 +1356,9 @@ class _NearbyFacilitiesState extends State<NearbyFacilities> {
     return List.generate(
         widget.tabCount,
         (index) => Tab(
-              child: Text('Transportation'),
+              child: Text('Transportation',style: TextStyle(
+                fontSize: getHeight(context: context, height:14)
+              ),),
             )).toList();
   }
 
@@ -1331,7 +1373,7 @@ class _NearbyFacilitiesState extends State<NearbyFacilities> {
                     height: MediaQuery.of(context).size.height * 0.15,
                     padding: EdgeInsets.only(top: 5),
                     child: ListTileTheme.merge(
-                      child: ListView.builder(
+                      child: ListView.separated(
                         itemBuilder: (context, index) {
                           return Container(
                             padding: EdgeInsets.only(
@@ -1344,20 +1386,26 @@ class _NearbyFacilitiesState extends State<NearbyFacilities> {
                               children: [
                                 Icon(
                                   Icons.star,
-                                  size: 15,
+                                  size: 14,
                                   color: Colors.grey,
                                 ),
                                 SizedBox(
                                   width: 10,
                                 ),
-                                Text('Uber Cab'),
+                                Text('Uber Cab',style: TextStyle(
+                                  fontSize: getHeight(context: context, height:12)
+                                ),),
                                 Spacer(),
-                                Text('0.3Km'),
+                                Text('0.3Km',style: TextStyle(
+                                  fontSize: getHeight(context: context, height:12)
+                                ),),
+
                               ],
                             ),
                           );
                         },
                         itemCount: 10,
+                        separatorBuilder:(_,__)=>SizedBox(height: 5,),
                       ),
                     ),
                   ),
