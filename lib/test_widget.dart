@@ -2,18 +2,24 @@ import 'dart:developer';
 
 import 'package:RentMyStay_user/property_details_module/amenities_model.dart';
 import 'package:RentMyStay_user/property_details_module/model/property_details_model.dart';
+import 'package:RentMyStay_user/property_details_module/model/property_details_util_model.dart';
+import 'package:RentMyStay_user/property_details_module/view/site_visit_page.dart';
 import 'package:RentMyStay_user/property_details_module/viewModel/property_details_viewModel.dart';
 import 'package:RentMyStay_user/theme/custom_theme.dart';
 import 'package:RentMyStay_user/theme/fonts.dart';
 import 'package:RentMyStay_user/utils/constants/app_consts.dart';
+import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
+import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:RentMyStay_user/utils/view/webView_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -40,10 +46,8 @@ class _TestWidgetState extends State<TestWidget> {
   void initState() {
     super.initState();
     _viewModel = Provider.of<PropertyDetailsViewModel>(context, listen: false);
-    _viewModel.getPropertyDetails(propId: 9133.toString());
+    _viewModel.getPropertyDetails(propId: 8258.toString());
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +66,7 @@ class _TestWidgetState extends State<TestWidget> {
                     color: Colors.white,
                     height: _mainHeight,
                     width: _mainWidth,
-                    padding: EdgeInsets.only(bottom: _mainHeight * 0.02),
+                   // margin: EdgeInsets.only(bottom: _mainHeight * 0.01),
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
@@ -160,17 +164,21 @@ class _TestWidgetState extends State<TestWidget> {
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.w700,
-                                                      fontSize: getHeight(context: context, height:12),
+                                                      fontSize: getHeight(
+                                                          context: context,
+                                                          height: 12),
                                                       fontFamily: getThemeFont,
                                                       color: CustomTheme
                                                           .appThemeContrast),
-                                                  children:  <TextSpan>[
+                                                  children: <TextSpan>[
                                                 TextSpan(
                                                   text:
                                                       'The furniture and furnishings may appear different from what’s shown in the pictures. Dewan/sofa may be provided as available.',
                                                   style: TextStyle(
                                                     color: Colors.grey,
-                                                    fontSize: getHeight(context: context, height:10),
+                                                    fontSize: getHeight(
+                                                        context: context,
+                                                        height: 10),
                                                     fontWeight: FontWeight.w500,
                                                   ),
                                                 ),
@@ -212,7 +220,9 @@ class _TestWidgetState extends State<TestWidget> {
                                                 : '',
                                             style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: getHeight(context: context, height:16),
+                                                fontSize: getHeight(
+                                                    context: context,
+                                                    height: 16),
                                                 fontWeight: FontWeight.w600),
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
@@ -289,14 +299,18 @@ class _TestWidgetState extends State<TestWidget> {
                                                   color: Colors.grey,
                                                   fontFamily: getThemeFont,
                                                   fontWeight: FontWeight.w500,
-                                                  fontSize: getHeight(context: context, height:12)),
+                                                  fontSize: getHeight(
+                                                      context: context,
+                                                      height: 12)),
                                             ),
                                             TextSpan(
                                               text: 'Click here',
                                               style: TextStyle(
                                                   color: CustomTheme
                                                       .appThemeContrast,
-                                                  fontSize: getHeight(context: context, height:12),
+                                                  fontSize: getHeight(
+                                                      context: context,
+                                                      height: 12),
                                                   fontFamily: getThemeFont,
                                                   fontWeight: FontWeight.w600,
                                                   decoration:
@@ -308,7 +322,9 @@ class _TestWidgetState extends State<TestWidget> {
                                                   color: Colors.grey,
                                                   fontFamily: getThemeFont,
                                                   fontWeight: FontWeight.w500,
-                                                  fontSize: getHeight(context: context, height:12)),
+                                                  fontSize: getHeight(
+                                                      context: context,
+                                                      height: 12)),
                                             )
                                           ],
                                         ),
@@ -397,7 +413,9 @@ class _TestWidgetState extends State<TestWidget> {
                                               : ' ',
                                           style: {
                                             "body": Style(
-                                              fontSize: FontSize(getHeight(context: context, height:12)),
+                                              fontSize: FontSize(getHeight(
+                                                  context: context,
+                                                  height: 12)),
                                               fontWeight: FontWeight.w500,
                                               color: Colors.black54,
                                               wordSpacing: 0.5,
@@ -419,10 +437,22 @@ class _TestWidgetState extends State<TestWidget> {
                                   SizedBox(
                                     height: _mainHeight * 0.005,
                                   ),
-                                  Container(
-                                      padding: getHeadingPadding,
-                                      height: _mainHeight * 0.22,
-                                      child: NearbyFacilities(tabCount: 4)),
+                                  value.propertyDetailsModel?.data?.nearBy !=
+                                              null &&
+                                          value.propertyDetailsModel?.data
+                                                  ?.nearBy!.length !=
+                                              0
+                                      ? Container(
+                                          padding: getHeadingPadding,
+                                          height: _mainHeight * 0.22,
+                                          child: NearbyFacilities(
+                                            nearByList: value
+                                                    .propertyDetailsModel
+                                                    ?.data
+                                                    ?.nearBy ??
+                                                [],
+                                          ))
+                                      : Container(),
                                   SizedBox(
                                     height: _mainHeight * 0.005,
                                   ),
@@ -539,8 +569,9 @@ class _TestWidgetState extends State<TestWidget> {
                                                   child: Text(
                                                     getReasonsList[index],
                                                     style: TextStyle(
-                                                        fontSize:
-                                                        getHeight(context: context, height:12),
+                                                        fontSize: getHeight(
+                                                            context: context,
+                                                            height: 12),
                                                         color: Colors.black87,
                                                         fontWeight:
                                                             FontWeight.w500),
@@ -603,7 +634,9 @@ class _TestWidgetState extends State<TestWidget> {
                                                 : ' ',
                                             style: {
                                               "body": Style(
-                                                fontSize: FontSize(getHeight(context: context, height:12)),
+                                                fontSize: FontSize(getHeight(
+                                                    context: context,
+                                                    height: 12)),
                                                 fontWeight: FontWeight.w500,
                                                 color: Colors.black54,
                                                 wordSpacing: 0.5,
@@ -659,7 +692,8 @@ class _TestWidgetState extends State<TestWidget> {
                                           style: TextStyle(
                                               color:
                                                   CustomTheme.appThemeContrast,
-                                              fontSize: getHeight(context: context, height:14),
+                                              fontSize: getHeight(
+                                                  context: context, height: 14),
                                               fontWeight: FontWeight.w500),
                                         ),
                                       ],
@@ -682,16 +716,110 @@ class _TestWidgetState extends State<TestWidget> {
                                         color: Colors.white,
                                       ),
                                       Spacer(),
-                                      Icon(
-                                        Icons.favorite_outline_rounded,
-                                        color: Colors.white,
+                                      GestureDetector(
+                                        onTap: () async {
+                                          if (value.propertyDetailsModel?.data
+                                              ?.details !=
+                                              null &&
+                                              value.propertyDetailsModel?.data
+                                                  ?.details?.wishlist ==
+                                                  1) {
+                                            if (value.propertyDetailsModel?.data
+                                                ?.details !=
+                                                null &&
+                                                value.propertyDetailsModel?.data
+                                                    ?.details?.propId !=
+                                                    null) {
+                                              int response =
+                                              await _viewModel.addToWishlist(
+                                                  propertyId: value
+                                                      .propertyDetailsModel
+                                                      ?.data
+                                                      ?.details
+                                                      ?.propId ??
+                                                      '');
+                                              if (response == 200) {
+                                                setState(() {
+                                                  value.propertyDetailsModel?.data
+                                                      ?.details?.wishlist = 0;
+                                                });
+                                                RMSWidgets.showSnackbar(
+                                                    context: context,
+                                                    message:
+                                                    'Successfully Removed From Wishlist',
+                                                    color: CustomTheme.appTheme);
+                                              }
+                                            }
+                                          } else if (value.propertyDetailsModel
+                                              ?.data?.details !=
+                                              null &&
+                                              value.propertyDetailsModel?.data
+                                                  ?.details?.wishlist ==
+                                                  0) {
+                                            if (value.propertyDetailsModel?.data
+                                                ?.details !=
+                                                null &&
+                                                value.propertyDetailsModel?.data
+                                                    ?.details?.propId !=
+                                                    null) {
+                                              int response =
+                                              await _viewModel.addToWishlist(
+                                                  propertyId: value
+                                                      .propertyDetailsModel
+                                                      ?.data
+                                                      ?.details
+                                                      ?.propId ??
+                                                      '');
+                                              if (response == 200) {
+                                                setState(() {
+                                                  value.propertyDetailsModel?.data
+                                                      ?.details?.wishlist = 1;
+                                                });
+                                                RMSWidgets.showSnackbar(
+                                                    context: context,
+                                                    message:
+                                                    'Successfully Added to Wishlist',
+                                                    color: CustomTheme.appTheme);
+                                              }
+                                            }
+                                          }
+                                        },
+                                        child: CircleAvatar(
+                                            backgroundColor: Colors.transparent,
+                                            radius: 12,
+                                            child: value.propertyDetailsModel?.data
+                                                ?.details !=
+                                                null &&
+                                                value.propertyDetailsModel?.data
+                                                    ?.details?.wishlist ==
+                                                    1
+                                                ? Icon(
+                                              Icons.favorite,
+                                              color: CustomTheme.errorColor,
+                                            )
+                                                : Icon(
+                                              Icons.favorite_outline_rounded,
+                                              color: CustomTheme.white,
+                                            )),
                                       ),
                                       SizedBox(
                                         width: _mainWidth * 0.04,
                                       ),
-                                      Icon(
-                                        Icons.share,
-                                        color: Colors.white,
+                                      GestureDetector(
+                                        onTap: () async {
+                                          await Share.share(value
+                                              .propertyDetailsModel!
+                                              .data
+                                              ?.shareLink ??
+                                              " ");
+                                        },
+                                        child: CircleAvatar(
+                                            backgroundColor: Colors.transparent,
+                                            radius: 12,
+                                            child: Icon(
+                                              Icons.share_outlined,
+                                              color: CustomTheme.white,
+                                            )),
                                       ),
                                       SizedBox(
                                         width: _mainWidth * 0.03,
@@ -702,8 +830,8 @@ class _TestWidgetState extends State<TestWidget> {
                               ),
                               Positioned(
                                 top: _mainHeight * 0.32,
-                                left: _mainWidth * 0.1,
-                                right: _mainWidth * 0.1,
+                                left: _mainWidth * 0.08,
+                                right: _mainWidth * 0.07,
                                 child: Material(
                                   elevation: 5, shadowColor: Colors.white,
                                   //color: Colors.white,
@@ -715,8 +843,7 @@ class _TestWidgetState extends State<TestWidget> {
                                         shape: BoxShape.rectangle),
                                     width: _mainWidth * 0.75,
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
+
                                       children: [
                                         InkWell(
                                           onTap: () {
@@ -727,6 +854,7 @@ class _TestWidgetState extends State<TestWidget> {
                                             });
                                           },
                                           child: Column(
+
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
@@ -761,6 +889,7 @@ class _TestWidgetState extends State<TestWidget> {
                                           child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
+
                                             children: [
                                               Spacer(),
                                               Text(
@@ -782,6 +911,7 @@ class _TestWidgetState extends State<TestWidget> {
                                             ],
                                           ),
                                         ),
+                                        SizedBox(width: _mainWidth*0.06,),
                                         InkWell(
                                           onTap: () {
                                             setState(() {
@@ -791,6 +921,7 @@ class _TestWidgetState extends State<TestWidget> {
                                             });
                                           },
                                           child: Column(
+
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
@@ -828,6 +959,118 @@ class _TestWidgetState extends State<TestWidget> {
                 : RMSWidgets.getLoader();
           },
         ),
+        bottomNavigationBar: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InkWell(
+              onTap: () async {
+                RMSWidgets.showLoaderDialog(
+                    context: context, message: 'Loading...');
+                SharedPreferenceUtil sharedPreferenceUtil =
+                    SharedPreferenceUtil();
+                var name =
+                    (await sharedPreferenceUtil.getString(rms_name) ?? '')
+                        .toString();
+                var email =
+                    (await sharedPreferenceUtil.getString(rms_email) ?? '')
+                        .toString();
+                var phone =
+                    (await sharedPreferenceUtil.getString(rms_phoneNumber) ??
+                            '')
+                        .toString();
+                Navigator.of(context).pop();
+                _showDialog(
+                  propId: _viewModel
+                          .propertyDetailsModel?.data?.details?.propId ??
+                      ' ',
+                  name: name,
+                  phone: phone,
+                  email: email,
+                );
+              },
+              child: Container(
+                alignment: Alignment.center,
+                color: Colors.white,
+                width: _mainWidth*0.5,
+                height: _mainHeight * 0.06,
+                child: Text(
+                  'Site Visit',
+                  style: TextStyle(
+                      color: CustomTheme.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () async {
+                if (_viewModel.propertyDetailsModel == null ||
+                    _viewModel.propertyDetailsModel?.data?.details == null) {
+                  RMSWidgets.showSnackbar(
+                      context: context,
+                      message:
+                          'Something went wrong. Property Details not Found.',
+                      color: CustomTheme.errorColor);
+                  return;
+                }
+                RMSWidgets.showLoaderDialog(
+                    context: context, message: 'Loading...');
+                SharedPreferenceUtil sharedPreferenceUtil =
+                    SharedPreferenceUtil();
+                var name =
+                    (await sharedPreferenceUtil.getString(rms_name) ?? '')
+                        .toString();
+                var email =
+                    (await sharedPreferenceUtil.getString(rms_email) ?? '')
+                        .toString();
+                var phone =
+                    (await sharedPreferenceUtil.getString(rms_phoneNumber) ??
+                            '')
+                        .toString();
+                var token = (await sharedPreferenceUtil
+                            .getString(rms_registeredUserToken) ??
+                        '')
+                    .toString();
+                Navigator.of(context).pop();
+                PropertyDetailsUtilModel model = PropertyDetailsUtilModel(
+                  name: name,
+                  email: email,
+                  mobile: phone,
+                  token: token,
+                  propId: int.parse(
+                      (_viewModel.propertyDetailsModel?.data?.details?.propId)
+                          .toString()),
+                  buildingName:
+                      (_viewModel.propertyDetailsModel?.data?.details?.bname)
+                          .toString(),
+                  title:
+                      (_viewModel.propertyDetailsModel?.data?.details?.title)
+                          .toString(),
+                  freeGuest: int.parse((_viewModel
+                          .propertyDetailsModel?.data?.details?.freeGuests)
+                      .toString()),
+                  maxGuest: int.parse(_viewModel
+                          .propertyDetailsModel?.data?.details?.maxGuests ??
+                      '0'),
+                );
+                Navigator.pushNamed(context, AppRoutes.bookingPage,
+                    arguments: model);
+              },
+              child: Container(
+                  width: _mainWidth * 0.5,
+                  height: _mainHeight * 0.06,
+                  alignment: Alignment.center,
+                  color: CustomTheme.appThemeContrast,
+                  child: Text(
+                    'Book Now',
+                    style: TextStyle(
+                        color: CustomTheme.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500),
+                  )),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -853,7 +1096,7 @@ class _TestWidgetState extends State<TestWidget> {
                       ' Guest'
                   : ' ',
               style: TextStyle(
-                  fontSize: getHeight(context: context, height:12),
+                  fontSize: getHeight(context: context, height: 12),
                   color: Colors.grey.shade600,
                   fontWeight: FontWeight.w500),
             ),
@@ -875,7 +1118,7 @@ class _TestWidgetState extends State<TestWidget> {
                       ' BedRoom'
                   : ' ',
               style: TextStyle(
-                  fontSize: getHeight(context: context, height:12),
+                  fontSize: getHeight(context: context, height: 12),
                   color: Colors.grey.shade600,
                   fontWeight: FontWeight.w500),
             ),
@@ -897,7 +1140,7 @@ class _TestWidgetState extends State<TestWidget> {
                       ' BathRoom'
                   : ' ',
               style: TextStyle(
-                  fontSize: getHeight(context: context, height:12),
+                  fontSize: getHeight(context: context, height: 12),
                   color: Colors.grey.shade600,
                   fontWeight: FontWeight.w500),
             ),
@@ -1076,6 +1319,20 @@ class _TestWidgetState extends State<TestWidget> {
     );
   }
 
+  void _showDialog(
+      {required String propId,
+      required String name,
+      required String phone,
+      required String email}) async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => ChangeNotifierProvider(
+              create: (_) => PropertyDetailsViewModel(),
+              child: SiteVisitPage(
+                  propId: propId, email: email, phoneNumber: phone, name: name),
+            ));
+  }
+
   Widget _getSimilarProperties(
       {required BuildContext context,
       required PropertyDetailsViewModel model}) {
@@ -1144,7 +1401,8 @@ class _TestWidgetState extends State<TestWidget> {
                                 child: Text(
                                   data.title ?? '',
                                   style: TextStyle(
-                                      fontSize: getHeight(context: context, height: 12),
+                                      fontSize: getHeight(
+                                          context: context, height: 12),
                                       color: CustomTheme.appTheme,
                                       fontWeight: FontWeight.w500),
                                   maxLines: 1,
@@ -1161,7 +1419,8 @@ class _TestWidgetState extends State<TestWidget> {
                                       ? data.buildingName.toString()
                                       : '',
                                   style: TextStyle(
-                                    fontSize: getHeight(context: context, height: 12),
+                                    fontSize:
+                                        getHeight(context: context, height: 12),
                                     color: Colors.grey,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -1187,8 +1446,9 @@ class _TestWidgetState extends State<TestWidget> {
                                           data.monthlyRent != null
                                               ? rupee + ' ${data.monthlyRent}'
                                               : '',
-                                          style:TextStyle(
-                                            fontSize: getHeight(context: context, height: 12),
+                                          style: TextStyle(
+                                            fontSize: getHeight(
+                                                context: context, height: 12),
                                             color: Colors.black,
                                             fontWeight: FontWeight.w500,
                                           ),
@@ -1203,7 +1463,6 @@ class _TestWidgetState extends State<TestWidget> {
                                             orgRent: data.orgRent)
                                         ? Container()
                                         : Container(
-
                                             width: _mainWidth * 0.1,
                                             alignment: Alignment.centerLeft,
                                             padding: EdgeInsets.only(
@@ -1215,7 +1474,9 @@ class _TestWidgetState extends State<TestWidget> {
                                                     ? rupee + '${data.orgRent}'
                                                     : '',
                                                 style: TextStyle(
-                                                  fontSize:getHeight(context: context, height: 10) ,
+                                                  fontSize: getHeight(
+                                                      context: context,
+                                                      height: 10),
                                                   color: Colors.grey,
                                                   decoration: TextDecoration
                                                       .lineThrough,
@@ -1243,7 +1504,9 @@ class _TestWidgetState extends State<TestWidget> {
                                               child: Text(
                                                 '70% OFF',
                                                 style: TextStyle(
-                                                  fontSize: getHeight(context: context, height: 12),
+                                                  fontSize: getHeight(
+                                                      context: context,
+                                                      height: 12),
                                                   color: CustomTheme.myFavColor,
                                                   fontWeight: FontWeight.w600,
 
@@ -1263,7 +1526,8 @@ class _TestWidgetState extends State<TestWidget> {
                                 child: Text(
                                   'More',
                                   style: TextStyle(
-                                    fontSize: getHeight(context: context, height:14),
+                                    fontSize:
+                                        getHeight(context: context, height: 14),
                                     color: CustomTheme.appThemeContrast,
 
                                     fontWeight: FontWeight.w600,
@@ -1308,16 +1572,19 @@ class _TestWidgetState extends State<TestWidget> {
   }
 
   TextStyle get getHeadingStyle => TextStyle(
-      color: CustomTheme.appTheme, fontSize: getHeight(context: context, height:16), fontWeight: FontWeight.w500);
+      color: CustomTheme.appTheme,
+      fontSize: getHeight(context: context, height: 16),
+      fontWeight: FontWeight.w500);
 
   EdgeInsets get getHeadingPadding =>
       EdgeInsets.only(left: _mainWidth * 0.03, right: _mainWidth * 0.03);
 }
 
 class NearbyFacilities extends StatefulWidget {
-  final int tabCount;
+  final List<NearBy> nearByList;
 
-  const NearbyFacilities({Key? key, required this.tabCount}) : super(key: key);
+  const NearbyFacilities({Key? key, required this.nearByList})
+      : super(key: key);
 
   @override
   State<NearbyFacilities> createState() => _NearbyFacilitiesState();
@@ -1328,7 +1595,7 @@ class _NearbyFacilitiesState extends State<NearbyFacilities> {
   Widget build(BuildContext context) {
     return DefaultTabController(
         initialIndex: 0,
-        length: widget.tabCount,
+        length: widget.nearByList.length,
         child: Scaffold(
           appBar: AppBar(
             elevation: 0,
@@ -1339,78 +1606,97 @@ class _NearbyFacilitiesState extends State<NearbyFacilities> {
               unselectedLabelColor: Colors.black54,
               indicatorColor: CustomTheme.appThemeContrast,
               labelColor: CustomTheme.appThemeContrast,
-              tabs: getTabs(context: context, tabCount: widget.tabCount),
+              tabs:
+                  getTabs(context: context, tabCount: widget.nearByList.length),
             ),
           ),
           body: Container(
             color: Colors.white,
             child: TabBarView(
-              children:
-                  getTabBarWidgets(context: context, tabCount: widget.tabCount),
+              children: getTabBarWidgets(
+                  context: context, tabCount: widget.nearByList.length),
             ),
           ),
         ));
   }
 
   List<Tab> getTabs({required BuildContext context, required int tabCount}) {
-    return List.generate(
-        widget.tabCount,
-        (index) => Tab(
-              child: Text('Transportation',style: TextStyle(
-                fontSize: getHeight(context: context, height:14)
-              ),),
-            )).toList();
+    List<Tab> tabList = [];
+    for (int i = 0; i < widget.nearByList.length; i++) {
+      tabList.add(Tab(
+        child: Text(
+          '${widget.nearByList[i].placeType ?? 'Popular Places Near By'}',
+          style: TextStyle(fontSize: getHeight(context: context, height: 14)),
+        ),
+      ));
+    }
+    return tabList;
   }
 
   List<Widget> getTabBarWidgets(
       {required BuildContext context, required int tabCount}) {
-    return List.generate(
-        widget.tabCount,
-        (index) => Tab(
-              child: Column(
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.15,
-                    padding: EdgeInsets.only(top: 5),
-                    child: ListTileTheme.merge(
-                      child: ListView.separated(
-                        itemBuilder: (context, index) {
-                          return Container(
-                            padding: EdgeInsets.only(
-                              left: MediaQuery.of(context).size.width * 0.03,
-                              right: MediaQuery.of(context).size.width * 0.03,
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Icon(
-                                  Icons.star,
-                                  size: 14,
-                                  color: Colors.grey,
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text('Uber Cab',style: TextStyle(
-                                  fontSize: getHeight(context: context, height:12)
-                                ),),
-                                Spacer(),
-                                Text('0.3Km',style: TextStyle(
-                                  fontSize: getHeight(context: context, height:12)
-                                ),),
-
-                              ],
-                            ),
-                          );
-                        },
-                        itemCount: 10,
-                        separatorBuilder:(_,__)=>SizedBox(height: 5,),
-                      ),
+    List<Tab> tabList = [];
+    for (int i = 0; i < widget.nearByList.length; i++) {
+      tabList.add(Tab(
+          child: Column(
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height * 0.15,
+            padding: EdgeInsets.only(top: 5),
+            child: ListTileTheme.merge(
+              child: ListView.separated(
+                itemBuilder: (context, index) {
+                  var data = widget.nearByList[i].placeList != null &&
+                          widget.nearByList[i].placeList!.isNotEmpty
+                      ? widget.nearByList[i].placeList![index]
+                      : PlaceList();
+                  return Container(
+                    padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.03,
+                      right: MediaQuery.of(context).size.width * 0.03,
                     ),
-                  ),
-                ],
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.star,
+                          size: 14,
+                          color: Colors.grey.shade400,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          '${data.placeTitle ?? ''}',
+                          style: TextStyle(
+                              fontSize:
+                                  getHeight(context: context, height: 12)),
+                        ),
+                        Spacer(),
+                        data.distance != null && data.distance.toString() !='0'?Text(
+                          '${data.distance ?? ''} Km',
+                          style: TextStyle(
+                              fontSize:
+                                  getHeight(context: context, height: 12)),
+                        ):Container(),
+                      ],
+                    ),
+                  );
+                },
+                itemCount: widget.nearByList[i].placeList != null &&
+                        widget.nearByList[i].placeList!.isNotEmpty
+                    ? widget.nearByList[i].placeList!.length
+                    : 0,
+                separatorBuilder: (_, __) => SizedBox(
+                  height: 5,
+                ),
               ),
-            )).toList();
+            ),
+          ),
+        ],
+      )));
+    }
+    return tabList;
   }
 }

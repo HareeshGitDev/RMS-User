@@ -743,13 +743,15 @@ class PlaceList {
   String? placeTitle;
   String? placeAddress;
   String? placeDesc;
+  dynamic distance;
 
-  PlaceList({this.placeTitle, this.placeAddress, this.placeDesc});
+  PlaceList({this.placeTitle, this.placeAddress, this.placeDesc,this.distance});
 
   PlaceList.fromJson(Map<String, dynamic> json) {
     placeTitle = json['place_title'];
     placeAddress = json['place_address'];
     placeDesc = json['place_desc'];
+    distance = json['distance'];
   }
 
   Map<String, dynamic> toJson() {
@@ -757,6 +759,7 @@ class PlaceList {
     data['place_title'] = this.placeTitle;
     data['place_address'] = this.placeAddress;
     data['place_desc'] = this.placeDesc;
+    data['distance'] = this.distance;
     return data;
   }
 }
