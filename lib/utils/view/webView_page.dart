@@ -4,7 +4,11 @@ import 'dart:developer';
 import 'package:RentMyStay_user/theme/custom_theme.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
+//import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:webview_flutter/platform_interface.dart';
 //import 'package:flutter_webview_pro/webview_flutter.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -31,6 +35,19 @@ class _WebViewContainerState extends State<Web_View_Container> {
   late StreamSubscription<ConnectivityResult> _connectivitySubs;
   final Connectivity _connectivity = Connectivity();
   bool _connectionStatus = true;
+ /* InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
+      crossPlatform: InAppWebViewOptions(
+        useShouldOverrideUrlLoading: true,
+        mediaPlaybackRequiresUserGesture: true,
+      ),
+      android: AndroidInAppWebViewOptions(
+        useHybridComposition: true,
+      ),
+      ios: IOSInAppWebViewOptions(
+        allowsInlineMediaPlayback: true,
+      ));*/
+
+
 
   Future<void> initConnectionStatus() async {
     ConnectivityResult result = ConnectivityResult.none;
@@ -80,8 +97,10 @@ class _WebViewContainerState extends State<Web_View_Container> {
   }
 
 
+
   @override
   Widget build(BuildContext context) {
+
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
     return _connectionStatus?Scaffold(
@@ -99,6 +118,17 @@ class _WebViewContainerState extends State<Web_View_Container> {
               Expanded(
                 child: Stack(
                   children: [
+                   /* InAppWebView(
+                      initialUrlRequest:
+                      URLRequest(url: Uri.parse(widget.url)),
+                      initialOptions: options,
+                      androidOnPermissionRequest: (controller, origin, resources) async {
+                        return PermissionRequestResponse(
+                            resources: resources,
+                            action: PermissionRequestResponseAction.GRANT);
+                      },
+
+                    ),*/
                     WebView(
                       onProgress: (progress) {
                         progressIndicator.value = progress;
@@ -116,10 +146,16 @@ class _WebViewContainerState extends State<Web_View_Container> {
                       key: _key,
                       javascriptMode: JavascriptMode.unrestricted,
                       initialUrl: widget.url,
-                      allowsInlineMediaPlayback: true,
+                      allowsInlineMediaPlayback: false,
                       gestureNavigationEnabled: true,
+                      initialMediaPlaybackPolicy: AutoMediaPlaybackPolicy.always_allow,
+                      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                        Factory<OneSequenceGestureRecognizer>(
+                              () => EagerGestureRecognizer(),
+                        ),
+                      }.toSet(),
                     ),
-                    Positioned(
+                   Positioned(
                       top: _mainHeight * 0.4,
                       left: _mainWidth * 0.4,
                       child: ValueListenableBuilder(
