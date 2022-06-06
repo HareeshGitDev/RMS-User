@@ -14,9 +14,13 @@ import '../../theme/custom_theme.dart';
 class PropertyGalleryViewPage extends StatefulWidget {
   final List<Pic> imageList;
   final String? videoLink;
+  final bool fromVideo;
 
   const PropertyGalleryViewPage(
-      {Key? key, required this.imageList, required this.videoLink})
+      {Key? key,
+      required this.imageList,
+      required this.videoLink,
+      required this.fromVideo})
       : super(key: key);
 
   @override
@@ -35,13 +39,19 @@ class _PropertyGalleryViewPageState extends State<PropertyGalleryViewPage> {
     super.initState();
     log('${widget.videoLink}');
     youTubeController = YoutubePlayerController(
-      initialVideoId:widget.videoLink ??'',
+      initialVideoId: widget.videoLink ?? '',
       flags: const YoutubePlayerFlags(
           autoPlay: true,
           mute: true,
           controlsVisibleAtStart: false,
           useHybridComposition: true),
     );
+    showVideo=widget.fromVideo;
+  }
+  @override
+  void dispose() {
+    youTubeController.dispose();
+    super.dispose();
   }
 
   @override
@@ -54,32 +64,37 @@ class _PropertyGalleryViewPageState extends State<PropertyGalleryViewPage> {
         centerTitle: false,
         title: Text('Property Gallery'),
         actions: [
-          widget.videoLink == null || widget.videoLink == '' ?Container():GestureDetector(
-            onTap: () => setState(() => showVideo = !showVideo),
-            child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: CustomTheme.white),
-              padding: EdgeInsets.only(left: 10, right: 10),
-              margin: EdgeInsets.only(right: 10, top: 8, bottom: 8),
-              child: Row(
-                children: [
-                  Text(
-                    showVideo ? 'Photo Mode' : 'Video Mode',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: CustomTheme.appTheme),
+          widget.videoLink == null || widget.videoLink == ''
+              ? Container()
+              : GestureDetector(
+                  onTap: () {
+                    youTubeController.reset();
+                    setState(() => showVideo = !showVideo);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: CustomTheme.white),
+                    padding: EdgeInsets.only(left: _mainWidth*0.015, right: _mainWidth*0.015),
+                    margin: EdgeInsets.only(right: _mainWidth*0.015, top: _mainHeight*0.01, bottom:_mainHeight*0.01),
+                    child: Row(
+                      children: [
+                        Text(
+                          showVideo ? 'Photo Tour' : 'Video Tour',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: CustomTheme.appTheme),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Icon(showVideo ? Icons.photo : Icons.play_arrow,
+                            color: CustomTheme.appTheme,size: _mainWidth*0.05,),
+                      ],
+                    ),
                   ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Icon(showVideo ? Icons.photo : Icons.play_circle_fill,
-                      color: CustomTheme.appTheme),
-                ],
-              ),
-            ),
-          )
+                )
         ],
       ),
       body: Container(
@@ -140,16 +155,6 @@ class _PropertyGalleryViewPageState extends State<PropertyGalleryViewPage> {
                   controller: youTubeController,
                   showVideoProgressIndicator: false,
                   topActions: [
-                    Text(
-                      'Powered by RMS',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Spacer(),
                     IconButton(
                         onPressed: () {
                           if (youTubeController.flags.mute) {

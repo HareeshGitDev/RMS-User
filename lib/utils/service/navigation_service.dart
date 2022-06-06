@@ -322,6 +322,7 @@ class NavigationService {
               child: PropertyGalleryViewPage(
                 imageList: data['imageList'],
                 videoLink: data['videoLink'],
+                fromVideo: data['fromVideo'],
               )),
         );
       case AppRoutes.ownerPropertyListingPage:

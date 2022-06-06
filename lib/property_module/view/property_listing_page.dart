@@ -1805,4 +1805,5 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
           )),
     );
   }
+
 }
