@@ -1,6 +1,8 @@
 import 'dart:developer';
 
+import 'package:RentMyStay_user/my_stays/viewmodel/mystay_viewmodel.dart';
 import 'package:RentMyStay_user/property_details_module/amenities_model.dart';
+import 'package:RentMyStay_user/property_details_module/model/booking_amount_request_model.dart';
 import 'package:RentMyStay_user/property_details_module/model/property_details_model.dart';
 import 'package:RentMyStay_user/property_details_module/model/property_details_util_model.dart';
 import 'package:RentMyStay_user/property_details_module/view/site_visit_page.dart';
@@ -30,6 +32,10 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import 'images.dart';
 import 'dart:math' as math;
+import 'package:RentMyStay_user/my_stays/model/Invoice_Details_Model.dart'
+    as invoiceModelData;
+
+import 'my_stays/model/invoice_payment_model.dart';
 
 class TestWidget extends StatefulWidget {
   const TestWidget({Key? key}) : super(key: key);
@@ -42,18 +48,13 @@ class _TestWidgetState extends State<TestWidget> {
   var _mainHeight;
   var _mainWidth;
 
-  bool showSearchResults = false;
-  late TextEditingController _searchController = TextEditingController();
-
-  late PropertyViewModel _viewModel;
+  late MyStayViewModel _viewModel;
 
   @override
   void initState() {
     super.initState();
-    _viewModel = Provider.of<PropertyViewModel>(context, listen: false);
-
-    _viewModel.getPropertyDetailsList(
-        address: 'Bengaluru-Karnataka-India', property: Property.fromLocation);
+    _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
+    _viewModel.getInvoiceDetails(bookingId: 41769.toString());
   }
 
   @override
@@ -63,823 +64,337 @@ class _TestWidgetState extends State<TestWidget> {
     log('$_mainWidth  -- $_mainHeight');
 
     return Scaffold(
-      appBar: _getAppBar(context: context),
-      body: Consumer<PropertyViewModel>(
+      appBar: AppBar(
+        title: Text('Invoices'),
+      ),
+      body: Consumer<MyStayViewModel>(
         builder: (context, value, child) {
-          return value.propertyListModel.msg != null &&
-                  value.propertyListModel.data != null &&
-              value.propertyListModel.data!.isNotEmpty
+          return value.invoiceDetailsModel != null &&
+                  value.invoiceDetailsModel?.msg != null &&
+                  value.invoiceDetailsModel?.data != null &&
+                  value.invoiceDetailsModel?.data!.length != 0
               ? Container(
-                  color: Colors.white,
                   height: _mainHeight,
                   width: _mainWidth,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Container(
-                            padding: EdgeInsets.only(
-                                left: _mainWidth * 0.04,
-                                right: _mainWidth * 0.04,
-                                top: _mainHeight * 0.02),
-                            width: _mainWidth,
-                            child: Row(
-                              children: [
-                                Text(
-                                  '${value.propertyListModel.data?.length ?? ''} Stay\'s Found',
-                                  style: TextStyle(
-                                      color: CustomTheme.appTheme,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: getHeight(
-                                          context: context, height: 16)),
-                                ),
-                                Spacer(),
-                                Icon(
-                                  Icons.filter_alt_outlined,
-                                  size: _mainHeight * 0.015,
-                                  color: CustomTheme.appThemeContrast,
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  'Filter',
-                                  style: TextStyle(
-                                    fontSize:
-                                        getHeight(context: context, height: 12),
-                                    color: CustomTheme.appThemeContrast,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: _mainWidth * 0.05,
-                                ),
-                                Icon(
-                                  Icons.waves,
-                                  size: _mainHeight * 0.015,
-                                  color: CustomTheme.appThemeContrast,
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  'Sort',
-                                  style: TextStyle(
-                                    fontSize:
-                                        getHeight(context: context, height: 12),
-                                    color: CustomTheme.appThemeContrast,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            )),
-                        Stack(
-                          children: [
-
-                            Container(
-                              color: Colors.white,
-                              height: _mainHeight,
+                  color: Colors.white,
+                  padding: EdgeInsets.symmetric(
+                      horizontal: _mainWidth * 0.02,
+                      vertical: _mainHeight * 0.02),
+                  child: ListView.separated(
+                      itemBuilder: (context, index) {
+                        var data =
+                            value.invoiceDetailsModel?.data![index];
+                        return Container(
+                         // color: Colors.purple,
+                          child: ExpansionTile(
+                            backgroundColor: Colors.grey.shade50,
+                            collapsedBackgroundColor: Colors.grey.shade50,
+                            tilePadding: EdgeInsets.zero,
+                            childrenPadding: EdgeInsets.only(
+                              bottom: _mainHeight * 0.02,
+                              left: _mainWidth * 0.02,
+                              top: _mainHeight*0.015,
+                              right: _mainWidth*0.09
+                            ),
+                            title: Container(
                               width: _mainWidth,
-                              padding: EdgeInsets.only(
-                                  left: _mainWidth * 0.03,
-                                  right: _mainWidth * 0.03,
-                                  top: _mainHeight * 0.01,
-                                  bottom: _mainHeight *
-                                      0.16),
-                              child: ListView.separated(
-                                itemBuilder: (context, index) {
-                                  var data =
-                                      value.propertyListModel.data![index];
-                                  return GestureDetector(
-                                    onTap: () => Navigator.of(context)
-                                        .pushNamed(
-                                            AppRoutes.propertyDetailsPage,
-                                            arguments: {
-                                          'propId': data.propId,
-                                          'fromExternalLink': false,
-                                        }),
-                                    child: Card(
-                                      elevation: 4,
-                                      shadowColor: CustomTheme.appTheme,
-                                      shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10))),
-                                      child: Stack(
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                padding: EdgeInsets.only(
-                                                    left: _mainWidth * 0.02,
-                                                    top: _mainHeight * 0.01,
-                                                    right: _mainWidth * 0.02),
-                                                child: CarouselSlider(
-                                                  items: data.propPics
-                                                          ?.map((e) =>
-                                                              CachedNetworkImage(
-                                                                imageUrl: e
-                                                                    .picLink
-                                                                    .toString(),
-                                                                imageBuilder:
-                                                                    (context,
-                                                                            imageProvider) =>
-                                                                        Container(
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            10),
-                                                                    image:
-                                                                        DecorationImage(
-                                                                      image:
-                                                                          imageProvider,
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                placeholder: (context, url) => Shimmer
-                                                                    .fromColors(
-                                                                        child:
-                                                                            Container(
-                                                                          height:
-                                                                              _mainHeight * 0.22,
-                                                                          color:
-                                                                              Colors.grey,
-                                                                        ),
-                                                                        baseColor:
-                                                                            Colors.grey[200]
-                                                                                as Color,
-                                                                        highlightColor:
-                                                                            Colors.grey[350]
-                                                                                as Color),
-                                                                errorWidget: (context,
-                                                                        url,
-                                                                        error) =>
-                                                                    const Icon(Icons
-                                                                        .error),
-                                                              ))
-                                                          .toList() ??
-                                                      [],
-                                                  options: CarouselOptions(
-                                                      height: _mainHeight * 0.22,
-                                                      enlargeCenterPage: true,
-                                                      autoPlay: true,
-                                                      aspectRatio: 16 / 9,
-                                                      autoPlayInterval: Duration(
-                                                          milliseconds: math
-                                                                      .Random()
-                                                                  .nextInt(
-                                                                      6000) +
-                                                              1500),
-                                                      autoPlayCurve:
-                                                          Curves.fastOutSlowIn,
-                                                      enableInfiniteScroll:
-                                                          true,
-                                                      viewportFraction: 1),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: _mainHeight * 0.02,
-                                              ),
-                                              Container(
-                                                padding: EdgeInsets.only(
-                                                    left: _mainWidth * 0.02,
-                                                    right: _mainWidth * 0.02),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      width: _mainWidth * 0.68,
-                                                      child: Text(
-                                                        "${data.title ?? ""}",
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        maxLines: 2,
-                                                        style: TextStyle(
-                                                            fontSize: getHeight(
-                                                                context:
-                                                                    context,
-                                                                height: 12),
-                                                            color: Colors.black,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w600),
-                                                      ),
-                                                    ),
-                                                    Visibility(
-                                                      visible: data.rmsProp !=
-                                                              null &&
-                                                          data.rmsProp ==
-                                                              "RMS Prop",
-                                                      child: Text(
-                                                        "${data.unitType ?? ''}",
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        maxLines: 1,
-                                                        style: TextStyle(
-                                                            fontSize: getHeight(
-                                                                context:
-                                                                    context,
-                                                                height: 12),
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w700),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: _mainHeight * 0.01,
-                                              ),
-                                              Container(
-                                                width: _mainWidth,
-                                                padding: EdgeInsets.only(
-                                                    left: _mainWidth * 0.02,
-                                                    right: _mainWidth * 0.02),
-                                                child: Row(
-                                                  children: [
-                                                    GestureDetector(
-                                                      onTap: () => goToMap(
-                                                          glat: data.glat,
-                                                          glng: data.glng),
-                                                      child: Icon(
-                                                        Icons
-                                                            .location_on_outlined,
-                                                        color: Colors.grey,
-                                                        size:
-                                                            _mainHeight * 0.015,
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: _mainWidth * 0.01,
-                                                    ),
-                                                    GestureDetector(
-                                                      onTap: () => goToMap(
-                                                          glat: data.glat,
-                                                          glng: data.glng),
-                                                      child: Text(
-                                                        (data.areas ??
-                                                                data.city) ??
-                                                            " ",
-                                                        style: TextStyle(
-                                                            color: Colors.grey,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontSize: getHeight(
-                                                                context:
-                                                                    context,
-                                                                height: 10)),
-                                                      ),
-                                                    ),
-                                                    Spacer(),
-                                                    Visibility(
-                                                      visible: data.rmsProp !=
-                                                              null &&
-                                                          data.rmsProp ==
-                                                              "RMS Prop",
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                left:
-                                                                    _mainWidth *
-                                                                        0.02,
-                                                                right:
-                                                                    _mainWidth *
-                                                                        0.02),
-                                                        child: Row(children: [
-                                                          Icon(
-                                                            Icons.person,
-                                                            size: _mainHeight *
-                                                                0.015,
-                                                            color: Colors.grey,
-                                                          ),
-                                                          SizedBox(
-                                                            width: _mainWidth *
-                                                                0.01,
-                                                          ),
-                                                          Text(
-                                                            'Managed by RMS',
-                                                            style: TextStyle(
-                                                                color: Colors.grey,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                fontSize: getHeight(
-                                                                    context:
-                                                                        context,
-                                                                    height:
-                                                                        10)),
-                                                          ),
-                                                        ]),
-                                                      ),
-                                                    ),
-                                                    Spacer(),
-                                                    Visibility(
-                                                      visible: data.rmsProp !=
-                                                              null &&
-                                                          data.rmsProp ==
-                                                              "RMS Prop",
-                                                      child: Text(
-                                                        'Multiple Units Available',
-                                                        style: TextStyle(
-                                                          color: Colors.grey,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          fontSize: getHeight(
-                                                              context: context,
-                                                              height: 10),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: _mainHeight * 0.01,
-                                              ),
-                                              Container(
-                                                child: Row(
-                                                  children: [
-                                                    getRents(
-                                                        rentType:
-                                                            'Rent Per Day',
-                                                        discount: '70 % OFF',
-                                                        rent: data.rent ?? '0',
-                                                        orgRent: data.orgRent ??
-                                                            '0'),
-                                                    SizedBox(
-                                                        width:
-                                                            _mainWidth * 0.005),
-                                                    getRents(
-                                                        rentType:
-                                                            'Stay < 3 Month',
-                                                        discount: '70 % OFF',
-                                                        rent:
-                                                            data.monthlyRent ??
-                                                                '0',
-                                                        orgRent:
-                                                            data.orgMonthRent ??
-                                                                '0'),
-                                                    SizedBox(
-                                                        width:
-                                                            _mainWidth * 0.005),
-                                                    getRents(
-                                                        rentType:
-                                                            'Stay > 3 Month',
-                                                        discount: '70 % OFF',
-                                                        rent:
-                                                            data.rmsRent ?? '0',
-                                                        orgRent:
-                                                            data.orgRmsRent ??
-                                                                '0'),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Positioned(
-                                            top: _mainHeight * 0.02,
-                                            left: _mainWidth * 0.04,
-                                            child: Visibility(
-                                              visible: data.rmsProp != null &&
-                                                  data.rmsProp == "RMS Prop",
-                                              child: Container(
-                                                height: _mainHeight * 0.03,
-                                                padding: EdgeInsets.only(
-                                                    left: _mainWidth * 0.02,
-                                                    right: _mainWidth * 0.02),
-                                                decoration: BoxDecoration(
-                                                    color: CustomTheme
-                                                        .appThemeContrast,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5)),
-                                                child: Row(children: [
-                                                  Icon(
-                                                    Icons.home,
-                                                    size: _mainHeight * 0.017,
-                                                    color: Colors.white,
-                                                  ),
-                                                  SizedBox(
-                                                    width: _mainWidth * 0.01,
-                                                  ),
-                                                  LimitedBox(
-                                                    maxWidth: _mainWidth * 0.5,
-                                                    child: Text(
-                                                      data.buildingName ?? '',
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                      style: TextStyle(
-                                                        fontSize: getHeight(
-                                                            context: context,
-                                                            height: 12),
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ]),
-                                              ),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            right: _mainWidth * 0.04,
-                                            top: _mainHeight * 0.02,
-                                            child: GestureDetector(
-                                              onTap: () async {
-                                                if (data.wishlist == 1) {
-                                                  if (data.propId != null) {
-                                                    int response =
-                                                        await _viewModel
-                                                            .addToWishlist(
-                                                                propertyId:
-                                                                    data.propId ??
-                                                                        '');
-                                                    if (response == 200) {
-                                                      setState(() {
-                                                        data.wishlist = 0;
-                                                      });
-                                                      RMSWidgets.showSnackbar(
-                                                          context: context,
-                                                          message:
-                                                              'Successfully Removed From Wishlist',
-                                                          color: CustomTheme
-                                                              .appTheme);
-                                                    }
-                                                  }
-                                                } else if (data.wishlist == 0) {
-                                                  if (data.propId != null) {
-                                                    int response =
-                                                        await _viewModel
-                                                            .addToWishlist(
-                                                                propertyId:
-                                                                    data.propId ??
-                                                                        '');
-                                                    if (response == 200) {
-                                                      setState(() {
-                                                        data.wishlist = 1;
-                                                      });
-                                                      RMSWidgets.showSnackbar(
-                                                          context: context,
-                                                          message:
-                                                              'Successfully Added to Wishlist',
-                                                          color: CustomTheme
-                                                              .appTheme);
-                                                    }
-                                                  }
-                                                }
-                                              },
-                                              child: data.wishlist == 1
-                                                  ? Icon(
-                                                      Icons.favorite,
-                                                      color: CustomTheme
-                                                          .errorColor,
-                                                    )
-                                                  : Icon(
-                                                      Icons
-                                                          .favorite_outline_rounded,
-                                                      color: CustomTheme.white,
-                                                    ),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            left: _mainWidth * 0.04,
-                                            top: _mainHeight * 0.2,
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              height: _mainHeight * 0.025,
-                                              padding: EdgeInsets.only(
-                                                  left: _mainWidth * 0.02,
-                                                  right: _mainWidth * 0.02),
-                                              decoration: BoxDecoration(
-                                                  color: CustomTheme.appThemeContrast,
-                                                  borderRadius:
-                                                      BorderRadius.circular(5)),
-                                              child: LimitedBox(
-                                                maxWidth: _mainWidth * 0.5,
-                                                child: Text(
-                                                  '${value.propertyListModel.data![0].propType}',
-                                                  style: TextStyle(
-                                                    fontSize: getHeight(
-                                                        context: context,
-                                                        height: 12),
-                                                    color: CustomTheme.white,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            right: _mainWidth * 0.04,
-                                            top: _mainHeight * 0.2,
-                                            child: Visibility(
-
-                                                visible:
-                                                    data.avl?.toLowerCase() ==
-                                                        'booked',
-                                                child: Container(
-                                                  alignment:
-                                                      Alignment.topCenter,
-                                                  height: _mainHeight * 0.022,
-                                                  width: _mainWidth * 0.17,
-                                                  padding: EdgeInsets.only(
-                                                      left: _mainWidth * 0.02,
-                                                      right: _mainWidth * 0.02),
-                                                  decoration: BoxDecoration(
-                                                      color: CustomTheme
-                                                          .appThemeContrast,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5)),
-                                                  child: Text(
-                                                    'Booked',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: getHeight(
-                                                            context: context,
-                                                            height: 14)),
-                                                  ),
-                                                )),
-                                          ),
-                                        ],
-                                      ),
+                              height: 30,
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(left: _mainWidth*0.015),
+                                    child: Text(
+                                      data?.transactionType ?? '',
+                                      style: TextStyle(
+                                          color: Colors.black87,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: getHeight(context: context, height: 20)),
                                     ),
-                                  );
-                                },
-                                itemCount: value.propertyListModel.data?.length ??0,
-                                separatorBuilder: (context, index) => SizedBox(
-                                  height: _mainHeight * 0.008,
-                                ),
+                                  ),
+                                  Spacer(),
+                                  Text('$rupee ${data?.amount ?? ' '}',
+                                      style: TextStyle(
+                                          color: Colors.black87,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: getHeight(context: context, height: 18))),
+                                  SizedBox(
+                                    width: _mainWidth * 0.02,
+                                  ),
+                                  Icon(
+                                    data?.pendingBalance !=
+                                        null &&
+                                        data?.pendingBalance == 0?Icons.check:Icons.alarm,
+                                    color: data?.pendingBalance !=
+                                        null &&
+                                        data?.pendingBalance == 0?CustomTheme.myFavColor:CustomTheme.appThemeContrast,
+                                    size: _mainWidth*0.045,
+
+                                  )
+                                ],
                               ),
                             ),
-                            showSearchResults
-                                ? Positioned(
-                                    top: _mainHeight * 0.01,
-                                    left: _mainWidth * 0.035,
-                                    child: Container(
-                                        height: _mainHeight * 0.32,
-                                        width: _mainWidth * 0.93,
-                                        child: showSuggestions(
-                                            value: value, context: context)),
+                            trailing: Container(
+                              padding: EdgeInsets.only(bottom: _mainHeight*0.06),
+                              child:
+                                  Icon(Icons.keyboard_arrow_down_outlined),
+                            ),
+                            subtitle: Container(
+
+                              padding: EdgeInsets.only(top: _mainHeight*0.01,left: _mainWidth*0.015),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text('From : ',
+                                          style:  TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: getHeight(context: context, height: 12))),
+                                      Text(  '${data?.fromDate ??''}',
+                                          style: TextStyle(
+                                              color: Colors.black87.withAlpha(180),
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: getHeight(context: context, height: 12))),
+                                    ],
+                                  ),
+
+                                  Row(
+                                    children: [
+                                      Text('To : ',
+                                          style:  TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: getHeight(context: context, height: 12))),
+                                      Text( '${data?.tillDate??''}',
+                                          style:  TextStyle(
+                                              color: Colors.black87.withAlpha(180),
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: getHeight(context: context, height: 12))),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text('Id : ',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: getHeight(context: context, height: 12))),
+                                      Text('${data?.invoiceId ??''}',
+                                          style: TextStyle(
+                                              color: Colors.black87.withAlpha(180),
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: getHeight(context: context, height: 12))),
+                                    ],
                                   )
-                                : Container(),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                                ],
+                              ),
+                            ),
+                            children: [
+                              Container(
+                                //color: Colors.amber,
+                                //height: _mainHeight * 0.03,
+                                width: _mainWidth,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('Amount',
+                                        style: TextStyle(
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: getHeight(context: context, height: 14))),
+                                    Text('$rupee ${data?.amount ?? ' '}',
+                                        style: TextStyle(
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: getHeight(context: context, height: 14))),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: _mainHeight*0.01,
+                              ),
+                              Container(
+
+                                width: _mainWidth,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('Received',
+                                        style: TextStyle(
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: getHeight(context: context, height: 14))),
+                                    Text(
+                                        '$rupee ${data?.amountRecieved ?? ''}',
+                                        style: TextStyle(
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: getHeight(context: context, height: 14))),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: _mainHeight*0.01,
+                              ),
+                              data?.refferalDiscount != null &&
+                                      data?.refferalDiscount.toString() !=
+                                          '0'
+                                  ? Container(
+                                      // color: Colors.amber,
+                                      //height: _mainHeight * 0.03,
+                                      width: _mainWidth,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text('Referral',
+                                              style:  TextStyle(
+                                                  color: Colors.grey,
+                                                  fontWeight:
+                                                      FontWeight.w500,
+                                                  fontSize: getHeight(context: context, height: 14))),
+                                          Text(
+                                              '$rupee ${data?.refferalDiscount ?? ''}',
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontWeight:
+                                                      FontWeight.w600,
+                                                  fontSize: getHeight(context: context, height: 14))),
+                                        ],
+                                      ),
+                                    )
+                                  : Container(),
+                              SizedBox(
+                                height: data?.refferalDiscount != null &&
+                                    data?.refferalDiscount.toString() !=
+                                        '0'
+                                    ?_mainHeight*0.01:0,
+                              ),
+                              Divider(
+                                thickness: 0.7,
+                              ),
+                              SizedBox(
+                                height: _mainHeight*0.01,
+                              ),
+                              Container(
+                                //color: Colors.amber,
+                                //height: _mainHeight * 0.03,
+                                width: _mainWidth,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('Pending',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: getHeight(context: context, height: 14))),
+                                    Text(
+                                        '$rupee ${data?.pendingBalance ?? ''}',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: getHeight(context: context, height: 16))),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: _mainHeight * 0.02,
+                              ),
+                              SizedBox(
+                                height: _mainHeight * 0.035,
+                                child: ElevatedButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all<
+                                              Color>(data?.pendingBalance !=
+                                                      null &&
+                                                  data?.pendingBalance == 0
+                                              ? CustomTheme.myFavColor
+                                              : CustomTheme
+                                                  .appThemeContrast),
+                                      shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                      )),
+                                  onPressed: data?.pendingBalance != null &&
+                                          data?.pendingBalance == 0
+                                      ? () async {
+                                          RMSWidgets.showLoaderDialog(
+                                              context: context,
+                                              message: 'Loading');
+                                          String invoiceLink =
+                                              await _viewModel
+                                                  .downloadInvoice(
+                                                      bookingId:
+                                                          41769.toString(),
+                                                      invoiceId:
+                                                          data?.invoiceId ??
+                                                              '');
+                                          Navigator.of(context).pop();
+                                          if (invoiceLink.isNotEmpty) {
+                                            if (await canLaunch(
+                                                invoiceLink)) {
+                                              await launch(invoiceLink);
+                                            }
+                                          }
+                                        }
+                                      : () {
+                                          /*choosePaymentDialog(
+                                    context: context,
+                                    model: data ??
+                                        invoiceModelData
+                                            .Data());*/
+                                        },
+                                  child: Container(
+                                      child: data?.pendingBalance != null &&
+                                              data?.pendingBalance == 0
+                                          ? RichText(
+                                              text: TextSpan(
+                                              children: [
+                                                TextSpan(text: 'Download',style: TextStyle(
+                                                  fontSize: getHeight(context: context, height: 14)
+                                                )),
+                                                WidgetSpan(
+                                                  child: Icon(
+                                                      Icons.download,
+                                                      size: _mainHeight *
+                                                          0.018),
+                                                ),
+                                              ],
+                                            ))
+                                          : Text('Pay Now',style: TextStyle(
+                                        fontSize: getHeight(context: context, height: 14)
+                                      ),)),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return SizedBox(
+                          height: 25,
+                        );
+                      },
+                      itemCount:
+                          value.invoiceDetailsModel?.data!.length ?? 0),
                 )
-              : RMSWidgets.getLoader();
+              : value.invoiceDetailsModel != null &&
+                      value.invoiceDetailsModel?.msg != null &&
+                      value.invoiceDetailsModel?.data == null
+                  ? RMSWidgets.noData(
+                      context: context,
+                      message:
+                          'Something went Wrong.Invoice Details could not be found.')
+                  : Center(child: RMSWidgets.getLoader());
         },
       ),
-      
-    );
-  }
-
-  void goToMap({String? glat, String? glng}) async {
-    if ((glat != null) && (glng != null)) {
-      var latitude = glat.toString();
-      var longitude = glng.toString();
-      await SystemService.launchGoogleMaps(
-          latitude: latitude, longitude: longitude);
-    }
-  }
-
-  int getDiscount({required String rent, required String orgRent}) {
-    double val = 0;
-
-    try {
-      if (rent != '' || rent != '0' || orgRent != '' || orgRent != '0') {
-        if (double.parse(rent.trim()).toInt() <
-            double.parse(orgRent.trim()).toInt()) {
-          val = (double.parse(rent.trim()).toInt() * 100) /
-              double.parse(orgRent.trim()).toInt();
-        }
-      }
-    } catch (e) {
-      log('Format Exception : $e');
-    }
-
-    return val.toInt();
-  }
-
-  Widget getRents(
-      {required String rentType,
-      required String rent,
-      required String orgRent,
-      String? discount}) {
-    return Visibility(
-      visible: rent != '0',
-      child: Container(
-        margin: EdgeInsets.only(
-            bottom: _mainHeight * 0.01, left: _mainWidth * 0.01),
-        padding: EdgeInsets.only(
-            left: _mainWidth * 0.01,
-            right: _mainWidth * 0.02,
-            top: _mainHeight * 0.00),
-        width: _mainWidth * 0.29,
-        height: _mainHeight * 0.05,
-        decoration: BoxDecoration(
-            color: Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(5)),
-        child: FittedBox(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    rentType,
-                    style: TextStyle(
-                        fontSize: getHeight(context: context, height: 10)),
-                  ),
-                  SizedBox(height: _mainHeight * 0.005),
-                  Visibility(
-                    visible: getDiscount(rent: rent, orgRent: orgRent) != 0,
-                    child: Text(
-                      '${getDiscount(rent: rent, orgRent: orgRent)} % OFF',
-                      style: TextStyle(
-                          fontSize: getHeight(context: context, height: 10),
-                          color: CustomTheme.myFavColor,
-                          fontWeight: FontWeight.w700),
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(width: _mainWidth * 0.01),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Visibility(
-                      child: Text(
-                    '$rupee $rent',
-                    style: TextStyle(
-                        fontSize: getHeight(context: context, height: 10),
-                        color: CustomTheme.black,
-                        fontWeight: FontWeight.w500),
-                  )),
-                  SizedBox(height: _mainHeight * 0.005),
-                  Visibility(
-                      visible: orgRent != '0' && rent != orgRent,
-                      child: Text(
-                        '$rupee $orgRent',
-                        style: TextStyle(
-                            fontSize: getHeight(context: context, height: 10),
-                            color: Colors.grey,
-                            decoration: TextDecoration.lineThrough,
-                            fontWeight: FontWeight.w500),
-                      ))
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  AppBar _getAppBar({required BuildContext context}) {
-    return AppBar(
-      leading: BackButton(
-        color: Colors.white,
-      ),
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(15),
-              bottomRight: Radius.circular(15))),
-      titleSpacing: 0,
-      backgroundColor: CustomTheme.appTheme,
-      title: Consumer<PropertyViewModel>(
-        builder: (context, value, child) {
-          return Container(
-            margin: EdgeInsets.only(right: 15),
-            // width: _mainWidth * 0.78,
-            height: 45,
-
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(10)),
-            child: TextFormField(
-              controller: _searchController,
-              onChanged: (text) async {
-                if (text.length < 3) {
-                  return;
-                }
-                showSearchResults = true;
-                await value.getSearchedPlace(text);
-              },
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(left: 10, top: 10),
-                  hintText: 'Search by Locality , Landmark or City',
-                  hintStyle: TextStyle(
-                      fontSize: getHeight(context: context, height: 14),
-                      color: Colors.black54,
-                      fontWeight: FontWeight.w500),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      Icons.clear,
-                      color: Colors.black,
-                    ),
-                    onPressed: () async {
-                      _searchController.clear();
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      setState(() {
-                        showSearchResults = false;
-                      });
-                    },
-                  )),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget showSuggestions(
-      {required PropertyViewModel value, required BuildContext context}) {
-    return Neumorphic(
-      style: NeumorphicStyle(
-        shadowLightColor: CustomTheme.appTheme.withAlpha(150),
-        shadowDarkColor: CustomTheme.appTheme.withAlpha(150),
-        color: Colors.white,
-        lightSource: LightSource.bottom,
-        intensity: 5,
-        depth: 2,
-      ),
-      child: Container(
-          padding: EdgeInsets.only(top: 10),
-          child: ListView.separated(
-            padding: EdgeInsets.zero,
-            itemBuilder: (context1, index) {
-              return GestureDetector(
-                onTap: () async {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  RMSWidgets.showLoaderDialog(
-                      context: context, message: 'Loading');
-
-                  _searchController.text = value.locations[index].location;
-                  showSearchResults = false;
-                  await _viewModel.getPropertyDetailsList(
-                      address: value.locations[index].location,
-                      property: Property.fromSearch,
-                      toDate: '',
-                      fromDate: '');
-
-                  Navigator.of(context).pop();
-                },
-                child: Container(
-                  padding: EdgeInsets.only(
-                    left: _mainWidth * 0.02,
-                  ),
-                  height: _mainHeight * 0.045,
-                  alignment: Alignment.centerLeft,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                        size: _mainHeight * 0.022,
-                        color: CustomTheme.appTheme,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Container(
-                        width: _mainWidth * 0.8,
-                        child: Text(
-                          value.locations[index].location,
-                          style: TextStyle(
-                              fontSize: getHeight(context: context, height: 14),
-                              color: CustomTheme.appTheme,
-                              fontWeight: FontWeight.w500),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-            itemCount: value.locations.length,
-            separatorBuilder: (context, index) => const Divider(
-              thickness: 1,
-            ),
-          )),
     );
   }
 }

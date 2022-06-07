@@ -31,23 +31,23 @@ class Data {
   String? title;
   String? usp;
   String? description;
-  String? nearby;
+  dynamic nearby;
   String? things2note;
-  String? otherinfo;
-  String? newDetails;
-  String? getaround;
+  dynamic otherinfo;
+  dynamic newDetails;
+  dynamic getaround;
   String? address1;
-  String? landmark;
+  dynamic landmark;
   String? furnishingType;
-  String? suitableFor;
+  dynamic suitableFor;
   String? floors;
-  String? neighbor;
-  String? directions;
+  dynamic neighbor;
+  dynamic directions;
   String? country;
   String? city;
   String? state;
   String? area;
-  String? locality;
+  dynamic locality;
   String? zipCode;
   String? addressDisplay;
   String? uiAddress;
@@ -56,7 +56,7 @@ class Data {
   String? lastUpdateTime;
   String? creationTime;
   String? pageViews;
-  String? numBooking;
+  dynamic numBooking;
   String? applyServiceCharges;
   String? videoLink;
   String? active;
@@ -529,17 +529,17 @@ class Data {
 }
 
 class PicLink {
-  String? picLink;
+  String? picWp;
 
-  PicLink({this.picLink});
+  PicLink({this.picWp});
 
   PicLink.fromJson(Map<String, dynamic> json) {
-    picLink = json['pic_link'];
+    picWp = json['pic_wp'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['pic_link'] = this.picLink;
+    data['pic_wp'] = this.picWp;
     return data;
   }
 }

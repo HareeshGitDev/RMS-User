@@ -123,10 +123,10 @@ class Details {
   String? description;
   String? buildingDesc;
   String? things2note;
-  String? otherinfo;
+  dynamic otherinfo;
   String? newDetails;
-  String? getaround;
-  String? neighbor;
+  dynamic getaround;
+  dynamic neighbor;
   String? country;
   String? directions;
   String? state;
@@ -443,7 +443,7 @@ class Pic {
 }
 
 class PropOwner {
-  Null? fullname;
+  String? fullname;
   String? firstname;
   String? lastname;
   String? picture;
@@ -612,14 +612,16 @@ class SimilarProp {
   String? glng;
   String? propType;
   String? unitType;
-  Null? neighbor;
+  dynamic neighbor;
   String? area;
   String? city;
   String? roomType;
-  String? orgRent;
-  String? rent;
-  String? monthlyRent;
-  String? rmsRent;
+  dynamic orgRent;
+  dynamic rent;
+  dynamic monthlyRent;
+  dynamic orgMonthRent;
+  dynamic rmsRent;
+  dynamic orgRmsRent;
   String? uiAddress;
   String? freeGuests;
   String? extraPerGuest;
@@ -628,6 +630,9 @@ class SimilarProp {
   String? rmsDeposit;
   String? picThumbnail;
   String? enId;
+  dynamic rentOff;
+  dynamic monthRentOff;
+  dynamic rmsRentOff;
   int? wishlist;
 
   SimilarProp(
@@ -645,7 +650,9 @@ class SimilarProp {
         this.orgRent,
         this.rent,
         this.monthlyRent,
+        this.orgMonthRent,
         this.rmsRent,
+        this.orgRmsRent,
         this.uiAddress,
         this.freeGuests,
         this.extraPerGuest,
@@ -654,6 +661,9 @@ class SimilarProp {
         this.rmsDeposit,
         this.picThumbnail,
         this.enId,
+        this.rentOff,
+        this.monthRentOff,
+        this.rmsRentOff,
         this.wishlist});
 
   SimilarProp.fromJson(Map<String, dynamic> json) {
@@ -671,7 +681,9 @@ class SimilarProp {
     orgRent = json['org_rent'];
     rent = json['rent'];
     monthlyRent = json['monthly_rent'];
+    orgMonthRent = json['org_month_rent'];
     rmsRent = json['rms_rent'];
+    orgRmsRent = json['org_rms_rent'];
     uiAddress = json['ui_address'];
     freeGuests = json['free_guests'];
     extraPerGuest = json['extra_per_guest'];
@@ -680,6 +692,9 @@ class SimilarProp {
     rmsDeposit = json['rms_deposit'];
     picThumbnail = json['pic_thumbnail'];
     enId = json['en_id'];
+    rentOff = json['rent_off'];
+    monthRentOff = json['month_rent_off'];
+    rmsRentOff = json['rms_rent_off'];
     wishlist = json['wishlist'];
   }
 
@@ -699,7 +714,9 @@ class SimilarProp {
     data['org_rent'] = this.orgRent;
     data['rent'] = this.rent;
     data['monthly_rent'] = this.monthlyRent;
+    data['org_month_rent'] = this.orgMonthRent;
     data['rms_rent'] = this.rmsRent;
+    data['org_rms_rent'] = this.orgRmsRent;
     data['ui_address'] = this.uiAddress;
     data['free_guests'] = this.freeGuests;
     data['extra_per_guest'] = this.extraPerGuest;
@@ -708,6 +725,9 @@ class SimilarProp {
     data['rms_deposit'] = this.rmsDeposit;
     data['pic_thumbnail'] = this.picThumbnail;
     data['en_id'] = this.enId;
+    data['rent_off'] = this.rentOff;
+    data['month_rent_off'] = this.monthRentOff;
+    data['rms_rent_off'] = this.rmsRentOff;
     data['wishlist'] = this.wishlist;
     return data;
   }
@@ -742,15 +762,13 @@ class NearBy {
 class PlaceList {
   String? placeTitle;
   String? placeAddress;
-  String? placeDesc;
   dynamic distance;
 
-  PlaceList({this.placeTitle, this.placeAddress, this.placeDesc,this.distance});
+  PlaceList({this.placeTitle, this.placeAddress, this.distance});
 
   PlaceList.fromJson(Map<String, dynamic> json) {
     placeTitle = json['place_title'];
     placeAddress = json['place_address'];
-    placeDesc = json['place_desc'];
     distance = json['distance'];
   }
 
@@ -758,7 +776,6 @@ class PlaceList {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['place_title'] = this.placeTitle;
     data['place_address'] = this.placeAddress;
-    data['place_desc'] = this.placeDesc;
     data['distance'] = this.distance;
     return data;
   }

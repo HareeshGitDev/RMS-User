@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../my_stays/viewmodel/mystay_viewmodel.dart';
 import '../../property_module/viewModel/property_viewModel.dart';
 import '../../test_widget.dart';
 import '../../theme/custom_theme.dart';
@@ -823,7 +824,7 @@ class _HomePageState extends State<HomePage> {
                       title: 'Tenants Leads',
                       onTap: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => ChangeNotifierProvider(
-                            create: (context) => PropertyViewModel(),
+                            create: (context) => MyStayViewModel(),
                             child: const TestWidget()),
                       )),
                     ),

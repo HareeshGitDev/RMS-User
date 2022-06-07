@@ -84,7 +84,7 @@ class _OwnerPropertyListingPageState extends State<OwnerPropertyListingPage> {
                                       bottom: _mainHeight * 0.005,
                                       left: _mainWidth * 0.02),
                                   child: CachedNetworkImage(
-                                    imageUrl: data?.picLink != null && data?.picLink!.length != 0 ? data!.picLink![0].picLink.toString() : '',
+                                    imageUrl: data?.picLink != null && data?.picLink!.length != 0 ? data!.picLink![0].picWp.toString() : '',
                                     imageBuilder: (context, imageProvider) =>
                                         Container(
                                           decoration: BoxDecoration(
