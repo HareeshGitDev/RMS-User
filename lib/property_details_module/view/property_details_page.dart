@@ -384,9 +384,9 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                 ?.details
                                                 ?.title !=
                                                 null
-                                            ? (value.propertyDetailsModel
+                                            ? '${(value.propertyDetailsModel
                                             ?.data?.details?.title)
-                                            .toString()
+                                            .toString().trim()} (${value.propertyDetailsModel?.data?.details?.propId ??''})'
                                             : '',
                                         style: TextStyle(
                                             color: Colors.black,
@@ -1032,7 +1032,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(10)
                               ),
-                              width: _mainWidth*0.27,
+                             // width: _mainWidth*0.27,
                               padding: EdgeInsets.only(left: _mainWidth*0.03),
                               child: GestureDetector(
                                   onTap: () async {
@@ -1062,12 +1062,14 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   child: Row(
                                     children: [
                                       Text(
-                                        'Video Tour ',
+                                        'Video Tour',
+
                                         style: TextStyle(
                                             color: CustomTheme
                                                 .appThemeContrast,
                                             fontFamily: getThemeFont,
                                             fontWeight: FontWeight.w500,
+
                                             fontSize: getHeight(
                                                 context: context,
                                                 height: 12)),
@@ -1702,6 +1704,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                     fontWeight: FontWeight.w500,
                                   ),
                                   maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               Container(
@@ -1818,14 +1821,14 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                         ],
                       )),
                 ),
-                Positioned(
+                /*Positioned(
                     right: _mainHeight * 0.015,
                     top: _mainHeight * 0.01,
                     child: Icon(
                       Icons.favorite_outline,
                       color: Colors.white,
                       size: _mainWidth * 0.04,
-                    ))
+                    ))*/
               ],
             ),
           );

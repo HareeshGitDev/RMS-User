@@ -191,7 +191,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
-                            getPropSettings(value: value, context: context),
+                            showSearchResults?Container():getPropSettings(value: value, context: context),
                             Stack(
                               children: [
 
@@ -314,7 +314,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                         Container(
                                                           width: _mainWidth * 0.68,
                                                           child: Text(
-                                                            "${data.title ?? ""}",
+                                                            "${data.title?.trim() ?? ""}",
                                                             overflow: TextOverflow
                                                                 .ellipsis,
                                                             maxLines: 2,
