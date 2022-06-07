@@ -67,59 +67,55 @@ class _TestWidgetState extends State<TestWidget> {
       body: Consumer<PropertyViewModel>(
         builder: (context, value, child) {
           return value.propertyListModel.msg != null &&
-                  value.propertyListModel.data != null
+                  value.propertyListModel.data != null &&
+              value.propertyListModel.data!.isNotEmpty
               ? Container(
                   color: Colors.white,
                   height: _mainHeight,
                   width: _mainWidth,
-                  // margin: EdgeInsets.only(bottom: _mainHeight * 0.01),
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
                         Container(
-                          padding: EdgeInsets.only(
-                            left: _mainWidth*0.04,
-                            right: _mainWidth*0.04,
-                            top: _mainHeight*0.02
-                          ),
+                            padding: EdgeInsets.only(
+                                left: _mainWidth * 0.04,
+                                right: _mainWidth * 0.04,
+                                top: _mainHeight * 0.02),
                             width: _mainWidth,
                             child: Row(
                               children: [
-                                Text('${value.propertyListModel.data?.length ??''} Stay\'s Found',
-                                style: TextStyle(
-                                  color: CustomTheme.appTheme,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: getHeight(
-                                      context: context,
-                                      height: 16)
-                                ),
+                                Text(
+                                  '${value.propertyListModel.data?.length ?? ''} Stay\'s Found',
+                                  style: TextStyle(
+                                      color: CustomTheme.appTheme,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: getHeight(
+                                          context: context, height: 16)),
                                 ),
                                 Spacer(),
                                 Icon(
                                   Icons.filter_alt_outlined,
-                                  size: _mainHeight*0.015,
+                                  size: _mainHeight * 0.015,
                                   color: CustomTheme.appThemeContrast,
                                 ),
                                 SizedBox(
                                   width: 5,
                                 ),
-
                                 Text(
                                   'Filter',
                                   style: TextStyle(
-                                      fontSize: getHeight(
-                                          context: context,
-                                          height: 12),
-                                      color: CustomTheme.appThemeContrast,
-                                      fontWeight: FontWeight.w500,
-                                      ),
+                                    fontSize:
+                                        getHeight(context: context, height: 12),
+                                    color: CustomTheme.appThemeContrast,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                                 SizedBox(
-                                  width: _mainWidth*0.05,
+                                  width: _mainWidth * 0.05,
                                 ),
                                 Icon(
                                   Icons.waves,
-                                  size: _mainHeight*0.015,
+                                  size: _mainHeight * 0.015,
                                   color: CustomTheme.appThemeContrast,
                                 ),
                                 SizedBox(
@@ -128,9 +124,8 @@ class _TestWidgetState extends State<TestWidget> {
                                 Text(
                                   'Sort',
                                   style: TextStyle(
-                                    fontSize: getHeight(
-                                        context: context,
-                                        height: 12),
+                                    fontSize:
+                                        getHeight(context: context, height: 12),
                                     color: CustomTheme.appThemeContrast,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -139,6 +134,7 @@ class _TestWidgetState extends State<TestWidget> {
                             )),
                         Stack(
                           children: [
+
                             Container(
                               color: Colors.white,
                               height: _mainHeight,
@@ -147,14 +143,17 @@ class _TestWidgetState extends State<TestWidget> {
                                   left: _mainWidth * 0.03,
                                   right: _mainWidth * 0.03,
                                   top: _mainHeight * 0.01,
-                                  bottom: 0),
+                                  bottom: _mainHeight *
+                                      0.16),
                               child: ListView.separated(
                                 itemBuilder: (context, index) {
-                                  var data = value.propertyListModel.data![index];
+                                  var data =
+                                      value.propertyListModel.data![index];
                                   return GestureDetector(
-                                    onTap: () => Navigator.of(context).pushNamed(
-                                        AppRoutes.propertyDetailsPage,
-                                        arguments: {
+                                    onTap: () => Navigator.of(context)
+                                        .pushNamed(
+                                            AppRoutes.propertyDetailsPage,
+                                            arguments: {
                                           'propId': data.propId,
                                           'fromExternalLink': false,
                                         }),
@@ -162,8 +161,8 @@ class _TestWidgetState extends State<TestWidget> {
                                       elevation: 4,
                                       shadowColor: CustomTheme.appTheme,
                                       shape: const RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.all(Radius.circular(10))),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10))),
                                       child: Stack(
                                         children: [
                                           Column(
@@ -177,66 +176,67 @@ class _TestWidgetState extends State<TestWidget> {
                                                     right: _mainWidth * 0.02),
                                                 child: CarouselSlider(
                                                   items: data.propPics
-                                                          ?.map(
-                                                              (e) =>
-                                                                  CachedNetworkImage(
-                                                                    imageUrl: e
-                                                                        .picLink
-                                                                        .toString(),
-                                                                    imageBuilder:
-                                                                        (context,
-                                                                                imageProvider) =>
-                                                                            Container(
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        borderRadius:
-                                                                            BorderRadius
-                                                                                .circular(
-                                                                                    10),
-                                                                        image:
-                                                                            DecorationImage(
-                                                                          image:
-                                                                              imageProvider,
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                        ),
-                                                                      ),
+                                                          ?.map((e) =>
+                                                              CachedNetworkImage(
+                                                                imageUrl: e
+                                                                    .picLink
+                                                                    .toString(),
+                                                                imageBuilder:
+                                                                    (context,
+                                                                            imageProvider) =>
+                                                                        Container(
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    image:
+                                                                        DecorationImage(
+                                                                      image:
+                                                                          imageProvider,
+                                                                      fit: BoxFit
+                                                                          .cover,
                                                                     ),
-                                                                    placeholder: (context, url) => Shimmer
-                                                                        .fromColors(
-                                                                            child:
-                                                                                Container(
-                                                                              height: _mainHeight *
-                                                                                  0.27,
-                                                                              color: Colors
-                                                                                  .grey,
-                                                                            ),
-                                                                            baseColor:
-                                                                                Colors.grey[200]
-                                                                                    as Color,
-                                                                            highlightColor:
-                                                                                Colors.grey[350]
-                                                                                    as Color),
-                                                                    errorWidget: (context,
-                                                                            url,
-                                                                            error) =>
-                                                                        const Icon(Icons
-                                                                            .error),
-                                                                  ))
+                                                                  ),
+                                                                ),
+                                                                placeholder: (context, url) => Shimmer
+                                                                    .fromColors(
+                                                                        child:
+                                                                            Container(
+                                                                          height:
+                                                                              _mainHeight * 0.22,
+                                                                          color:
+                                                                              Colors.grey,
+                                                                        ),
+                                                                        baseColor:
+                                                                            Colors.grey[200]
+                                                                                as Color,
+                                                                        highlightColor:
+                                                                            Colors.grey[350]
+                                                                                as Color),
+                                                                errorWidget: (context,
+                                                                        url,
+                                                                        error) =>
+                                                                    const Icon(Icons
+                                                                        .error),
+                                                              ))
                                                           .toList() ??
                                                       [],
                                                   options: CarouselOptions(
-                                                      height: _mainHeight * 0.27,
+                                                      height: _mainHeight * 0.22,
                                                       enlargeCenterPage: true,
                                                       autoPlay: true,
                                                       aspectRatio: 16 / 9,
                                                       autoPlayInterval: Duration(
-                                                          milliseconds: math.Random()
-                                                                  .nextInt(6000) +
+                                                          milliseconds: math
+                                                                      .Random()
+                                                                  .nextInt(
+                                                                      6000) +
                                                               1500),
                                                       autoPlayCurve:
                                                           Curves.fastOutSlowIn,
-                                                      enableInfiniteScroll: true,
+                                                      enableInfiniteScroll:
+                                                          true,
                                                       viewportFraction: 1),
                                                 ),
                                               ),
@@ -255,37 +255,44 @@ class _TestWidgetState extends State<TestWidget> {
                                                       width: _mainWidth * 0.68,
                                                       child: Text(
                                                         "${data.title ?? ""}",
-                                                        overflow:
-                                                            TextOverflow.ellipsis,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                         maxLines: 2,
                                                         style: TextStyle(
                                                             fontSize: getHeight(
-                                                                context: context,
+                                                                context:
+                                                                    context,
                                                                 height: 12),
                                                             color: Colors.black,
                                                             fontWeight:
-                                                                FontWeight.w600),
+                                                                FontWeight
+                                                                    .w600),
                                                       ),
                                                     ),
                                                     Visibility(
-                                                      visible: data.rmsProp != null &&
-                                                          data.rmsProp == "RMS Prop",
+                                                      visible: data.rmsProp !=
+                                                              null &&
+                                                          data.rmsProp ==
+                                                              "RMS Prop",
                                                       child: Text(
                                                         "${data.unitType ?? ''}",
-                                                        overflow:
-                                                            TextOverflow.ellipsis,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                         maxLines: 1,
                                                         style: TextStyle(
                                                             fontSize: getHeight(
-                                                                context: context,
+                                                                context:
+                                                                    context,
                                                                 height: 12),
                                                             fontWeight:
-                                                                FontWeight.w700),
+                                                                FontWeight
+                                                                    .w700),
                                                       ),
                                                     ),
                                                   ],
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment.spaceBetween,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                 ),
                                               ),
                                               SizedBox(
@@ -303,9 +310,11 @@ class _TestWidgetState extends State<TestWidget> {
                                                           glat: data.glat,
                                                           glng: data.glng),
                                                       child: Icon(
-                                                        Icons.location_on_outlined,
-                                                        color: CustomTheme.appTheme,
-                                                        size: _mainHeight * 0.015,
+                                                        Icons
+                                                            .location_on_outlined,
+                                                        color: Colors.grey,
+                                                        size:
+                                                            _mainHeight * 0.015,
                                                       ),
                                                     ),
                                                     SizedBox(
@@ -316,51 +325,67 @@ class _TestWidgetState extends State<TestWidget> {
                                                           glat: data.glat,
                                                           glng: data.glng),
                                                       child: Text(
-                                                        (data.areas ?? data.city) ??
+                                                        (data.areas ??
+                                                                data.city) ??
                                                             " ",
                                                         style: TextStyle(
-                                                            color: Colors.black,
+                                                            color: Colors.grey,
                                                             fontWeight:
                                                                 FontWeight.w600,
                                                             fontSize: getHeight(
-                                                                context: context,
+                                                                context:
+                                                                    context,
                                                                 height: 10)),
                                                       ),
                                                     ),
                                                     Spacer(),
                                                     Visibility(
-                                                      visible: data.rmsProp != null &&
-                                                          data.rmsProp == "RMS Prop",
+                                                      visible: data.rmsProp !=
+                                                              null &&
+                                                          data.rmsProp ==
+                                                              "RMS Prop",
                                                       child: Container(
-                                                        padding: EdgeInsets.only(
-                                                            left: _mainWidth * 0.02,
-                                                            right: _mainWidth * 0.02),
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left:
+                                                                    _mainWidth *
+                                                                        0.02,
+                                                                right:
+                                                                    _mainWidth *
+                                                                        0.02),
                                                         child: Row(children: [
                                                           Icon(
                                                             Icons.person,
-                                                            size: _mainHeight * 0.015,
-                                                            color: Colors.green,
+                                                            size: _mainHeight *
+                                                                0.015,
+                                                            color: Colors.grey,
                                                           ),
                                                           SizedBox(
-                                                            width: _mainWidth * 0.01,
+                                                            width: _mainWidth *
+                                                                0.01,
                                                           ),
                                                           Text(
                                                             'Managed by RMS',
                                                             style: TextStyle(
-                                                                color: Colors.black,
+                                                                color: Colors.grey,
                                                                 fontWeight:
-                                                                    FontWeight.w500,
+                                                                    FontWeight
+                                                                        .w500,
                                                                 fontSize: getHeight(
-                                                                    context: context,
-                                                                    height: 10)),
+                                                                    context:
+                                                                        context,
+                                                                    height:
+                                                                        10)),
                                                           ),
                                                         ]),
                                                       ),
                                                     ),
                                                     Spacer(),
                                                     Visibility(
-                                                      visible: data.rmsProp != null &&
-                                                          data.rmsProp == "RMS Prop",
+                                                      visible: data.rmsProp !=
+                                                              null &&
+                                                          data.rmsProp ==
+                                                              "RMS Prop",
                                                       child: Text(
                                                         'Multiple Units Available',
                                                         style: TextStyle(
@@ -379,55 +404,63 @@ class _TestWidgetState extends State<TestWidget> {
                                               SizedBox(
                                                 height: _mainHeight * 0.01,
                                               ),
-                                              SizedBox(
-                                                height: _mainHeight * 0.007,
-                                              ),
                                               Container(
                                                 child: Row(
                                                   children: [
                                                     getRents(
-                                                        rentType: 'Rent Per Day',
+                                                        rentType:
+                                                            'Rent Per Day',
                                                         discount: '70 % OFF',
                                                         rent: data.rent ?? '0',
-                                                        orgRent: data.orgRent ?? '0'),
+                                                        orgRent: data.orgRent ??
+                                                            '0'),
                                                     SizedBox(
-                                                        width: _mainWidth * 0.005),
+                                                        width:
+                                                            _mainWidth * 0.005),
                                                     getRents(
-                                                        rentType: 'Stay < 3 Month',
+                                                        rentType:
+                                                            'Stay < 3 Month',
                                                         discount: '70 % OFF',
-                                                        rent: data.monthlyRent ?? '0',
+                                                        rent:
+                                                            data.monthlyRent ??
+                                                                '0',
                                                         orgRent:
-                                                            data.orgMonthRent ?? '0'),
+                                                            data.orgMonthRent ??
+                                                                '0'),
                                                     SizedBox(
-                                                        width: _mainWidth * 0.005),
+                                                        width:
+                                                            _mainWidth * 0.005),
                                                     getRents(
-                                                        rentType: 'Stay > 3 Month',
+                                                        rentType:
+                                                            'Stay > 3 Month',
                                                         discount: '70 % OFF',
-                                                        rent: data.rmsRent ?? '0',
+                                                        rent:
+                                                            data.rmsRent ?? '0',
                                                         orgRent:
-                                                            data.orgRmsRent ?? '0'),
+                                                            data.orgRmsRent ??
+                                                                '0'),
                                                   ],
                                                 ),
                                               ),
                                             ],
                                           ),
                                           Positioned(
-                                            top: _mainHeight * 0.025,
-                                            left: _mainWidth * 0.05,
+                                            top: _mainHeight * 0.02,
+                                            left: _mainWidth * 0.04,
                                             child: Visibility(
                                               visible: data.rmsProp != null &&
                                                   data.rmsProp == "RMS Prop",
                                               child: Container(
                                                 height: _mainHeight * 0.03,
-
                                                 padding: EdgeInsets.only(
                                                     left: _mainWidth * 0.02,
                                                     right: _mainWidth * 0.02),
                                                 decoration: BoxDecoration(
-                                                    color:
-                                                        CustomTheme.appThemeContrast,
+                                                    color: CustomTheme
+                                                        .appThemeContrast,
                                                     borderRadius:
-                                                        BorderRadius.circular(5)),
+                                                        BorderRadius.circular(
+                                                            5)),
                                                 child: Row(children: [
                                                   Icon(
                                                     Icons.home,
@@ -438,18 +471,19 @@ class _TestWidgetState extends State<TestWidget> {
                                                     width: _mainWidth * 0.01,
                                                   ),
                                                   LimitedBox(
-
-                                                    maxWidth: _mainWidth*0.5,
+                                                    maxWidth: _mainWidth * 0.5,
                                                     child: Text(
-                                                        data.buildingName??'',
-                                                      overflow: TextOverflow.ellipsis,
+                                                      data.buildingName ?? '',
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       maxLines: 1,
                                                       style: TextStyle(
                                                         fontSize: getHeight(
                                                             context: context,
                                                             height: 12),
                                                         color: Colors.white,
-                                                        fontWeight: FontWeight.w500,
+                                                        fontWeight:
+                                                            FontWeight.w500,
                                                       ),
                                                     ),
                                                   ),
@@ -459,15 +493,17 @@ class _TestWidgetState extends State<TestWidget> {
                                           ),
                                           Positioned(
                                             right: _mainWidth * 0.04,
-                                            top: _mainHeight * 0.025,
+                                            top: _mainHeight * 0.02,
                                             child: GestureDetector(
                                               onTap: () async {
                                                 if (data.wishlist == 1) {
                                                   if (data.propId != null) {
-                                                    int response = await _viewModel
-                                                        .addToWishlist(
-                                                            propertyId:
-                                                                data.propId ?? '');
+                                                    int response =
+                                                        await _viewModel
+                                                            .addToWishlist(
+                                                                propertyId:
+                                                                    data.propId ??
+                                                                        '');
                                                     if (response == 200) {
                                                       setState(() {
                                                         data.wishlist = 0;
@@ -476,16 +512,18 @@ class _TestWidgetState extends State<TestWidget> {
                                                           context: context,
                                                           message:
                                                               'Successfully Removed From Wishlist',
-                                                          color:
-                                                              CustomTheme.appTheme);
+                                                          color: CustomTheme
+                                                              .appTheme);
                                                     }
                                                   }
                                                 } else if (data.wishlist == 0) {
                                                   if (data.propId != null) {
-                                                    int response = await _viewModel
-                                                        .addToWishlist(
-                                                            propertyId:
-                                                                data.propId ?? '');
+                                                    int response =
+                                                        await _viewModel
+                                                            .addToWishlist(
+                                                                propertyId:
+                                                                    data.propId ??
+                                                                        '');
                                                     if (response == 200) {
                                                       setState(() {
                                                         data.wishlist = 1;
@@ -494,8 +532,8 @@ class _TestWidgetState extends State<TestWidget> {
                                                           context: context,
                                                           message:
                                                               'Successfully Added to Wishlist',
-                                                          color:
-                                                              CustomTheme.appTheme);
+                                                          color: CustomTheme
+                                                              .appTheme);
                                                     }
                                                   }
                                                 }
@@ -503,24 +541,60 @@ class _TestWidgetState extends State<TestWidget> {
                                               child: data.wishlist == 1
                                                   ? Icon(
                                                       Icons.favorite,
-                                                      color: CustomTheme.errorColor,
+                                                      color: CustomTheme
+                                                          .errorColor,
                                                     )
                                                   : Icon(
-                                                      Icons.favorite_outline_rounded,
+                                                      Icons
+                                                          .favorite_outline_rounded,
                                                       color: CustomTheme.white,
                                                     ),
                                             ),
                                           ),
                                           Positioned(
+                                            left: _mainWidth * 0.04,
+                                            top: _mainHeight * 0.2,
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              height: _mainHeight * 0.025,
+                                              padding: EdgeInsets.only(
+                                                  left: _mainWidth * 0.02,
+                                                  right: _mainWidth * 0.02),
+                                              decoration: BoxDecoration(
+                                                  color: CustomTheme.appThemeContrast,
+                                                  borderRadius:
+                                                      BorderRadius.circular(5)),
+                                              child: LimitedBox(
+                                                maxWidth: _mainWidth * 0.5,
+                                                child: Text(
+                                                  '${value.propertyListModel.data![0].propType}',
+                                                  style: TextStyle(
+                                                    fontSize: getHeight(
+                                                        context: context,
+                                                        height: 12),
+                                                    color: CustomTheme.white,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
                                             right: _mainWidth * 0.04,
-                                            top: _mainHeight * 0.24,
+                                            top: _mainHeight * 0.2,
                                             child: Visibility(
-                                                visible: data.avl?.toLowerCase() ==
-                                                    'booked',
+
+                                                visible:
+                                                    data.avl?.toLowerCase() ==
+                                                        'booked',
                                                 child: Container(
-                                                  alignment: Alignment.topCenter,
+                                                  alignment:
+                                                      Alignment.topCenter,
                                                   height: _mainHeight * 0.022,
-                                                  width: _mainWidth * 0.2,
+                                                  width: _mainWidth * 0.17,
                                                   padding: EdgeInsets.only(
                                                       left: _mainWidth * 0.02,
                                                       right: _mainWidth * 0.02),
@@ -528,7 +602,8 @@ class _TestWidgetState extends State<TestWidget> {
                                                       color: CustomTheme
                                                           .appThemeContrast,
                                                       borderRadius:
-                                                          BorderRadius.circular(5)),
+                                                          BorderRadius.circular(
+                                                              5)),
                                                   child: Text(
                                                     'Booked',
                                                     style: TextStyle(
@@ -544,7 +619,7 @@ class _TestWidgetState extends State<TestWidget> {
                                     ),
                                   );
                                 },
-                                itemCount: value.propertyListModel.data?.length ?? 0,
+                                itemCount: value.propertyListModel.data?.length ??0,
                                 separatorBuilder: (context, index) => SizedBox(
                                   height: _mainHeight * 0.008,
                                 ),
@@ -570,117 +645,7 @@ class _TestWidgetState extends State<TestWidget> {
               : RMSWidgets.getLoader();
         },
       ),
-      /* bottomNavigationBar: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          InkWell(
-            onTap: () async {
-              RMSWidgets.showLoaderDialog(
-                  context: context, message: 'Loading...');
-              SharedPreferenceUtil sharedPreferenceUtil =
-                  SharedPreferenceUtil();
-              var name =
-                  (await sharedPreferenceUtil.getString(rms_name) ?? '')
-                      .toString();
-              var email =
-                  (await sharedPreferenceUtil.getString(rms_email) ?? '')
-                      .toString();
-              var phone =
-                  (await sharedPreferenceUtil.getString(rms_phoneNumber) ??
-                          '')
-                      .toString();
-              Navigator.of(context).pop();
-              _showDialog(
-                propId:
-                    _viewModel.propertyDetailsModel?.data?.details?.propId ??
-                        ' ',
-                name: name,
-                phone: phone,
-                email: email,
-              );
-            },
-            child: Container(
-              alignment: Alignment.center,
-              color: Colors.white,
-              width: _mainWidth * 0.5,
-              height: _mainHeight * 0.06,
-              child: Text(
-                'Site Visit',
-                style: TextStyle(
-                    color: CustomTheme.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500),
-              ),
-            ),
-          ),
-          InkWell(
-            onTap: () async {
-              if (_viewModel.propertyDetailsModel == null ||
-                  _viewModel.propertyDetailsModel?.data?.details == null) {
-                RMSWidgets.showSnackbar(
-                    context: context,
-                    message:
-                        'Something went wrong. Property Details not Found.',
-                    color: CustomTheme.errorColor);
-                return;
-              }
-              RMSWidgets.showLoaderDialog(
-                  context: context, message: 'Loading...');
-              SharedPreferenceUtil sharedPreferenceUtil =
-                  SharedPreferenceUtil();
-              var name =
-                  (await sharedPreferenceUtil.getString(rms_name) ?? '')
-                      .toString();
-              var email =
-                  (await sharedPreferenceUtil.getString(rms_email) ?? '')
-                      .toString();
-              var phone =
-                  (await sharedPreferenceUtil.getString(rms_phoneNumber) ??
-                          '')
-                      .toString();
-              var token = (await sharedPreferenceUtil
-                          .getString(rms_registeredUserToken) ??
-                      '')
-                  .toString();
-              Navigator.of(context).pop();
-              PropertyDetailsUtilModel model = PropertyDetailsUtilModel(
-                name: name,
-                email: email,
-                mobile: phone,
-                token: token,
-                propId: int.parse(
-                    (_viewModel.propertyDetailsModel?.data?.details?.propId)
-                        .toString()),
-                buildingName:
-                    (_viewModel.propertyDetailsModel?.data?.details?.bname)
-                        .toString(),
-                title: (_viewModel.propertyDetailsModel?.data?.details?.title)
-                    .toString(),
-                freeGuest: int.parse((_viewModel
-                        .propertyDetailsModel?.data?.details?.freeGuests)
-                    .toString()),
-                maxGuest: int.parse(_viewModel
-                        .propertyDetailsModel?.data?.details?.maxGuests ??
-                    '0'),
-              );
-              Navigator.pushNamed(context, AppRoutes.bookingPage,
-                  arguments: model);
-            },
-            child: Container(
-                width: _mainWidth * 0.5,
-                height: _mainHeight * 0.06,
-                alignment: Alignment.center,
-                color: CustomTheme.appThemeContrast,
-                child: Text(
-                  'Book Now',
-                  style: TextStyle(
-                      color: CustomTheme.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500),
-                )),
-          ),
-        ],
-      ),*/
+      
     );
   }
 
@@ -697,12 +662,12 @@ class _TestWidgetState extends State<TestWidget> {
     double val = 0;
 
     try {
-      if (rent != '' || rent != '0' || orgRent != '' || orgRent != '0' ) {
-        if(double.parse(rent.trim()).toInt() < double.parse(orgRent.trim()).toInt()) {
-        val = (double.parse(rent.trim()).toInt() * 100) /
-        double.parse(orgRent.trim()).toInt();
+      if (rent != '' || rent != '0' || orgRent != '' || orgRent != '0') {
+        if (double.parse(rent.trim()).toInt() <
+            double.parse(orgRent.trim()).toInt()) {
+          val = (double.parse(rent.trim()).toInt() * 100) /
+              double.parse(orgRent.trim()).toInt();
         }
-
       }
     } catch (e) {
       log('Format Exception : $e');
@@ -739,9 +704,8 @@ class _TestWidgetState extends State<TestWidget> {
                 children: [
                   Text(
                     rentType,
-                    style: TextStyle(fontSize: getHeight(
-                        context: context,
-                        height: 10)),
+                    style: TextStyle(
+                        fontSize: getHeight(context: context, height: 10)),
                   ),
                   SizedBox(height: _mainHeight * 0.005),
                   Visibility(
@@ -749,9 +713,7 @@ class _TestWidgetState extends State<TestWidget> {
                     child: Text(
                       '${getDiscount(rent: rent, orgRent: orgRent)} % OFF',
                       style: TextStyle(
-                          fontSize: getHeight(
-                              context: context,
-                              height: 10),
+                          fontSize: getHeight(context: context, height: 10),
                           color: CustomTheme.myFavColor,
                           fontWeight: FontWeight.w700),
                     ),
@@ -766,9 +728,7 @@ class _TestWidgetState extends State<TestWidget> {
                       child: Text(
                     '$rupee $rent',
                     style: TextStyle(
-                        fontSize: getHeight(
-                            context: context,
-                            height: 10),
+                        fontSize: getHeight(context: context, height: 10),
                         color: CustomTheme.black,
                         fontWeight: FontWeight.w500),
                   )),
@@ -778,9 +738,7 @@ class _TestWidgetState extends State<TestWidget> {
                       child: Text(
                         '$rupee $orgRent',
                         style: TextStyle(
-                            fontSize: getHeight(
-                                context: context,
-                                height: 10),
+                            fontSize: getHeight(context: context, height: 10),
                             color: Colors.grey,
                             decoration: TextDecoration.lineThrough,
                             fontWeight: FontWeight.w500),
@@ -828,9 +786,7 @@ class _TestWidgetState extends State<TestWidget> {
                   contentPadding: EdgeInsets.only(left: 10, top: 10),
                   hintText: 'Search by Locality , Landmark or City',
                   hintStyle: TextStyle(
-                      fontSize: getHeight(
-                          context: context,
-                          height: 14),
+                      fontSize: getHeight(context: context, height: 14),
                       color: Colors.black54,
                       fontWeight: FontWeight.w500),
                   suffixIcon: IconButton(
@@ -907,9 +863,7 @@ class _TestWidgetState extends State<TestWidget> {
                         child: Text(
                           value.locations[index].location,
                           style: TextStyle(
-                              fontSize: getHeight(
-                                  context: context,
-                                  height: 14),
+                              fontSize: getHeight(context: context, height: 14),
                               color: CustomTheme.appTheme,
                               fontWeight: FontWeight.w500),
                           maxLines: 2,
