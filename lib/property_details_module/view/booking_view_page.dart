@@ -44,10 +44,11 @@ class BookingPage extends StatefulWidget {
 
 class _BookingPageState extends State<BookingPage> {
   late ThemeData theme;
-  static const String fontFamily = 'hk-grotest';
+
   var _mainHeight;
   var _mainWidth;
   int _currentStep = 0;
+  int maxGuest=0;
 
   DateTime selectedDate = DateTime.now();
   String showDate = 'Select Date For Visit';
@@ -109,6 +110,7 @@ class _BookingPageState extends State<BookingPage> {
     _viewModel = Provider.of<PropertyDetailsViewModel>(context, listen: false);
     getLanguageData();
     initMethod();
+    maxGuest=widget.propertyDetailsUtilModel.maxGuest ?? 0;
   }
 
   @override
@@ -160,7 +162,7 @@ class _BookingPageState extends State<BookingPage> {
             title: Text(
               '${widget.propertyDetailsUtilModel.buildingName ?? ''} (${widget.propertyDetailsUtilModel.propId})',
               style: const TextStyle(
-                fontFamily: fontFamily,
+
               ),
             ),
             centerTitle: false,
@@ -206,7 +208,7 @@ class _BookingPageState extends State<BookingPage> {
                     '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[0].name : "You are almost done !"}',
                     style: TextStyle(
                         fontSize: 24,
-                        fontFamily: fontFamily,
+
                         fontWeight: FontWeight.w500),
                   ),
                   Container(
@@ -221,7 +223,7 @@ class _BookingPageState extends State<BookingPage> {
                           child: Text(
                             widget.propertyDetailsUtilModel.title ?? '',
                             style: const TextStyle(
-                              fontFamily: fontFamily,
+
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -324,7 +326,7 @@ class _BookingPageState extends State<BookingPage> {
                                   style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
-                                      fontFamily: fontFamily,
+
                                       color: Colors.grey),
                                 ),
                                 state: StepState.complete,
@@ -342,7 +344,7 @@ class _BookingPageState extends State<BookingPage> {
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
-                                      fontFamily: fontFamily,
+
                                       color: Colors.grey),
                                 ),
                                 content: Container(
@@ -362,7 +364,7 @@ class _BookingPageState extends State<BookingPage> {
                                     }
                                     return null;
                                   },*/
-                                      style: TextStyle(fontFamily: fontFamily),
+
                                       controller: _nameController,
                                       decoration: const InputDecoration(
                                         border: InputBorder.none,
@@ -382,7 +384,7 @@ class _BookingPageState extends State<BookingPage> {
                                   style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
-                                      fontFamily: fontFamily,
+
                                       color: Colors.grey),
                                 ),
                                 content: Container(
@@ -401,7 +403,7 @@ class _BookingPageState extends State<BookingPage> {
                                       maxLength: 10,
 
                                       controller: _phoneNumberController,
-                                      style: TextStyle(fontFamily: fontFamily),
+
                                       decoration: InputDecoration(
                                         border: InputBorder.none,
 
@@ -421,7 +423,7 @@ class _BookingPageState extends State<BookingPage> {
                                   style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
-                                      fontFamily: fontFamily,
+
                                       color: Colors.grey),
                                 ),
                                 content: Container(
@@ -444,7 +446,7 @@ class _BookingPageState extends State<BookingPage> {
                                       enabled: true,
                                       keyboardType: TextInputType.emailAddress,
                                       controller: _emailController,
-                                      style: TextStyle(fontFamily: fontFamily),
+
                                       decoration: InputDecoration(
                                         border: InputBorder.none,
                                         //hintText: 'Email',
@@ -457,16 +459,48 @@ class _BookingPageState extends State<BookingPage> {
                               Step(
                                 isActive: true,
                                 title: Text(
-                                  '${widget.propertyDetailsUtilModel.maxGuest} Guests',
+                                  '$maxGuest Guests',
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
-                                      fontFamily: fontFamily,
+
                                       color: Colors.grey),
                                 ),
                                 state: StepState.complete,
                                 content: Container(
-                                  margin: EdgeInsets.only(left: 8),
+                                  margin: EdgeInsets.only(bottom: _mainHeight*0.01,),
+                                  height: _mainHeight * 0.05,
+                                  width: _mainWidth*0.3,
+                                  child:  Neumorphic(
+                                    style: NeumorphicStyle(
+                                      shadowLightColor: CustomTheme.appTheme.withAlpha(100),
+                                      shadowDarkColor: Colors.grey.shade200,
+                                      color: Colors.white,
+                                      lightSource: LightSource.bottom,
+                                      intensity: 2,
+                                      depth: 2,
+                                    ),
+                                    child: DropdownButtonHideUnderline(
+                                      child: DropdownButton(
+                                        iconEnabledColor: CustomTheme.appTheme,
+                                        items: widget.propertyDetailsUtilModel.guestList
+                                            ?.map((type) => DropdownMenuItem(
+                                          child: Padding(
+                                            padding:  EdgeInsets.only(left:_mainWidth*0.04),
+                                            child: Text(type.toString()),
+                                          ),
+                                          value: type,
+                                        ))
+                                            .toList(),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            maxGuest = value as int;
+                                          });
+                                        },
+                                        value: maxGuest,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                               Step(
@@ -476,7 +510,7 @@ class _BookingPageState extends State<BookingPage> {
                                   style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
-                                      fontFamily: fontFamily,
+
                                       color: Colors.grey),
                                 ),
                                 state: StepState.complete,
@@ -528,10 +562,7 @@ class _BookingPageState extends State<BookingPage> {
                                                   .propertyDetailsUtilModel
                                                   .token)
                                               .toString(),
-                                          numOfGuests: (widget
-                                                  .propertyDetailsUtilModel
-                                                  .maxGuest)
-                                              .toString(),
+                                          numOfGuests:maxGuest.toString(),
                                           couponCode: _coupanController.text,
                                           fromDate: checkInDate,
                                           toDate: checkOutDate,
@@ -602,7 +633,7 @@ class _BookingPageState extends State<BookingPage> {
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 12,
-                                fontFamily: fontFamily,
+
                                 color: Colors.black),
                             children: <TextSpan>[
                           TextSpan(
@@ -612,7 +643,7 @@ class _BookingPageState extends State<BookingPage> {
                               color: CustomTheme.myFavColor,
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
-                              fontFamily: fontFamily,
+
                             ),
                           ),
                         ])),
@@ -636,7 +667,7 @@ class _BookingPageState extends State<BookingPage> {
                             '$rupee ${value.bookingAmountsResponseModel?.data?.advanceAmount ?? 0}',
                             style: TextStyle(
                               fontSize: 20,
-                              fontFamily: fontFamily,
+
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -759,7 +790,7 @@ class _BookingPageState extends State<BookingPage> {
                           child: Text(
                             '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[13].name : 'Proceed Booking'}',
                             style: const TextStyle(
-                              fontFamily: fontFamily,
+
                               fontSize: 16,
                             ),
                           ),
@@ -934,7 +965,7 @@ class _BookingPageState extends State<BookingPage> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12,
-                                    fontFamily: fontFamily,
+
                                     color: Colors.grey),
                                 children: <TextSpan>[
                               TextSpan(
@@ -943,7 +974,7 @@ class _BookingPageState extends State<BookingPage> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12,
-                                    fontFamily: fontFamily,
+
                                     color: Colors.grey),
                               ),
                             ])),

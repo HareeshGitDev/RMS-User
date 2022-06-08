@@ -8,6 +8,7 @@ class PropertyDetailsUtilModel {
   int? freeGuest;
   int? propId;
   String? token;
+  List<int>? guestList;
 
   PropertyDetailsUtilModel(
       {this.email,
@@ -18,6 +19,7 @@ class PropertyDetailsUtilModel {
       this.token,
       this.mobile,
       this.freeGuest,
+        this.guestList,
 this.maxGuest});
 
   Map<String,dynamic> toJosn(){

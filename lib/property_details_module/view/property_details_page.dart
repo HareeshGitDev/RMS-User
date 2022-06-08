@@ -1402,12 +1402,23 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                             '')
                                         .toString();
                                 Navigator.of(context).pop();
+                                List<int> guestList=[];
+                                for(int i=1;i <= int.parse(_viewModel
+                                    .propertyDetailsModel
+                                    ?.data
+                                    ?.details
+                                    ?.maxGuests ??
+                                    '0');i++){
+                                  guestList.add(i);
+                                }
+                                guestList.forEach(print);
                                 PropertyDetailsUtilModel model =
                                     PropertyDetailsUtilModel(
                                   name: name,
                                   email: email,
                                   mobile: phone,
                                   token: token,
+                                  guestList: guestList,
                                   propId: int.parse((_viewModel
                                           .propertyDetailsModel
                                           ?.data
