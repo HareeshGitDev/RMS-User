@@ -170,7 +170,6 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
     _mainWidth = MediaQuery.of(context).size.width;
     return _connectionStatus
         ? Scaffold(
-
             appBar: _getAppBar(
               context: context,
             ),
@@ -178,9 +177,6 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
               onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
               child: Consumer<PropertyViewModel>(
                 builder: (context, value, child) {
-
-
-
                   if (value.propertyListModel.msg != null &&
                       value.propertyListModel.data != null &&
                       value.propertyListModel.data!.isNotEmpty) {
@@ -191,10 +187,12 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
-                            showSearchResults?Container():getPropSettings(value: value, context: context),
+                            showSearchResults
+                                ? Container()
+                                : getPropSettings(
+                                    value: value, context: context),
                             Stack(
                               children: [
-
                                 Container(
                                   color: Colors.white,
                                   height: _mainHeight,
@@ -203,17 +201,16 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                       left: _mainWidth * 0.03,
                                       right: _mainWidth * 0.03,
                                       top: _mainHeight * 0.01,
-                                      bottom: _mainHeight *
-                                          0.16),
+                                      bottom: _mainHeight * 0.16),
                                   child: ListView.separated(
                                     itemBuilder: (context, index) {
                                       var data =
-                                      value.propertyListModel.data![index];
+                                          value.propertyListModel.data![index];
                                       return GestureDetector(
                                         onTap: () => Navigator.of(context)
                                             .pushNamed(
-                                            AppRoutes.propertyDetailsPage,
-                                            arguments: {
+                                                AppRoutes.propertyDetailsPage,
+                                                arguments: {
                                               'propId': data.propId,
                                               'fromExternalLink': false,
                                             }),
@@ -227,76 +224,72 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                             children: [
                                               Column(
                                                 crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Container(
                                                     padding: EdgeInsets.only(
                                                         left: _mainWidth * 0.02,
                                                         top: _mainHeight * 0.01,
-                                                        right: _mainWidth * 0.02),
+                                                        right:
+                                                            _mainWidth * 0.02),
                                                     child: CarouselSlider(
                                                       items: data.propPics
-                                                          ?.map((e) =>
-                                                          CachedNetworkImage(
-                                                            imageUrl: e
-                                                                .picLink
-                                                                .toString(),
-                                                            imageBuilder:
-                                                                (context,
-                                                                imageProvider) =>
-                                                                Container(
-                                                                  decoration:
-                                                                  BoxDecoration(
-                                                                    borderRadius:
-                                                                    BorderRadius.circular(
-                                                                        10),
-                                                                    image:
-                                                                    DecorationImage(
-                                                                      image:
-                                                                      imageProvider,
-                                                                      fit: BoxFit
-                                                                          .cover,
+                                                              ?.map((e) =>
+                                                                  CachedNetworkImage(
+                                                                    imageUrl: e
+                                                                        .picLink
+                                                                        .toString(),
+                                                                    imageBuilder:
+                                                                        (context,
+                                                                                imageProvider) =>
+                                                                            Container(
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(10),
+                                                                        image:
+                                                                            DecorationImage(
+                                                                          image:
+                                                                              imageProvider,
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                        ),
+                                                                      ),
                                                                     ),
-                                                                  ),
-                                                                ),
-                                                            placeholder: (context, url) => Shimmer
-                                                                .fromColors(
-                                                                child:
-                                                                Container(
-                                                                  height:
-                                                                  _mainHeight * 0.22,
-                                                                  color:
-                                                                  Colors.grey,
-                                                                ),
-                                                                baseColor:
-                                                                Colors.grey[200]
-                                                                as Color,
-                                                                highlightColor:
-                                                                Colors.grey[350]
-                                                                as Color),
-                                                            errorWidget: (context,
-                                                                url,
-                                                                error) =>
-                                                            const Icon(Icons
-                                                                .error),
-                                                          ))
-                                                          .toList() ??
+                                                                    placeholder: (context,
+                                                                            url) =>
+                                                                        Shimmer.fromColors(
+                                                                            child: Container(
+                                                                              height: _mainHeight * 0.22,
+                                                                              color: Colors.grey,
+                                                                            ),
+                                                                            baseColor: Colors.grey[200] as Color,
+                                                                            highlightColor: Colors.grey[350] as Color),
+                                                                    errorWidget: (context,
+                                                                            url,
+                                                                            error) =>
+                                                                        const Icon(
+                                                                            Icons.error),
+                                                                  ))
+                                                              .toList() ??
                                                           [],
                                                       options: CarouselOptions(
-                                                          height: _mainHeight * 0.22,
-                                                          enlargeCenterPage: true,
+                                                          height: _mainHeight *
+                                                              0.22,
+                                                          enlargeCenterPage:
+                                                              true,
                                                           autoPlay: true,
                                                           aspectRatio: 16 / 9,
                                                           autoPlayInterval: Duration(
                                                               milliseconds: math
-                                                                  .Random()
-                                                                  .nextInt(
-                                                                  6000) +
+                                                                          .Random()
+                                                                      .nextInt(
+                                                                          6000) +
                                                                   1500),
-                                                          autoPlayCurve:
-                                                          Curves.fastOutSlowIn,
+                                                          autoPlayCurve: Curves
+                                                              .fastOutSlowIn,
                                                           enableInfiniteScroll:
-                                                          true,
+                                                              true,
                                                           viewportFraction: 1),
                                                     ),
                                                   ),
@@ -306,53 +299,60 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                   Container(
                                                     padding: EdgeInsets.only(
                                                         left: _mainWidth * 0.02,
-                                                        right: _mainWidth * 0.02),
+                                                        right:
+                                                            _mainWidth * 0.02),
                                                     child: Row(
                                                       crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: [
                                                         Container(
-                                                          width: _mainWidth * 0.68,
+                                                          width:
+                                                              _mainWidth * 0.68,
                                                           child: Text(
                                                             "${data.title?.trim() ?? ""}",
-                                                            overflow: TextOverflow
-                                                                .ellipsis,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
                                                             maxLines: 2,
                                                             style: TextStyle(
                                                                 fontSize: getHeight(
                                                                     context:
-                                                                    context,
+                                                                        context,
                                                                     height: 12),
-                                                                color: Colors.black,
+                                                                color: Colors
+                                                                    .black,
                                                                 fontWeight:
-                                                                FontWeight
-                                                                    .w600),
+                                                                    FontWeight
+                                                                        .w600),
                                                           ),
                                                         ),
                                                         Visibility(
-                                                          visible: data.rmsProp !=
-                                                              null &&
+                                                          visible: data
+                                                                      .rmsProp !=
+                                                                  null &&
                                                               data.rmsProp ==
                                                                   "RMS Prop",
                                                           child: Text(
                                                             "${data.unitType ?? ''}",
-                                                            overflow: TextOverflow
-                                                                .ellipsis,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
                                                             maxLines: 1,
                                                             style: TextStyle(
                                                                 fontSize: getHeight(
                                                                     context:
-                                                                    context,
+                                                                        context,
                                                                     height: 12),
                                                                 fontWeight:
-                                                                FontWeight
-                                                                    .w700),
+                                                                    FontWeight
+                                                                        .w700),
                                                           ),
                                                         ),
                                                       ],
                                                       mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
                                                     ),
                                                   ),
                                                   SizedBox(
@@ -362,7 +362,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                     width: _mainWidth,
                                                     padding: EdgeInsets.only(
                                                         left: _mainWidth * 0.02,
-                                                        right: _mainWidth * 0.02),
+                                                        right:
+                                                            _mainWidth * 0.02),
                                                     child: Row(
                                                       children: [
                                                         GestureDetector(
@@ -373,12 +374,13 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                             Icons
                                                                 .location_on_outlined,
                                                             color: Colors.grey,
-                                                            size:
-                                                            _mainHeight * 0.015,
+                                                            size: _mainHeight *
+                                                                0.015,
                                                           ),
                                                         ),
                                                         SizedBox(
-                                                          width: _mainWidth * 0.01,
+                                                          width:
+                                                              _mainWidth * 0.01,
                                                         ),
                                                         GestureDetector(
                                                           onTap: () => goToMap(
@@ -386,74 +388,86 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                               glng: data.glng),
                                                           child: Text(
                                                             (data.areas ??
-                                                                data.city) ??
+                                                                    data.city) ??
                                                                 " ",
                                                             style: TextStyle(
-                                                                color: Colors.grey,
+                                                                color:
+                                                                    Colors.grey,
                                                                 fontWeight:
-                                                                FontWeight.w600,
+                                                                    FontWeight
+                                                                        .w600,
                                                                 fontSize: getHeight(
                                                                     context:
-                                                                    context,
-                                                                    height: 10)),
+                                                                        context,
+                                                                    height:
+                                                                        10)),
                                                           ),
                                                         ),
                                                         Spacer(),
                                                         Visibility(
-                                                          visible: data.rmsProp !=
-                                                              null &&
+                                                          visible: data
+                                                                      .rmsProp !=
+                                                                  null &&
                                                               data.rmsProp ==
                                                                   "RMS Prop",
                                                           child: Container(
-                                                            padding:
-                                                            EdgeInsets.only(
+                                                            padding: EdgeInsets.only(
                                                                 left:
-                                                                _mainWidth *
-                                                                    0.02,
+                                                                    _mainWidth *
+                                                                        0.02,
                                                                 right:
-                                                                _mainWidth *
-                                                                    0.02),
-                                                            child: Row(children: [
+                                                                    _mainWidth *
+                                                                        0.02),
+                                                            child:
+                                                                Row(children: [
                                                               Icon(
                                                                 Icons.person,
-                                                                size: _mainHeight *
-                                                                    0.015,
-                                                                color: Colors.grey,
+                                                                size:
+                                                                    _mainHeight *
+                                                                        0.015,
+                                                                color:
+                                                                    Colors.grey,
                                                               ),
                                                               SizedBox(
-                                                                width: _mainWidth *
-                                                                    0.01,
+                                                                width:
+                                                                    _mainWidth *
+                                                                        0.01,
                                                               ),
                                                               Text(
                                                                 'Managed by RMS',
                                                                 style: TextStyle(
-                                                                    color: Colors.grey,
+                                                                    color: Colors
+                                                                        .grey,
                                                                     fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
+                                                                        FontWeight
+                                                                            .w500,
                                                                     fontSize: getHeight(
                                                                         context:
-                                                                        context,
+                                                                            context,
                                                                         height:
-                                                                        10)),
+                                                                            10)),
                                                               ),
                                                             ]),
                                                           ),
                                                         ),
                                                         Spacer(),
                                                         Visibility(
-                                                          visible: data.rmsProp !=
-                                                              null &&
+                                                          visible: data
+                                                                      .rmsProp !=
+                                                                  null &&
                                                               data.rmsProp ==
                                                                   "RMS Prop",
                                                           child: Text(
                                                             'Multiple Units Available',
                                                             style: TextStyle(
-                                                              color: Colors.grey,
+                                                              color:
+                                                                  Colors.grey,
                                                               fontWeight:
-                                                              FontWeight.w700,
+                                                                  FontWeight
+                                                                      .w700,
                                                               fontSize: getHeight(
-                                                                  context: context,
+                                                                  context:
+                                                                      context,
                                                                   height: 10),
                                                             ),
                                                           ),
@@ -469,36 +483,36 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                       children: [
                                                         getRents(
                                                             rentType:
-                                                            'Rent Per Day',
-                                                            discount: '70 % OFF',
-                                                            rent: data.rent ?? '0',
-                                                            orgRent: data.orgRent ??
-                                                                '0'),
-                                                        SizedBox(
-                                                            width:
-                                                            _mainWidth * 0.005),
-                                                        getRents(
-                                                            rentType:
-                                                            'Stay < 3 Month',
-                                                            discount: '70 % OFF',
-                                                            rent:
-                                                            data.monthlyRent ??
+                                                                'Rent Per Day',
+                                                            rent: data.rent ??
                                                                 '0',
                                                             orgRent:
-                                                            data.orgMonthRent ??
-                                                                '0'),
+                                                                data.orgRent ??
+                                                                    '0'),
                                                         SizedBox(
-                                                            width:
-                                                            _mainWidth * 0.005),
+                                                            width: _mainWidth *
+                                                                0.005),
                                                         getRents(
                                                             rentType:
-                                                            'Stay > 3 Month',
-                                                            discount: '70 % OFF',
+                                                                'Stay < 3 Month',
                                                             rent:
-                                                            data.rmsRent ?? '0',
+                                                                data.monthlyRent ??
+                                                                    '0',
                                                             orgRent:
-                                                            data.orgRmsRent ??
-                                                                '0'),
+                                                                data.orgMonthRent ??
+                                                                    '0'),
+                                                        SizedBox(
+                                                            width: _mainWidth *
+                                                                0.005),
+                                                        getRents(
+                                                            rentType:
+                                                                'Stay > 3 Month',
+                                                            rent:
+                                                                data.rmsRent ??
+                                                                    '0',
+                                                            orgRent:
+                                                                data.orgRmsRent ??
+                                                                    '0'),
                                                       ],
                                                     ),
                                                   ),
@@ -508,42 +522,50 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                 top: _mainHeight * 0.02,
                                                 left: _mainWidth * 0.04,
                                                 child: Visibility(
-                                                  visible: data.rmsProp != null &&
-                                                      data.rmsProp == "RMS Prop",
+                                                  visible:
+                                                      data.rmsProp != null &&
+                                                          data.rmsProp ==
+                                                              "RMS Prop",
                                                   child: Container(
                                                     height: _mainHeight * 0.03,
                                                     padding: EdgeInsets.only(
                                                         left: _mainWidth * 0.02,
-                                                        right: _mainWidth * 0.02),
+                                                        right:
+                                                            _mainWidth * 0.02),
                                                     decoration: BoxDecoration(
                                                         color: CustomTheme
                                                             .appThemeContrast,
                                                         borderRadius:
-                                                        BorderRadius.circular(
-                                                            5)),
+                                                            BorderRadius
+                                                                .circular(5)),
                                                     child: Row(children: [
                                                       Icon(
                                                         Icons.home,
-                                                        size: _mainHeight * 0.017,
+                                                        size:
+                                                            _mainHeight * 0.017,
                                                         color: Colors.white,
                                                       ),
                                                       SizedBox(
-                                                        width: _mainWidth * 0.01,
+                                                        width:
+                                                            _mainWidth * 0.01,
                                                       ),
                                                       LimitedBox(
-                                                        maxWidth: _mainWidth * 0.5,
+                                                        maxWidth:
+                                                            _mainWidth * 0.5,
                                                         child: Text(
-                                                          data.buildingName ?? '',
-                                                          overflow:
-                                                          TextOverflow.ellipsis,
+                                                          data.buildingName ??
+                                                              '',
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
                                                           maxLines: 1,
                                                           style: TextStyle(
                                                             fontSize: getHeight(
-                                                                context: context,
+                                                                context:
+                                                                    context,
                                                                 height: 12),
                                                             color: Colors.white,
                                                             fontWeight:
-                                                            FontWeight.w500,
+                                                                FontWeight.w500,
                                                           ),
                                                         ),
                                                       ),
@@ -559,11 +581,11 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                     if (data.wishlist == 1) {
                                                       if (data.propId != null) {
                                                         int response =
-                                                        await _propertyViewModel
-                                                            .addToWishlist(
-                                                            propertyId:
-                                                            data.propId ??
-                                                                '');
+                                                            await _propertyViewModel
+                                                                .addToWishlist(
+                                                                    propertyId:
+                                                                        data.propId ??
+                                                                            '');
                                                         if (response == 200) {
                                                           setState(() {
                                                             data.wishlist = 0;
@@ -571,19 +593,20 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                           RMSWidgets.showSnackbar(
                                                               context: context,
                                                               message:
-                                                              'Successfully Removed From Wishlist',
+                                                                  'Successfully Removed From Wishlist',
                                                               color: CustomTheme
                                                                   .appTheme);
                                                         }
                                                       }
-                                                    } else if (data.wishlist == 0) {
+                                                    } else if (data.wishlist ==
+                                                        0) {
                                                       if (data.propId != null) {
                                                         int response =
-                                                        await _propertyViewModel
-                                                            .addToWishlist(
-                                                            propertyId:
-                                                            data.propId ??
-                                                                '');
+                                                            await _propertyViewModel
+                                                                .addToWishlist(
+                                                                    propertyId:
+                                                                        data.propId ??
+                                                                            '');
                                                         if (response == 200) {
                                                           setState(() {
                                                             data.wishlist = 1;
@@ -591,7 +614,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                           RMSWidgets.showSnackbar(
                                                               context: context,
                                                               message:
-                                                              'Successfully Added to Wishlist',
+                                                                  'Successfully Added to Wishlist',
                                                               color: CustomTheme
                                                                   .appTheme);
                                                         }
@@ -600,15 +623,16 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                   },
                                                   child: data.wishlist == 1
                                                       ? Icon(
-                                                    Icons.favorite,
-                                                    color: CustomTheme
-                                                        .errorColor,
-                                                  )
+                                                          Icons.favorite,
+                                                          color: CustomTheme
+                                                              .errorColor,
+                                                        )
                                                       : Icon(
-                                                    Icons
-                                                        .favorite_outline_rounded,
-                                                    color: CustomTheme.white,
-                                                  ),
+                                                          Icons
+                                                              .favorite_outline_rounded,
+                                                          color:
+                                                              CustomTheme.white,
+                                                        ),
                                                 ),
                                               ),
                                               Positioned(
@@ -621,9 +645,11 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                       left: _mainWidth * 0.02,
                                                       right: _mainWidth * 0.02),
                                                   decoration: BoxDecoration(
-                                                      color: CustomTheme.appThemeContrast,
+                                                      color: CustomTheme
+                                                          .appThemeContrast,
                                                       borderRadius:
-                                                      BorderRadius.circular(5)),
+                                                          BorderRadius.circular(
+                                                              5)),
                                                   child: LimitedBox(
                                                     maxWidth: _mainWidth * 0.5,
                                                     child: Text(
@@ -632,12 +658,14 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                         fontSize: getHeight(
                                                             context: context,
                                                             height: 12),
-                                                        color: CustomTheme.white,
-                                                        fontWeight: FontWeight.w500,
+                                                        color:
+                                                            CustomTheme.white,
+                                                        fontWeight:
+                                                            FontWeight.w500,
                                                       ),
                                                       maxLines: 1,
                                                       overflow:
-                                                      TextOverflow.ellipsis,
+                                                          TextOverflow.ellipsis,
                                                     ),
                                                   ),
                                                 ),
@@ -646,30 +674,33 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                 right: _mainWidth * 0.04,
                                                 top: _mainHeight * 0.2,
                                                 child: Visibility(
-
-                                                    visible:
-                                                    data.avl?.toLowerCase() ==
+                                                    visible: data.avl
+                                                            ?.toLowerCase() ==
                                                         'booked',
                                                     child: Container(
                                                       alignment:
-                                                      Alignment.topCenter,
-                                                      height: _mainHeight * 0.022,
+                                                          Alignment.topCenter,
+                                                      height:
+                                                          _mainHeight * 0.022,
                                                       width: _mainWidth * 0.17,
                                                       padding: EdgeInsets.only(
-                                                          left: _mainWidth * 0.02,
-                                                          right: _mainWidth * 0.02),
+                                                          left:
+                                                              _mainWidth * 0.02,
+                                                          right: _mainWidth *
+                                                              0.02),
                                                       decoration: BoxDecoration(
                                                           color: CustomTheme
                                                               .appThemeContrast,
                                                           borderRadius:
-                                                          BorderRadius.circular(
-                                                              5)),
+                                                              BorderRadius
+                                                                  .circular(5)),
                                                       child: Text(
                                                         'Booked',
                                                         style: TextStyle(
                                                             color: Colors.white,
                                                             fontSize: getHeight(
-                                                                context: context,
+                                                                context:
+                                                                    context,
                                                                 height: 14)),
                                                       ),
                                                     )),
@@ -679,22 +710,26 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                         ),
                                       );
                                     },
-                                    itemCount: value.propertyListModel.data?.length ??0,
-                                    separatorBuilder: (context, index) => SizedBox(
+                                    itemCount:
+                                        value.propertyListModel.data?.length ??
+                                            0,
+                                    separatorBuilder: (context, index) =>
+                                        SizedBox(
                                       height: _mainHeight * 0.008,
                                     ),
                                   ),
                                 ),
                                 showSearchResults
                                     ? Positioned(
-                                 top: _mainHeight*0.01,
-                                  left: _mainWidth * 0.035,
-                                  child: Container(
-                                      height: _mainHeight * 0.32,
-                                      width: _mainWidth * 0.93,
-                                      child: showSuggestions(
-                                          value: value, context: context)),
-                                )
+                                        top: _mainHeight * 0.01,
+                                        left: _mainWidth * 0.035,
+                                        child: Container(
+                                            height: _mainHeight * 0.32,
+                                            width: _mainWidth * 0.93,
+                                            child: showSuggestions(
+                                                value: value,
+                                                context: context)),
+                                      )
                                     : Container(),
                               ],
                             ),
@@ -702,47 +737,42 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                         ),
                       ),
                     );
-                  }
-                  else if (value.propertyListModel.msg != null &&
+                  } else if (value.propertyListModel.msg != null &&
                       value.propertyListModel.data == null) {
                     return Stack(
                       children: [
-
                         showSearchResults
                             ? Positioned(
-                        top: _mainHeight * 0.01,
-                          left: _mainWidth * 0.035,
-                          child: Container(
-                              height: _mainHeight * 0.32,
-                              width: _mainWidth * 0.93,
-                              child: showSuggestions(value: value,context: context)),
-                        )
+                                top: _mainHeight * 0.01,
+                                left: _mainWidth * 0.035,
+                                child: Container(
+                                    height: _mainHeight * 0.32,
+                                    width: _mainWidth * 0.93,
+                                    child: showSuggestions(
+                                        value: value, context: context)),
+                              )
                             : getPropSettings(value: value, context: context),
-
                       ],
                     );
-                  }
-                  else if (value.propertyListModel.msg != null &&
+                  } else if (value.propertyListModel.msg != null &&
                       value.propertyListModel.data != null &&
                       value.propertyListModel.data!.isEmpty) {
                     return Stack(
                       children: [
                         showSearchResults
                             ? Positioned(
-                          top: _mainHeight * 0.01,
-                          left: _mainWidth * 0.035,
-                          child: Container(
-                              height: _mainHeight * 0.32,
-                              width: _mainWidth * 0.93,
-                              child: showSuggestions(value: value,context: context)),
-                        )
-                            :getPropSettings(value: value, context: context),
-
-
+                                top: _mainHeight * 0.01,
+                                left: _mainWidth * 0.035,
+                                child: Container(
+                                    height: _mainHeight * 0.32,
+                                    width: _mainWidth * 0.93,
+                                    child: showSuggestions(
+                                        value: value, context: context)),
+                              )
+                            : getPropSettings(value: value, context: context),
                       ],
                     );
-                  }
-                  else {
+                  } else {
                     return Center(
                         child:
                             RMSWidgets.getLoader(color: CustomTheme.appTheme));
@@ -754,7 +784,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
         : RMSWidgets.networkErrorPage(context: context);
   }
 
-   Widget getPropSettings({required PropertyViewModel value,required BuildContext context}){
+  Widget getPropSettings(
+      {required PropertyViewModel value, required BuildContext context}) {
     return Container(
         padding: EdgeInsets.only(
             left: _mainWidth * 0.04,
@@ -768,12 +799,11 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
               style: TextStyle(
                   color: CustomTheme.appTheme,
                   fontWeight: FontWeight.w600,
-                  fontSize: getHeight(
-                      context: context, height: 16)),
+                  fontSize: getHeight(context: context, height: 16)),
             ),
             Spacer(),
             InkWell(
-              onTap: ()=>applyFilter(context, value),
+              onTap: () => applyFilter(context, value),
               child: Icon(
                 Icons.filter_alt_outlined,
                 size: _mainHeight * 0.015,
@@ -784,12 +814,11 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
               width: 5,
             ),
             InkWell(
-              onTap: ()=>applyFilter(context, value),
+              onTap: () => applyFilter(context, value),
               child: Text(
                 'Filter',
                 style: TextStyle(
-                  fontSize:
-                  getHeight(context: context, height: 12),
+                  fontSize: getHeight(context: context, height: 12),
                   color: CustomTheme.appThemeContrast,
                   fontWeight: FontWeight.w500,
                 ),
@@ -799,7 +828,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
               width: _mainWidth * 0.05,
             ),
             InkWell(
-              onTap: ()=>applySorting(context, value),
+              onTap: () => applySorting(context, value),
               child: Icon(
                 Icons.waves,
                 size: _mainHeight * 0.015,
@@ -810,12 +839,11 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
               width: 5,
             ),
             InkWell(
-              onTap: ()=>applySorting(context, value),
+              onTap: () => applySorting(context, value),
               child: Text(
                 'Sort',
                 style: TextStyle(
-                  fontSize:
-                  getHeight(context: context, height: 12),
+                  fontSize: getHeight(context: context, height: 12),
                   color: CustomTheme.appThemeContrast,
                   fontWeight: FontWeight.w500,
                 ),
@@ -823,7 +851,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
             ),
           ],
         ));
-   }
+  }
+
   AppBar _getAppBar({required BuildContext context}) {
     return AppBar(
       leading: BackButton(
@@ -887,8 +916,6 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
     );
   }
 
-
-
   Future<void> applySorting(
       BuildContext context, PropertyViewModel value) async {
     return await showModalBottomSheet(
@@ -927,7 +954,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.w600,
-                                  fontSize: getHeight(context: context, height: 14)),
+                                  fontSize:
+                                      getHeight(context: context, height: 14)),
                             )),
                           ),
                         ),
@@ -965,7 +993,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
-                                  fontSize: getHeight(context: context, height: 14)),
+                                  fontSize:
+                                      getHeight(context: context, height: 14)),
                             )),
                           ),
                         ),
@@ -1086,13 +1115,11 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                     Row(
                       children: [
                         Container(
-
                           decoration: BoxDecoration(
-
                               border: Border.all(color: Colors.grey, width: 1),
                               borderRadius: BorderRadius.circular(40)),
-                          width: _mainWidth*0.2,
-                          height: _mainHeight*0.035,
+                          width: _mainWidth * 0.2,
+                          height: _mainHeight * 0.035,
                           child: GestureDetector(
                             onTap: () async {
                               setState(() {
@@ -1124,14 +1151,15 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.w600,
-                                  fontSize: getHeight(context: context, height: 14)),
+                                  fontSize:
+                                      getHeight(context: context, height: 14)),
                             )),
                           ),
                         ),
                         Spacer(),
                         Container(
-                          width: _mainWidth*0.3,
-                          height: _mainHeight*0.035,
+                          width: _mainWidth * 0.3,
+                          height: _mainHeight * 0.035,
                           child: ElevatedButton(
                             style: ButtonStyle(
                                 backgroundColor:
@@ -1207,7 +1235,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
-                                  fontSize: getHeight(context: context, height: 14)),
+                                  fontSize:
+                                      getHeight(context: context, height: 14)),
                             )),
                           ),
                         ),
@@ -1280,7 +1309,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                   style: TextStyle(
                                       color: Colors.blueGrey,
                                       fontFamily: fontFamily,
-                                      fontSize: getHeight(context: context, height: 14),
+                                      fontSize: getHeight(
+                                          context: context, height: 14),
                                       fontWeight: FontWeight.w500),
                                 ),
                                 Text(
@@ -1288,7 +1318,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontFamily: fontFamily,
-                                      fontSize: getHeight(context: context, height: 14),
+                                      fontSize: getHeight(
+                                          context: context, height: 14),
                                       fontWeight: FontWeight.w500),
                                 ),
                               ],
@@ -1301,7 +1332,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                   style: TextStyle(
                                       color: Colors.blueGrey,
                                       fontFamily: fontFamily,
-                                      fontSize: getHeight(context: context, height: 14),
+                                      fontSize: getHeight(
+                                          context: context, height: 14),
                                       fontWeight: FontWeight.w500),
                                 ),
                                 Text(
@@ -1309,7 +1341,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontFamily: fontFamily,
-                                      fontSize: getHeight(context: context, height: 14),
+                                      fontSize: getHeight(
+                                          context: context, height: 14),
                                       fontWeight: FontWeight.w500),
                                 ),
                               ],
@@ -1354,14 +1387,16 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                     style: TextStyle(
                                         color: Colors.blueGrey,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: getHeight(context: context, height: 14)),
+                                        fontSize: getHeight(
+                                            context: context, height: 14)),
                                   ),
                                   Text(
                                     '$rupee ${double.parse(_values.start.toString()).toStringAsFixed(0)}',
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w600,
-                                        fontSize: getHeight(context: context, height: 14)),
+                                        fontSize: getHeight(
+                                            context: context, height: 14)),
                                   ),
                                 ],
                               ),
@@ -1372,14 +1407,16 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                     style: TextStyle(
                                         color: Colors.blueGrey,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: getHeight(context: context, height: 14)),
+                                        fontSize: getHeight(
+                                            context: context, height: 14)),
                                   ),
                                   Text(
                                     '$rupee ${double.parse(_values.end.toString()).toStringAsFixed(0)}',
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w600,
-                                        fontSize: getHeight(context: context, height: 14)),
+                                        fontSize: getHeight(
+                                            context: context, height: 14)),
                                   ),
                                 ],
                               ),
@@ -1396,7 +1433,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(right: _mainWidth*0.025),
+                            padding: EdgeInsets.only(right: _mainWidth * 0.025),
                             child: FilterChip(
                                 selected: fullyFurnishedSelected,
                                 checkmarkColor: CustomTheme.white,
@@ -1417,7 +1454,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                 }),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(right: _mainWidth*0.025),
+                            padding: EdgeInsets.only(right: _mainWidth * 0.025),
                             child: FilterChip(
                                 selected: semiFurnishedSelected,
                                 checkmarkColor: CustomTheme.white,
@@ -1448,7 +1485,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(right: _mainWidth*0.025),
+                            padding: EdgeInsets.only(right: _mainWidth * 0.025),
                             child: FilterChip(
                                 selected: entireHouseSelected,
                                 checkmarkColor: CustomTheme.white,
@@ -1468,7 +1505,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                 }),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(right: _mainWidth*0.025),
+                            padding: EdgeInsets.only(right: _mainWidth * 0.025),
                             child: FilterChip(
                                 selected: privateRoomSelected,
                                 checkmarkColor: CustomTheme.white,
@@ -1488,7 +1525,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                 }),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(right: _mainWidth*0.025),
+                            padding: EdgeInsets.only(right: _mainWidth * 0.025),
                             child: FilterChip(
                                 selected: sharedRoomSelected,
                                 checkmarkColor: CustomTheme.white,
@@ -1518,7 +1555,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(right: _mainWidth*0.025),
+                            padding: EdgeInsets.only(right: _mainWidth * 0.025),
                             child: FilterChip(
                                 selected: studioSelected,
                                 checkmarkColor: CustomTheme.white,
@@ -1538,7 +1575,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                 }),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(right: _mainWidth*0.025),
+                            padding: EdgeInsets.only(right: _mainWidth * 0.025),
                             child: FilterChip(
                                 selected: oneBHKSelected,
                                 checkmarkColor: CustomTheme.white,
@@ -1558,7 +1595,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                 }),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(right: _mainWidth*0.025),
+                            padding: EdgeInsets.only(right: _mainWidth * 0.025),
                             child: FilterChip(
                                 selected: twoBHKSelected,
                                 checkmarkColor: CustomTheme.white,
@@ -1578,7 +1615,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                 }),
                           ),
                           FilterChip(
-                              padding: EdgeInsets.only(right: _mainWidth*0.025),
+                              padding:
+                                  EdgeInsets.only(right: _mainWidth * 0.025),
                               selected: threeBHKSelected,
                               checkmarkColor: CustomTheme.white,
                               backgroundColor: CustomTheme.white,
@@ -1618,7 +1656,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
           .address
           .toString();
 
-  Widget showSuggestions({required PropertyViewModel value,required BuildContext context}) {
+  Widget showSuggestions(
+      {required PropertyViewModel value, required BuildContext context}) {
     return Neumorphic(
       style: NeumorphicStyle(
         shadowLightColor: CustomTheme.appTheme.withAlpha(150),
@@ -1629,7 +1668,6 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
         depth: 2,
       ),
       child: Container(
-
           padding: EdgeInsets.only(top: 10),
           child: ListView.separated(
             padding: EdgeInsets.zero,
@@ -1647,7 +1685,6 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                       property: Property.fromSearch,
                       toDate: widget.checkOutDate,
                       fromDate: widget.checkInDate);
-
 
                   Navigator.of(context).pop();
                 },
@@ -1692,6 +1729,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
           )),
     );
   }
+
   void goToMap({String? glat, String? glng}) async {
     if ((glat != null) && (glng != null)) {
       var latitude = glat.toString();
@@ -1710,20 +1748,20 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
             double.parse(orgRent.trim()).toInt()) {
           val = (double.parse(rent.trim()).toInt() * 100) /
               double.parse(orgRent.trim()).toInt();
+          return 100 - val.toInt();
         }
       }
     } catch (e) {
       log('Format Exception : $e');
     }
-
-    return val.toInt();
+    return 0;
   }
 
-  Widget getRents(
-      {required String rentType,
-        required String rent,
-        required String orgRent,
-        String? discount}) {
+  Widget getRents({
+    required String rentType,
+    required String rent,
+    required String orgRent,
+  }) {
     return Visibility(
       visible: rent != '0',
       child: Container(
@@ -1769,12 +1807,12 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                 children: [
                   Visibility(
                       child: Text(
-                        '$rupee $rent',
-                        style: TextStyle(
-                            fontSize: getHeight(context: context, height: 10),
-                            color: CustomTheme.black,
-                            fontWeight: FontWeight.w500),
-                      )),
+                    '$rupee $rent',
+                    style: TextStyle(
+                        fontSize: getHeight(context: context, height: 10),
+                        color: CustomTheme.black,
+                        fontWeight: FontWeight.w500),
+                  )),
                   SizedBox(height: _mainHeight * 0.005),
                   Visibility(
                       visible: orgRent != '0' && rent != orgRent,
@@ -1794,5 +1832,4 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
       ),
     );
   }
-
 }

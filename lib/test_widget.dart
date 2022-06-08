@@ -385,13 +385,15 @@ class _TestWidgetState extends State<TestWidget> {
                       itemCount:
                           value.invoiceDetailsModel?.data!.length ?? 0),
                 )
-              : value.invoiceDetailsModel != null &&
+              : ((value.invoiceDetailsModel != null &&
                       value.invoiceDetailsModel?.msg != null &&
-                      value.invoiceDetailsModel?.data == null
+                      value.invoiceDetailsModel?.data == null) || value.invoiceDetailsModel != null &&
+              value.invoiceDetailsModel?.msg != null &&
+              value.invoiceDetailsModel?.data!.length == 0)
                   ? RMSWidgets.noData(
                       context: context,
                       message:
-                          'Something went Wrong.Invoice Details could not be found.')
+                          'Invoice Details could not be found.')
                   : Center(child: RMSWidgets.getLoader());
         },
       ),

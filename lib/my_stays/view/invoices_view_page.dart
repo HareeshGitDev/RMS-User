@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:RentMyStay_user/my_stays/model/invoice_payment_model.dart';
 import 'package:RentMyStay_user/payment_module/view/razorpay_payement_page.dart';
+import 'package:RentMyStay_user/utils/service/date_time_service.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +17,7 @@ import '../../payment_module/model/payment_request_model.dart';
 import '../../property_details_module/model/booking_amount_request_model.dart';
 import '../../property_details_module/model/booking_credential_response_model.dart';
 import '../../theme/custom_theme.dart';
+import '../../theme/fonts.dart';
 import '../../utils/constants/app_consts.dart';
 import '../../utils/constants/enum_consts.dart';
 import '../../utils/constants/sp_constants.dart';
@@ -140,285 +142,359 @@ class _InvoiceState extends State<InvoicePage> {
               builder: (context, value, child) {
                 return value.invoiceDetailsModel != null &&
                         value.invoiceDetailsModel?.msg != null &&
-                        value.invoiceDetailsModel?.data != null
+                        value.invoiceDetailsModel?.data != null &&
+                        value.invoiceDetailsModel?.data!.length != 0
                     ? Container(
                         height: _mainHeight,
                         width: _mainWidth,
                         color: Colors.white,
                         padding: EdgeInsets.symmetric(
-                            horizontal: _mainWidth * 0.04,
+                            horizontal: _mainWidth * 0.02,
                             vertical: _mainHeight * 0.02),
                         child: ListView.separated(
                             itemBuilder: (context, index) {
                               var data =
                                   value.invoiceDetailsModel?.data![index];
+                              futureInvoice(fromDate: data?.fromDate ?? '');
                               return Container(
-
-                                decoration: BoxDecoration(
-                                 // color: Colors.amber,
-                                  border: Border.all(color:Colors.grey,width: 0.5),
-                                  borderRadius: BorderRadius.circular(10)
-                                ),
-                                padding: EdgeInsets.only(
-                                    left: _mainWidth * 0.05,
-                                    top: _mainHeight * 0.01,
-                                  bottom: _mainHeight * 0.01,
-                                    right: _mainWidth * 0.05,),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                // color: Colors.purple,
+                                child: ExpansionTile(
+                                  backgroundColor: Colors.grey.shade50,
+                                  collapsedBackgroundColor: Colors.grey.shade50,
+                                  tilePadding: EdgeInsets.zero,
+                                  childrenPadding: EdgeInsets.only(
+                                      bottom: _mainHeight * 0.02,
+                                      left: _mainWidth * 0.02,
+                                      top: _mainHeight * 0.015,
+                                      right: _mainWidth * 0.09),
+                                  title: Container(
+                                    width: _mainWidth,
+                                    height: 30,
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              left: _mainWidth * 0.015),
+                                          child: Text(
+                                            data?.transactionType ?? '',
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: getHeight(
+                                                    context: context,
+                                                    height: 20)),
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        Text('$rupee ${data?.amount ?? ' '}',
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: getHeight(
+                                                    context: context,
+                                                    height: 18))),
+                                        SizedBox(
+                                          width: _mainWidth * 0.02,
+                                        ),
+                                        Icon(
+                                          data?.pendingBalance != null &&
+                                                  data?.pendingBalance == 0
+                                              ? Icons.check
+                                              : futureInvoice(fromDate: data?.fromDate ??'')?Icons.add_alert:Icons.alarm,
+                                          color: data?.pendingBalance != null &&
+                                                  data?.pendingBalance == 0
+                                              ? CustomTheme.myFavColor
+                                              : futureInvoice(fromDate: data?.fromDate ??'')?CustomTheme.appTheme:CustomTheme.appThemeContrast,
+                                          size: _mainWidth * 0.045,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  trailing: Container(
+                                    padding: EdgeInsets.only(
+                                        bottom: _mainHeight * 0.06),
+                                    child: Icon(
+                                        Icons.keyboard_arrow_down_outlined),
+                                  ),
+                                  subtitle: Container(
+                                    padding: EdgeInsets.only(
+                                        top: _mainHeight * 0.01,
+                                        left: _mainWidth * 0.015),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text('From : ',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: getHeight(
+                                                        context: context,
+                                                        height: 12))),
+                                            Text('${data?.fromDate ?? ''}',
+                                                style: TextStyle(
+                                                    color: Colors.black87
+                                                        .withAlpha(180),
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: getHeight(
+                                                        context: context,
+                                                        height: 12))),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text('To : ',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: getHeight(
+                                                        context: context,
+                                                        height: 12))),
+                                            Text('${data?.tillDate ?? ''}',
+                                                style: TextStyle(
+                                                    color: Colors.black87
+                                                        .withAlpha(180),
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: getHeight(
+                                                        context: context,
+                                                        height: 12))),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text('Id : ',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: getHeight(
+                                                        context: context,
+                                                        height: 12))),
+                                            Text('${data?.invoiceId ?? ''}',
+                                                style: TextStyle(
+                                                    color: Colors.black87
+                                                        .withAlpha(180),
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: getHeight(
+                                                        context: context,
+                                                        height: 12))),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
                                   children: [
-                                    Text(
-                                      data?.transactionType ?? '',
-                                      style: TextStyle(
-                                          color: CustomTheme.appTheme,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 20),
-                                    ),
-                                    SizedBox(
-                                      height: _mainHeight * 0.005,
-                                    ),
                                     Container(
                                       //color: Colors.amber,
                                       //height: _mainHeight * 0.03,
                                       width: _mainWidth,
                                       child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
-                                              '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[3].name : 'From'}   ',
-                                              style: const TextStyle(
+                                          Text('Amount',
+                                              style: TextStyle(
                                                   color: Colors.grey,
                                                   fontWeight: FontWeight.w500,
-                                                  fontSize: 14)),
-                                          Text(data?.fromDate ?? '',
-                                              style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14)),
-                                          const Spacer(),
-                                          Text(
-                                              '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[4].name : 'To'}    ',
-                                              style: const TextStyle(
+                                                  fontSize: getHeight(
+                                                      context: context,
+                                                      height: 14))),
+                                          Text('$rupee ${data?.amount ?? ' '}',
+                                              style: TextStyle(
                                                   color: Colors.grey,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14)),
-                                          Text(data?.tillDate ?? '',
-                                              style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14)),
-                                        ],
-                                      ),
-                                    ),
-                                    Divider(
-                                      thickness: 0.7,
-                                    ),
-                                    SizedBox(
-                                      height: _mainHeight * 0.001,
-                                    ),
-                                    Container(
-                                      //color: Colors.amber,
-                                      //height: _mainHeight * 0.03,
-                                      width: _mainWidth,
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                              '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[5].name : 'Amount'} ',
-                                              style: const TextStyle(
-                                                  color: Colors.grey,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14)),
-                                          Text(
-                                              '$rupee ${data?.amount ?? ' '}',
-                                              style: const TextStyle(
-                                                  color: Colors.black,
                                                   fontWeight: FontWeight.w600,
-                                                  fontSize: 14)),
-
+                                                  fontSize: getHeight(
+                                                      context: context,
+                                                      height: 14))),
                                         ],
                                       ),
                                     ),
-
+                                    SizedBox(
+                                      height: _mainHeight * 0.01,
+                                    ),
                                     Container(
-                                      //color: Colors.amber,
-                                      //height: _mainHeight * 0.03,
                                       width: _mainWidth,
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
-                                              '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[6].name : 'Received'} ',
-                                              style: const TextStyle(
+                                          Text('Received',
+                                              style: TextStyle(
                                                   color: Colors.grey,
                                                   fontWeight: FontWeight.w500,
-                                                  fontSize: 14)),
+                                                  fontSize: getHeight(
+                                                      context: context,
+                                                      height: 14))),
                                           Text(
                                               '$rupee ${data?.amountRecieved ?? ''}',
-                                              style: const TextStyle(
-                                                  color: Colors.black,
+                                              style: TextStyle(
+                                                  color: Colors.grey,
                                                   fontWeight: FontWeight.w600,
-                                                  fontSize: 14)),
-
+                                                  fontSize: getHeight(
+                                                      context: context,
+                                                      height: 14))),
                                         ],
                                       ),
                                     ),
-
-                                    data?.refferalDiscount != null && data?.refferalDiscount.toString() != '0'?  Container(
-                                     // color: Colors.amber,
-                                      //height: _mainHeight * 0.03,
-                                      width: _mainWidth,
-                                      child: Row(
-
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                              '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[7].name : 'Referral'} ',
-                                              style: const TextStyle(
-                                                  color: Colors.grey,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14)),
-                                          Text(
-                                              '$rupee ${data?.refferalDiscount ?? ''}',
-                                              style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 14)),
-
-                                        ],
-                                      ),
-                                    ):Container(),
+                                    SizedBox(
+                                      height: _mainHeight * 0.01,
+                                    ),
+                                    data?.refferalDiscount != null &&
+                                            data?.refferalDiscount.toString() !=
+                                                '0'
+                                        ? Container(
+                                            // color: Colors.amber,
+                                            //height: _mainHeight * 0.03,
+                                            width: _mainWidth,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text('Referral',
+                                                    style: TextStyle(
+                                                        color: Colors.grey,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: getHeight(
+                                                            context: context,
+                                                            height: 14))),
+                                                Text(
+                                                    '$rupee ${data?.refferalDiscount ?? ''}',
+                                                    style: TextStyle(
+                                                        color: Colors.grey,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: getHeight(
+                                                            context: context,
+                                                            height: 14))),
+                                              ],
+                                            ),
+                                          )
+                                        : Container(),
+                                    SizedBox(
+                                      height: data?.refferalDiscount != null &&
+                                              data?.refferalDiscount
+                                                      .toString() !=
+                                                  '0'
+                                          ? _mainHeight * 0.01
+                                          : 0,
+                                    ),
                                     Divider(
                                       thickness: 0.7,
                                     ),
-
+                                    SizedBox(
+                                      height: _mainHeight * 0.01,
+                                    ),
                                     Container(
                                       //color: Colors.amber,
                                       //height: _mainHeight * 0.03,
                                       width: _mainWidth,
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
-                                              '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[8].name : 'Pending'} ',
-                                              style: const TextStyle(
+                                          Text('Pending',
+                                              style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w600,
-                                                  fontSize: 14)),
+                                                  fontSize: getHeight(
+                                                      context: context,
+                                                      height: 14))),
                                           Text(
                                               '$rupee ${data?.pendingBalance ?? ''}',
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w700,
-                                                  fontSize: 16)),
-
+                                                  fontSize: getHeight(
+                                                      context: context,
+                                                      height: 16))),
                                         ],
                                       ),
                                     ),
-                                    const Divider(
-                                      thickness: 0.7,
+                                    SizedBox(
+                                      height: _mainHeight * 0.02,
                                     ),
                                     SizedBox(
-                                      height: _mainHeight * 0.00,
-                                    ),
-                                    Container(
-                                     // height: _mainHeight * 0.04,
-                                      width: _mainWidth,
-                                      child: Row(
-
-                                        children: [
-                                          Text(
-                                              '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[2].name : 'Invoice Id'} - ',
-                                              style:  TextStyle(
-                                                  color: CustomTheme.appTheme,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14)),
-                                          Text(
-                                            data?.invoiceId ?? '',
-                                              style: TextStyle(
-                                                  color: CustomTheme.appTheme,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14)),
-                                          Spacer(),
-                                          FittedBox(
-                                            child: SizedBox(
-
-                                              height: _mainHeight*0.035,
-                                              child: ElevatedButton(
-                                                style: ButtonStyle(
-                                                    backgroundColor:
-                                                    MaterialStateProperty.all<
-                                                        Color>(
+                                      height: _mainHeight * 0.035,
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all<
+                                                    Color>(data?.pendingBalance !=
+                                                            null &&
                                                         data?.pendingBalance ==
                                                             0
-                                                            ? CustomTheme.myFavColor
-                                                            : CustomTheme.appThemeContrast),
-                                                    shape:
-                                                    MaterialStateProperty.all<
-                                                        RoundedRectangleBorder>(
-                                                      RoundedRectangleBorder(
-                                                          borderRadius:
-                                                          BorderRadius.circular(
-                                                              10)),
-                                                    )),
-                                                onPressed: data?.pendingBalance == 0
-                                                    ? () async {
-                                                  RMSWidgets.showLoaderDialog(
-                                                      context: context,
-                                                      message: 'Loading');
-                                                  String invoiceLink =
-                                                  await _viewModel
-                                                      .downloadInvoice(
-                                                      bookingId: widget
-                                                          .bookingId,
-                                                      invoiceId:
-                                                      data?.invoiceId ??
-                                                          '');
-                                                  Navigator.of(context).pop();
-                                                  if (invoiceLink
-                                                      .isNotEmpty) {
-                                                    if (await canLaunch(
-                                                        invoiceLink)) {
-                                                      launch(invoiceLink);
-                                                    }
+                                                    ? CustomTheme.myFavColor
+                                                    : CustomTheme
+                                                        .appThemeContrast),
+                                            shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                            )),
+                                        onPressed: data?.pendingBalance !=
+                                                    null &&
+                                                data?.pendingBalance == 0
+                                            ? () async {
+                                                RMSWidgets.showLoaderDialog(
+                                                    context: context,
+                                                    message: 'Loading');
+                                                String invoiceLink =
+                                                    await _viewModel
+                                                        .downloadInvoice(
+                                                            bookingId: widget
+                                                                .bookingId,
+                                                            invoiceId:
+                                                                data?.invoiceId ??
+                                                                    '');
+                                                Navigator.of(context).pop();
+                                                if (invoiceLink.isNotEmpty) {
+                                                  if (await canLaunch(
+                                                      invoiceLink)) {
+                                                    await launch(invoiceLink);
                                                   }
                                                 }
-                                                    : () {
-                                                  choosePaymentDialog(
-                                                      context: context,
-                                                      model: data ??
-                                                          invoiceModelData
-                                                              .Data());
-                                                },
-                                                child: Container(
-                                                    child: data?.pendingBalance == 0
-                                                        ? RichText(
-                                                        text: TextSpan(
-                                                          children: [
-
-                                                            TextSpan(
-                                                                text: nullCheck(
-                                                                    list: value
-                                                                        .invoiceLang)
-                                                                    ? ' ${value.invoiceLang[11].name} '
-                                                                    : 'Download'),
-                                                            WidgetSpan(
-                                                              child: Icon(
-                                                                  Icons.download,
-                                                                  size: _mainHeight*0.018),
-                                                            ),
-                                                          ],
-                                                        ))
-                                                        : Text(nullCheck(
-                                                        list: value
-                                                            .invoiceLang)
-                                                        ? ' ${value.invoiceLang[9].name} '
-                                                        : 'Pay Now')),
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
+                                              }
+                                            : () {
+                                                choosePaymentDialog(
+                                                    context: context,
+                                                    model: data ??
+                                                        invoiceModelData
+                                                            .Data());
+                                              },
+                                        child: Container(
+                                            child: data?.pendingBalance !=
+                                                        null &&
+                                                    data?.pendingBalance == 0
+                                                ? RichText(
+                                                    text: TextSpan(
+                                                    children: [
+                                                      TextSpan(
+                                                          text: 'Download',
+                                                          style: TextStyle(
+                                                              fontSize: getHeight(
+                                                                  context:
+                                                                      context,
+                                                                  height: 14))),
+                                                      WidgetSpan(
+                                                        child: Icon(
+                                                            Icons.download,
+                                                            size: _mainHeight *
+                                                                0.018),
+                                                      ),
+                                                    ],
+                                                  ))
+                                                : Text(
+                                                    'Pay Now',
+                                                    style: TextStyle(
+                                                        fontSize: getHeight(
+                                                            context: context,
+                                                            height: 14)),
+                                                  )),
                                       ),
                                     ),
                                   ],
@@ -427,53 +503,41 @@ class _InvoiceState extends State<InvoicePage> {
                             },
                             separatorBuilder: (context, index) {
                               return SizedBox(
-                                height: 15,
+                                height: 25,
                               );
                             },
                             itemCount:
                                 value.invoiceDetailsModel?.data!.length ?? 0),
                       )
-                    : value.invoiceDetailsModel != null &&
-                            value.invoiceDetailsModel?.msg != null &&
-                            value.invoiceDetailsModel?.data == null
+                    : ((value.invoiceDetailsModel != null &&
+                                value.invoiceDetailsModel?.msg != null &&
+                                value.invoiceDetailsModel?.data == null) ||
+                            value.invoiceDetailsModel != null &&
+                                value.invoiceDetailsModel?.msg != null &&
+                                value.invoiceDetailsModel?.data!.length == 0)
                         ? RMSWidgets.noData(
                             context: context,
-                            message:
-                                'Something went Wrong.Invoice Details could not be found.')
+                            message: 'Invoice Details could not be found.')
                         : Center(child: RMSWidgets.getLoader());
               },
             ))
         : RMSWidgets.networkErrorPage(context: context);
   }
-/*TableRow(
-                                              children: [
-                                            Visibility(
-                                                visible:
-                                                    data?.pendingBalance != 0,
-                                                child: Text(
-                                                    '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[9].name : 'Pay Now'} :',
-                                                    style: getKeyStyle)),
-                                            Visibility(
-                                              visible:
-                                                  data?.pendingBalance != 0,
-                                              child: Text(
-                                                  '$rupee ${data?.pendingBalance ?? '0'}',
-                                                  style: getValueStyle),
-                                            ),
-                                            Visibility(
-                                                visible:
-                                                    data?.pendingBalance != 0,
-                                                child: Text(
-                                                    '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[10].name : 'Status'} :',
-                                                    style: getKeyStyle)),
-                                            Visibility(
-                                              visible:
-                                                  data?.pendingBalance != 0,
-                                              child: Text(
-                                                  '${data?.status ?? ''}',
-                                                  style: getValueStyle),
-                                            ),
-                                          ]),*/
+
+  bool futureInvoice({required String fromDate}) {
+    if (fromDate.trim() == '') {
+      return false;
+    }
+    DateTime currentDate = DateTime.now();
+    try {
+      currentDate = DateTime.parse(fromDate);
+    } catch (e) {
+      log(e.toString());
+    }
+    return currentDate.isAfter(
+        DateTime.parse(DateTimeService.ddMMYYYYformatDate(DateTime.now())));
+  }
+
   void choosePaymentDialog(
       {required BuildContext context, required invoiceModelData.Data model}) {
     showDialog(
@@ -489,7 +553,7 @@ class _InvoiceState extends State<InvoicePage> {
                 style: TextStyle(
                     color: CustomTheme.appTheme,
                     fontWeight: FontWeight.w600,
-                    fontSize: 20),
+                    fontSize: getHeight(context: context, height: 20)),
               ),
             ),
             content: Container(
@@ -543,7 +607,9 @@ class _InvoiceState extends State<InvoicePage> {
                       }
                     },
                     child: Neumorphic(
-                      padding: EdgeInsets.only(left: 10, right: 10, top: 5),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: _mainWidth * 0.02,
+                          vertical: _mainHeight * 0.01),
                       style: NeumorphicStyle(
                           depth: 2,
                           color: Colors.white,
@@ -551,8 +617,9 @@ class _InvoiceState extends State<InvoicePage> {
                           shadowLightColor: Colors.blueGrey.shade200),
                       child: Container(
                         width: _mainWidth,
+
                         alignment: Alignment.centerLeft,
-                        height: 50,
+                        // height: 50,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -560,14 +627,16 @@ class _InvoiceState extends State<InvoicePage> {
                               'Pay by Razorpay',
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 16,
+                                  fontSize:
+                                      getHeight(context: context, height: 16),
                                   color: Colors.black87),
                             ),
                             Text(
                               'Extra 3% payment getway charges ',
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 14,
+                                  fontSize:
+                                      getHeight(context: context, height: 14),
                                   color: Colors.grey),
                             ),
                           ],
@@ -599,23 +668,28 @@ class _InvoiceState extends State<InvoicePage> {
                           shadowLightColor: Colors.blueGrey.shade200),
                       child: Container(
                         width: _mainWidth,
-                        padding: EdgeInsets.only(left: 10, right: 10, top: 5),
-                        height: 50,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: _mainWidth * 0.02,
+                            vertical: _mainHeight * 0.005),
+
+                        // height: 60,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
+                          children: [
                             Text(
                               'Pay by Bank / Update Transaction',
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 16,
+                                  fontSize:
+                                      getHeight(context: context, height: 16),
                                   color: Colors.black87),
                             ),
                             Text(
                               'No Convenience fee',
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 14,
+                                  fontSize:
+                                      getHeight(context: context, height: 14),
                                   color: Colors.grey),
                             ),
                           ],
