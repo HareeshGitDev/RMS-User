@@ -28,7 +28,7 @@ class HomeViewModel extends ChangeNotifier {
       {required BuildContext context}) {
     return [
       CitySuggestionModel(
-          cityName: 'Current Location',
+          cityName: 'Near Me',
           imageUrl:
               "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/newbangaloreimage.png?alt=media&token=b665228b-a72c-46f1-8683-0e0a0ce88d11",
           value: "Bengaluru-Karnataka-India"),
@@ -69,7 +69,7 @@ class HomeViewModel extends ChangeNotifier {
         value: "Whitefield-Bengaluru-Karnataka-India",
       ),
       CitySuggestionModel(
-          cityName: 'Old Airport Road',
+          cityName: 'Old Airport',
           imageUrl:
               "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/old_airport_road.png?alt=media&token=3100968f-c852-4363-a805-597f8804c51c",
           value: "old-airport-road-Bengaluru-Karnataka-India"),

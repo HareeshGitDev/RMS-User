@@ -746,7 +746,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  '5 Reasons to choose Rent My Stay',
+                                                  '5 Reasons to choose RentMyStay',
                                                   style: getHeadingStyle,
                                                 ),
                                                 SizedBox(

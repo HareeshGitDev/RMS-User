@@ -50,6 +50,7 @@ class Images {
   static const String callIcon='assets/icons/call_icon.png';
   static const String locationIcon='assets/icons/location_icon.png';
   static const String personIcon='assets/icons/person.png';
+  static const String referEarnImage='assets/images/refer_earn.png';
 
 
 }
