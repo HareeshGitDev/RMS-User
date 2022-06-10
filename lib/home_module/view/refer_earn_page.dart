@@ -3,8 +3,10 @@ import 'dart:developer';
 
 import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
 import 'package:RentMyStay_user/images.dart';
+import 'package:RentMyStay_user/theme/fonts.dart';
 import 'package:RentMyStay_user/utils/constants/app_consts.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../language_module/model/language_model.dart';
 import '../../theme/custom_theme.dart';
@@ -77,6 +80,7 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
     _homeViewModel.getInviteEarnDetails();
+
     getLanguageData();
   }
 
@@ -205,7 +209,7 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                       ),
                                       Container(
                                         alignment: Alignment.center,
-                                        height: 28,
+                                        height: _mainHeight*0.032,
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.20,
@@ -215,7 +219,9 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                             borderRadius:
                                                 BorderRadius.circular(35)),
                                         child: Text(
-                                            '$rupee ${value.referAndEarnModel?.data?.refferalMoney ?? " 0 "}'),
+                                            '$rupee ${value.referAndEarnModel?.data?.refferalMoney ?? " 0 "}',style: TextStyle(
+                                          fontSize: getHeight(context: context, height: 12)
+                                        ),),
                                       )
                                     ],
                                   ),
@@ -226,12 +232,33 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                         ),
                       ),
                       Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage(Images.referEarn),
-                              fit: BoxFit.cover),
+                        width: _mainWidth,
+                        padding: EdgeInsets.only(
+                            left: _mainWidth * 0.03,
+                            right: _mainWidth * 0.03),
+                        child: CachedNetworkImage(
+                          height: _mainHeight * 0.22,
+                          imageUrl: 'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/Screenshot%202022-06-08%20at%2010.50.43%20PM.png?alt=media&token=d0a37d0e-79ec-44ee-8e1e-97296f044d35',
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                          placeholder: (context, url) => Shimmer.fromColors(
+                              child: Container(
+                                height: _mainHeight * 0.22,
+                                decoration: const BoxDecoration(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              baseColor: Colors.grey[200] as Color,
+                              highlightColor: Colors.grey[350] as Color),
+                          errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                         ),
-                        height: _mainHeight * 0.30,
                       ),
                       Container(
                           decoration: BoxDecoration(
@@ -244,38 +271,34 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                     blurRadius: 6,
                                     color: CustomTheme.appTheme),
                               ]),
-                         // margin: EdgeInsets.symmetric(horizontal: 15),
+                         margin: EdgeInsets.symmetric(horizontal: _mainWidth*0.035),
                           height: _mainHeight * 0.28,
                           child: Column(
                             crossAxisAlignment:
                             CrossAxisAlignment.center,
                             children: [
                               Container(
-                                  margin: EdgeInsets.only(top: 10),
+                                  margin: EdgeInsets.only(top: _mainHeight*0.02),
                                   child: Text(
                                     '${nullCheck(list: value.referAndEarnLang) ? value.referAndEarnLang[0].name : 'Your Invite Code'}',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontSize: 12,
+                                        fontSize: getHeight(context: context, height: 12),
                                         color: Colors.black45),
                                   )),
                               Container(
-                                margin: EdgeInsets.only(top: 5),
+                                margin: EdgeInsets.only(top: _mainHeight*0.01),
                                 child: Row(
                                   mainAxisAlignment:
                                   MainAxisAlignment.center,
                                   children: [
-                                    Padding(
-                                      padding:
-                                      const EdgeInsets.all(6.0),
-                                      child: Text(
-                                          value.referAndEarnModel?.data
-                                              ?.refferalCode ??
-                                              " ",
-                                          textAlign: TextAlign.center,
-                                          style:
-                                          TextStyle(fontSize: 20)),
-                                    ),
+                                    Text(
+                                        value.referAndEarnModel?.data
+                                            ?.refferalCode ??
+                                            " ",
+                                        textAlign: TextAlign.center,
+                                        style:
+                                        TextStyle(fontSize: getHeight(context: context, height: 20))),
                                     value.referAndEarnModel?.data
                                         ?.refferalCode !=
                                         null
@@ -294,20 +317,24 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                             color:
                                             Colors.black12);
                                       },
-                                      child: Padding(
-                                        padding:
-                                        const EdgeInsets.all(
-                                            6.0),
+                                      child: Container(
+                                       
+                                        decoration: BoxDecoration(
+                                          color: CustomTheme.myFavColor,
+                                          borderRadius: BorderRadius.circular(5)
+                                        ),
+                                        padding: EdgeInsets.only(left: _mainWidth*0.01,right: _mainWidth*0.01,top: _mainHeight*0.0025,bottom: _mainHeight*0.0025),
+                                        margin: EdgeInsets.only(left: _mainWidth*0.02),
+                                        alignment: Alignment.center,
                                         child: Text(
                                           "COPY",
                                           textAlign:
                                           TextAlign.center,
                                           style: TextStyle(
-                                              backgroundColor:
-                                              CustomTheme
-                                                  .appThemeContrast
-                                                  .withAlpha(
-                                                  60)),
+                                            color: Colors.white,
+                                            fontSize: getHeight(context: context, height:12)
+
+                                          ),
                                         ),
                                       ),
                                     )
@@ -315,23 +342,31 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                   ],
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(16),
+                              Container(
+                                padding: EdgeInsets.only(
+                                  left: _mainWidth*0.04,
+                                  right: _mainWidth*0.04,
+                                  top: _mainHeight*0.02,
+                                  bottom: _mainHeight*0.02,
+                                ),
                                 child: Text(
                                   '${nullCheck(list: value.referAndEarnLang) ? value.referAndEarnLang[1].name : 'Invite Your Friend and Get 1000 to your account once he/she books a flats using your Invite Code.'}',
                                   textAlign: TextAlign.center,
                                 ),
                               ),
+                              Spacer(),
                               Container(
                                 alignment: Alignment.center,
-                                margin: EdgeInsets.only(
-                                    left: 15, right: 15, bottom: 1),
+                                padding: EdgeInsets.only(
+                                  left: _mainWidth*0.04,
+                                  right: _mainWidth*0.04,
+                                ),
                                 height: _mainHeight * 0.08,
                                 width:
                                 MediaQuery.of(context).size.width,
                                 child: Neumorphic(
                                     style: NeumorphicStyle(
-                                      color: Colors.green,
+                                      color: CustomTheme.myFavColor,
                                     ),
                                     child: TextButton(
                                       onPressed: () async {
@@ -348,12 +383,18 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
                                           Icon(
                                             Icons.share_outlined,
                                             color: Colors.white,
+                                            size: _mainWidth*0.05,
+                                          ),
+                                          SizedBox(
+                                            width: _mainWidth*0.02,
                                           ),
                                           Text(
                                             '${nullCheck(list: value.referAndEarnLang) ? value.referAndEarnLang[2].name : 'Invite Your Friends'}',
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
-                                                color: Colors.white),
+                                                color: Colors.white,
+                                            fontSize: getHeight(context: context, height: 16)
+                                            ),
                                           )
                                         ],
                                       ),

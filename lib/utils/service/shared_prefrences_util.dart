@@ -15,8 +15,18 @@ class SharedPreferenceUtil {
   Future<bool> setString(String key, String value) async {
     final prefs = await SharedPreferences.getInstance();
     log('$key $value');
+
     return prefs.setString(key, value);
   }
+  Future<bool> setStringList(String key, List<String> list) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.setStringList(key, list);
+  }
+  Future<List<String>?> getStringList(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList(key);
+  }
+
   Future<bool> setBool(String key, bool value) async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.setBool(key, value);

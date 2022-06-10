@@ -499,7 +499,7 @@ class _WishListPageState extends State<WishListPage> {
                                                   right: _mainWidth * 0.02),
                                               decoration: BoxDecoration(
                                                   color: CustomTheme
-                                                      .appThemeContrast,
+                                                      .highlightColor,
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           5)),
@@ -548,9 +548,9 @@ class _WishListPageState extends State<WishListPage> {
                                                                   data.propId ??
                                                                       '');
                                                   if (response == 200) {
-                                                    setState(() {
-                                                      data.wishlist = 0;
-                                                    });
+                                                    RMSWidgets.showLoaderDialog(context: context, message:'Loading');
+                                                    await _propertyViewModel.getWishList();
+                                                    Navigator.of(context).pop();
                                                     RMSWidgets.showSnackbar(
                                                         context: context,
                                                         message:
@@ -607,7 +607,7 @@ class _WishListPageState extends State<WishListPage> {
                                                 right: _mainWidth * 0.02),
                                             decoration: BoxDecoration(
                                                 color: CustomTheme
-                                                    .appThemeContrast,
+                                                    .highlightColor,
                                                 borderRadius:
                                                     BorderRadius.circular(
                                                         5)),

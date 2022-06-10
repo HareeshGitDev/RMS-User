@@ -57,6 +57,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
   late PropertyViewModel _propertyViewModel;
   static const String fontFamily = 'hk-grotest';
   String sortOrder = '0';
+
   final List<bool> _sortKeys = [
     false,
     false,
@@ -534,7 +535,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                             _mainWidth * 0.02),
                                                     decoration: BoxDecoration(
                                                         color: CustomTheme
-                                                            .appThemeContrast,
+                                                            .highlightColor,
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(5)),
@@ -646,7 +647,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                       right: _mainWidth * 0.02),
                                                   decoration: BoxDecoration(
                                                       color: CustomTheme
-                                                          .appThemeContrast,
+                                                          .highlightColor,
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               5)),
@@ -690,7 +691,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                               0.02),
                                                       decoration: BoxDecoration(
                                                           color: CustomTheme
-                                                              .appThemeContrast,
+                                                              .highlightColor,
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(5)),
@@ -902,11 +903,15 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                       color: Colors.black,
                     ),
                     onPressed: () async {
-                      _searchController.clear();
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      setState(() {
-                        showSearchResults = false;
-                      });
+                      if (showSearchResults == false) {
+                        _searchController.clear();
+                        FocusScope.of(context)
+                            .requestFocus(FocusNode());
+                      } else {
+                        setState(() {
+                          showSearchResults = false;
+                        });
+                      }
                     },
                   )),
             ),
@@ -1172,7 +1177,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                 )),
                             onPressed: () async {
                               RMSWidgets.showLoaderDialog(
-                                  context: context, message: 'Loading...');
+                                  context: context, message: 'Loading');
                               FilterSortRequestModel model =
                                   FilterSortRequestModel(
                                 sortOrder: sortOrder,
@@ -1667,7 +1672,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
         intensity: 5,
         depth: 2,
       ),
-      child: Container(
+      child:value.locations.isNotEmpty? Container(
           padding: EdgeInsets.only(top: 10),
           child: ListView.separated(
             padding: EdgeInsets.zero,
@@ -1726,7 +1731,17 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
             separatorBuilder: (context, index) => const Divider(
               thickness: 1,
             ),
-          )),
+          )):Center(
+        child: Text(
+          'No any suggestion found !',
+          style: TextStyle(
+              fontSize: getHeight(
+                context: context,
+                height: 16,
+              ),
+              color: CustomTheme.appTheme),
+        ),
+      ),
     );
   }
 

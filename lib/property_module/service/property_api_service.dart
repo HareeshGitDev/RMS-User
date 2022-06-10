@@ -7,6 +7,7 @@ import 'package:RentMyStay_user/property_module/model/wish_list_model.dart';
 import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 
+import '../../home_module/model/home_page_model.dart';
 import '../../utils/constants/api_urls.dart';
 import '../../utils/constants/enum_consts.dart';
 import '../../utils/service/rms_user_api_service.dart';
@@ -54,7 +55,20 @@ class PropertyApiService {
       return PropertyListModel.fromJson(data);
     }
   }
+  Future<HomePageModel> fetchHomePageData() async {
+    String url = AppUrls.homePageUrl;
+    final response = await _apiService.getApiCall(endPoint: url);
+    final data = response as Map<String, dynamic>;
 
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
+      return HomePageModel(
+        msg: 'failure',
+      );
+    } else {
+      return HomePageModel.fromJson(data);
+
+    }
+  }
   Future<int> addToWishList({required String propertyId}) async {
     String url = AppUrls.addWishListPropertyUrl;
     final response = await _apiService.postApiCall(endPoint: url, bodyParams: {

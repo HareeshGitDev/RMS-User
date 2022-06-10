@@ -32,6 +32,7 @@ import 'package:RentMyStay_user/property_details_module/viewModel/property_detai
 import 'package:RentMyStay_user/property_module/view/property_listing_page.dart';
 import 'package:RentMyStay_user/property_module/view/wish_list_page.dart';
 import 'package:RentMyStay_user/property_module/viewModel/property_viewModel.dart';
+import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
 import 'package:RentMyStay_user/utils/service/picture_screen.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -295,12 +296,13 @@ class NavigationService {
         );
       case AppRoutes.searchPage:
         final data = settings.arguments as Map<String, dynamic>;
-        bool fromBottom = data['fromBottom'];
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
               create: (_) => PropertyViewModel(),
               child: SearchPage(
-                fromBottom: fromBottom,
+                fromBottom: data['fromBottom'],
+
+
               )),
         );
       case AppRoutes.dashboardPage:

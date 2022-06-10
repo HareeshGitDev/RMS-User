@@ -37,7 +37,6 @@ class PropertyDetailsViewModel extends ChangeNotifier {
     final response =
         await _detailsApiService.fetchPropertyDetails(propId: propId);
     propertyDetailsModel = response;
-
     if (propertyDetailsModel != null &&
         propertyDetailsModel?.data != null &&
         propertyDetailsModel?.data?.amenities != null) {
@@ -47,7 +46,10 @@ class PropertyDetailsViewModel extends ChangeNotifier {
     if (propertyDetailsModel != null &&
         propertyDetailsModel?.data != null &&
         propertyDetailsModel?.data?.details != null &&
-        propertyDetailsModel?.data?.details?.videoLink != null) {
+        propertyDetailsModel?.data?.details?.videoLink != null &&
+        propertyDetailsModel?.data?.details?.videoLink?.trim() != ''
+    ) {
+
       youTubeController = YoutubePlayerController(
         initialVideoId:
             (propertyDetailsModel?.data?.details?.videoLink).toString(),

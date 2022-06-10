@@ -64,11 +64,11 @@ class RMSWidgets {
     );
   }
 
-  static void getToast({required String message, required Color color}) {
+  static void getToast({required String message, required Color color,bool? center}) {
     Fluttertoast.showToast(
         msg: message,
         toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
+        gravity: center != null && center ?ToastGravity.CENTER:ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
         backgroundColor: color,
         textColor: Colors.white,

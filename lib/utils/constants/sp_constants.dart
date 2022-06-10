@@ -10,3 +10,6 @@ const String rms_user_latitude='userLatitude';
 const String rms_checkInDate='checkInDate';
 const String rms_checkOutDate='checkOutDate';
 const String rms_language='language';
+const String search_key1='search_key1';
+const String search_key2='search_key2';
+const String search_key3='search_key3';

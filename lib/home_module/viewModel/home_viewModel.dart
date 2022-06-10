@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:RentMyStay_user/home_module/model/home_page_model.dart';
 import 'package:RentMyStay_user/home_module/model/invite_and_earn_model.dart';
 import 'package:RentMyStay_user/home_module/model/popular_model.dart';
 import 'package:RentMyStay_user/images.dart';
@@ -18,6 +19,7 @@ class HomeViewModel extends ChangeNotifier {
   List<LanguageModel> languageData = [];
   List<LanguageModel> referAndEarnLang = [];
   bool ownerModeSelected=true;
+  HomePageModel homePageModel=HomePageModel();
 
   void switchMode({required bool ownerMode}){
     ownerModeSelected=ownerMode;
@@ -76,34 +78,7 @@ class HomeViewModel extends ChangeNotifier {
     ];
   }
 
-  List<PopularPropertyModel> getPopularPropertyModelList() {
-    return [
-      PopularPropertyModel(
-        imageUrl: Images.onebhk_img,
-        propertyDesc:
-            'BTM Layout, Hoodi, HSR Layout,\nKoramangala, Kudlu gate,\nKundanahali, Marathahalli',
-        propertyType: '1BHK',
-        hint: 'More',
-        callback: log,
-      ),
-      PopularPropertyModel(
-        imageUrl: Images.twobhk_img,
-        propertyDesc:
-            'BTM Layout, Hoodi, HSR Layout,\nKoramangala, Kudlu gate,\nKundanahali, Marathahalli',
-        propertyType: '2BHK',
-        hint: 'More',
-        callback: log,
-      ),
-      PopularPropertyModel(
-        imageUrl: Images.studio_img,
-        propertyDesc:
-            'BTM Layout, Hoodi, HSR Layout,\nKoramangala, Kudlu gate,\nKundanahali, Marathahalli',
-        propertyType: 'Studio',
-        hint: 'More',
-        callback: log,
-      ),
-    ];
-  }
+
 
   List<String> getAdsImageList() => [
         'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/WhatsApp%20Image%202022-02-14%20at%2012.01.05%20PM.jpeg?alt=media&token=153f6374-979f-46ad-aaf3-06f9ff1d0b20',
@@ -116,6 +91,17 @@ class HomeViewModel extends ChangeNotifier {
         await _homeApiService.fetchInviteEarnDetails();
     referAndEarnModel = response;
     notifyListeners();
+  }
+  Future<int> addToWishlist({
+    required String propertyId,
+  }) async =>
+      await _homeApiService.addToWishList(propertyId: propertyId);
+
+  Future<void> getHomePageData() async {
+    final response =
+    await _homeApiService.fetchHomePageData();
+    homePageModel = response;
+   notifyListeners();
   }
 
   Future<void> getLanguagesData(

@@ -35,4 +35,5 @@ class AppUrls {
   static const String uploadPropertyPhotosUrl = '/v2/PropPic';
   static const String hostPropertyUrl = '/v2/host';
   static const String fcmTokenUrl = '/v2/androidToken';
+  static const String homePageUrl = '/v2/home';
 }

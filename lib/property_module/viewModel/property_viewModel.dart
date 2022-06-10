@@ -6,6 +6,9 @@ import 'package:RentMyStay_user/property_module/service/property_api_service.dar
 import 'package:RentMyStay_user/utils/constants/app_consts.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../../home_module/model/home_page_model.dart';
+import '../../home_module/model/popular_model.dart';
+import '../../images.dart';
 import '../../language_module/service/language_api_service.dart';
 import '../../utils/constants/enum_consts.dart';
 import '../../language_module/model/language_model.dart';
@@ -22,6 +25,7 @@ class PropertyViewModel extends ChangeNotifier {
   List<LanguageModel> searchPageLang = [];
   List<LanguageModel> wishListLang = [];
   List<LanguageModel> propertyListingLang = [];
+  HomePageModel homePageModel=HomePageModel();
 
   Future<void> getPropertyDetailsList({
     required String address,
@@ -41,6 +45,40 @@ class PropertyViewModel extends ChangeNotifier {
     propertyListModel = data;
     log('ALL PROPERTIES :: ${propertyListModel.data?.length}');
     notifyListeners();
+  }
+  Future<void> getHomePageData() async {
+    final response =
+    await _propertyApiService.fetchHomePageData();
+    homePageModel = response;
+    notifyListeners();
+  }
+  List<PopularPropertyModel> getPopularPropertyModelList() {
+    return [
+      PopularPropertyModel(
+        imageUrl: Images.onebhk_img,
+        propertyDesc:
+        'BTM Layout, Hoodi, HSR Layout,\nKoramangala, Kudlu gate,\nKundanahali, Marathahalli',
+        propertyType: '1BHK',
+        hint: 'More',
+        callback: log,
+      ),
+      PopularPropertyModel(
+        imageUrl: Images.twobhk_img,
+        propertyDesc:
+        'BTM Layout, Hoodi, HSR Layout,\nKoramangala, Kudlu gate,\nKundanahali, Marathahalli',
+        propertyType: '2BHK',
+        hint: 'More',
+        callback: log,
+      ),
+      PopularPropertyModel(
+        imageUrl: Images.studio_img,
+        propertyDesc:
+        'BTM Layout, Hoodi, HSR Layout,\nKoramangala, Kudlu gate,\nKundanahali, Marathahalli',
+        propertyType: 'Studio',
+        hint: 'More',
+        callback: log,
+      ),
+    ];
   }
 
   Future<int> addToWishlist({
@@ -70,6 +108,9 @@ class PropertyViewModel extends ChangeNotifier {
               location: '${suggestion['description']}',
               placeId: '${suggestion['place_id']} '))
           .toList();
+      notifyListeners();
+    }else if(data['status'] == 'ZERO_RESULTS'){
+      locations=[];
       notifyListeners();
     }
   }

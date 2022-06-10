@@ -398,7 +398,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                                     ?.details
                                                                     ?.title !=
                                                                 null
-                                                        ? '${(value.propertyDetailsModel?.data?.details?.title).toString().trim()} (${value.propertyDetailsModel?.data?.details?.propId ?? ''})'
+                                                        ? '${(value.propertyDetailsModel?.data?.details?.title).toString().trim()}'
                                                         : '',
                                                     style: TextStyle(
                                                         color: Colors.black,
@@ -425,33 +425,38 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                               ],
                                             ),
                                           ),
-                                          /* SizedBox(
+                                           SizedBox(
                                     height: _mainHeight * 0.005,
                                   ),
-                                  Container(
-                                    padding: EdgeInsets.only(
-                                      left: _mainWidth * 0.03,
-                                      //right: _mainWidth * 0.03,
-                                    ),
-                                    child: Text(
-                                      value.propertyDetailsModel?.data?.details !=
-                                                  null &&
+                                          Container(
+                                            width: _mainWidth * 0.9,
+                                            padding: getHeadingPadding,
+                                            child: Text(
                                               value.propertyDetailsModel?.data
-                                                      ?.details?.propId !=
-                                                  null
-                                          ? 'PropId : ${(value.propertyDetailsModel?.data?.details?.propId)}'
-                                              .toString()
-                                          : '',
-                                      style: TextStyle(
-                                          color: Colors.black54,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),*/
+                                                  ?.details !=
+                                                  null &&
+                                                  value
+                                                      .propertyDetailsModel
+                                                      ?.data
+                                                      ?.details
+                                                      ?.title !=
+                                                      null
+                                                  ? '${(value.propertyDetailsModel?.data?.details?.bname).toString().trim()} (Prop Id :  ${value.propertyDetailsModel?.data?.details?.propId ?? ''})'
+                                                  : '',
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: getHeight(
+                                                      context: context,
+                                                      height: 12),
+                                                  fontWeight:
+                                                  FontWeight.w500),
+                                              maxLines: 1,
+                                              overflow:
+                                              TextOverflow.ellipsis,
+                                            ),
+                                          ),
                                           SizedBox(
-                                            height: _mainHeight * 0.01,
+                                            height: _mainHeight * 0.015,
                                           ),
                                           Padding(
                                             padding: getHeadingPadding,
@@ -1114,66 +1119,79 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                       Positioned(
                                         top: _mainHeight * 0.27,
                                         right: _mainWidth * 0.02,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          // width: _mainWidth*0.27,
-                                          padding: EdgeInsets.only(
-                                              left: _mainWidth * 0.03),
-                                          child: GestureDetector(
-                                              onTap: () async {
-                                                if (value.propertyDetailsModel
-                                                            ?.data?.details !=
-                                                        null &&
-                                                    value
-                                                            .propertyDetailsModel
-                                                            ?.data
-                                                            ?.details
-                                                            ?.pic !=
-                                                        null) {
-                                                  Navigator.of(context).pushNamed(
-                                                      AppRoutes
-                                                          .propertyGalleryPage,
-                                                      arguments: {
-                                                        'fromVideo': true,
-                                                        'videoLink': value
-                                                            .propertyDetailsModel
-                                                            ?.data
-                                                            ?.details
-                                                            ?.videoLink,
-                                                        'imageList': value
-                                                            .propertyDetailsModel
-                                                            ?.data
-                                                            ?.details
-                                                            ?.pic,
-                                                      });
-                                                }
-                                              },
-                                              child: Row(
-                                                children: [
-                                                  Text(
-                                                    'Video Tour',
-                                                    style: TextStyle(
-                                                        color: CustomTheme
-                                                            .appThemeContrast,
-                                                        fontFamily:
-                                                            getThemeFont,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontSize: getHeight(
-                                                            context: context,
-                                                            height: 12)),
-                                                  ),
-                                                  Icon(
-                                                    Icons.play_arrow,
-                                                    color: CustomTheme
-                                                        .appThemeContrast,
-                                                    size: _mainHeight * 0.025,
-                                                  )
-                                                ],
-                                              )),
+                                        child: Visibility(
+                                          visible: value.propertyDetailsModel
+                                              ?.data?.details !=
+                                              null && value
+                                              .propertyDetailsModel
+                                              ?.data
+                                              ?.details
+                                              ?.videoLink != null && value
+                                              .propertyDetailsModel
+                                              ?.data
+                                              ?.details
+                                              ?.videoLink?.trim() != '',
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            // width: _mainWidth*0.27,
+                                            padding: EdgeInsets.only(
+                                                left: _mainWidth * 0.03),
+                                            child: GestureDetector(
+                                                onTap: () async {
+                                                  if (value.propertyDetailsModel
+                                                              ?.data?.details !=
+                                                          null &&
+                                                      value
+                                                              .propertyDetailsModel
+                                                              ?.data
+                                                              ?.details
+                                                              ?.pic !=
+                                                          null) {
+                                                    Navigator.of(context).pushNamed(
+                                                        AppRoutes
+                                                            .propertyGalleryPage,
+                                                        arguments: {
+                                                          'fromVideo': true,
+                                                          'videoLink': value
+                                                              .propertyDetailsModel
+                                                              ?.data
+                                                              ?.details
+                                                              ?.videoLink,
+                                                          'imageList': value
+                                                              .propertyDetailsModel
+                                                              ?.data
+                                                              ?.details
+                                                              ?.pic,
+                                                        });
+                                                  }
+                                                },
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      'Video Tour',
+                                                      style: TextStyle(
+                                                          color: CustomTheme
+                                                              .appThemeContrast,
+                                                          fontFamily:
+                                                              getThemeFont,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: getHeight(
+                                                              context: context,
+                                                              height: 12)),
+                                                    ),
+                                                    Icon(
+                                                      Icons.play_arrow,
+                                                      color: CustomTheme
+                                                          .appThemeContrast,
+                                                      size: _mainHeight * 0.025,
+                                                    )
+                                                  ],
+                                                )),
+                                          ),
                                         ),
                                       ),
                                       Positioned(
@@ -1778,9 +1796,9 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                 Card(
                   elevation: 2,
                   child: Container(
-                      // height: _mainHeight * 0.2,
                       width: _mainWidth * 0.42,
                       decoration: BoxDecoration(
+
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Column(
@@ -1892,7 +1910,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                 top: _mainHeight * 0.003),
                                             child: FittedBox(
                                               child: Text(
-                                                data.orgRent != null
+                                                data.orgMonthRent != null
                                                     ? rupee +
                                                         '${data.orgMonthRent}'
                                                     : '',

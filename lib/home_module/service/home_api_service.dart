@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:RentMyStay_user/home_module/model/home_page_model.dart';
 import 'package:RentMyStay_user/home_module/model/invite_and_earn_model.dart';
 import 'package:RentMyStay_user/language_module/model/language_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -35,6 +37,30 @@ class HomeApiService {
       );
     } else {
       return ReferAndEarnModel.fromJson(data);
+
+    }
+  }
+  Future<int> addToWishList({required String propertyId}) async {
+    String url = AppUrls.addWishListPropertyUrl;
+    final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
+      'prop_id': base64Encode(utf8.encode(propertyId)),
+    });
+
+    final data = response as Map<String, dynamic>;
+
+    return data['msg'].toString().toLowerCase().contains('failure') ? 404 : 200;
+  }
+  Future<HomePageModel> fetchHomePageData() async {
+    String url = AppUrls.homePageUrl;
+    final response = await _apiService.getApiCall(endPoint: url);
+    final data = response as Map<String, dynamic>;
+
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
+      return HomePageModel(
+        msg: 'failure',
+      );
+    } else {
+      return HomePageModel.fromJson(data);
 
     }
   }

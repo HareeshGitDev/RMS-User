@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:RentMyStay_user/property_details_module/viewModel/property_details_viewModel.dart';
+import 'package:RentMyStay_user/theme/fonts.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
@@ -112,15 +113,16 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
               borderRadius: BorderRadius.circular(15),
             ),
             child: Container(
+              width: _mainWidth,
               padding: EdgeInsets.all(_mainHeight * 0.015),
               child: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    const Center(
+                    Center(
                       child: Text(
                         "SCHEDULE SITE VISIT",
                         style: TextStyle(
-                            fontSize: 18,
+                            fontSize: getHeight(context: context, height: 18),
                             color: Colors.black,
                             fontWeight: FontWeight.w600),
                       ),
@@ -143,7 +145,7 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                                         ? Colors.white
                                         : Colors.black,
                                     fontWeight: FontWeight.w600,
-                                    fontSize: 14),
+                                    fontSize: getHeight(context: context, height: 14)),
                               ),
                             ),
                             elevation: 2,
@@ -171,7 +173,7 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                                         ? Colors.white
                                         : Colors.black,
                                     fontWeight: FontWeight.w600,
-                                    fontSize: 14),
+                                    fontSize: getHeight(context: context, height: 14)),
                               ),
                             ),
                             elevation: 2,
@@ -210,13 +212,13 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                             border: InputBorder.none,
                             hintText: "Name",
                             prefixIcon: Icon(Icons.person_outline,
-                                color: Colors.grey, size: 20),
+                                color: Colors.grey, size: _mainHeight*0.022),
                           ),
                         ),
                       ),
                     ),
                     SizedBox(
-                      height: _mainHeight * 0.02,
+                      height: _mainHeight * 0.01,
                     ),
                     Container(
                       alignment: Alignment.centerLeft,
@@ -238,13 +240,13 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                             border: InputBorder.none,
                             hintText: "E-mail",
                             prefixIcon: Icon(Icons.email_outlined,
-                                color: Colors.grey, size: 20),
+                                color: Colors.grey,  size: _mainHeight*0.022),
                           ),
                         ),
                       ),
                     ),
                     SizedBox(
-                      height: _mainHeight * 0.02,
+                      height: _mainHeight * 0.01,
                     ),
                     Container(
                       alignment: Alignment.centerLeft,
@@ -265,93 +267,105 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                             border: InputBorder.none,
                             hintText: "Phone Number",
                             prefixIcon: Icon(Icons.phone_android_outlined,
-                                color: Colors.grey, size: 20),
+                                color: Colors.grey,  size: _mainHeight*0.022),
                           ),
                         ),
                       ),
                     ),
                     SizedBox(
-                      height: _mainHeight * 0.02,
+                      height: _mainHeight * 0.01,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Neumorphic(
-                          style: NeumorphicStyle(
-                            depth: -2,
-                            color: Colors.white,
-                          ),
-                          child: GestureDetector(
-                            onTap: () async {
-                              DateTime? _date = await _pickDate(context);
-                              if (_date != null) {
-                                selectedDate = _date;
-                                setState(() {
-                                  showDate = yyyyMMDDformatDate(selectedDate);
-                                });
-                              }
-                            },
-                            child: Container(
-                              padding: EdgeInsets.only(
-                                  left: _mainWidth * 0.04,
-                                  right: _mainWidth * 0.04),
-                              color: Colors.white,
-                              height: _mainHeight * 0.060,
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.calendar_today_sharp,
-                                    color: Colors.grey,
-                                    size: 20,
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(showDate),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
+                    Neumorphic(
+                      style: NeumorphicStyle(
+                        depth: -2,
+                        color: Colors.white,
+                      ),
+                      child: GestureDetector(
+                        onTap: () async {
+                          DateTime? _date = await _pickDate(context);
+                          if (_date != null) {
+                            selectedDate = _date;
+                            setState(() {
+                              showDate = yyyyMMDDformatDate(selectedDate);
+                            });
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              left: _mainWidth * 0.04,
+                              right: _mainWidth * 0.04),
+                          color: Colors.white,
+
                           height: _mainHeight * 0.060,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            color: Colors.white,
-                          ),
-                          child: Neumorphic(
-                            style: NeumorphicStyle(
-                              depth: -2,
-                              color: Colors.white,
-                            ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                icon: Container(),
-                                menuMaxHeight: _mainHeight * 0.8,
-                                items: getTimeList
-                                    .map((type) => DropdownMenuItem(
-                                          child: Container(
-                                            padding: EdgeInsets.only(
-                                                left: _mainWidth * 0.04,
-                                                right: _mainWidth * 0.04),
-                                            alignment: Alignment.center,
-                                            child: Text(type),
-                                          ),
-                                          value: type,
-                                        ))
-                                    .toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    typeValue = value.toString();
-                                  });
-                                },
-                                value: typeValue,
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.calendar_today_sharp,
+                                color: Colors.grey,
+                                size: _mainHeight*0.022,
+
                               ),
-                            ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(showDate),
+                            ],
                           ),
                         ),
-                      ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: _mainHeight * 0.01,
+                    ),
+                    Container(
+                      height: _mainHeight * 0.060,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        color: Colors.white,
+                      ),
+                      child: Neumorphic(
+                        style: NeumorphicStyle(
+                          depth: -2,
+                          color: Colors.white,
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            menuMaxHeight: _mainHeight * 0.8,
+                            items: getTimeList
+                                .map((type) => DropdownMenuItem(
+                              child: Container(
+                                padding: EdgeInsets.only(
+                                    left: _mainWidth * 0.04,
+                                    right: _mainWidth * 0.04),
+                                alignment: Alignment.center,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.alarm,
+                                      color: Colors.grey,
+                                      size: _mainHeight*0.022,
+
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(type),
+                                  ],
+                                ),
+                              ),
+                              value: type,
+                            ))
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                typeValue = value.toString();
+                              });
+                            },
+                            value: typeValue,
+                          ),
+                        ),
+                      ),
                     ),
                     SizedBox(
                       height: _mainHeight * 0.02,

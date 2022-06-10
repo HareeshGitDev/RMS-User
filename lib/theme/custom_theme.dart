@@ -29,6 +29,7 @@ class CustomTheme {
   static final Color green = Color(0xff068425);
   static final Color yellow = Color(0xfffff44f);
   static final Color orange = Color(0xffFFA500);
+  static const Color highlightColor= Color(0XFFDC9D3D);
 
   final Color card,
       cardDark,

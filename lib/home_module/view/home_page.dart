@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
+import 'package:RentMyStay_user/home_module/model/home_page_model.dart';
 import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
 import 'package:RentMyStay_user/login_module/service/google_auth_service.dart';
 import 'package:RentMyStay_user/property_details_module/viewModel/property_details_viewModel.dart';
@@ -11,6 +12,7 @@ import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
 import 'package:RentMyStay_user/utils/service/date_time_service.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
+import 'package:RentMyStay_user/utils/view/shimmers_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -102,6 +104,7 @@ class _HomePageState extends State<HomePage> {
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
+    _homeViewModel.getHomePageData();
     userDetails = getSharedPreferencesValues();
     preferenceUtil.getToken().then((value) => token = value ?? '');
     getExplorePropertiesList();
@@ -151,10 +154,18 @@ class _HomePageState extends State<HomePage> {
                   bottom: PreferredSize(
                     preferredSize: Size(20, 50),
                     child: GestureDetector(
-                      onTap: () => Navigator.of(context)
-                          .pushNamed(AppRoutes.searchPage, arguments: {
-                        'fromBottom': false,
-                      }),
+                      onTap: () async {
+                        Navigator.of(context)
+                            .pushNamed(AppRoutes.searchPage, arguments: {
+                          'fromBottom': false,
+                          search_key1:
+                              await preferenceUtil.getString(search_key1) ?? '',
+                          search_key2:
+                              await preferenceUtil.getString(search_key2) ?? '',
+                          search_key3:
+                              await preferenceUtil.getString(search_key3) ?? '',
+                        });
+                      },
                       child: Container(
                         height: _mainHeight * 0.05,
                         padding: EdgeInsets.only(
@@ -320,54 +331,113 @@ class _HomePageState extends State<HomePage> {
                                 viewportFraction: 0.8),
                           ),
                           SizedBox(
-                            height: _mainHeight * 0.03,
+                            height: _mainHeight * 0.02,
                           ),
                           Container(
                             width: _mainWidth,
-                            margin: EdgeInsets.only(
-                                left: _mainWidth * 0.035,
-                                right: _mainWidth * 0.035),
                             padding: EdgeInsets.only(
-                                left: _mainWidth * 0.035,
-                                right: _mainWidth * 0.035),
-                            height: _mainHeight * 0.055,
-                            decoration: BoxDecoration(
-                                color: CustomTheme.appThemeContrast,
-                                borderRadius: BorderRadius.circular(10)),
+                              left: _mainWidth * 0.035,
+                              right: _mainWidth * 0.035,
+                            ),
                             child: Row(
                               children: [
                                 Text(
-                                  'Book your first RentMyStay ',
+                                  '${nullCheck(list: value.languageData) ? value.languageData[17].name : 'Trending'}',
                                   style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: getHeight(
-                                          context: context, height: 14)),
+                                      color: CustomTheme.appTheme,
+                                      fontSize:
+                                          getHeight(context: context, height: 16),
+                                      fontWeight: FontWeight.w500),
                                 ),
                                 Spacer(),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Colors.white,
-                                )
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(
+                                        AppRoutes.propertyListingPage,
+                                        arguments: {
+                                          'location': 'Bengaluru-Karnataka-India',
+                                          'property': Property.fromLocation,
+                                        });
+                                  },
+                                  child: Text(
+                                    '${nullCheck(list: value.languageData) ? value.languageData[24].name : 'See All'}',
+                                    style: TextStyle(
+                                        color: CustomTheme.appThemeContrast,
+                                        fontSize:
+                                        getHeight(context: context, height: 14),
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
-
-
+                          SizedBox(
+                            height: _mainHeight * 0.01,
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(
+                              left: _mainWidth * 0.035,
+                              right: _mainWidth * 0.035,
+                            ),
+                            child: _getTrendingProperties(
+                                context: context, model: value),
+                          ),
+                          SizedBox(
+                            height: _mainHeight * 0.03,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.of(context).pushNamed(
+                                  AppRoutes.propertyListingPage,
+                                  arguments: {
+                                    'location': 'Bengaluru-Karnataka-India',
+                                    'property': Property.fromLocation,
+                                  });
+                            },
+                            child: Container(
+                              width: _mainWidth,
+                              margin: EdgeInsets.only(
+                                  left: _mainWidth * 0.035,
+                                  right: _mainWidth * 0.035),
+                              padding: EdgeInsets.only(
+                                  left: _mainWidth * 0.035,
+                                  right: _mainWidth * 0.035),
+                              height: _mainHeight * 0.055,
+                              decoration: BoxDecoration(
+                                  color: CustomTheme.appThemeContrast,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '${nullCheck(list: value.languageData) ? value.languageData[15].name : 'Book your first RentMyStay '}',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: getHeight(
+                                            context: context, height: 14)),
+                                  ),
+                                  Spacer(),
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    color: Colors.white,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
                           SizedBox(
                             height: _mainHeight * 0.03,
                           ),
                           Container(
                             padding: EdgeInsets.only(
                               left: _mainWidth * 0.035,
-
                             ),
                             child: Text(
-                              'Explore Your Wanderlust',
+                              '${nullCheck(list: value.languageData) ? value.languageData[14].name : 'Explore Your Wanderlust'}',
                               style: TextStyle(
                                   color: CustomTheme.appTheme,
-                                  fontSize: getHeight(
-                                      context: context, height: 16),
+                                  fontSize:
+                                      getHeight(context: context, height: 16),
                                   fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -375,131 +445,11 @@ class _HomePageState extends State<HomePage> {
                             height: _mainHeight * 0.01,
                           ),
                           exploreProperties(context: context, viewModel: value),
-                          Padding(
-                            padding: EdgeInsets.only(left: _mainWidth * 0.035),
-                            child: Text(
-                              '${nullCheck(list: value.languageData) ? value.languageData[1].name : "Popular"}',
-                              style: TextStyle(
-                                  color: CustomTheme.appTheme,
-                                  fontSize: getHeight(
-                                      context: context, height: 16),
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ),
                           SizedBox(
                             height: _mainHeight * 0.005,
                           ),
                           Container(
-                            padding: EdgeInsets.only(left:_mainWidth * 0.035 ,right: _mainWidth * 0.035),
-                            child: LimitedBox(
-
-                                maxHeight: _mainHeight * 0.25,
-                                maxWidth: MediaQuery.of(context).size.width,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder: (context, index) {
-                                    var data = _homeViewModel
-                                        .getPopularPropertyModelList()[index];
-                                    return InkWell(
-                                      onTap: () => Navigator.of(context)
-                                          .pushNamed(
-                                              AppRoutes.propertyListingPage,
-                                              arguments: {
-                                            'location':
-                                                'Bengaluru-Karnataka-India',
-                                            'propertyType': data.propertyType,
-                                            'property': Property.fromBHK,
-                                          }),
-                                      child: Card(
-                                        shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10))),
-                                        elevation: 3,
-                                        shadowColor: CustomTheme.appTheme,
-                                        child: Container(
-                                          width: _mainWidth * 0.45,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                height: _mainHeight * 0.13,
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                            topLeft:
-                                                                Radius.circular(
-                                                                    10),
-                                                            topRight:
-                                                                Radius.circular(
-                                                                    10)),
-                                                    image: DecorationImage(
-                                                        image: AssetImage(
-                                                            data.imageUrl ??''),
-                                                        fit: BoxFit.cover
-                                                        //NetworkImage(data.imageUrl!),fit: BoxFit.cover,
-                                                        )),
-                                              ),
-                                              Container(
-                                                  margin: EdgeInsets.only(
-                                                      left: _mainWidth*0.02,
-                                                      top: _mainHeight * 0.01),
-                                                  alignment: Alignment.topLeft,
-                                                  child: Text(data.propertyType ??'',
-                                                      style: TextStyle(
-                                                        fontSize: getHeight(context: context, height: 14),
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ))),
-                                              Container(
-                                               // width: _mainWidth*0.45,
-
-                                               // color: Colors.purple,
-                                                  margin: EdgeInsets.only(
-                                                      left: _mainWidth*0.02,
-                                                      top: _mainHeight * 0.005),
-                                                  alignment: Alignment.topLeft,
-                                                  child: Text(
-                                                    data.propertyDesc ??'',
-                                                    maxLines: 3,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                        color: Colors.grey,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontSize: getHeight(context: context, height: 12),
-                                                  )),),
-                                              Container(
-
-                                                  margin: EdgeInsets.only(
-                                                      left: _mainWidth*0.02,
-                                                      top: _mainHeight * 0.005),
-                                                  child: Text(
-                                                      '${nullCheck(list: value.languageData) ? value.languageData[3].name : 'More Info'}',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          fontSize: getHeight(context: context, height: 12),
-                                                          color: CustomTheme
-                                                              .appThemeContrast))),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  itemCount: _homeViewModel
-                                      .getPopularPropertyModelList()
-                                      .length,
-                                )),
-                          ),
-                          SizedBox(
-                            height: _mainHeight * 0.02,
-                          ),
-                          Container(
-                            color: Colors.grey.shade50,
+                            //color: Colors.grey.shade50,
                             height: _mainHeight * 0.13,
                             padding: EdgeInsets.only(
                               top: _mainHeight * 0.01,
@@ -510,7 +460,7 @@ class _HomePageState extends State<HomePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '5 Reasons to choose RentMyStay',
+                                  '${nullCheck(list: value.languageData) ? value.languageData[16].name : '5 Reasons to choose RentMyStay'}',
                                   style: TextStyle(
                                       color: CustomTheme.appTheme,
                                       fontSize: getHeight(
@@ -533,12 +483,13 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                           width: _mainWidth * 0.42,
                                           decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: Colors.grey.shade300),
+                                              color: Colors.grey.shade50,
                                               borderRadius:
                                                   BorderRadius.circular(5)),
                                           child: Text(
                                             getReasonsList[index],
+                                            maxLines: 3,
+                                            overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                                 fontSize: getHeight(
                                                     context: context,
@@ -575,18 +526,48 @@ class _HomePageState extends State<HomePage> {
                                   ),
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () => Navigator.of(context)
-                                .pushNamed(AppRoutes.referAndEarn),
-                            child: Container(
-                                width: _mainWidth,
-                                padding: EdgeInsets.only(
-                                    left: _mainWidth * 0.03,
-                                    right: _mainWidth * 0.03),
-                                child: Image.asset(Images.referEarnImage)),
+                          SizedBox(
+                            height: _mainHeight * 0.01,
+                          ),
+                          Container(
+                            width: _mainWidth,
+                            padding: EdgeInsets.only(
+                                left: _mainWidth * 0.03,
+                                right: _mainWidth * 0.03),
+                            child: GestureDetector(
+                              onTap: () => Navigator.of(context)
+                                  .pushNamed(AppRoutes.referAndEarn),
+                              child: CachedNetworkImage(
+                                height: _mainHeight * 0.15,
+                                imageUrl:
+                                    'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/Screenshot%202022-06-08%20at%2010.50.43%20PM.png?alt=media&token=d0a37d0e-79ec-44ee-8e1e-97296f044d35',
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                placeholder: (context, url) =>
+                                    Shimmer.fromColors(
+                                        child: Container(
+                                          height: _mainHeight * 0.15,
+                                          decoration: const BoxDecoration(
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        baseColor: Colors.grey[200] as Color,
+                                        highlightColor:
+                                            Colors.grey[350] as Color),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              ),
+                            ),
                           ),
                           SizedBox(
-                            height: _mainHeight * 0.02,
+                            height: _mainHeight * 0.03,
                           ),
                         ],
                       ),
@@ -604,6 +585,334 @@ class _HomePageState extends State<HomePage> {
         : RMSWidgets.networkErrorPage(context: context);
   }
 
+  Widget _getTrendingProperties(
+      {required BuildContext context, required HomeViewModel model}) {
+    if (model.homePageModel.msg != null &&
+        model.homePageModel.data != null &&
+        model.homePageModel.data?.trendingProps != null &&
+        model.homePageModel.data?.trendingProps!.length != 0) {
+      return Container(
+        height: _mainHeight * 0.23,
+        decoration: BoxDecoration(
+          //  color: Colors.amber,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: ListView.builder(
+          itemBuilder: (context, index) {
+            final data = model.homePageModel.data != null &&
+                    model.homePageModel.data?.trendingProps != null &&
+                    model.homePageModel.data?.trendingProps!.length != 0
+                ? model.homePageModel.data?.trendingProps![index]
+                    as TrendingProps
+                : TrendingProps();
+            return InkWell(
+              onTap: () => Navigator.of(context)
+                  .pushNamed(AppRoutes.propertyDetailsPage, arguments: {
+                'propId': data.propId ?? '',
+                'fromExternalLink': false,
+              }),
+              child: Stack(
+                children: [
+                  Card(
+                    elevation: 2,
+                    child: Container(
+                        width: _mainWidth * 0.42,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          children: [
+                            CachedNetworkImage(
+                              imageUrl: data.picThumbnail ?? '',
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                height: _mainHeight * 0.125,
+                                //width: _mainWidth * 0.4,
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(5),
+                                      topRight: Radius.circular(5)),
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              placeholder: (context, url) => Shimmer.fromColors(
+                                  child: Container(
+                                    height: _mainHeight * 0.125,
+                                    color: Colors.grey,
+                                  ),
+                                  baseColor: Colors.grey[200] as Color,
+                                  highlightColor: Colors.grey[350] as Color),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(
+                                      left: _mainWidth * 0.01,
+                                      right: _mainWidth * 0.01,
+                                      top: _mainHeight * 0.005),
+                                  child: Text(
+                                    data.title ?? '',
+                                    style: TextStyle(
+                                        fontSize: getHeight(
+                                            context: context, height: 12),
+                                        color: CustomTheme.appTheme,
+                                        fontWeight: FontWeight.w500),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(
+                                      left: _mainWidth * 0.01,
+                                      right: _mainWidth * 0.01,
+                                      top: _mainHeight * 0.005),
+                                  child: Text(
+                                    data.buildingName != null
+                                        ? data.buildingName.toString()
+                                        : '',
+                                    style: TextStyle(
+                                      fontSize: getHeight(
+                                          context: context, height: 12),
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(
+                                      left: _mainWidth * 0.01,
+                                      right: _mainWidth * 0.01,
+                                      top: _mainHeight * 0.005),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: _mainWidth * 0.13,
+                                        alignment: Alignment.centerLeft,
+                                        padding: EdgeInsets.only(
+                                            right: _mainWidth * 0.01,
+                                            top: _mainHeight * 0.003),
+                                        child: FittedBox(
+                                          child: Text(
+                                            data.monthlyRent != null
+                                                ? rupee + ' ${data.monthlyRent}'
+                                                : '',
+                                            style: TextStyle(
+                                              fontSize: getHeight(
+                                                  context: context, height: 12),
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: _mainWidth * 0.005,
+                                      ),
+                                      showOrgPrice(
+                                              monthlyRent:
+                                                  data.monthlyRent ?? '0',
+                                              orgRent: data.orgMonthRent ?? '0')
+                                          ? Container()
+                                          : Container(
+                                              width: _mainWidth * 0.1,
+                                              alignment: Alignment.centerLeft,
+                                              padding: EdgeInsets.only(
+                                                  right: _mainWidth * 0.01,
+                                                  top: _mainHeight * 0.003),
+                                              child: FittedBox(
+                                                child: Text(
+                                                  data.orgMonthRent != null
+                                                      ? rupee +
+                                                          '${data.orgMonthRent}'
+                                                      : '',
+                                                  style: TextStyle(
+                                                    fontSize: getHeight(
+                                                        context: context,
+                                                        height: 10),
+                                                    color: Colors.grey,
+                                                    decoration: TextDecoration
+                                                        .lineThrough,
+                                                    fontWeight: FontWeight.w600,
+
+                                                    //fontStyle: FontStyle.italic,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                      SizedBox(
+                                        width: _mainWidth * 0.005,
+                                      ),
+                                      data.monthRentOff != null &&
+                                              data.monthRentOff.toString() !=
+                                                  '0'
+                                          ? Container(
+                                              width: _mainWidth * 0.15,
+                                              alignment: Alignment.centerLeft,
+                                              padding: EdgeInsets.only(
+                                                  right: _mainWidth * 0.01,
+                                                  top: _mainHeight * 0.003),
+                                              child: FittedBox(
+                                                child: Text(
+                                                  '${data.monthRentOff.toString()}% OFF',
+                                                  style: TextStyle(
+                                                    fontSize: getHeight(
+                                                        context: context,
+                                                        height: 12),
+                                                    color:
+                                                        CustomTheme.myFavColor,
+                                                    fontWeight: FontWeight.w600,
+
+                                                    //fontStyle: FontStyle.italic,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : Container(),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  padding: EdgeInsets.only(
+                                      left: _mainWidth * 0.01,
+                                      top: _mainHeight * 0.003),
+                                  child: Text(
+                                    nullCheck(list: _homeViewModel.languageData) ? '${_homeViewModel.languageData[23].name}' :'More Info',
+                                    style: TextStyle(
+                                      fontSize: getHeight(
+                                          context: context, height: 12),
+                                      color: CustomTheme.appThemeContrast,
+
+                                      fontWeight: FontWeight.w600,
+
+                                      //fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )),
+                  ),
+                  Positioned(
+                    right: _mainHeight * 0.015,
+                    top: _mainHeight * 0.01,
+                    child: GestureDetector(
+                      onTap: () async {
+                        if (data.wishlist != null && data.wishlist == 1) {
+
+                          if (data.propId != null) {
+
+                            int response = await _homeViewModel.addToWishlist(
+                                propertyId: data.propId ?? '');
+                            if (response == 200) {
+                              setState(() {
+                                data.wishlist = 0;
+                              });
+                              RMSWidgets.showSnackbar(
+                                  context: context,
+                                  message: 'Successfully Removed From Wishlist',
+                                  color: CustomTheme.appTheme);
+                            }
+                          }
+                        }
+                        else if (data.wishlist != null && data.wishlist == 0) {
+
+                          if (data.propId != null) {
+
+                            int response = await _homeViewModel.addToWishlist(
+                                propertyId: data.propId ?? '');
+                            if (response == 200) {
+                              setState(() {
+                                data.wishlist = 1;
+                              });
+                              RMSWidgets.showSnackbar(
+                                  context: context,
+                                  message: 'Successfully Added to Wishlist',
+                                  color: CustomTheme.appTheme);
+                            }
+                          }
+                        }
+                      },
+                      child: data.wishlist == 1
+                          ? Icon(
+                              Icons.favorite,
+                              color: CustomTheme.errorColor,
+                            )
+                          : Icon(
+                              Icons.favorite_outline_rounded,
+                              color: CustomTheme.white,
+                            ),
+                    ),
+                  )
+                ],
+              ),
+            );
+          },
+          itemCount: model.homePageModel.data?.trendingProps!.length ?? 0,
+          scrollDirection: Axis.horizontal,
+        ),
+      );
+    } else if ((model.homePageModel.msg != null &&
+            model.homePageModel.data != null &&
+            model.homePageModel.data?.trendingProps != null &&
+            model.homePageModel.data?.trendingProps!.length == 0) ||
+        (model.homePageModel.msg != null &&
+            model.homePageModel.data != null &&
+            model.homePageModel.data?.trendingProps == null)) {
+      return Center(
+          child: RMSWidgets.someError(
+        context: context,
+      ));
+    } else {
+      return Container(
+          height: _mainHeight * 0.23,
+        width: _mainWidth,
+        //color: Colors.amber,
+        child: ListView.separated(itemBuilder: (_,index){
+
+          return Shimmer
+              .fromColors(
+              child:
+              Container(
+                decoration: BoxDecoration(
+                  color:
+                  Colors.grey,
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                height:_mainHeight * 0.22,
+                width: _mainWidth*0.42,
+                
+              ),
+              baseColor: Colors.grey[200]
+              as Color,
+              highlightColor:
+              Colors.grey[350] as Color);
+        },itemCount: 4,
+            separatorBuilder: (_,__)=>SizedBox(width: _mainWidth*0.02,),
+            scrollDirection:Axis.horizontal),
+      );
+    }
+  }
+
+  bool showOrgPrice({required String monthlyRent, required String orgRent}) {
+    if (orgRent == '0') {
+      return true;
+    }
+    return orgRent != '0' &&
+        monthlyRent != '0' &&
+        (monthlyRent.toString() == orgRent.toString());
+  }
+
   Widget exploreProperties(
       {required BuildContext context, required HomeViewModel viewModel}) {
     return Container(
@@ -612,31 +921,33 @@ class _HomePageState extends State<HomePage> {
       padding:
           EdgeInsets.only(left: _mainWidth * 0.035, right: _mainWidth * 0.035),
       child: GridView.builder(
+        //shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             mainAxisSpacing: _mainHeight * 0.005,
             crossAxisSpacing: _mainWidth * 0.035,
-            childAspectRatio: 1.1),
+            mainAxisExtent: _mainHeight * 0.19
+            // childAspectRatio: 1.1
+            ),
         itemBuilder: (_, index) {
           final data = explorePropertiesList[index];
-          return InkWell(
-            onTap: data.callback != null ? data.callback!():(){},
-            child: Container(
-              height: _mainHeight * 0.2,
-              width: _mainWidth,
-              child: Column(
-                children: [
-                  CachedNetworkImage(
+          return Container(
+            height: _mainHeight * 0.2,
+            width: _mainWidth,
+            child: Column(
+              children: [
+                InkWell(
+                  onTap: () =>RMSWidgets.getToast(message: 'Coming Soon...', color: CustomTheme.appTheme,center: true),
+                  child: CachedNetworkImage(
                     height: _mainHeight * 0.15,
                     imageUrl: data.imagePath ?? '',
                     imageBuilder: (context, imageProvider) => Container(
                       decoration: BoxDecoration(
-                       borderRadius: BorderRadius.only(
-                         topLeft: Radius.circular(10),
-                         topRight:  Radius.circular(10),
-
-                       ),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10),
+                        ),
                         image: DecorationImage(
                           image: imageProvider,
                           fit: BoxFit.cover,
@@ -647,24 +958,30 @@ class _HomePageState extends State<HomePage> {
                         child: Container(
                           height: _mainHeight * 0.15,
                           decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                            ),
                             color: Colors.grey,
                           ),
                         ),
                         baseColor: Colors.grey[200] as Color,
                         highlightColor: Colors.grey[350] as Color),
-                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
-                  SizedBox(
-                    height: _mainHeight*0.008,
-                  ),
-                  Text(data.key ?? "",style: TextStyle(
-                    fontSize: getHeight(context: context, height: 14),
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black
-                  ),)
-                ],
-              ),
+                ),
+                SizedBox(
+                  height: _mainHeight * 0.008,
+                ),
+                Text(
+                  data.key ?? "",
+                  style: TextStyle(
+                      fontSize: getHeight(context: context, height: 14),
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black),
+                )
+              ],
             ),
           );
         },
@@ -678,28 +995,28 @@ class _HomePageState extends State<HomePage> {
       UtilsModel(
           key: 'Head to the hills',
           imagePath:
-              'https://www.jurist.org/commentary/wp-content/uploads/sites/3/2020/11/moving_1604694400.jpg',
-          callback: () {}),
+              'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/Screenshot%202022-06-10%20at%201.15.48%20AM.png?alt=media&token=431d2ac6-8d80-4532-8c34-f18cf5a46e6b',
+          callback: () =>RMSWidgets.getToast(message: 'Coming Soon', color: CustomTheme.appTheme)),
     );
     explorePropertiesList.add(
       UtilsModel(
           key: 'Chill at the beach',
           imagePath:
-              'https://www.jurist.org/commentary/wp-content/uploads/sites/3/2020/11/moving_1604694400.jpg',
+              'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/Screenshot%202022-06-10%20at%201.16.15%20AM.png?alt=media&token=878164f1-0332-4fa5-aa54-43598af8c705',
           callback: () {}),
     );
     explorePropertiesList.add(
       UtilsModel(
           key: 'Discover your heritage',
           imagePath:
-              'https://www.jurist.org/commentary/wp-content/uploads/sites/3/2020/11/moving_1604694400.jpg',
+              'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/Screenshot%202022-06-10%20at%201.16.32%20AM.png?alt=media&token=23c1dda7-4243-41ff-89d9-e8eb6f278706',
           callback: () {}),
     );
     explorePropertiesList.add(
       UtilsModel(
           key: 'Travel for work',
           imagePath:
-              'https://www.jurist.org/commentary/wp-content/uploads/sites/3/2020/11/moving_1604694400.jpg',
+              'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/Screenshot%202022-06-10%20at%201.22.26%20AM.png?alt=media&token=b541bd17-02a8-4d6a-8d43-950edae42ddb',
           callback: () {}),
     );
   }
@@ -850,7 +1167,7 @@ class _HomePageState extends State<HomePage> {
                 size: 20,
               ),
               title:
-                  nullCheck(list: list) ? '${list[12].name}' : 'My Site Visits',
+                  nullCheck(list: list) ? '${list[18].name}' : 'My Site Visits',
               onTap: () => {
                 _handleURLButtonPress(
                     context,
@@ -890,7 +1207,9 @@ class _HomePageState extends State<HomePage> {
                         size: 20,
                       )),
                   title: Container(
-                      width: _mainWidth, child: Text('Owner Dashboard')),
+                      width: _mainWidth,
+                      child: Text(
+                          '${nullCheck(list: value.languageData) ? value.languageData[19].name : 'Owner Dashboard'}')),
                   children: [
                     getTile(
                       context: context,
@@ -899,7 +1218,9 @@ class _HomePageState extends State<HomePage> {
                         color: CustomTheme.appTheme,
                         size: 20,
                       ),
-                      title: /*nullCheck(list: list) ? '${list[13].name}' :*/ 'Property View',
+                      title: nullCheck(list: list)
+                          ? '${list[20].name}'
+                          : 'Property View',
                       onTap: () => {
                         _handleURLButtonPress(
                             context,
@@ -917,7 +1238,9 @@ class _HomePageState extends State<HomePage> {
                         color: CustomTheme.appTheme,
                         size: 20,
                       ),
-                      title: 'My Properties',
+                      title: nullCheck(list: list)
+                          ? '${list[21].name}'
+                          : 'Property View',
                       onTap: () => Navigator.of(context)
                           .pushNamed(AppRoutes.ownerPropertyListingPage),
                     ),
@@ -928,7 +1251,9 @@ class _HomePageState extends State<HomePage> {
                         color: CustomTheme.appTheme,
                         size: 20,
                       ),
-                      title: 'Tenants Leads',
+                      title: nullCheck(list: list)
+                          ? '${list[22].name}'
+                          : 'Tenants Leads',
                       onTap: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => ChangeNotifierProvider(
                             create: (context) => MyStayViewModel(),
@@ -1121,7 +1446,7 @@ class _HomePageState extends State<HomePage> {
       'Free Maintenance for first 30 days of stay(T&C).',
       'Free movement across any property in first 48hrs.',
       'No Brokerage and No maintenance charged.',
-      'Rent for Short term or Long term.'
+      'Rent for Short term or Long term.',
     ];
   }
 
@@ -1201,7 +1526,10 @@ class _HomePageState extends State<HomePage> {
                                 height: _mainHeight * 0.08,
                                 width: _mainWidth * 0.12,
                                 decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                  ),
                                   color: Colors.grey,
                                 ),
                               ),
