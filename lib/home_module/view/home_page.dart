@@ -182,7 +182,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         child: Row(
                           children: [
-                            Icon(Icons.search_rounded),
+                            Icon(Icons.search_rounded,size: _mainWidth*0.05,),
                             SizedBox(
                               width: _mainWidth * 0.02,
                             ),
@@ -344,11 +344,7 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Text(
                                   '${nullCheck(list: value.languageData) ? value.languageData[17].name : 'Trending'}',
-                                  style: TextStyle(
-                                      color: CustomTheme.appTheme,
-                                      fontSize:
-                                          getHeight(context: context, height: 16),
-                                      fontWeight: FontWeight.w500),
+                                  style:  getHeaderStyle,
                                 ),
                                 Spacer(),
                                 InkWell(
@@ -435,11 +431,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             child: Text(
                               '${nullCheck(list: value.languageData) ? value.languageData[14].name : 'Explore Your Wanderlust'}',
-                              style: TextStyle(
-                                  color: CustomTheme.appTheme,
-                                  fontSize:
-                                      getHeight(context: context, height: 16),
-                                  fontWeight: FontWeight.w500),
+                              style:  getHeaderStyle,
                             ),
                           ),
                           SizedBox(
@@ -462,12 +454,7 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Text(
                                   '${nullCheck(list: value.languageData) ? value.languageData[16].name : '5 Reasons to choose RentMyStay'}',
-                                  style: TextStyle(
-                                      color: CustomTheme.appTheme,
-                                      fontSize: getHeight(
-                                          context: context, height: 16),
-                                      fontWeight: FontWeight.w500),
-                                ),
+                                  style:  getHeaderStyle),
                                 SizedBox(
                                   height: _mainHeight * 0.01,
                                 ),
@@ -518,13 +505,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             child: Text(
                               '${nullCheck(list: value.languageData) ? value.languageData[4].name : "Refer & Earn"}',
-                              style: TextStyle(
-                                  color: CustomTheme.appTheme,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500
-
-                                  //decoration: TextDecoration.underline,
-                                  ),
+                              style: getHeaderStyle,
                             ),
                           ),
                           SizedBox(
@@ -647,7 +628,10 @@ class _HomePageState extends State<HomePage> {
                                   baseColor: Colors.grey[200] as Color,
                                   highlightColor: Colors.grey[350] as Color),
                               errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
+                                  Container(
+                                    alignment: Alignment.center,
+                                      height: _mainHeight * 0.125,
+                                      child: const Icon(Icons.error)),
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1523,10 +1507,7 @@ class _HomePageState extends State<HomePage> {
                                 height: _mainHeight * 0.08,
                                 width: _mainWidth * 0.12,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                  ),
+                                  borderRadius: BorderRadius.circular(10),
                                   color: Colors.grey,
                                 ),
                               ),
@@ -1568,4 +1549,9 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+  TextStyle get getHeaderStyle =>TextStyle(
+      color: CustomTheme.appTheme,
+      fontSize: getHeight(context: context,height: 18),
+      fontWeight: FontWeight.w500
+  );
 }

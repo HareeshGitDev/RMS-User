@@ -72,7 +72,7 @@ class _RazorpayPaymentPageState extends State<RazorpayPaymentPage> {
 
     _razorpay = Razorpay();
     _viewModel = Provider.of<PaymentViewModel>(context, listen: false);
-    WidgetsBinding.instance.addPostFrameCallback(
+    WidgetsBinding.instance?.addPostFrameCallback(
         (_) => openCheckout(model: widget.paymentRequestModel));
 
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);

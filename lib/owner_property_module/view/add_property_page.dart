@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 
+import '../../language_module/model/language_model.dart';
 import '../../theme/custom_theme.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/navigation_service.dart';
@@ -48,15 +49,26 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
         'Semi Furnished House',
         'Service Apartment'
       ];
+  SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+
+  getLanguageData() async {
+    await _viewModel.getLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'ownerPropertyPage');
+  }
+  bool nullCheck({required List<LanguageModel> list}) =>
+      list.isNotEmpty ? true : false;
 
   @override
   void initState() {
     super.initState();
+    _viewModel = Provider.of<OwnerPropertyViewModel>(context, listen: false);
+    getLanguageData();
     if (widget.fromPropertyDetails) {
       _propertyNameController.text = widget.title.toString();
       propertyType = widget.propertyType ?? 'Select Your Property Type';
     }
-    _viewModel = Provider.of<OwnerPropertyViewModel>(context, listen: false);
+
   }
 
   @override
@@ -65,82 +77,89 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
     _mainWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Property'),
+        title: Text(nullCheck(
+            list: context.watch<OwnerPropertyViewModel>().ownerPropertyLang)
+            ? '${context.watch<OwnerPropertyViewModel>().ownerPropertyLang[7].name}'
+            :'Add Property'),
         titleSpacing: 0,
         centerTitle: false,
       ),
-      body: Container(
-        height: _mainHeight,
-        width: _mainWidth,
-        color: Colors.white,
-        padding: EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 20),
-        child: Column(
-          children: [
-            Container(
-              alignment: Alignment.centerLeft,
-              height: _mainHeight * 0.060,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: Colors.white,
-              ),
-              child: Neumorphic(
-                style: NeumorphicStyle(
-                  depth: -2,
-                  color: Colors.white,
-                ),
-                child: TextFormField(
-                  controller: _propertyNameController,
-                  keyboardType: TextInputType.name,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Property Name",
-                    prefixIcon: Icon(Icons.house, color: Colors.grey, size: 20),
+      body: Consumer<OwnerPropertyViewModel>(
+        builder: (context, value, child) {
+          return Container(
+            height: _mainHeight,
+            width: _mainWidth,
+            color: Colors.white,
+            padding: EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 20),
+            child: Column(
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  height: _mainHeight * 0.060,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.white,
+                  ),
+                  child: Neumorphic(
+                    style: NeumorphicStyle(
+                      depth: -2,
+                      color: Colors.white,
+                    ),
+                    child: TextFormField(
+                      controller: _propertyNameController,
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[8].name :"Property Name"}',
+                        prefixIcon: Icon(Icons.house, color: Colors.grey, size: 20),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            SizedBox(
-              height: _mainHeight * 0.04,
-            ),
-            Neumorphic(
-              style: NeumorphicStyle(
-                shadowLightColor: CustomTheme.appTheme.withAlpha(100),
-                shadowDarkColor: Colors.grey.shade200,
-                color: Colors.white,
-                lightSource: LightSource.bottom,
-                intensity: 2,
-                depth: 2,
-              ),
-              child: Container(
-                height: _mainHeight * 0.06,
-                width: _mainWidth,
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton(
-                    iconEnabledColor: CustomTheme.appTheme,
-                    items: getPropertyTypeList
-                        .map((type) => DropdownMenuItem(
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Text(type),
-                              ),
-                              value: type,
-                            ))
-                        .toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        propertyType = value.toString();
-                      });
-                    },
-                    value: propertyType,
+                SizedBox(
+                  height: _mainHeight * 0.04,
+                ),
+                Neumorphic(
+                  style: NeumorphicStyle(
+                    shadowLightColor: CustomTheme.appTheme.withAlpha(100),
+                    shadowDarkColor: Colors.grey.shade200,
+                    color: Colors.white,
+                    lightSource: LightSource.bottom,
+                    intensity: 2,
+                    depth: 2,
+                  ),
+                  child: Container(
+                    height: _mainHeight * 0.06,
+                    width: _mainWidth,
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                        iconEnabledColor: CustomTheme.appTheme,
+                        items: getPropertyTypeList
+                            .map((type) => DropdownMenuItem(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(type),
+                          ),
+                          value: type,
+                        ))
+                            .toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            propertyType = value.toString();
+                          });
+                        },
+                        value: propertyType,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                SizedBox(
+                  height: _mainHeight * 0.1,
+                ),
+              ],
             ),
-            SizedBox(
-              height: _mainHeight * 0.1,
-            ),
-          ],
-        ),
+          );
+        },
       ),
       bottomNavigationBar: Container(
         height: _mainHeight * 0.05,
@@ -156,7 +175,10 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               )),
-          child: Text('Add Property'),
+          child: Text(nullCheck(
+              list: context.watch<OwnerPropertyViewModel>().ownerPropertyLang)
+              ? '${context.watch<OwnerPropertyViewModel>().ownerPropertyLang[7].name}'
+              :'Add Property'),
           onPressed: () async {
             if (_propertyNameController.text.isEmpty) {
               RMSWidgets.getToast(

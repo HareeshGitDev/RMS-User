@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:RentMyStay_user/language_module/model/language_model.dart';
+import 'package:RentMyStay_user/language_module/service/language_api_service.dart';
 import 'package:RentMyStay_user/owner_property_module/model/owner_property_details_model.dart';
 import 'package:RentMyStay_user/owner_property_module/model/owner_property_details_request_model.dart';
 import 'package:RentMyStay_user/owner_property_module/model/owner_property_listing_model.dart';
@@ -16,12 +18,14 @@ import '../../utils/service/rms_user_api_service.dart';
 
 class OwnerPropertyViewModel extends ChangeNotifier {
   final OwnerPropertyApiService _apiService = OwnerPropertyApiService();
+  final LanguageApiService _languageApiService = LanguageApiService();
   late OwnerPropertyListingModel ownerPropertyListingModel =
       OwnerPropertyListingModel();
   late OwnerPropertyDetailsModel ownerPropertyDetailsModel =
       OwnerPropertyDetailsModel();
   List<AmenitiesModel> availableAmenitiesList = [];
   List<AmenitiesModel> allAmenitiesList = [];
+  List<LanguageModel> ownerPropertyLang = [];
 
   double latitude = 12.967140;
   double longitude = 77.736558;
@@ -539,4 +543,13 @@ class OwnerPropertyViewModel extends ChangeNotifier {
           lang: lang,
           lat: lat,
           comment: comment);
+
+  Future<void> getLanguagesData(
+      {required String language, required String pageName}) async {
+    final response = await _languageApiService.fetchLanguagesData(
+        language: language, pageName: pageName);
+    ownerPropertyLang = response;
+
+    notifyListeners();
+  }
 }

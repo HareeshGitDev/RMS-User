@@ -984,7 +984,10 @@ class _SearchPageState extends State<SearchPage> {
                                   baseColor: Colors.grey[200] as Color,
                                   highlightColor: Colors.grey[350] as Color),
                               errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
+                                  Container(
+                                      alignment: Alignment.center,
+                                      height: _mainHeight * 0.125,
+                                      child: const Icon(Icons.error))
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
