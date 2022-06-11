@@ -10,7 +10,10 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../language_module/model/language_model.dart';
 import '../../theme/custom_theme.dart';
+import '../../utils/constants/sp_constants.dart';
+import '../../utils/service/shared_prefrences_util.dart';
 import '../../utils/view/rms_widgets.dart';
 import '../viewmodel/mystay_viewmodel.dart';
 
@@ -31,6 +34,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
   late ValueNotifier<bool> showOpenButton;
   late ValueNotifier<bool> showResolvedButton;
   late ValueNotifier<bool> showCancelButton;
+  SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
   late StreamSubscription<ConnectivityResult> _connectivitySubs;
   final Connectivity _connectivity = Connectivity();
   bool _connectionStatus = true;
@@ -91,6 +95,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
     showOpenButton = ValueNotifier(false);
     showResolvedButton = ValueNotifier(false);
     showCancelButton = ValueNotifier(false);
+    getLanguageData();
     if (widget.ticketModel.status?.toLowerCase() == 'open' ||
         widget.ticketModel.status?.toLowerCase() == 'reopen') {
       showResolvedButton.value = true;
@@ -106,6 +111,13 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
       showOpenButton.value = false;
     }
   }
+  getLanguageData() async {
+    await _viewModel.getLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'ticketPage');
+  }
+  bool nullCheck({required List<LanguageModel> list}) =>
+      list.isNotEmpty ? true : false;
 
   @override
   Widget build(BuildContext context) {
@@ -116,8 +128,10 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
             appBar: AppBar(
               titleSpacing: 0,
               centerTitle: false,
-              title: Text(
-                'Ticket Details',
+              title: Text(nullCheck(
+                  list: context.watch<MyStayViewModel>().ticketLang)
+                  ? '${context.watch<MyStayViewModel>().ticketLang[1].name}'
+                  : 'Ticket Details',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
@@ -172,7 +186,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                           width: _mainWidth,
                           child: Row(
                             children: [
-                              Text('Time : ',
+                              Text('${nullCheck(list: _viewModel.ticketLang) ? _viewModel.ticketLang[2].name :'Time'} : ',
                                   style: const TextStyle(
                                       color: Colors.grey,
                                       fontWeight: FontWeight.w500,
@@ -184,7 +198,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                                       fontWeight: FontWeight.w500,
                                       fontSize: 14)),
                               const Spacer(),
-                              Text('Status : ',
+                              Text('${nullCheck(list: _viewModel.ticketLang) ? _viewModel.ticketLang[3].name :'Status'} : ',
                                   style: const TextStyle(
                                       color: Colors.grey,
                                       fontWeight: FontWeight.w500,
@@ -213,7 +227,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text('Unit No. : ',
+                                    Text('${nullCheck(list: _viewModel.ticketLang) ? _viewModel.ticketLang[4].name :'Unit No.'} : ',
                                         style: const TextStyle(
                                             color: Colors.grey,
                                             fontWeight: FontWeight.w500,
@@ -238,7 +252,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Ticket Id : ',
+                              Text('${nullCheck(list: _viewModel.ticketLang) ? _viewModel.ticketLang[5].name :'Ticket Id'} : ',
                                   style: const TextStyle(
                                       color: Colors.grey,
                                       fontWeight: FontWeight.w500,
@@ -261,7 +275,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Mobile : ',
+                              Text('${nullCheck(list: _viewModel.ticketLang) ? _viewModel.ticketLang[6].name :'Mobile'} : ',
                                   style: const TextStyle(
                                       color: Colors.grey,
                                       fontWeight: FontWeight.w500,
@@ -283,8 +297,8 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                           width: _mainWidth,
                           child: RichText(
                             text: TextSpan(children: [
-                              const TextSpan(
-                                text: "Issue Description : ",
+                              TextSpan(
+                                text: '${nullCheck(list: _viewModel.ticketLang) ? _viewModel.ticketLang[7].name :'Issue Description'} : ',
                                 style: TextStyle(
                                     color: Colors.black54,
                                     fontWeight: FontWeight.w400,

@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import '../../language_module/model/language_model.dart';
 import '../../theme/custom_theme.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/shared_prefrences_util.dart';
@@ -49,6 +50,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
   late StreamSubscription<ConnectivityResult> _connectivitySubs;
   final Connectivity _connectivity = Connectivity();
   bool _connectionStatus = true;
+  SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+
+  getLanguageData() async {
+    await _loginViewModel.getLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'loginPage');
+  }
+  bool nullCheck({required List<LanguageModel> list}) =>
+      list.isNotEmpty ? true : false;
 
   Future<void> initConnectionStatus() async {
     ConnectivityResult result = ConnectivityResult.none;
@@ -98,7 +108,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _loginViewModel = Provider.of<LoginViewModel>(context, listen: false);
-
+getLanguageData();
 
   }
 
@@ -130,9 +140,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 alignment: Alignment.centerRight,
                 child: AnimatedTextKit(
                   animatedTexts: [
-                    ColorizeAnimatedText('You are Almost there!',
+                    ColorizeAnimatedText('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[23].name :'You are Almost there!'} !',
                         textStyle:
-                            TextStyle(fontSize: 25, fontFamily: "HKGrotest-Light"),
+                            TextStyle(fontSize: 25,),
                         colors: [
                           Colors.white,
                           CustomTheme.appTheme,
@@ -158,7 +168,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: _textInput(
-                          hint: "Name",
+                          hint: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[12].name :"Name"}',
                           icon: Icons.person_outline,
                           controller: _nameController),
                     ),
@@ -166,7 +176,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       height: 5,
                     ),
                     _textInput(
-                        hint: "Email",
+                        hint: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[1].name :"Email"}',
                         icon: Icons.email_outlined,
 
                         controller: _emailController),
@@ -174,21 +184,21 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       height: 5,
                     ),
                     _textInput(
-                        hint: "Phone Number",
+                        hint: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[13].name :"Phone Number"}',
                         icon: Icons.phone_android_outlined,
                         controller: _phoneNumberController),
                     SizedBox(
                       height: 5,
                     ),
                     _textInput(
-                        hint: "Password",
+                        hint: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[2].name :"Password"}',
                         icon: Icons.vpn_key_outlined,
                         controller: _passwordController),
                     SizedBox(
                       height: 5,
                     ),
                     _textInput(
-                        hint: "Apply Referal Code (Optional)",
+                        hint: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[14].name :"Apply Referal Code (Optional)"}',
                         icon: Icons.ac_unit_outlined,
                         controller: _referalController),
                     SizedBox(
@@ -387,7 +397,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           }
                         }
                         },
-                        child: Center(child: Text("REGISTER")),
+                        child: Center(child: Text('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[15].name :"REGISTER"}')),
                       ),
                     ),
                   ],

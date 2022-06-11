@@ -105,6 +105,7 @@ class _HomePageState extends State<HomePage> {
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
     _homeViewModel.getHomePageData();
+    _homeViewModel.getTenantLeads();
     userDetails = getSharedPreferencesValues();
     preferenceUtil.getToken().then((value) => token = value ?? '');
     getExplorePropertiesList();
@@ -1254,11 +1255,7 @@ class _HomePageState extends State<HomePage> {
                       title: nullCheck(list: list)
                           ? '${list[22].name}'
                           : 'Tenants Leads',
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ChangeNotifierProvider(
-                            create: (context) => MyStayViewModel(),
-                            child: const TestWidget()),
-                      )),
+                      onTap: () => Navigator.of(context).pushNamed(AppRoutes.tenantLeadsPage),
                     ),
                   ],
                 );

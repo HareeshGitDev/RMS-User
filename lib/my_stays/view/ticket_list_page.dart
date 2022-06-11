@@ -8,8 +8,11 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../language_module/model/language_model.dart';
 import '../../theme/custom_theme.dart';
+import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/navigation_service.dart';
+import '../../utils/service/shared_prefrences_util.dart';
 
 class TicketListPage extends StatefulWidget {
   const TicketListPage({Key? key}) : super(key: key);
@@ -25,6 +28,7 @@ class _TicketListPageState extends State<TicketListPage> {
   late StreamSubscription<ConnectivityResult> _connectivitySubs;
   final Connectivity _connectivity = Connectivity();
   bool _connectionStatus = true;
+  SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
 
   Future<void> initConnectionStatus() async {
     ConnectivityResult result = ConnectivityResult.none;
@@ -59,6 +63,11 @@ class _TicketListPageState extends State<TicketListPage> {
         break;
     }
   }
+  getLanguageData() async {
+    await _viewModel.getLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'ticketPage');
+  }
 
   @override
   void dispose() {
@@ -74,8 +83,10 @@ class _TicketListPageState extends State<TicketListPage> {
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
     _viewModel.getTicketList();
+    getLanguageData();
   }
-
+  bool nullCheck({required List<LanguageModel> list}) =>
+      list.isNotEmpty ? true : false;
   @override
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
@@ -84,8 +95,10 @@ class _TicketListPageState extends State<TicketListPage> {
         ? Scaffold(
             appBar: AppBar(
               titleSpacing: 0,
-              title: Text(
-                'Created Tickets',
+              title: Text(nullCheck(
+                  list: context.watch<MyStayViewModel>().ticketLang)
+                  ? '${context.watch<MyStayViewModel>().ticketLang[0].name}'
+                  : 'Created Tickets',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,

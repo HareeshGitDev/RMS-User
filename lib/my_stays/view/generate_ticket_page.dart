@@ -9,8 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 
+import '../../language_module/model/language_model.dart';
 import '../../theme/custom_theme.dart';
+import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/navigation_service.dart';
+import '../../utils/service/shared_prefrences_util.dart';
 import '../viewmodel/mystay_viewmodel.dart';
 
 class GenerateTicketPage extends StatefulWidget {
@@ -34,6 +37,7 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
   var _mainWidth;
   String issueType = 'Select Issue';
   final _descriptionController = TextEditingController();
+  SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
 
   late MyStayViewModel _viewModel;
 
@@ -93,6 +97,13 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
         break;
     }
   }
+  getLanguageData() async {
+    await _viewModel.getLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'ticketPage');
+  }
+  bool nullCheck({required List<LanguageModel> list}) =>
+      list.isNotEmpty ? true : false;
 
   @override
   void dispose() {
@@ -108,6 +119,7 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
+    getLanguageData();
   }
 
   @override
@@ -116,8 +128,10 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
     _mainWidth = MediaQuery.of(context).size.width;
     return _connectionStatus?Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Raise Ticket',
+        title: Text(nullCheck(
+            list: context.watch<MyStayViewModel>().ticketLang)
+            ? '${context.watch<MyStayViewModel>().ticketLang[8].name}'
+            : 'Raise Ticket',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w600,
@@ -146,7 +160,7 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
                 Container(
                   padding: EdgeInsets.only(left: 15, right: 15, top: 15),
                   child: Text(
-                    'Kindly report your issue by selecting the category and description',
+                    '${nullCheck(list: _viewModel.ticketLang) ? _viewModel.ticketLang[9].name :'Kindly report your issue by selecting the category and description'}',
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
                         color: Colors.grey,
@@ -228,7 +242,7 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                             color: Colors.grey),
-                        hintText: "Enter the description...",
+                        hintText: '${nullCheck(list: _viewModel.ticketLang) ? _viewModel.ticketLang[11].name :"Enter the description..."}',
                         prefixIcon: Icon(Icons.email_outlined,
                             color: Colors.grey, size: 20),
                       ),
@@ -243,7 +257,7 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
                   color: CustomTheme.appTheme,
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Add Images of Your Issue',
+                    '${nullCheck(list: _viewModel.ticketLang) ? _viewModel.ticketLang[12].name :'Add Images of Your Issue'}',
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
                         color: Colors.white,
@@ -296,7 +310,7 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
                               ),
                               Container(
                                 child: Text(
-                                  "Gallery",
+                                  '${nullCheck(list: _viewModel.ticketLang) ? _viewModel.ticketLang[13].name :"Gallery"}',
                                   style: TextStyle(
                                     color: CustomTheme.appTheme,
                                     fontSize: 14,
@@ -341,7 +355,7 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
                               ),
                               Container(
                                 child: Text(
-                                  "Camera",
+                                  '${nullCheck(list: _viewModel.ticketLang) ? _viewModel.ticketLang[14].name :"Camera"}',
                                   style: TextStyle(
                                     color: CustomTheme.appTheme,
                                     fontSize: 14,
@@ -438,7 +452,7 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
               Navigator.of(context,).pushNamedAndRemoveUntil(AppRoutes.dashboardPage, (route) => false);
             }
           },
-          child: Center(child: Text("Submit Ticket")),
+          child: Center(child: Text('${nullCheck(list: _viewModel.ticketLang) ? _viewModel.ticketLang[15].name :"Submit Ticket"}')),
         ),
       ),
     ):RMSWidgets.networkErrorPage(context: context);

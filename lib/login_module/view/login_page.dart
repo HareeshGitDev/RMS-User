@@ -20,6 +20,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import '../../language_module/model/language_model.dart';
 import '../../theme/custom_theme.dart';
 import '../../utils/view/webView_page.dart';
 import '../../utils/constants/sp_constants.dart';
@@ -54,6 +55,15 @@ class _LoginPageState extends State<LoginPage> {
   late StreamSubscription<ConnectivityResult> _connectivitySubs;
   final Connectivity _connectivity = Connectivity();
   bool _connectionStatus = true;
+  SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+
+  getLanguageData() async {
+    await _loginViewModel.getLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'loginPage');
+  }
+  bool nullCheck({required List<LanguageModel> list}) =>
+      list.isNotEmpty ? true : false;
 
   Future<void> initConnectionStatus() async {
     ConnectivityResult result = ConnectivityResult.none;
@@ -96,6 +106,7 @@ class _LoginPageState extends State<LoginPage> {
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _loginViewModel = Provider.of<LoginViewModel>(context, listen: false);
+    getLanguageData();
   }
 
   @override
@@ -130,15 +141,15 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.only(bottom: 5, left: 15),
-                        margin: EdgeInsets.only(right: 20),
+                        padding: EdgeInsets.only( left: _mainWidth*0.035),
+                        margin: EdgeInsets.only(right: _mainWidth*0.035),
                         alignment: Alignment.centerLeft,
                         child: AnimatedTextKit(
                           animatedTexts: [
-                            ColorizeAnimatedText('Welcome Back !',
+                            ColorizeAnimatedText('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[0].name :'Welcome Back'} ! ',
                                 textStyle: TextStyle(
-                                    fontSize: 25,
-                                    fontFamily: "HKGrotest-Light"),
+                                    fontSize: _mainWidth*0.06,
+                                ),
                                 colors: [
                                   Colors.white,
                                   CustomTheme.appTheme,
@@ -149,14 +160,14 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       SizedBox(
-                        height: 20,
+                        height: _mainHeight*0.025,
                       ),
                       Expanded(
                         child: Container(
                           width: _mainWidth,
                           height: _mainHeight * 0.6,
                           padding:
-                              EdgeInsets.only(left: 15, top: 25, right: 15),
+                              EdgeInsets.only(left: _mainWidth*0.04, top: _mainHeight*0.03, right: _mainWidth*0.04),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.only(
@@ -200,14 +211,14 @@ class _LoginPageState extends State<LoginPage> {
                                     controller: _emailController,
                                     decoration: InputDecoration(
                                       border: InputBorder.none,
-                                      hintText: 'Email',
+                                      hintText:'${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[1].name :'Email'}',
                                       prefixIcon: Icon(Icons.email_outlined),
                                     ),
                                   ),
                                 ),
                               ),
                               SizedBox(
-                                height: 10,
+                                height: _mainHeight*0.01,
                               ),
                               Container(
                                 margin: EdgeInsets.only(top: 10),
@@ -235,18 +246,18 @@ class _LoginPageState extends State<LoginPage> {
                                     obscureText: true,
                                     decoration: InputDecoration(
                                       border: InputBorder.none,
-                                      hintText: "Password",
+                                      hintText: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[2].name :"Password"}',
                                       prefixIcon: Icon(Icons.lock_outline),
                                     ),
                                   ),
                                 ),
                               ),
                               SizedBox(
-                                height: 40,
+                                height: _mainHeight*0.045,
                               ),
                               Container(
                                 width: _mainWidth,
-                                height: 45,
+                                height: _mainHeight*0.05,
                                 child: ElevatedButton(
                                   style: ButtonStyle(
                                       backgroundColor:
@@ -297,11 +308,11 @@ class _LoginPageState extends State<LoginPage> {
                                     }
                                     //
                                   },
-                                  child: Center(child: Text("LOGIN")),
+                                  child: Center(child: Text('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[3].name :"LOGIN"}')),
                                 ),
                               ),
                               SizedBox(
-                                height: 15,
+                                height: _mainHeight*0.015,
                               ),
                               Align(
                                 alignment: Alignment.centerRight,
@@ -309,7 +320,7 @@ class _LoginPageState extends State<LoginPage> {
                                     onTap: () => showForgotPasswordDialog(
                                         context: context),
                                     child: Text(
-                                      'Forgot Password',
+                                      '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[4].name :'Forgot Password'}',
                                       style: TextStyle(
                                           fontSize: 14,
                                           color: CustomTheme.appThemeContrast,
@@ -317,10 +328,10 @@ class _LoginPageState extends State<LoginPage> {
                                     )),
                               ),
                               SizedBox(
-                                height: 40,
+                                height: _mainHeight*0.045,
                               ),
                               Text(
-                                'Or',
+                                '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[5].name :'Or'}',
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.w400),
                               ),
@@ -335,9 +346,9 @@ class _LoginPageState extends State<LoginPage> {
                                   GestureDetector(
                                     onTap: () => _showBottomSheet(context),
                                     child: Container(
-                                      height: 40,
+                                      height: _mainHeight*0.045,
                                       padding:
-                                          EdgeInsets.only(left: 15, right: 15),
+                                          EdgeInsets.only(left: _mainWidth*0.03, right: _mainWidth*0.03),
                                       decoration: BoxDecoration(
                                           border: Border.all(
                                               color: CustomTheme.appTheme),
@@ -350,10 +361,10 @@ class _LoginPageState extends State<LoginPage> {
                                             color: CustomTheme.appTheme,
                                           ),
                                           SizedBox(
-                                            width: 10,
+                                            width: _mainWidth*0.015,
                                           ),
                                           Text(
-                                            'SignIn with OTP',
+                                            '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[6].name : 'SignIn with OTP'}',
                                             style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w600),
@@ -460,7 +471,7 @@ class _LoginPageState extends State<LoginPage> {
                                               width: 10,
                                             ),
                                             Text(
-                                              'SignIn With Gmail',
+                                              '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[7].name :'SignIn With Gmail'}',
                                               style: TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w600),
@@ -488,12 +499,12 @@ class _LoginPageState extends State<LoginPage> {
                                   child: RichText(
                                     text: TextSpan(children: [
                                       TextSpan(
-                                          text: "Don't have an account ? ",
+                                          text:'${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[8].name : "Don't have an account"} ? ',
                                           style: TextStyle(
                                               color: Colors.black,
                                               )),
                                       TextSpan(
-                                          text: "Register",
+                                          text: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[9].name :"Register"}',
                                           style: TextStyle(
                                               color: CustomTheme.appThemeContrast,
                                              )),
@@ -513,12 +524,12 @@ class _LoginPageState extends State<LoginPage> {
                                     text: TextSpan(children: [
                                       TextSpan(
                                           text:
-                                              "By Signing in, you are agree to our ",
+                                          '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[10].name :"By Signing in, you are agree to our "} ',
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 12)),
                                       TextSpan(
-                                          text: "Privacy Policy",
+                                          text: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[11].name :"Privacy Policy"}',
                                           style: TextStyle(
                                             fontSize: 16,
                                             color: CustomTheme.appTheme,
@@ -679,7 +690,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Image.asset(Images.mobSignIn),
                     ),
                     Text(
-                      'Registration or Login',
+                    '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[16].name :'Registration or Login'}',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -689,7 +700,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: 10,
                     ),
                     Text(
-                      "Add your phone number. we'll send you a verification code so we know you're real",
+                      '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[17].name : "Add your phone number. we'll send you a verification code so we know you're real"}',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -720,7 +731,7 @@ class _LoginPageState extends State<LoginPage> {
                                 fontWeight: FontWeight.bold,
                               ),
                               decoration: InputDecoration(
-                                hintText: "Mobile Number",
+                                hintText: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[13].name :"Phone Number"}',
                                 hintStyle:
                                     TextStyle(color: Colors.blueGrey.shade200),
                                 enabledBorder: OutlineInputBorder(

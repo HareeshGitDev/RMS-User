@@ -29,6 +29,7 @@ class MyStayViewModel extends ChangeNotifier {
   List<LanguageModel> invoiceLang = [];
   List<LanguageModel> refundSplitUpLang = [];
   List<LanguageModel> feedBackLang = [];
+  List<LanguageModel> ticketLang = [];
 
   Future<void> getMyStayList() async {
     final MyStayListModel response = await _myStayApiService.fetchMyStayList();
@@ -171,6 +172,8 @@ class MyStayViewModel extends ChangeNotifier {
       invoiceLang = response;
     } else if (pageName == 'Refundsplitup') {
       refundSplitUpLang = response;
+    }else if (pageName == 'ticketPage') {
+      ticketLang = response;
     }
 
     notifyListeners();

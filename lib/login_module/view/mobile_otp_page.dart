@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:provider/provider.dart';
 
+import '../../language_module/model/language_model.dart';
 import '../../theme/custom_theme.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/navigation_service.dart';
@@ -39,6 +40,15 @@ class _OtpState extends State<MobileOtpPage> {
   late StreamSubscription<ConnectivityResult> _connectivitySubs;
   final Connectivity _connectivity = Connectivity();
   bool _connectionStatus = true;
+  SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+
+  getLanguageData() async {
+    await _loginViewModel.getLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'loginPage');
+  }
+  bool nullCheck({required List<LanguageModel> list}) =>
+      list.isNotEmpty ? true : false;
 
   Future<void> initConnectionStatus() async {
     ConnectivityResult result = ConnectivityResult.none;
@@ -91,7 +101,8 @@ class _OtpState extends State<MobileOtpPage> {
   }
   Future initMethod() async {
     _loginViewModel = Provider.of<LoginViewModel>(context, listen: false);
-    WidgetsBinding.instance!.addPostFrameCallback(
+    getLanguageData();
+    WidgetsBinding.instance.addPostFrameCallback(
             (_) => verifyOTP(context: context, phoneNumber: widget.number));
   }
 
@@ -109,10 +120,13 @@ class _OtpState extends State<MobileOtpPage> {
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(15),
                 bottomRight: Radius.circular(15))),
-        title: const Text(
-          'OTP Verification',
+        title:  Text(
+          nullCheck(
+              list: context.watch<LoginViewModel>().loginLang)
+              ? '${context.watch<LoginViewModel>().loginLang[19].name}'
+              :'OTP Verification',
           style: TextStyle(
-            fontSize: 22,
+            fontSize: 20,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -137,7 +151,7 @@ class _OtpState extends State<MobileOtpPage> {
             Row(
               children: [
                 Text(
-                  'OTP has been sent to : ',
+                  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[20].name : 'OTP has been sent to'} :  ',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey,
@@ -157,7 +171,7 @@ class _OtpState extends State<MobileOtpPage> {
               height: 30,
             ),
             Text(
-              "Enter your OTP code number",
+              '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[21].name :"Enter your OTP code number"}',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
@@ -215,7 +229,7 @@ class _OtpState extends State<MobileOtpPage> {
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 12),
                   child: Text(
-                    'Verify OTP',
+                    '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[22].name :'Verify OTP'}',
                     style: TextStyle(fontSize: 16),
                   ),
                 ),

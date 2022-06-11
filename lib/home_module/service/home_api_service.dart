@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:RentMyStay_user/home_module/model/home_page_model.dart';
 import 'package:RentMyStay_user/home_module/model/invite_and_earn_model.dart';
+import 'package:RentMyStay_user/home_module/model/tenant_leads_model.dart';
 import 'package:RentMyStay_user/language_module/model/language_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -61,6 +62,20 @@ class HomeApiService {
       );
     } else {
       return HomePageModel.fromJson(data);
+
+    }
+  }
+  Future<TenantLeadsModel> fetchTenantLeads() async {
+    String url = AppUrls.tenantLeadsUrl;
+    final response = await _apiService.getApiCall(endPoint: url);
+    final data = response as Map<String, dynamic>;
+
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
+      return TenantLeadsModel(
+        msg: 'failure',
+      );
+    } else {
+      return TenantLeadsModel.fromJson(data);
 
     }
   }

@@ -6,10 +6,14 @@ import 'package:RentMyStay_user/login_module/model/signup_request_model.dart';
 import 'package:RentMyStay_user/login_module/service/login_api_service.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../../language_module/model/language_model.dart';
+import '../../language_module/service/language_api_service.dart';
 import '../model/signup_response_model.dart';
 
 class LoginViewModel extends ChangeNotifier {
   final LoginApiService _loginApiService = LoginApiService();
+  List<LanguageModel> loginLang = [];
+  final LanguageApiService _languageApiService = LanguageApiService();
 
   Future<LoginResponseModel> getLoginDetails(
       {required String email, required String password}) async {
@@ -58,4 +62,13 @@ class LoginViewModel extends ChangeNotifier {
 
   Future<int> updateFCMToken({required String fcmToken}) async =>
       await _loginApiService.updateFCMToken(fcmToken: fcmToken);
+
+  Future<void> getLanguagesData(
+      {required String language, required String pageName}) async {
+    final response = await _languageApiService.fetchLanguagesData(
+        language: language, pageName: pageName);
+      loginLang = response;
+
+    notifyListeners();
+  }
 }

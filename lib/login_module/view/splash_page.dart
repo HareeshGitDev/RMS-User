@@ -74,7 +74,7 @@ class _SplashPageState extends State<SplashPage> {
     String lang=await preferenceUtil.getString(rms_language) ?? 'english';
 
     if (token == null) {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         Timer(const Duration(milliseconds: 1000), ()  {
           if (mounted) {
             Navigator.pushNamedAndRemoveUntil(
@@ -91,7 +91,7 @@ class _SplashPageState extends State<SplashPage> {
         });
       });
     } else {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         Timer(const Duration(milliseconds: 1000), () {
           if (mounted) {
             Navigator.pushNamedAndRemoveUntil(

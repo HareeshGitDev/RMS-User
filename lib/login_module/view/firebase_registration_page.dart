@@ -19,6 +19,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import '../../language_module/model/language_model.dart';
 import '../../theme/custom_theme.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/shared_prefrences_util.dart';
@@ -63,6 +64,16 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
   late StreamSubscription<ConnectivityResult> _connectivitySubs;
   final Connectivity _connectivity = Connectivity();
   bool _connectionStatus = true;
+
+  SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+
+  getLanguageData() async {
+    await _loginViewModel.getLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'loginPage');
+  }
+  bool nullCheck({required List<LanguageModel> list}) =>
+      list.isNotEmpty ? true : false;
 
   Future<void> initConnectionStatus() async {
     ConnectivityResult result = ConnectivityResult.none;
@@ -143,7 +154,7 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
                         alignment: Alignment.centerRight,
                         child: AnimatedTextKit(
                           animatedTexts: [
-                            ColorizeAnimatedText('You are Almost there!',
+                            ColorizeAnimatedText('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[23].name :'You are Almost there'} ! ',
                                 textStyle: const TextStyle(
                                   fontSize: 30,
                                 ),
@@ -235,7 +246,7 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
                                       controller: _nameController,
                                       decoration: InputDecoration(
                                         border: InputBorder.none,
-                                        hintText: "Name",
+                                        hintText: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[12].name :"Name"}',
                                         prefixIcon: Icon(Icons.person),
                                       ),
                                     ),
@@ -264,7 +275,7 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
                                       controller: _phoneNumberController,
                                       decoration: InputDecoration(
                                         border: InputBorder.none,
-                                        hintText: "Phone Number",
+                                        hintText:  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[13].name :"Phone Number"}',
                                         prefixIcon: Icon(Icons.contact_page),
                                       ),
                                     ),
@@ -302,7 +313,7 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
                                     controller: _emailController,
                                     decoration: InputDecoration(
                                       border: InputBorder.none,
-                                      hintText: 'Email',
+                                      hintText:'${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[1].name :"Email"}',
                                       prefixIcon: Icon(Icons.email_outlined),
                                     ),
                                   ),
@@ -424,7 +435,7 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
                                     await calledFromOTPPage();
                                   }
                                 },
-                                child: Center(child: Text("REGISTER")),
+                                child: Center(child:  Text('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[15].name :"REGISTER"}')),
                               ),
                             ),
                           ],

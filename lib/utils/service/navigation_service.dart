@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:RentMyStay_user/home_module/view/dashboard_page.dart';
 import 'package:RentMyStay_user/home_module/view/refer_earn_page.dart';
+import 'package:RentMyStay_user/home_module/view/tenant_leads_page.dart';
 import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
 import 'package:RentMyStay_user/language_module/view/language_screen.dart';
 import 'package:RentMyStay_user/language_module/viewModel/language_viewModel.dart';
@@ -452,6 +453,13 @@ class NavigationService {
             ),
           ),
         );
+      case AppRoutes.tenantLeadsPage:
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+            create: (_) => HomeViewModel(),
+            child: TenantLeadsPage(),
+          ),
+        );
 
       default:
         return MaterialPageRoute(
@@ -504,4 +512,5 @@ class AppRoutes {
   static const String propertyDescriptionPage = 'propertyDescriptionPage';
   static const String propertyRulesPage = 'propertyRulesPage';
   static const String propertyLocationPage = 'propertyLocationPage';
+  static const String tenantLeadsPage = 'tenantLeadsPage';
 }

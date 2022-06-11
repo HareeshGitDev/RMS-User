@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:RentMyStay_user/home_module/model/home_page_model.dart';
 import 'package:RentMyStay_user/home_module/model/invite_and_earn_model.dart';
 import 'package:RentMyStay_user/home_module/model/popular_model.dart';
+import 'package:RentMyStay_user/home_module/model/tenant_leads_model.dart';
 import 'package:RentMyStay_user/images.dart';
 import 'package:RentMyStay_user/language_module/service/language_api_service.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
@@ -17,9 +18,11 @@ class HomeViewModel extends ChangeNotifier {
   final LanguageApiService _languageApiService = LanguageApiService();
   ReferAndEarnModel? referAndEarnModel ;
   List<LanguageModel> languageData = [];
+  List<LanguageModel> tenantLeadsLang = [];
   List<LanguageModel> referAndEarnLang = [];
   bool ownerModeSelected=true;
   HomePageModel homePageModel=HomePageModel();
+  TenantLeadsModel tenantLeadsModel=TenantLeadsModel();
 
   void switchMode({required bool ownerMode}){
     ownerModeSelected=ownerMode;
@@ -103,12 +106,25 @@ class HomeViewModel extends ChangeNotifier {
     homePageModel = response;
    notifyListeners();
   }
+  Future<void> getTenantLeads() async {
+    final response =
+    await _homeApiService.fetchTenantLeads();
+   tenantLeadsModel = response;
+    notifyListeners();
+  }
 
   Future<void> getLanguagesData(
       {required String language, required String pageName}) async {
     final response = await _languageApiService.fetchLanguagesData(
         language: language, pageName: pageName);
     languageData = response;
+    notifyListeners();
+  }
+  Future<void> getTenantLeadsLanguageData(
+      {required String language, required String pageName}) async {
+    final response = await _languageApiService.fetchLanguagesData(
+        language: language, pageName: pageName);
+    tenantLeadsLang = response;
     notifyListeners();
   }
   Future<void> getReferAndEarnLanguagesData(
