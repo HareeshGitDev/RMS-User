@@ -8,7 +8,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:flutter_webview_pro/webview_flutter.dart';
+//import 'package:flutter_webview_pro/webview_flutter.dart';
 import 'package:webview_flutter/platform_interface.dart';
 //import 'package:flutter_webview_pro/webview_flutter.dart' as webViewAndroid;
 import 'package:webview_flutter/webview_flutter.dart' as webViewIOS;
