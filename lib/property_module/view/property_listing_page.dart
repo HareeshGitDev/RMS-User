@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:developer' as logger;
 import 'dart:developer';
 import 'dart:math' as math;
-
+import 'package:RentMyStay_user/property_module/model/property_list_model.dart'
+    as propListModel;
 import 'package:RentMyStay_user/profile_Module/model/filter_sort_request_model.dart';
 import 'package:RentMyStay_user/property_module/viewModel/property_viewModel.dart';
 import 'package:RentMyStay_user/utils/constants/enum_consts.dart';
@@ -165,6 +166,18 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
   bool nullCheck({required List<LanguageModel> list}) =>
       list.isNotEmpty ? true : false;
 
+  String getUnitType({required propListModel.Data data}) {
+    return '';
+  }
+
+  String getPropType({required propListModel.Data data}) {
+    return '';
+  }
+
+  String getPropName({required propListModel.Data data}) {
+    return '';
+  }
+
   @override
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
@@ -298,25 +311,76 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                     height: _mainHeight * 0.02,
                                                   ),
                                                   Container(
+
                                                     padding: EdgeInsets.only(
-                                                        left: _mainWidth * 0.02,
-                                                        right:
-                                                            _mainWidth * 0.02),
+                                                      left: _mainWidth * 0.02,
+                                                    ),
                                                     child: Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
                                                       children: [
+                                                        Visibility(
+                                                          visible: data
+                                                                      .rmsProp !=
+                                                                  null &&
+                                                              data.rmsProp ==
+                                                                  "RMS Prop",
+                                                          child: Container(
+                                                            child: Text(
+                                                              "${data.unitType ?? ''}",
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              maxLines: 1,
+                                                              style: TextStyle(
+                                                                  fontSize: getHeight(
+                                                                      context:
+                                                                          context,
+                                                                      height:
+                                                                          12),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Text(' - '),
                                                         Container(
-                                                          width:
-                                                              _mainWidth * 0.68,
+
                                                           child: Text(
-                                                            "${data.title?.trim() ?? ""}",
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            maxLines: 2,
+                                                            '${data.propType}',
                                                             style: TextStyle(
+                                                              fontSize: getHeight(
+                                                                  context:
+                                                                  context,
+                                                                  height: 12),
+                                                              color:
+                                                              Colors.black,
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .w500,
+                                                            ),
+                                                            maxLines: 1,
+                                                            overflow:
+                                                            TextOverflow
+                                                                .ellipsis,
+                                                          ),
+                                                        ),
+                                                        Text(' - '),
+                                                        Visibility(
+                                                          visible: data
+                                                                      .rmsProp !=
+                                                                  null &&
+                                                              data.rmsProp ==
+                                                                  "RMS Prop",
+                                                          child: Container(
+                                                            width: _mainWidth*0.28,
+                                                            child: Text(
+                                                              data.buildingName ??
+                                                                  '',
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              maxLines: 1,
+                                                              style: TextStyle(
                                                                 fontSize: getHeight(
                                                                     context:
                                                                         context,
@@ -325,35 +389,13 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                                     .black,
                                                                 fontWeight:
                                                                     FontWeight
-                                                                        .w600),
+                                                                        .w500,
+                                                              ),
+                                                            ),
                                                           ),
                                                         ),
-                                                        Visibility(
-                                                          visible: data
-                                                                      .rmsProp !=
-                                                                  null &&
-                                                              data.rmsProp ==
-                                                                  "RMS Prop",
-                                                          child: Text(
-                                                            "${data.unitType ?? ''}",
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            maxLines: 1,
-                                                            style: TextStyle(
-                                                                fontSize: getHeight(
-                                                                    context:
-                                                                        context,
-                                                                    height: 12),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700),
-                                                          ),
-                                                        ),
+
                                                       ],
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
                                                     ),
                                                   ),
                                                   SizedBox(
@@ -519,7 +561,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                   ),
                                                 ],
                                               ),
-                                              Positioned(
+                                              /* Positioned(
                                                 top: _mainHeight * 0.02,
                                                 left: _mainWidth * 0.04,
                                                 child: Visibility(
@@ -573,7 +615,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                     ]),
                                                   ),
                                                 ),
-                                              ),
+                                              ),*/
                                               Positioned(
                                                 right: _mainWidth * 0.04,
                                                 top: _mainHeight * 0.02,
@@ -636,7 +678,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                         ),
                                                 ),
                                               ),
-                                              Positioned(
+                                              /* Positioned(
                                                 left: _mainWidth * 0.04,
                                                 top: _mainHeight * 0.2,
                                                 child: Container(
@@ -670,7 +712,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                     ),
                                                   ),
                                                 ),
-                                              ),
+                                              ),*/
                                               Positioned(
                                                 right: _mainWidth * 0.04,
                                                 top: _mainHeight * 0.2,
@@ -796,7 +838,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
         child: Row(
           children: [
             Text(
-              '${value.propertyListModel.data?.length ?? ''} ${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[28].name :'Stay\'s Found'}',
+              '${value.propertyListModel.data?.length ?? ''} ${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[28].name : 'Stay\'s Found'}',
               style: TextStyle(
                   color: CustomTheme.appTheme,
                   fontWeight: FontWeight.w600,
@@ -817,7 +859,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
             InkWell(
               onTap: () => applyFilter(context, value),
               child: Text(
-                '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[2].name :'Filter'}',
+                '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[2].name : 'Filter'}',
                 style: TextStyle(
                   fontSize: getHeight(context: context, height: 12),
                   color: CustomTheme.appThemeContrast,
@@ -842,7 +884,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
             InkWell(
               onTap: () => applySorting(context, value),
               child: Text(
-                '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[3].name :'Sort'}',
+                '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[3].name : 'Sort'}',
                 style: TextStyle(
                   fontSize: getHeight(context: context, height: 12),
                   color: CustomTheme.appThemeContrast,
@@ -905,8 +947,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                     onPressed: () async {
                       if (showSearchResults == false) {
                         _searchController.clear();
-                        FocusScope.of(context)
-                            .requestFocus(FocusNode());
+                        FocusScope.of(context).requestFocus(FocusNode());
                       } else {
                         setState(() {
                           showSearchResults = false;
@@ -1672,76 +1713,78 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
         intensity: 5,
         depth: 2,
       ),
-      child:value.locations.isNotEmpty? Container(
-          padding: EdgeInsets.only(top: 10),
-          child: ListView.separated(
-            padding: EdgeInsets.zero,
-            itemBuilder: (context1, index) {
-              return GestureDetector(
-                onTap: () async {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  RMSWidgets.showLoaderDialog(
-                      context: context, message: 'Loading');
+      child: value.locations.isNotEmpty
+          ? Container(
+              padding: EdgeInsets.only(top: 10),
+              child: ListView.separated(
+                padding: EdgeInsets.zero,
+                itemBuilder: (context1, index) {
+                  return GestureDetector(
+                    onTap: () async {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      RMSWidgets.showLoaderDialog(
+                          context: context, message: 'Loading');
 
-                  _searchController.text = value.locations[index].location;
-                  showSearchResults = false;
-                  await _propertyViewModel.getPropertyDetailsList(
-                      address: value.locations[index].location,
-                      property: Property.fromSearch,
-                      toDate: widget.checkOutDate,
-                      fromDate: widget.checkInDate);
+                      _searchController.text = value.locations[index].location;
+                      showSearchResults = false;
+                      await _propertyViewModel.getPropertyDetailsList(
+                          address: value.locations[index].location,
+                          property: Property.fromSearch,
+                          toDate: widget.checkOutDate,
+                          fromDate: widget.checkInDate);
 
-                  Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.only(
+                        left: _mainWidth * 0.02,
+                      ),
+                      height: _mainHeight * 0.045,
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.location_on_outlined,
+                            size: _mainHeight * 0.022,
+                            color: CustomTheme.appTheme,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Container(
+                            width: _mainWidth * 0.8,
+                            child: Text(
+                              value.locations[index].location,
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: CustomTheme.appTheme,
+                                  fontWeight: FontWeight.w500),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
                 },
-                child: Container(
-                  padding: EdgeInsets.only(
-                    left: _mainWidth * 0.02,
-                  ),
-                  height: _mainHeight * 0.045,
-                  alignment: Alignment.centerLeft,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                        size: _mainHeight * 0.022,
-                        color: CustomTheme.appTheme,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Container(
-                        width: _mainWidth * 0.8,
-                        child: Text(
-                          value.locations[index].location,
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: CustomTheme.appTheme,
-                              fontWeight: FontWeight.w500),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
+                itemCount: value.locations.length,
+                separatorBuilder: (context, index) => const Divider(
+                  thickness: 1,
                 ),
-              );
-            },
-            itemCount: value.locations.length,
-            separatorBuilder: (context, index) => const Divider(
-              thickness: 1,
-            ),
-          )):Center(
-        child: Text(
-          'No any suggestion found !',
-          style: TextStyle(
-              fontSize: getHeight(
-                context: context,
-                height: 16,
+              ))
+          : Center(
+              child: Text(
+                'No any suggestion found !',
+                style: TextStyle(
+                    fontSize: getHeight(
+                      context: context,
+                      height: 16,
+                    ),
+                    color: CustomTheme.appTheme),
               ),
-              color: CustomTheme.appTheme),
-        ),
-      ),
+            ),
     );
   }
 

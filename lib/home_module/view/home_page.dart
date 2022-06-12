@@ -579,7 +579,7 @@ class _HomePageState extends State<HomePage> {
         model.homePageModel.data?.trendingProps != null &&
         model.homePageModel.data?.trendingProps!.length != 0) {
       return Container(
-        height: _mainHeight * 0.23,
+        height: _mainHeight * 0.235,
         decoration: BoxDecoration(
           //  color: Colors.amber,
           borderRadius: BorderRadius.circular(10),
@@ -741,7 +741,7 @@ class _HomePageState extends State<HomePage> {
                                       SizedBox(
                                         width: _mainWidth * 0.005,
                                       ),
-                                      data.monthRentOff != null &&
+                                      /*data.monthRentOff != null &&
                                               data.monthRentOff.toString() !=
                                                   '0'
                                           ? Container(
@@ -766,15 +766,156 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                               ),
                                             )
-                                          : Container(),
+                                          : Container(),*/
+                                      Container(
+                                        width: _mainWidth * 0.15,
+                                        alignment: Alignment.centerLeft,
+                                        padding: EdgeInsets.only(
+                                            right: _mainWidth * 0.01,
+                                            top: _mainHeight * 0.003),
+                                        child: FittedBox(
+                                          child: Text(
+                                            ' ( < 3 Month )',
+                                            style: TextStyle(
+                                              fontSize: getHeight(
+                                                  context: context,
+                                                  height: 12),
+                                              color:
+                                              CustomTheme.myFavColor,
+                                              fontWeight: FontWeight.w600,
+
+                                              //fontStyle: FontStyle.italic,
+                                            ),
+                                          ),
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),
                                 Container(
-                                  alignment: Alignment.centerLeft,
                                   padding: EdgeInsets.only(
                                       left: _mainWidth * 0.01,
-                                      top: _mainHeight * 0.003),
+                                      right: _mainWidth * 0.01,
+                                      top: _mainHeight * 0.005),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: _mainWidth * 0.13,
+                                        alignment: Alignment.centerLeft,
+                                        padding: EdgeInsets.only(
+                                            right: _mainWidth * 0.01,
+                                            top: _mainHeight * 0.003),
+                                        child: FittedBox(
+                                          child: Text(
+                                            data.rmsRent != null
+                                                ? rupee + ' ${data.rmsRent}'
+                                                : '',
+                                            style: TextStyle(
+                                              fontSize: getHeight(
+                                                  context: context, height: 12),
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: _mainWidth * 0.005,
+                                      ),
+                                      showOrgPrice(
+                                          monthlyRent:
+                                          data.rmsRent ?? '0',
+                                          orgRent: data.rmsRent ?? '0')
+                                          ? Container()
+                                          : Container(
+                                        width: _mainWidth * 0.1,
+                                        alignment: Alignment.centerLeft,
+                                        padding: EdgeInsets.only(
+                                            right: _mainWidth * 0.01,
+                                            top: _mainHeight * 0.003),
+                                        child: FittedBox(
+                                          child: Text(
+                                            data.orgRmsRent != null
+                                                ? rupee +
+                                                '${data.orgRmsRent}'
+                                                : '',
+                                            style: TextStyle(
+                                              fontSize: getHeight(
+                                                  context: context,
+                                                  height: 10),
+                                              color: Colors.grey,
+                                              decoration: TextDecoration
+                                                  .lineThrough,
+                                              fontWeight: FontWeight.w600,
+
+                                              //fontStyle: FontStyle.italic,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: _mainWidth * 0.005,
+                                      ),
+                                      /*data.monthRentOff != null &&
+                                              data.monthRentOff.toString() !=
+                                                  '0'
+                                          ? Container(
+                                              width: _mainWidth * 0.15,
+                                              alignment: Alignment.centerLeft,
+                                              padding: EdgeInsets.only(
+                                                  right: _mainWidth * 0.01,
+                                                  top: _mainHeight * 0.003),
+                                              child: FittedBox(
+                                                child: Text(
+                                                  '${data.monthRentOff.toString()}% OFF',
+                                                  style: TextStyle(
+                                                    fontSize: getHeight(
+                                                        context: context,
+                                                        height: 12),
+                                                    color:
+                                                        CustomTheme.myFavColor,
+                                                    fontWeight: FontWeight.w600,
+
+                                                    //fontStyle: FontStyle.italic,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : Container(),*/
+                                      Container(
+                                        width: _mainWidth * 0.15,
+                                        alignment: Alignment.centerLeft,
+                                        padding: EdgeInsets.only(
+                                            right: _mainWidth * 0.01,
+                                            top: _mainHeight * 0.003),
+                                        child: FittedBox(
+                                          child: Text(
+                                            ' ( > 3 Month )',
+                                            style: TextStyle(
+                                              fontSize: getHeight(
+                                                  context: context,
+                                                  height: 12),
+                                              color:
+                                              CustomTheme.myFavColor,
+                                              fontWeight: FontWeight.w600,
+
+                                              //fontStyle: FontStyle.italic,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+
+                              /* Container(
+                                  alignment: Alignment.centerRight,
+                                  padding: EdgeInsets.only(
+                                      left: _mainWidth * 0.01,
+                                      right: _mainWidth * 0.01,
+                                    top: _mainHeight*0.01
+                                      ),
                                   child: Text(
                                     nullCheck(list: _homeViewModel.languageData) ? '${_homeViewModel.languageData[23].name}' :'More Info',
                                     style: TextStyle(
@@ -787,7 +928,7 @@ class _HomePageState extends State<HomePage> {
                                       //fontStyle: FontStyle.italic,
                                     ),
                                   ),
-                                ),
+                                ),*/
                               ],
                             ),
                           ],
