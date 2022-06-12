@@ -10,9 +10,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../../language_module/model/language_model.dart';
 import '../../theme/custom_theme.dart';
+import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/location_service.dart';
 import '../../utils/service/navigation_service.dart';
+import '../../utils/service/shared_prefrences_util.dart';
 import '../model/owner_property_details_request_model.dart';
 import '../viewModel/owner_property_viewModel.dart';
 
@@ -43,12 +46,23 @@ class _PropertyLocationPageState extends State<PropertyLocationPage> {
   bool editable = false;
   final _addressController = TextEditingController();
   CurrentLocationModel currentLocation = CurrentLocationModel();
+  SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+
+  getLanguageData() async {
+    await _viewModel.getLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'ownerPropertyPage');
+  }
+  bool nullCheck({required List<LanguageModel> list}) =>
+      list.isNotEmpty ? true : false;
 
   @override
   void initState() {
     super.initState();
+
     _viewModel = Provider.of<OwnerPropertyViewModel>(context, listen: false);
     _addressController.text = widget.propertyLocation ?? '';
+    getLanguageData();
   }
 
   @override
@@ -65,99 +79,106 @@ class _PropertyLocationPageState extends State<PropertyLocationPage> {
       appBar: AppBar(
         titleSpacing: 0,
         centerTitle: false,
-        title: Text('Property Location'),
+        title: Text(nullCheck(
+            list: context.watch<OwnerPropertyViewModel>().ownerPropertyLang)
+            ? '${context.watch<OwnerPropertyViewModel>().ownerPropertyLang[23].name}'
+            :'Property Location'),
       ),
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-        child: Container(
-          height: _mainHeight,
-          width: _mainWidth,
-          color: Colors.white,
-          padding: EdgeInsets.only(
-              left: _mainWidth * 0.04,
-              right: _mainWidth * 0.04,
-              top: _mainHeight * 0.02,
-              bottom: _mainHeight * 0.02),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const Text(
-                  'Enter Your Property Location',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color: Colors.black),
-                ),
-                SizedBox(
-                  height: _mainHeight * 0.02,
-                ),
-                Container(
-                  alignment: Alignment.topLeft,
-                  height: _mainHeight * 0.1,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                  ),
-                  child: Neumorphic(
-                    style: NeumorphicStyle(
-                      depth: -2,
-                      color: Colors.white,
+      body: Consumer<OwnerPropertyViewModel>(
+        builder: (context, value, child) {
+          return GestureDetector(
+            onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+            child: Container(
+              height: _mainHeight,
+              width: _mainWidth,
+              color: Colors.white,
+              padding: EdgeInsets.only(
+                  left: _mainWidth * 0.04,
+                  right: _mainWidth * 0.04,
+                  top: _mainHeight * 0.02,
+                  bottom: _mainHeight * 0.02),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Text(
+                      '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[24].name :'Enter Your Property Location'}',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          color: Colors.black),
                     ),
-                    child: TextFormField(
-                      maxLines: 4,
-                      controller: _addressController,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(left: 10, top: 10),
-                        border: InputBorder.none,
-                        hintText: "Property Location",
+                    SizedBox(
+                      height: _mainHeight * 0.02,
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      height: _mainHeight * 0.1,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
                       ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: _mainHeight * 0.1,
-                ),
-                const Text(
-                  'Select Property Location on Map',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color: Colors.black),
-                ),
-                GestureDetector(
-                  onTap: () async {
-                    var locationDetails = await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            ChangeNotifierProvider<OwnerPropertyViewModel>(
-                          child: GoogleMapPage(
-                            longitude: widget.longitude,
-                            latitude: widget.latitude,
+                      child: Neumorphic(
+                        style: NeumorphicStyle(
+                          depth: -2,
+                          color: Colors.white,
+                        ),
+                        child: TextFormField(
+                          maxLines: 4,
+                          controller: _addressController,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.only(left: 10, top: 10),
+                            border: InputBorder.none,
+                            hintText: '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[23].name :"Property Location"}',
                           ),
-                          create: (BuildContext context) =>
-                              OwnerPropertyViewModel(),
                         ),
                       ),
-                    ) as CurrentLocationModel?;
-                    if (locationDetails != null &&
-                        locationDetails.fullAddress != null) {
-                      currentLocation = locationDetails;
-                      _addressController.text =
-                          currentLocation.fullAddress.toString();
-                    }
-                  },
-                  child: Container(
-                      // alignment: Alignment.topCenter,
-                      height: _mainHeight * 0.15,
-                      width: _mainWidth * 0.7,
-                      child: Image.asset(
-                        Images.googleMapImage,
-                        fit: BoxFit.cover,
-                      )),
+                    ),
+                    SizedBox(
+                      height: _mainHeight * 0.1,
+                    ),
+                     Text(
+                       '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[25].name : 'Select Property Location on Map'}',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          color: Colors.black),
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        var locationDetails = await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ChangeNotifierProvider<OwnerPropertyViewModel>(
+                                  child: GoogleMapPage(
+                                    longitude: widget.longitude,
+                                    latitude: widget.latitude,
+                                  ),
+                                  create: (BuildContext context) =>
+                                      OwnerPropertyViewModel(),
+                                ),
+                          ),
+                        ) as CurrentLocationModel?;
+                        if (locationDetails != null &&
+                            locationDetails.fullAddress != null) {
+                          currentLocation = locationDetails;
+                          _addressController.text =
+                              currentLocation.fullAddress.toString();
+                        }
+                      },
+                      child: Container(
+                        // alignment: Alignment.topCenter,
+                          height: _mainHeight * 0.15,
+                          width: _mainWidth * 0.7,
+                          child: Image.asset(
+                            Images.googleMapImage,
+                            fit: BoxFit.cover,
+                          )),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
       bottomNavigationBar: Container(
         margin: EdgeInsets.only(
@@ -178,7 +199,10 @@ class _PropertyLocationPageState extends State<PropertyLocationPage> {
                       RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
                     )),
-                child: Text('Current Location'),
+                child: Text(nullCheck(
+                    list: context.watch<OwnerPropertyViewModel>().ownerPropertyLang)
+                    ? '${context.watch<OwnerPropertyViewModel>().ownerPropertyLang[26].name}'
+                    :'Current Location'),
                 onPressed: () async {
                   RMSWidgets.showLoaderDialog(
                       context: context, message: 'Loading');
@@ -203,7 +227,10 @@ class _PropertyLocationPageState extends State<PropertyLocationPage> {
                       RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
                     )),
-                child: const Text('Save'),
+                child: Text(nullCheck(
+                    list: context.watch<OwnerPropertyViewModel>().ownerPropertyLang)
+                    ? '${context.watch<OwnerPropertyViewModel>().ownerPropertyLang[6].name}'
+                    :'Save'),
                 onPressed: () async {
                   if ((currentLocation.fullAddress != null &&
                           currentLocation.fullAddress!.isNotEmpty) ||

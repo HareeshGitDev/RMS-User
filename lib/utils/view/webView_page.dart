@@ -1,16 +1,17 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:RentMyStay_user/theme/custom_theme.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-//import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_webview_pro/webview_flutter.dart';
 import 'package:webview_flutter/platform_interface.dart';
-//import 'package:flutter_webview_pro/webview_flutter.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_webview_pro/webview_flutter.dart' as webViewAndroid;
+import 'package:webview_flutter/webview_flutter.dart' as webViewIOS;
 
 class Web_View_Container extends StatefulWidget {
   final url;
@@ -26,7 +27,8 @@ class _WebViewContainerState extends State<Web_View_Container> {
   ValueNotifier<bool> showLoader = ValueNotifier(true);
   ValueNotifier<int> progressIndicator = ValueNotifier(0);
 
-  late WebViewController _webViewController;
+  late webViewAndroid.WebViewController _webViewAndroidController;
+  late webViewIOS.WebViewController _webViewIosController;
 
   var _mainHeight;
   var _mainWidth;
@@ -35,17 +37,6 @@ class _WebViewContainerState extends State<Web_View_Container> {
   late StreamSubscription<ConnectivityResult> _connectivitySubs;
   final Connectivity _connectivity = Connectivity();
   bool _connectionStatus = true;
- /* InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
-      crossPlatform: InAppWebViewOptions(
-        useShouldOverrideUrlLoading: true,
-        mediaPlaybackRequiresUserGesture: true,
-      ),
-      android: AndroidInAppWebViewOptions(
-        useHybridComposition: true,
-      ),
-      ios: IOSInAppWebViewOptions(
-        allowsInlineMediaPlayback: true,
-      ));*/
 
 
 
@@ -118,18 +109,7 @@ class _WebViewContainerState extends State<Web_View_Container> {
               Expanded(
                 child: Stack(
                   children: [
-                   /* InAppWebView(
-                      initialUrlRequest:
-                      URLRequest(url: Uri.parse(widget.url)),
-                      initialOptions: options,
-                      androidOnPermissionRequest: (controller, origin, resources) async {
-                        return PermissionRequestResponse(
-                            resources: resources,
-                            action: PermissionRequestResponseAction.GRANT);
-                      },
-
-                    ),*/
-                    WebView(
+                    Platform.isIOS? webViewIOS.WebView(
                       onProgress: (progress) {
                         progressIndicator.value = progress;
                       },
@@ -139,21 +119,36 @@ class _WebViewContainerState extends State<Web_View_Container> {
                       onPageFinished: (end) {
                         showLoader.value = false;
                       },
-                      onWebViewCreated: (WebViewController controller) {
-                        _webViewController = controller;
+                      onWebViewCreated: (webViewIOS.WebViewController controller) {
+                        _webViewIosController =controller;
                       },
                       backgroundColor: Colors.white,
                       key: _key,
-                      javascriptMode: JavascriptMode.unrestricted,
+                      javascriptMode: webViewIOS.JavascriptMode.unrestricted,
                       initialUrl: widget.url,
                       allowsInlineMediaPlayback: false,
                       gestureNavigationEnabled: true,
-                      initialMediaPlaybackPolicy: AutoMediaPlaybackPolicy.always_allow,
-                      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-                        Factory<OneSequenceGestureRecognizer>(
-                              () => EagerGestureRecognizer(),
-                        ),
-                      }.toSet(),
+
+                    ):webViewAndroid.WebView(
+                      onProgress: (progress) {
+                        progressIndicator.value = progress;
+                      },
+                      onPageStarted: (start) {
+                        showLoader.value = true;
+                      },
+                      onPageFinished: (end) {
+                        showLoader.value = false;
+                      },
+                      onWebViewCreated: (webViewAndroid.WebViewController controller) {
+                        _webViewAndroidController = controller;
+                      },
+                      backgroundColor: Colors.white,
+                      key: _key,
+                      javascriptMode: webViewAndroid.JavascriptMode.unrestricted,
+                      initialUrl: widget.url,
+                      allowsInlineMediaPlayback: false,
+                      gestureNavigationEnabled: true,
+
                     ),
                    Positioned(
                       top: _mainHeight * 0.4,

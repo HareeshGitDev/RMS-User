@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:RentMyStay_user/images.dart';
 import 'package:RentMyStay_user/login_module/service/google_auth_service.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
+import 'package:RentMyStay_user/theme/fonts.dart';
 
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
@@ -320,7 +321,7 @@ class _LoginPageState extends State<LoginPage> {
                                     alignment: Alignment.centerRight,
                                     child: GestureDetector(
                                         onTap: () => showForgotPasswordDialog(
-                                            context: context),
+                                            context: context,value: value),
                                         child: Text(
                                           '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[4].name :'Forgot Password'}',
                                           style: TextStyle(
@@ -569,7 +570,7 @@ class _LoginPageState extends State<LoginPage> {
     await shared.setString(rms_userId, '${response.data?.id}');
   }
 
-  void showForgotPasswordDialog({required BuildContext context}) {
+  void showForgotPasswordDialog({required BuildContext context,required LoginViewModel value}) {
     showDialog(
         context: context,
         builder: (context) {
@@ -578,20 +579,20 @@ class _LoginPageState extends State<LoginPage> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             title: Text(
-              'Forgot Password ?',
+              '${nullCheck(list: value.loginLang) ? value.loginLang[4].name :'Forgot Password'} ?',
               style: TextStyle(
                   color: CustomTheme.appThemeContrast,
                   fontWeight: FontWeight.w600,
-                  fontSize: 20),
+                  fontSize: getHeight(context: context, height: 20)),
             ),
             content: Container(
               height: _mainHeight * 0.13,
               width: MediaQuery.of(context).size.width,
               child: Column(
                 children: [
-                  Text('Please Enter Email to get Password Reset Link !'),
+                  Text('${nullCheck(list: value.loginLang) ? value.loginLang[24].name :'Please Enter Email to get Password Reset Link'} !'),
                   SizedBox(
-                    height: 10,
+                    height: _mainHeight*0.035,
                   ),
                   Neumorphic(
                     style: NeumorphicStyle(
@@ -609,8 +610,8 @@ class _LoginPageState extends State<LoginPage> {
                       controller: _resetEmailController,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'Email',
-                        prefixIcon: Icon(Icons.email_outlined),
+                        hintText: '${nullCheck(list: value.loginLang) ? value.loginLang[1].name :'Email'}',
+                        prefixIcon: Icon(Icons.email_outlined,size: _mainHeight*0.02,),
                       ),
                     ),
                   ),
@@ -620,7 +621,7 @@ class _LoginPageState extends State<LoginPage> {
             elevation: 5,
             actions: [
               Container(
-                padding: EdgeInsets.only(bottom: 10),
+                padding: EdgeInsets.only(bottom: _mainHeight*0.015),
                 width: _mainWidth * 0.4,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -654,8 +655,8 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   },
                   child: Text(
-                    'Recover',
-                    style: TextStyle(fontSize: 14, color: CustomTheme.black),
+                    '${nullCheck(list: value.loginLang) ? value.loginLang[25].name :'Recover'}',
+                    style: TextStyle(fontSize: getHeight(context: context, height: 14), color: CustomTheme.black),
                   ),
                 ),
               ),

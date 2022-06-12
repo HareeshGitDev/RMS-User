@@ -26,6 +26,7 @@ class OwnerPropertyViewModel extends ChangeNotifier {
   List<AmenitiesModel> availableAmenitiesList = [];
   List<AmenitiesModel> allAmenitiesList = [];
   List<LanguageModel> ownerPropertyLang = [];
+  List<LanguageModel> ownerPropertyDetailsLang = [];
 
   double latitude = 12.967140;
   double longitude = 77.736558;
@@ -74,7 +75,7 @@ class OwnerPropertyViewModel extends ChangeNotifier {
         ownerPropertyDetailsModel.data?.propDetails?.videoLink != null) {
       youTubeController = YoutubePlayerController(
         initialVideoId:
-        (ownerPropertyDetailsModel.data?.propDetails?.videoLink).toString(),
+            (ownerPropertyDetailsModel.data?.propDetails?.videoLink).toString(),
         flags: const YoutubePlayerFlags(
           autoPlay: true,
           mute: true,
@@ -549,6 +550,15 @@ class OwnerPropertyViewModel extends ChangeNotifier {
     final response = await _languageApiService.fetchLanguagesData(
         language: language, pageName: pageName);
     ownerPropertyLang = response;
+
+    notifyListeners();
+  }
+
+  Future<void> getOwnerPropDetailsLang(
+      {required String language, required String pageName}) async {
+    final response = await _languageApiService.fetchLanguagesData(
+        language: language, pageName: pageName);
+    ownerPropertyDetailsLang = response;
 
     notifyListeners();
   }

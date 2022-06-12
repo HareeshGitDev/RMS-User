@@ -169,7 +169,7 @@ class _InvoiceState extends State<InvoicePage> {
                                       right: _mainWidth * 0.09),
                                   title: Container(
                                     width: _mainWidth,
-                                    height: 30,
+                                   // height: 30,
                                     child: Row(
                                       children: [
                                         Padding(
@@ -293,7 +293,7 @@ class _InvoiceState extends State<InvoicePage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text('Amount',
+                                          Text('${nullCheck(list: value.invoiceLang) ? value.invoiceLang[5].name :'Amount'}',
                                               style: TextStyle(
                                                   color: Colors.grey,
                                                   fontWeight: FontWeight.w500,
@@ -319,7 +319,7 @@ class _InvoiceState extends State<InvoicePage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text('Received',
+                                          Text('${nullCheck(list: value.invoiceLang) ? value.invoiceLang[6].name :'Received'}',
                                               style: TextStyle(
                                                   color: Colors.grey,
                                                   fontWeight: FontWeight.w500,
@@ -352,7 +352,7 @@ class _InvoiceState extends State<InvoicePage> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                Text('Referral',
+                                                Text('${nullCheck(list: value.invoiceLang) ? value.invoiceLang[7].name :'Referral'}',
                                                     style: TextStyle(
                                                         color: Colors.grey,
                                                         fontWeight:
@@ -395,7 +395,7 @@ class _InvoiceState extends State<InvoicePage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text('Pending',
+                                          Text('${nullCheck(list: value.invoiceLang) ? value.invoiceLang[8].name :'Pending'}',
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w600,
@@ -474,7 +474,7 @@ class _InvoiceState extends State<InvoicePage> {
                                                     text: TextSpan(
                                                     children: [
                                                       TextSpan(
-                                                          text: 'Download',
+                                                          text: '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[11].name :'Download'}',
                                                           style: TextStyle(
                                                               fontSize: getHeight(
                                                                   context:
@@ -489,7 +489,7 @@ class _InvoiceState extends State<InvoicePage> {
                                                     ],
                                                   ))
                                                 : Text(
-                                                    'Pay Now',
+                                              '${nullCheck(list: value.invoiceLang) ? value.invoiceLang[9].name :'Pay Now'}',
                                                     style: TextStyle(
                                                         fontSize: getHeight(
                                                             context: context,

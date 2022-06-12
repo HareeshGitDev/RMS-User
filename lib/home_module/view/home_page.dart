@@ -471,9 +471,14 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                           width: _mainWidth * 0.42,
                                           decoration: BoxDecoration(
-                                              color: Colors.grey.shade50,
+                                              border: Border.all(
+                                                  color: Colors
+                                                      .grey
+                                                      .shade300),
                                               borderRadius:
-                                                  BorderRadius.circular(5)),
+                                              BorderRadius
+                                                  .circular(
+                                                  5)),
                                           child: Text(
                                             getReasonsList[index],
                                             maxLines: 3,

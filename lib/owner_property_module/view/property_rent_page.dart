@@ -1,10 +1,14 @@
+import 'package:RentMyStay_user/theme/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 
+import '../../language_module/model/language_model.dart';
 import '../../theme/custom_theme.dart';
 import '../../utils/constants/app_consts.dart';
+import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/navigation_service.dart';
+import '../../utils/service/shared_prefrences_util.dart';
 import '../../utils/view/rms_widgets.dart';
 import '../model/owner_property_details_request_model.dart';
 import '../viewModel/owner_property_viewModel.dart';
@@ -35,6 +39,16 @@ class _PropertyRentPageState extends State<PropertyRentPage> {
   bool moreThanThreeFlag = false;
   var _mainHeight;
   var _mainWidth;
+  SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+
+  getLanguageData() async {
+    await _viewModel.getLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'ownerPropertyPage');
+  }
+  bool nullCheck({required List<LanguageModel> list}) =>
+      list.isNotEmpty ? true : false;
+
 
 
   @override
@@ -42,6 +56,7 @@ class _PropertyRentPageState extends State<PropertyRentPage> {
     super.initState();
     _viewModel=Provider.of<OwnerPropertyViewModel>(context,listen: false);
     _monthlyDepositController.text='10000';
+    getLanguageData();
     if(widget.fromPropertyDetails){
     _dailyRentController.text=widget.dailyRent.toString();
     _monthlyRentController.text=widget.monthlyRent.toString();
@@ -58,33 +73,40 @@ class _PropertyRentPageState extends State<PropertyRentPage> {
       appBar: AppBar(
         titleSpacing: 0,
         centerTitle: false,
-        title: Text('Add Rent'),
+        title: Text(nullCheck(
+            list: context.watch<OwnerPropertyViewModel>().ownerPropertyLang)
+            ? '${context.watch<OwnerPropertyViewModel>().ownerPropertyLang[9].name}'
+            :'Add Rent'),
 
       ),
-      body: Container(
-        height: _mainHeight,
-        width: _mainWidth,
-        color: Colors.white,
-        child: Column(
-          children: [
-            SizedBox(
-              height: _mainHeight*0.02,
+      body: Consumer<OwnerPropertyViewModel>(
+        builder: (context, value, child) {
+          return Container(
+            height: _mainHeight,
+            width: _mainWidth,
+            color: Colors.white,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: _mainHeight*0.02,
+                ),
+                Text('${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[10].name :'Rent & Deposit of Property'}',style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black54,
+                  // fontStyle: FontStyle.italic
+
+                ),),
+                SizedBox(
+                  height: _mainHeight*0.02,
+                ),
+                _getAmountView(context: context, value: _viewModel),
+
+
+              ],
             ),
-            Text('Rent & Deposit of Property',style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: Colors.black54,
-             // fontStyle: FontStyle.italic
-
-            ),),
-            SizedBox(
-              height: _mainHeight*0.02,
-            ),
-            _getAmountView(context: context, value: _viewModel),
-
-
-          ],
-        ),
+          );
+        },
       ),
       bottomNavigationBar: Container(
         height: _mainHeight*0.05,
@@ -102,7 +124,10 @@ class _PropertyRentPageState extends State<PropertyRentPage> {
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),
               )),
-          child: const Text('Save'),
+          child: Text(nullCheck(
+              list: context.watch<OwnerPropertyViewModel>().ownerPropertyLang)
+              ? '${context.watch<OwnerPropertyViewModel>().ownerPropertyLang[6].name}'
+              :'Save'),
           onPressed: () async{
 
               OwnerPropertyDetailsRequestModel model =
@@ -179,9 +204,9 @@ class _PropertyRentPageState extends State<PropertyRentPage> {
                             bottomLeft: Radius.circular(50),
                           )),
                       child: Text(
-                        'Daily',
+                        '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[11].name :'Daily'}',
                         style: TextStyle(
-                            fontSize: 14,
+                            fontSize: getHeight(context: context, height: 14),
                             color: dailyFlag ? Colors.white : Colors.black87,
                             fontWeight: FontWeight.w500),
                       ),
@@ -207,9 +232,9 @@ class _PropertyRentPageState extends State<PropertyRentPage> {
                           ? CustomTheme.appTheme
                           : Colors.blueGrey.shade100,
                       child: Text(
-                        'Monthly',
+                        '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[12].name :'Monthly'}',
                         style: TextStyle(
-                            fontSize: 14,
+                            fontSize: getHeight(context: context, height: 14),
                             color: monthlyFlag ? Colors.white : Colors.black87,
                             fontWeight: FontWeight.w500),
                       ),
@@ -240,9 +265,9 @@ class _PropertyRentPageState extends State<PropertyRentPage> {
                             bottomRight: Radius.circular(50),
                           )),
                       child: Text(
-                        '3+ Months',
+                        '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[13].name :'3+ Months'}',
                         style: TextStyle(
-                            fontSize: 14,
+                            fontSize: getHeight(context: context, height: 14),
                             color: moreThanThreeFlag
                                 ? Colors.white
                                 : Colors.black87,
@@ -278,7 +303,7 @@ class _PropertyRentPageState extends State<PropertyRentPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Rent',
+            '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[14].name :'Rent'}',
             style:TextStyle(
                 fontSize: 14, color: CustomTheme.appTheme, fontWeight: FontWeight.w500),
           ),
@@ -318,7 +343,7 @@ class _PropertyRentPageState extends State<PropertyRentPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Rent',
+                '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[14].name :'Rent'}',
                 style:  TextStyle(
                     fontSize: 14,
                     color: CustomTheme.appTheme,
@@ -354,7 +379,7 @@ class _PropertyRentPageState extends State<PropertyRentPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Deposit',
+                '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[15].name :'Deposit'}',
                 style:  TextStyle(
                     fontSize: 14,
                     color: CustomTheme.appThemeContrast,
@@ -396,7 +421,7 @@ class _PropertyRentPageState extends State<PropertyRentPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Rent',
+                '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[14].name : 'Rent'}',
                 style:  TextStyle(
                     fontSize: 14,
                     color: CustomTheme.appTheme,
@@ -434,7 +459,7 @@ class _PropertyRentPageState extends State<PropertyRentPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Deposit',
+                  '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[15].name :'Deposit'}',
                   style:  TextStyle(
                       fontSize: 14,
                       color: CustomTheme.appThemeContrast,
