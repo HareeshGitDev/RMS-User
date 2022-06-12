@@ -365,7 +365,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
                 itemBuilder: (context, index) {
                   var data = completedBookingList[index];
                   return GestureDetector(
-                    onTap: () => Navigator.of(context).pushNamed(
+                    onTap: data.bookingStatus != null && data.bookingStatus?.toLowerCase() !='success'?()=>RMSWidgets.getToast(message: 'Booking is Cancelled.', color: CustomTheme.errorColor) :() => Navigator.of(context).pushNamed(
                         AppRoutes.myStayDetailsPage,
                         arguments: data.bookingId),
                     child: Card(

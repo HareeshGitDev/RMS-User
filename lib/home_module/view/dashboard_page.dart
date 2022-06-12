@@ -126,7 +126,7 @@ class _DashboardPageState extends State<DashboardPage> {
               _bottomNavigationProvider.shiftBottom(index: value);
             },
             index: _bottomNavigationProvider.selectedIndex,
-            height: MediaQuery.of(context).size.height*0.055,
+            height: 50,
             backgroundColor: Colors.white,
             buttonBackgroundColor: CustomTheme.appTheme,
             color: CustomTheme.appTheme,
