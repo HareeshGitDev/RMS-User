@@ -37,14 +37,14 @@ class MyStayViewModel extends ChangeNotifier {
     log('Total Stay List :: ${myStayListModel.data?.result?.length}');
     if (myStayListModel.data != null && myStayListModel.data?.result != null) {
       completedBookingList = myStayListModel.data?.result
-              ?.where((element) => element.checkOutStatus == '1')
+              ?.where((element) => element.checkOutStatus == '1' || element.bookingStatus=='Cancel' )
               .toList() ??
           [];
       log('Completed Stay List :: ${completedBookingList?.length}');
 
       activeBookingList = myStayListModel.data?.result
               ?.where((element) =>
-                  element.checkOutStatus == '0' && element.earlyCout == null)
+                  element.checkOutStatus == '0' && element.earlyCout == null && element.bookingStatus !='Cancel' && element.bookingStatus !='Processing' && element.bookingStatus !='Failed')
               .toList() ??
           [];
       log('Active Stay List :: ${activeBookingList?.length}');
