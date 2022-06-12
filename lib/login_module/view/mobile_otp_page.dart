@@ -102,7 +102,7 @@ class _OtpState extends State<MobileOtpPage> {
   Future initMethod() async {
     _loginViewModel = Provider.of<LoginViewModel>(context, listen: false);
     getLanguageData();
-    WidgetsBinding.instance.addPostFrameCallback(
+    WidgetsBinding.instance?.addPostFrameCallback(
             (_) => verifyOTP(context: context, phoneNumber: widget.number));
   }
 
@@ -131,112 +131,114 @@ class _OtpState extends State<MobileOtpPage> {
           ),
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(vertical: _mainHeight*0.03, horizontal: _mainWidth*0.04),
-        child: Column(
-          children: [
-            Container(
-              width: _mainWidth*0.5,
-              height: _mainHeight*0.2,
-              decoration: BoxDecoration(
-                color: CustomTheme.appTheme.withAlpha(20),
-                shape: BoxShape.circle,
-              ),
-              child: Image.asset(Images.mobSignIn),
-            ),
-
-            SizedBox(
-              height: _mainHeight*0.05,
-            ),
-            Row(
+      body: Consumer<LoginViewModel>(
+        builder:  (context, value, child) {
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: _mainHeight*0.03, horizontal: _mainWidth*0.04),
+            child: Column(
               children: [
+                Container(
+                  width: _mainWidth*0.5,
+                  height: _mainHeight*0.2,
+                  decoration: BoxDecoration(
+                    color: CustomTheme.appTheme.withAlpha(20),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Image.asset(Images.mobSignIn),
+                ),
+
+                SizedBox(
+                  height: _mainHeight*0.05,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[20].name : 'OTP has been sent to'} :  ',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      widget.number,
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 30,
+                ),
                 Text(
-                  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[20].name : 'OTP has been sent to'} :  ',
+                  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[21].name :"Enter your OTP code number"}',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.grey,
                     fontWeight: FontWeight.w500,
+                    color: Colors.grey,
                   ),
+                  textAlign: TextAlign.center,
                 ),
-                Text(
-                  widget.number,
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
+                SizedBox(
+                  height: 15,
                 ),
-              ],
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Text(
-              '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[21].name :"Enter your OTP code number"}',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            PinCodeTextField(
-              maxLength: 6,
-              keyboardType: TextInputType.number,
-              hideCharacter: false,
-              defaultBorderColor: CustomTheme.appTheme,
-              pinBoxWidth: 45,
-              pinBoxHeight: 45,
-              pinBoxBorderWidth: 1,
-              pinBoxRadius: 10,
-              highlightAnimationBeginColor: Colors.grey,
-              highlightAnimationEndColor: Colors.white12,
-              controller: _pinCodeController,
-              onTextChanged: (data) {
+                PinCodeTextField(
+                  maxLength: 6,
+                  keyboardType: TextInputType.number,
+                  hideCharacter: false,
+                  defaultBorderColor: CustomTheme.appTheme,
+                  pinBoxWidth: 45,
+                  pinBoxHeight: 45,
+                  pinBoxBorderWidth: 1,
+                  pinBoxRadius: 10,
+                  highlightAnimationBeginColor: Colors.grey,
+                  highlightAnimationEndColor: Colors.white12,
+                  controller: _pinCodeController,
+                  onTextChanged: (data) {
 
-              },
-            ),
-           Spacer(),
-          Container(
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
-              width: _mainWidth,
-              //height: _mainHeight*0.05,
-              child: ElevatedButton(
-                onPressed: () async {
-                  if (_pinCodeController.text.length != 6) {
-                    log('Invalid Otp Code');
-                    return;
-                  }
-                  await loginWithOTP(
-                      verificationId: verifyId.toString(),
-                      smsCode: _pinCodeController.text,
-                      context: context);
-                },
-                style: ButtonStyle(
-                  foregroundColor:
+                  },
+                ),
+                Spacer(),
+                Container(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  width: _mainWidth,
+                  //height: _mainHeight*0.05,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (_pinCodeController.text.length != 6) {
+                        log('Invalid Otp Code');
+                        return;
+                      }
+                      await loginWithOTP(
+                          verificationId: verifyId.toString(),
+                          smsCode: _pinCodeController.text,
+                          context: context);
+                    },
+                    style: ButtonStyle(
+                      foregroundColor:
                       MaterialStateProperty.all<Color>(Colors.white),
-                  backgroundColor:
+                      backgroundColor:
                       MaterialStateProperty.all<Color>(CustomTheme.appTheme),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24.0),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24.0),
+                        ),
+                      ),
+                    ),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: Text(
+                        '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[22].name :'Verify OTP'}',
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
                   ),
                 ),
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  child: Text(
-                    '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[22].name :'Verify OTP'}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-              ),
-            ),
 
-          /*  const Text(
+                /*  const Text(
               "Didn't you receive any code?",
               style: TextStyle(
                 fontSize: 14,
@@ -257,8 +259,10 @@ class _OtpState extends State<MobileOtpPage> {
               ),
               textAlign: TextAlign.center,
             ),*/
-          ],
-        ),
+              ],
+            ),
+          );
+        },
       ),
     ):RMSWidgets.networkErrorPage(context: context);
   }

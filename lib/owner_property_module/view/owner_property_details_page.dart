@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:RentMyStay_user/owner_property_module/model/owner_property_details_model.dart';
+import 'package:RentMyStay_user/theme/fonts.dart';
+import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_options.dart';
@@ -12,9 +14,11 @@ import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../language_module/model/language_model.dart';
 import '../../property_details_module/amenities_model.dart';
 import '../../theme/custom_theme.dart';
 import '../../utils/constants/app_consts.dart';
+import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/navigation_service.dart';
 import '../../utils/view/webView_page.dart';
 import '../viewModel/owner_property_viewModel.dart';
@@ -41,12 +45,22 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
   bool showAllAmenities = false;
   ValueNotifier<bool> showPics = ValueNotifier(true);
   Set<Marker> markers = {};
+  SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+
+  getLanguageData() async {
+    await _viewModel.getOwnerPropDetailsLang(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'propertyDetails');
+  }
+  bool nullCheck({required List<LanguageModel> list}) =>
+      list.isNotEmpty ? true : false;
 
   @override
   void initState() {
     super.initState();
     _viewModel = Provider.of<OwnerPropertyViewModel>(context, listen: false);
     _viewModel.getOwnerPropertyDetails(propId: widget.propId);
+    getLanguageData();
   }
 
   @override
@@ -64,7 +78,10 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
           appBar: AppBar(
             centerTitle: false,
             titleSpacing: 0,
-            title: Text('Edit Your Property'),
+            title: Text(nullCheck(
+                list: context.watch<OwnerPropertyViewModel>().ownerPropertyDetailsLang)
+                ? '${context.watch<OwnerPropertyViewModel>().ownerPropertyDetailsLang[29].name}'
+                :'Edit Your Property'),
           ),
           body: value.ownerPropertyDetailsModel.msg != null &&
                   value.ownerPropertyDetailsModel.data != null &&
@@ -92,17 +109,6 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                                         aspectRatio: 1.2,
                                         controller: value.youTubeController,
                                         showVideoProgressIndicator: true,
-                                        topActions: const [
-                                          Text(
-                                            'Powered by RMS',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.white,
-                                              fontStyle: FontStyle.italic,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
                                       ),
                                       builder: (BuildContext context,
                                           Widget player) {
@@ -321,13 +327,13 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
 
                             children: [
                               Text(
-                                'Available Amenities',
-                                style: const TextStyle(
-                                    fontSize: 16,
+                                '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[13].name :'Available Amenities'}',
+                                style:  TextStyle(
+                                    fontSize: getHeight(context: context, height: 16),
                                     color: Colors.black,
                                     fontWeight: FontWeight.w600),
                               ),
-                              Text( value.availableAmenitiesList.isEmpty?'  (No Amenity)':''),
+                              Text( value.availableAmenitiesList.isEmpty?'  (${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[33].name :'No Amenity'})':''),
                               Spacer(),
                               showEditButton
                                   ? GestureDetector(
@@ -390,10 +396,10 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                                   ),
                                   child: Text(
                                     showAllAmenities
-                                        ? 'View Less Amenities'
-                                        : 'View All Amenities',
+                                        ? '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[34].name :'View Less Amenities'}'
+                                        : '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[35].name :'View All Amenities'}',
                                     style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 12,
                                         color: CustomTheme.appThemeContrast,
                                         fontWeight: FontWeight.w700),
                                   ),
@@ -406,11 +412,11 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                         Container(
                             padding: EdgeInsets.only(
                                 left: _mainWidth * 0.03,
-                                right: _mainWidth * 0.03),
+                                right: _mainWidth * 0.04),
                             child: Row(
                               children: [
                                 Text(
-                                  'Property Location',
+                                  '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[32].name :'Property Location'}',
                                   style: TextStyle(
                                       color: Colors.black87,
                                       fontSize: 16,
@@ -498,7 +504,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                                           }
                                         },
                                         child: Text(
-                                          'View',
+                                          '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[37].name :'View'}',
                                           style: TextStyle(
                                               color:
                                                   CustomTheme.appThemeContrast,
@@ -514,11 +520,11 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                         Container(
                             padding: EdgeInsets.only(
                                 left: _mainWidth * 0.03,
-                                right: _mainWidth * 0.03),
+                                right: _mainWidth * 0.04),
                             child: Row(
                               children: [
                                 Text(
-                                  'Details',
+                                  '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[16].name :'Details'}'.trim(),
                                   style: TextStyle(
                                       color: Colors.black87,
                                       fontSize: 16,
@@ -588,7 +594,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                                           }
                                         },
                                         child: Text(
-                                          'Read',
+                                          '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[20].name :'Read'}',
                                           style: TextStyle(
                                               color:
                                                   CustomTheme.appThemeContrast,
@@ -604,11 +610,11 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                         Container(
                           padding: EdgeInsets.only(
                               left: _mainWidth * 0.03,
-                              right: _mainWidth * 0.03),
+                              right: _mainWidth * 0.04),
                           child: Row(
                             children: [
                               Text(
-                                'House Rules',
+                                '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[17].name :'House Rules'}',
                                 style: TextStyle(
                                     color: Colors.black87,
                                     fontSize: 16,
@@ -676,7 +682,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                                         }
                                       },
                                       child: Text(
-                                        'Read',
+                                        '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[20].name :'Read'}',
                                         style: TextStyle(
                                             color: CustomTheme.appThemeContrast,
                                             fontSize: 14,
@@ -695,11 +701,11 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                         Container(
                           padding: EdgeInsets.only(
                               left: _mainWidth * 0.03,
-                              right: _mainWidth * 0.03),
+                              right: _mainWidth * 0.04),
                           child: Row(
                             children: [
                               Text(
-                                'FAQ',
+                                '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[19].name :'FAQ'}'.trim(),
                                 style: TextStyle(
                                     color: Colors.grey.shade500,
                                     fontSize: 16,
@@ -710,7 +716,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                                 onTap: () => _handleURLButtonPress(
                                     context, faqUrl, 'FAQ'),
                                 child: Text(
-                                  'Read',
+                                  '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[20].name :'Read'}',
                                   style: TextStyle(
                                       color: CustomTheme.appThemeContrast,
                                       fontSize: 14,
@@ -726,11 +732,11 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                         Container(
                           padding: EdgeInsets.only(
                               left: _mainWidth * 0.03,
-                              right: _mainWidth * 0.03),
+                              right: _mainWidth * 0.04),
                           child: Row(
                             children: [
                               Text(
-                                'Cancellation Policy',
+                                '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[9].name :'Cancellation Policy'}',
                                 style: TextStyle(
                                     color: Colors.grey.shade500,
                                     fontSize: 16,
@@ -743,7 +749,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                                     cancellationPolicyUrl,
                                     'Cancellation Policy'),
                                 child: Text(
-                                  'Read',
+                                  '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[20].name :'Read'}',
                                   style: TextStyle(
                                       color: CustomTheme.appThemeContrast,
                                       fontSize: 14,
@@ -759,9 +765,9 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                         SizedBox(
                           height: _mainHeight * 0.02,
                         ),
-                        const Center(
+                         Center(
                           child: Text(
-                            'Map View',
+                            '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[2].name :'Map'}',
                             style: TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 16),
                           ),
@@ -816,7 +822,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
                         )),
-                    child: Text(showEditButton ? 'Save' : 'Edit'),
+                    child: Text(showEditButton ? '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[36].name :'Save'}' : '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[30].name :'Edit'}'),
                     onPressed: () =>
                         setState(() => showEditButton = !showEditButton),
                   ),
@@ -834,7 +840,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
                         )),
-                    child: const Text('Proceed'),
+                    child:  Text('${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[31].name :'Proceed'}'),
                     onPressed: () =>Navigator.of(context).pop(),
                   ),
                 ),
@@ -947,7 +953,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                   ? (value.ownerPropertyDetailsModel.data?.propDetails
                               ?.maxGuests)
                           .toString() +
-                      ' Guest'
+                  ' ${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[10].name :' Guest'}'
                   : '0 Guest',
               style: TextStyle(
                   fontSize: 12,
@@ -972,7 +978,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                   ? (value.ownerPropertyDetailsModel.data?.propDetails
                               ?.bedrooms)
                           .toString() +
-                      ' BedRoom'
+                  ' ${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[11].name :' BedRoom'}'
                   : ' ',
               style: TextStyle(
                   fontSize: 12,
@@ -997,7 +1003,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                   ? (value.ownerPropertyDetailsModel.data?.propDetails
                               ?.bathrooms)
                           .toString() +
-                      ' BathRoom'
+                  ' ${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[12].name :' BathRoom'}'
                   : ' ',
               style: TextStyle(
                   fontSize: 12,
@@ -1106,7 +1112,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                             bottomLeft: Radius.circular(50),
                           )),
                       child: Text(
-                        'Daily',
+                        '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[3].name :'Daily'}',
                         style: TextStyle(
                             fontSize: 14,
                             color: dailyFlag ? Colors.white : Colors.black87,
@@ -1134,7 +1140,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                           ? CustomTheme.appTheme
                           : Colors.blueGrey.shade100,
                       child: Text(
-                        'Monthly',
+                        '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[4].name :'Monthly'}',
                         style: TextStyle(
                             fontSize: 14,
                             color: monthlyFlag ? Colors.white : Colors.black87,
@@ -1167,7 +1173,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                             bottomRight: Radius.circular(50),
                           )),
                       child: Text(
-                        '3+ Months',
+                        '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[5].name :'3+ Months'}',
                         style: TextStyle(
                             fontSize: 14,
                             color: moreThanThreeFlag
@@ -1244,7 +1250,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Rent',
+            '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[6].name :'Rent'}',
             style: const TextStyle(
                 fontSize: 14, color: Colors.black, fontWeight: FontWeight.w500),
           ),
@@ -1267,7 +1273,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Rent',
+                '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[6].name :'Rent'}'.trim(),
                 style: const TextStyle(
                     fontSize: 14,
                     color: Colors.black,
@@ -1290,7 +1296,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Deposit',
+                '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[7].name :'Deposit'}',
                 style: const TextStyle(
                     fontSize: 14,
                     color: Colors.black,
@@ -1314,7 +1320,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Rent',
+                '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[6].name :'Rent'}'.trim(),
                 style: const TextStyle(
                     fontSize: 14,
                     color: Colors.black,
@@ -1339,7 +1345,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Deposit',
+                  '${nullCheck(list: value.ownerPropertyDetailsLang) ? value.ownerPropertyDetailsLang[7].name :'Deposit'}',
                   style: const TextStyle(
                       fontSize: 14,
                       color: Colors.black,

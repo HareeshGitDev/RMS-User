@@ -790,13 +790,13 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
     return Container(
         padding: EdgeInsets.only(
             left: _mainWidth * 0.04,
-            right: _mainWidth * 0.04,
+            right: _mainWidth * 0.05,
             top: _mainHeight * 0.02),
         width: _mainWidth,
         child: Row(
           children: [
             Text(
-              '${value.propertyListModel.data?.length ?? ''} Stay\'s Found',
+              '${value.propertyListModel.data?.length ?? ''} ${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[28].name :'Stay\'s Found'}',
               style: TextStyle(
                   color: CustomTheme.appTheme,
                   fontWeight: FontWeight.w600,
@@ -817,7 +817,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
             InkWell(
               onTap: () => applyFilter(context, value),
               child: Text(
-                'Filter',
+                '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[2].name :'Filter'}',
                 style: TextStyle(
                   fontSize: getHeight(context: context, height: 12),
                   color: CustomTheme.appThemeContrast,
@@ -842,7 +842,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
             InkWell(
               onTap: () => applySorting(context, value),
               child: Text(
-                'Sort',
+                '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[3].name :'Sort'}',
                 style: TextStyle(
                   fontSize: getHeight(context: context, height: 12),
                   color: CustomTheme.appThemeContrast,
@@ -891,7 +891,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                               .watch<PropertyViewModel>()
                               .propertyListingLang)
                       ? '${context.watch<PropertyViewModel>().propertyListingLang[0].name}'
-                      : 'Search by Locality , Landmark or City',
+                      : 'Search by Locality , House or City',
                   hintStyle: TextStyle(
                       fontFamily: fontFamily,
                       fontSize: 16,

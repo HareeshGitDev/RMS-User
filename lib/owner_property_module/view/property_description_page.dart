@@ -4,8 +4,11 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 
+import '../../language_module/model/language_model.dart';
 import '../../theme/custom_theme.dart';
+import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/navigation_service.dart';
+import '../../utils/service/shared_prefrences_util.dart';
 import '../../utils/view/rms_widgets.dart';
 import '../../utils/view/webView_page.dart';
 import '../model/owner_property_details_request_model.dart';
@@ -34,11 +37,21 @@ class _PropertyDescriptionPageState extends State<PropertyDescriptionPage> {
   var _mainWidth;
   bool editable = false;
   final _detailsController = TextEditingController();
+  SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+
+  getLanguageData() async {
+    await _viewModel.getLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'ownerPropertyPage');
+  }
+  bool nullCheck({required List<LanguageModel> list}) =>
+      list.isNotEmpty ? true : false;
 
   @override
   void initState() {
     super.initState();
     _viewModel = Provider.of<OwnerPropertyViewModel>(context, listen: false);
+    getLanguageData();
     if(widget.fromPropertyDetails){
       String? description=widget.description
           ?.replaceAll('<ul><li>', '')
@@ -59,61 +72,68 @@ class _PropertyDescriptionPageState extends State<PropertyDescriptionPage> {
       appBar: AppBar(
         titleSpacing: 0,
         centerTitle: false,
-        title: Text('Details'),
+        title: Text(nullCheck(
+            list: context.watch<OwnerPropertyViewModel>().ownerPropertyLang)
+            ? '${context.watch<OwnerPropertyViewModel>().ownerPropertyLang[27].name}'
+            :'Details'),
       ),
-      body: Container(
-        height: _mainHeight,
-        width: _mainWidth,
-        color: Colors.white,
-        padding: EdgeInsets.only(
-            left: _mainWidth * 0.04,
-            right: _mainWidth * 0.04,
-            top: _mainHeight * 0.02,
-            bottom: _mainHeight * 0.02),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const Text(
-                'Your Property Description ',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                    color: Colors.black),
-              ),
-              SizedBox(
-                height: _mainHeight * 0.02,
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-
-                height: _mainHeight * 0.5,
-                decoration: BoxDecoration(
-
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-
-                ),
-                child: Neumorphic(
-                  style: NeumorphicStyle(
-                    depth: -2,
-                    color: Colors.white,
+      body: Consumer<OwnerPropertyViewModel>(
+        builder: (context, value, child) {
+          return Container(
+            height: _mainHeight,
+            width: _mainWidth,
+            color: Colors.white,
+            padding: EdgeInsets.only(
+                left: _mainWidth * 0.04,
+                right: _mainWidth * 0.04,
+                top: _mainHeight * 0.02,
+                bottom: _mainHeight * 0.02),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Text(
+                    '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[28].name :'Your Property Description '}',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        color: Colors.black),
                   ),
-                  child: TextFormField(
-                    maxLines: 20,
-                    controller: _detailsController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(left: 10, top: 10),
-                      border: InputBorder.none,
-                      hintText: "Any Comment...",
+                  SizedBox(
+                    height: _mainHeight * 0.02,
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+
+                    height: _mainHeight * 0.5,
+                    decoration: BoxDecoration(
+
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+
+                    ),
+                    child: Neumorphic(
+                      style: NeumorphicStyle(
+                        depth: -2,
+                        color: Colors.white,
+                      ),
+                      child: TextFormField(
+                        maxLines: 20,
+                        controller: _detailsController,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 10, top: 10),
+                          border: InputBorder.none,
+                          hintText: '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[29].name :"Any Comment"}...',
+                        ),
+                      ),
                     ),
                   ),
-                ),
+
+
+                ],
               ),
-
-
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
       bottomNavigationBar:   Container(
         height: _mainHeight * 0.05,
@@ -133,7 +153,10 @@ class _PropertyDescriptionPageState extends State<PropertyDescriptionPage> {
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),
               )),
-          child: const Text('Save'),
+          child: Text(nullCheck(
+              list: context.watch<OwnerPropertyViewModel>().ownerPropertyLang)
+              ? '${context.watch<OwnerPropertyViewModel>().ownerPropertyLang[6].name}'
+              :'Save'),
           onPressed: () async{
             OwnerPropertyDetailsRequestModel model =
             OwnerPropertyDetailsRequestModel();

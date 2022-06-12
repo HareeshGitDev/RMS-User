@@ -11,8 +11,11 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../language_module/model/language_model.dart';
 import '../../property_details_module/amenities_model.dart';
 import '../../theme/custom_theme.dart';
+import '../../utils/constants/sp_constants.dart';
+import '../../utils/service/shared_prefrences_util.dart';
 import '../../utils/view/rms_widgets.dart';
 
 class OwnerPropertyListingPage extends StatefulWidget {
@@ -27,6 +30,16 @@ class _OwnerPropertyListingPageState extends State<OwnerPropertyListingPage> {
   late OwnerPropertyViewModel _viewModel;
   var _mainHeight;
   var _mainWidth;
+  SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+
+  getLanguageData() async {
+    await _viewModel.getLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'ownerPropertyPage');
+  }
+
+  bool nullCheck({required List<LanguageModel> list}) =>
+      list.isNotEmpty ? true : false;
 
   @override
   void initState() {
@@ -34,6 +47,7 @@ class _OwnerPropertyListingPageState extends State<OwnerPropertyListingPage> {
     super.initState();
     _viewModel = Provider.of<OwnerPropertyViewModel>(context, listen: false);
     _viewModel.getOwnerPropertyList();
+    getLanguageData();
   }
 
   @override
@@ -44,7 +58,10 @@ class _OwnerPropertyListingPageState extends State<OwnerPropertyListingPage> {
       appBar: AppBar(
         centerTitle: false,
         titleSpacing: 0,
-        title: Text('My Properties'),
+        title: Text(nullCheck(
+                list: context.watch<OwnerPropertyViewModel>().ownerPropertyLang)
+            ? '${context.watch<OwnerPropertyViewModel>().ownerPropertyLang[39].name}'
+            : 'My Properties'),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(15),
@@ -68,7 +85,9 @@ class _OwnerPropertyListingPageState extends State<OwnerPropertyListingPage> {
                       itemBuilder: (context, index) {
                         var data = value.ownerPropertyListingModel.data?[index];
                         return GestureDetector(
-                          onTap: () => Navigator.of(context).pushNamed(AppRoutes.ownerPropertyDetailsPage,arguments: data?.propId),
+                          onTap: () => Navigator.of(context).pushNamed(
+                              AppRoutes.ownerPropertyDetailsPage,
+                              arguments: data?.propId),
                           child: Card(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0),
@@ -84,35 +103,45 @@ class _OwnerPropertyListingPageState extends State<OwnerPropertyListingPage> {
                                       bottom: _mainHeight * 0.005,
                                       left: _mainWidth * 0.02),
                                   child: CachedNetworkImage(
-                                    imageUrl: data?.picLink != null && data?.picLink!.length != 0 ? data!.picLink![0].picWp.toString() : '',
+                                    imageUrl: data?.picLink != null &&
+                                            data?.picLink!.length != 0
+                                        ? data!.picLink![0].picWp.toString()
+                                        : '',
                                     imageBuilder: (context, imageProvider) =>
                                         Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10),
-                                            image: DecorationImage(
-                                              image: imageProvider,
-                                              fit: BoxFit.cover,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    placeholder: (context, url) =>
+                                        Shimmer.fromColors(
+                                            child: Container(
+                                              height: _mainHeight * 0.075,
+                                              width: _mainWidth * 0.2,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                    placeholder: (context, url) => Shimmer.fromColors(
-                                        child: Container(
-                                          height: _mainHeight * 0.075,
-                                          width: _mainWidth * 0.2,
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey,
-                                            borderRadius: BorderRadius.circular(10),
-                                          ),
-                                        ),
-                                        baseColor: Colors.grey[200] as Color,
-                                        highlightColor: Colors.grey[350] as Color),
-                                    errorWidget: (context, url, error) => const Icon(
+                                            baseColor:
+                                                Colors.grey[200] as Color,
+                                            highlightColor:
+                                                Colors.grey[350] as Color),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(
                                       Icons.error,
                                       color: Colors.red,
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 10,),
+                                SizedBox(
+                                  width: 10,
+                                ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -131,22 +160,30 @@ class _OwnerPropertyListingPageState extends State<OwnerPropertyListingPage> {
                                       height: _mainHeight * 0.005,
                                     ),
                                     Container(
-
                                       child: Row(
                                         children: [
-                                          Icon(Icons.location_on,color: CustomTheme.appTheme,),
-                                          SizedBox(width: 5,),
-
+                                          Icon(
+                                            Icons.location_on,
+                                            color: CustomTheme.appTheme,
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
                                           Container(
-                                           // color: Colors.amber,
+                                            // color: Colors.amber,
                                             width: _mainWidth * 0.58,
                                             child: Text(
-                                              data?.addressDisplay?.replaceAll('-', ' ').replaceAll(',', ' ') ?? " " ,
+                                              data?.addressDisplay
+                                                      ?.replaceAll('-', ' ')
+                                                      .replaceAll(',', ' ') ??
+                                                  " ",
                                               maxLines: 1,
                                               style: const TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w400,
-                                                  fontSize: 14,overflow: TextOverflow.ellipsis),
+                                                  fontSize: 14,
+                                                  overflow:
+                                                      TextOverflow.ellipsis),
                                             ),
                                           ),
                                         ],
@@ -156,26 +193,28 @@ class _OwnerPropertyListingPageState extends State<OwnerPropertyListingPage> {
                                       height: _mainHeight * 0.005,
                                     ),
                                     Container(
-                                     width: _mainWidth * 0.66,
+                                      width: _mainWidth * 0.66,
                                       child: Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            'PropId: ${data?.propId ?? ''}',
+                                            'PropId : ${data?.propId ?? ''}',
                                             style: TextStyle(
                                               color: Colors.grey,
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
-
                                           Text(
                                             data?.active == '1'
-                                                ? 'Active'
-                                                : 'Not Active',
+                                                ? '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[40].name : 'Active'}'
+                                                : '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[41].name : 'Not Active'}',
                                             style: TextStyle(
-                                              color:  data?.active == '1'?CustomTheme.myFavColor:CustomTheme.appThemeContrast,
+                                              color: data?.active == '1'
+                                                  ? CustomTheme.myFavColor
+                                                  : CustomTheme
+                                                      .appThemeContrast,
                                               fontSize: 12,
                                               fontWeight: FontWeight.w700,
                                             ),
@@ -211,11 +250,7 @@ class _OwnerPropertyListingPageState extends State<OwnerPropertyListingPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-
-
-
-
-         choosePropertyDialog(context: context,value:_viewModel);
+          choosePropertyDialog(context: context, value: _viewModel);
         },
         backgroundColor: CustomTheme.appTheme,
         child: const Icon(Icons.add),
@@ -224,17 +259,17 @@ class _OwnerPropertyListingPageState extends State<OwnerPropertyListingPage> {
   }
 
   void choosePropertyDialog(
-      {required BuildContext context,required OwnerPropertyViewModel value}) {
+      {required BuildContext context, required OwnerPropertyViewModel value}) {
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             actionsAlignment: MainAxisAlignment.center,
             shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             title: Center(
               child: Text(
-                'Property Options',
+                '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[42].name :'Property Options'}',
                 style: TextStyle(
                     color: CustomTheme.appTheme,
                     fontWeight: FontWeight.w600,
@@ -248,23 +283,22 @@ class _OwnerPropertyListingPageState extends State<OwnerPropertyListingPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       Navigator.of(context).pop();
-                      Navigator.of(context).pushNamed(AppRoutes.hostPropertyPage);
+                      Navigator.of(context)
+                          .pushNamed(AppRoutes.hostPropertyPage);
                     },
                     child: Container(
                       //width: _mainWidth,
 
                       decoration: BoxDecoration(
-
-                        border: Border.all(color: CustomTheme.appTheme),
-                        borderRadius: BorderRadius.circular(15)
-                      ),
+                          border: Border.all(color: CustomTheme.appTheme),
+                          borderRadius: BorderRadius.circular(15)),
                       alignment: Alignment.centerLeft,
-                     height: _mainHeight*0.05,
+                      height: _mainHeight * 0.05,
                       child: Center(
                         child: Text(
-                          'Host Your Property',
+                          '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[43].name :'Host Your Property'}',
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 16,
@@ -274,27 +308,25 @@ class _OwnerPropertyListingPageState extends State<OwnerPropertyListingPage> {
                     ),
                   ),
                   SizedBox(
-                    height: _mainHeight*0.02,
+                    height: _mainHeight * 0.02,
                   ),
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context).pop();
-                      Navigator.of(context).pushNamed(AppRoutes.addPropertyPage,arguments: {
-                          'fromPropertyDetails':false,
-                        });
-
-
+                      Navigator.of(context)
+                          .pushNamed(AppRoutes.addPropertyPage, arguments: {
+                        'fromPropertyDetails': false,
+                      });
                     },
                     child: Container(
-                     // width: _mainWidth,
+                      // width: _mainWidth,
                       decoration: BoxDecoration(
                           border: Border.all(color: CustomTheme.appTheme),
-                          borderRadius: BorderRadius.circular(15)
-                      ),
-                      height: _mainHeight*0.05,
+                          borderRadius: BorderRadius.circular(15)),
+                      height: _mainHeight * 0.05,
                       child: Center(
                         child: Text(
-                          'Add Your Property',
+                          '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[44].name :'Add Your Property'}',
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 16,
@@ -310,5 +342,4 @@ class _OwnerPropertyListingPageState extends State<OwnerPropertyListingPage> {
           );
         });
   }
-  
 }

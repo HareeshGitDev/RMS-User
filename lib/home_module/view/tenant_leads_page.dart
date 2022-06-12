@@ -65,7 +65,6 @@ class _TenantLeadsPageState extends State<TenantLeadsPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initConnectionStatus();
     _connectivitySubs =

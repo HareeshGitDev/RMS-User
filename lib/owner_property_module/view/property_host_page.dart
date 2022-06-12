@@ -7,9 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 
+import '../../language_module/model/language_model.dart';
 import '../../theme/custom_theme.dart';
+import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/location_service.dart';
 import '../../utils/service/navigation_service.dart';
+import '../../utils/service/shared_prefrences_util.dart';
 
 class HostPropertyPage extends StatefulWidget {
   const HostPropertyPage({Key? key}) : super(key: key);
@@ -31,11 +34,21 @@ class _HostPropertyPageState extends State<HostPropertyPage> {
   int units = 0;
   String? lat;
   String? lang;
+  SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+
+  getLanguageData() async {
+    await _viewModel.getLanguagesData(
+        language: await preferenceUtil.getString(rms_language) ?? 'english',
+        pageName: 'ownerPropertyPage');
+  }
+  bool nullCheck({required List<LanguageModel> list}) =>
+      list.isNotEmpty ? true : false;
 
   @override
   void initState() {
     super.initState();
     _viewModel = Provider.of<OwnerPropertyViewModel>(context, listen: false);
+    getLanguageData();
   }
 
   @override
@@ -44,199 +57,205 @@ class _HostPropertyPageState extends State<HostPropertyPage> {
     _mainWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Host'),
+        title: Text(nullCheck(
+            list: context.watch<OwnerPropertyViewModel>().ownerPropertyLang)
+            ? '${context.watch<OwnerPropertyViewModel>().ownerPropertyLang[32].name}'
+            :'Add Host'),
         titleSpacing: 0,
         centerTitle: false,
       ),
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-        child: Container(
-          height: _mainHeight,
-          width: _mainWidth,
-          color: Colors.white,
-          padding: EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 20),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  alignment: Alignment.centerLeft,
-                  // height: _mainHeight * 0.060,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    color: Colors.white,
-                  ),
-                  child: Neumorphic(
-                    style: NeumorphicStyle(
-                      depth: -2,
+      body: Consumer<OwnerPropertyViewModel>(builder:(context, value, child) {
+        return GestureDetector(
+          onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+          child: Container(
+            height: _mainHeight,
+            width: _mainWidth,
+            color: Colors.white,
+            padding: EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 20),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+
+                    alignment: Alignment.centerLeft,
+                    // height: _mainHeight * 0.060,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
                       color: Colors.white,
                     ),
-                    child: TextFormField(
-                      controller: _nameController,
-                      keyboardType: TextInputType.name,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Owner Name",
-                        prefixIcon:
-                            Icon(Icons.person, color: Colors.grey, size: 20),
+                    child: Neumorphic(
+                      style: NeumorphicStyle(
+                        depth: -2,
+                        color: Colors.white,
                       ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: _mainHeight * 0.015,
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  // height: _mainHeight * 0.060,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    color: Colors.white,
-                  ),
-                  child: Neumorphic(
-                    style: NeumorphicStyle(
-                      depth: -2,
-                      color: Colors.white,
-                    ),
-                    child: TextFormField(
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "E-mail",
-                        prefixIcon: Icon(Icons.email_outlined,
-                            color: Colors.grey, size: 20),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: _mainHeight * 0.015,
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  //height: _mainHeight * 0.060,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    color: Colors.white,
-                  ),
-                  child: Neumorphic(
-                    style: NeumorphicStyle(
-                      depth: -2,
-                      color: Colors.white,
-                    ),
-                    child: TextFormField(
-                      controller: _phoneController,
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Phone Number",
-                        prefixIcon: Icon(Icons.phone_android,
-                            color: Colors.grey, size: 20),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: _mainHeight * 0.015,
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  //  height: _mainHeight * 0.060,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    color: Colors.white,
-                  ),
-                  child: Neumorphic(
-                    style: NeumorphicStyle(
-                      depth: -2,
-                      color: Colors.white,
-                    ),
-                    child: TextFormField(
-                      controller: _addressController,
-                      keyboardType: TextInputType.name,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Property Address",
-                        prefixIcon: Icon(Icons.my_location,
-                            color: Colors.grey, size: 20),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: _mainHeight * 0.02,
-                ),
-                Container(
-                  height: 50,
-                  width: _mainWidth,
-                  child: Row(
-                    children: [
-                      Text(
-                        'Number of Units : ',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
+                      child: TextFormField(
+                        controller: _nameController,
+                        keyboardType: TextInputType.name,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText:'${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[33].name : "Owner Name"}',
+                          prefixIcon:
+                          Icon(Icons.person, color: Colors.grey, size: 20),
                         ),
                       ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      DropdownButton<int>(
-                          borderRadius: BorderRadius.circular(20),
-                          elevation: 65,
-                          value: units,
-                          iconEnabledColor: CustomTheme.appThemeContrast,
-                          style: TextStyle(color: CustomTheme.appTheme),
-                          menuMaxHeight: _mainHeight * 0.35,
-                          items: List.generate(51, (index) => index)
-                              .map(
-                                (e) => DropdownMenuItem<int>(
-                                  value: e,
-                                  child: Text(
-                                    e.toString(),
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16),
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (int? val) {
-                            setState(() {
-                              units = int.parse(val.toString());
-                            });
-                          }),
-                    ],
+                    ),
                   ),
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  height: _mainHeight * 0.2,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    color: Colors.white,
+                  SizedBox(
+                    height: _mainHeight * 0.015,
                   ),
-                  child: Neumorphic(
-                    style: NeumorphicStyle(
-                      depth: -2,
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    // height: _mainHeight * 0.060,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
                       color: Colors.white,
                     ),
-                    child: TextFormField(
-                      maxLines: 5,
-                      controller: _commentsController,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(left: 10, top: 10),
-                        border: InputBorder.none,
-                        hintText: "Any Comment...",
+                    child: Neumorphic(
+                      style: NeumorphicStyle(
+                        depth: -2,
+                        color: Colors.white,
+                      ),
+                      child: TextFormField(
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[34].name :"Email"}',
+                          prefixIcon: Icon(Icons.email_outlined,
+                              color: Colors.grey, size: 20),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(
+                    height: _mainHeight * 0.015,
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    //height: _mainHeight * 0.060,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      color: Colors.white,
+                    ),
+                    child: Neumorphic(
+                      style: NeumorphicStyle(
+                        depth: -2,
+                        color: Colors.white,
+                      ),
+                      child: TextFormField(
+                        controller: _phoneController,
+                        keyboardType: TextInputType.phone,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[35].name :"Phone Number"}',
+                          prefixIcon: Icon(Icons.phone_android,
+                              color: Colors.grey, size: 20),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: _mainHeight * 0.015,
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    //  height: _mainHeight * 0.060,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      color: Colors.white,
+                    ),
+                    child: Neumorphic(
+                      style: NeumorphicStyle(
+                        depth: -2,
+                        color: Colors.white,
+                      ),
+                      child: TextFormField(
+                        controller: _addressController,
+                        keyboardType: TextInputType.name,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[36].name :"Property Address"}',
+                          prefixIcon: Icon(Icons.my_location,
+                              color: Colors.grey, size: 20),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: _mainHeight * 0.02,
+                  ),
+                  Container(
+                    height: 50,
+                    width: _mainWidth,
+                    child: Row(
+                      children: [
+                        Text(
+                          '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[37].name :'Number of Units'} : ',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        DropdownButton<int>(
+                            borderRadius: BorderRadius.circular(20),
+                            elevation: 65,
+                            value: units,
+                            iconEnabledColor: CustomTheme.appThemeContrast,
+                            style: TextStyle(color: CustomTheme.appTheme),
+                            menuMaxHeight: _mainHeight * 0.35,
+                            items: List.generate(51, (index) => index)
+                                .map(
+                                  (e) => DropdownMenuItem<int>(
+                                value: e,
+                                child: Text(
+                                  e.toString(),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16),
+                                ),
+                              ),
+                            )
+                                .toList(),
+                            onChanged: (int? val) {
+                              setState(() {
+                                units = int.parse(val.toString());
+                              });
+                            }),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    height: _mainHeight * 0.2,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      color: Colors.white,
+                    ),
+                    child: Neumorphic(
+                      style: NeumorphicStyle(
+                        depth: -2,
+                        color: Colors.white,
+                      ),
+                      child: TextFormField(
+                        maxLines: 5,
+                        controller: _commentsController,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 10, top: 10),
+                          border: InputBorder.none,
+                          hintText: '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[29].name :"Any Comment"}...',
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },),
       bottomNavigationBar: Container(
         margin: EdgeInsets.only(
             left: _mainWidth * 0.04,
@@ -265,7 +284,10 @@ class _HostPropertyPageState extends State<HostPropertyPage> {
                     _addressController.text = location.fullAddress.toString();
                   }
                 },
-                child: Center(child: Text("Capture Location")),
+                child: Center(child: Text(nullCheck(
+                    list: context.watch<OwnerPropertyViewModel>().ownerPropertyLang)
+                    ? '${context.watch<OwnerPropertyViewModel>().ownerPropertyLang[26].name}'
+                    :"Capture Location")),
               ),
             ),
             Container(
@@ -352,7 +374,10 @@ class _HostPropertyPageState extends State<HostPropertyPage> {
                         AppRoutes.dashboardPage, (route) => false);
                   }
                 },
-                child: Center(child: Text("Submit")),
+                child: Center(child: Text(nullCheck(
+                    list: context.watch<OwnerPropertyViewModel>().ownerPropertyLang)
+                    ? '${context.watch<OwnerPropertyViewModel>().ownerPropertyLang[38].name}'
+                    :"Submit")),
               ),
             ),
           ],

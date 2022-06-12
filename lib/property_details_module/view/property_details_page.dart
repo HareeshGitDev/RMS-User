@@ -292,7 +292,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                   child: RichText(
                                                       text: TextSpan(
                                                           text:
-                                                              'Please Note : ',
+                                                          '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[0].name :'Please Note'} : ',
                                                           style: TextStyle(
                                                               fontWeight:
                                                                   FontWeight
@@ -308,7 +308,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                           children: <TextSpan>[
                                                         TextSpan(
                                                           text:
-                                                              'The furniture and furnishings may appear different from what’s shown in the pictures. Dewan/sofa may be provided as available.',
+                                                          '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[1].name :'The furniture and furnishings may appear different from what’s shown in the pictures. Dewan/sofa may be provided as available.'}',
                                                           style: TextStyle(
                                                             color: Colors.grey,
                                                             fontSize: getHeight(
@@ -484,7 +484,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                   children: [
                                                     TextSpan(
                                                       text:
-                                                          'Free Cancellation within 24 hours of booking. ',
+                                                      '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[8].name :'Free Cancellation within 24 hours of booking'}.  ',
                                                       style: TextStyle(
                                                           color: Colors.grey,
                                                           fontFamily:
@@ -496,7 +496,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                               height: 12)),
                                                     ),
                                                     TextSpan(
-                                                      text: 'Click here',
+                                                      text: '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[24].name :'Click here'}',
                                                       style: TextStyle(
                                                           color: CustomTheme
                                                               .appThemeContrast,
@@ -512,7 +512,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                                   .underline),
                                                     ),
                                                     TextSpan(
-                                                      text: '  to View.',
+                                                      text: ' ${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[25].name :' to View.'}',
                                                       style: TextStyle(
                                                           color: Colors.grey,
                                                           fontFamily:
@@ -549,7 +549,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                       .spaceBetween,
                                               children: [
                                                 Text(
-                                                  'Available Amenities',
+                                                  '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[13].name :'Available Amenities'}',
                                                   style: getHeadingStyle,
                                                 ),
                                                 /*Icon(
@@ -589,7 +589,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                 color: CustomTheme.appTheme,
                                               ),
                                               title: Text(
-                                                'Details',
+                                                '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[16].name :'Details'}',
                                                 style: getHeadingStyle,
                                               ),
                                               children: [
@@ -632,7 +632,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                           Container(
                                             padding: getHeadingPadding,
                                             child: Text(
-                                              'Whats Nearby',
+                                              '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[27].name :'What\'s Nearby'}',
                                               style: getHeadingStyle,
                                             ),
                                           ),
@@ -671,7 +671,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                         .spaceEvenly,
                                                 children: [
                                                   Text(
-                                                    'Get In Touch',
+                                                    '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[14].name :'Get In Touch'}',
                                                     style: getHeadingStyle,
                                                   ),
                                                   Spacer(),
@@ -751,7 +751,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  '5 Reasons to choose RentMyStay',
+                                                  '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[18].name :'5 Reasons to choose RentMyStay'}',
                                                   style: getHeadingStyle,
                                                 ),
                                                 SizedBox(
@@ -839,7 +839,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                   right: _mainWidth * 0.04,
                                                 ),
                                                 title: Text(
-                                                  'House Rules',
+                                                  '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[17].name :'House Rules'}',
                                                   style: getHeadingStyle,
                                                 ),
                                                 children: [
@@ -899,7 +899,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                           .spaceBetween,
                                                   children: [
                                                     Text(
-                                                      'FAQ',
+                                                      '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[19].name :'FAQ'}',
                                                       style: getHeadingStyle,
                                                     ),
                                                     Icon(
@@ -922,7 +922,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                       .spaceBetween,
                                               children: [
                                                 Text(
-                                                  'Properties You May Like',
+                                                  '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[21].name :'Properties You May Like'}',
                                                   style: getHeadingStyle,
                                                 ),
                                                 GestureDetector(
@@ -938,7 +938,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                             .fromLocation,
                                                       }),
                                                   child: Text(
-                                                    'See All',
+                                                    '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[26].name :'See All'}',
                                                     style: TextStyle(
                                                         color: CustomTheme
                                                             .appThemeContrast,
@@ -1226,7 +1226,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                     children: [
                                                       Spacer(),
                                                       Text(
-                                                        'Daily',
+                                                        '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[3].name :'Daily'}',
                                                         style: TextStyle(
                                                             color: CustomTheme
                                                                 .appTheme,
@@ -1264,7 +1264,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                     children: [
                                                       Spacer(),
                                                       Text(
-                                                        'Monthly',
+                                                        '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[4].name :'Monthly'}',
                                                         style: TextStyle(
                                                             color: CustomTheme
                                                                 .appTheme,
@@ -1305,7 +1305,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                     children: [
                                                       Spacer(),
                                                       Text(
-                                                        '3+ Months',
+                                                        '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[5].name :'3+ Months'}',
                                                         style: TextStyle(
                                                             color: CustomTheme
                                                                 .appTheme,
@@ -1377,7 +1377,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                 width: _mainWidth * 0.5,
                                 height: _mainHeight * 0.06,
                                 child: Text(
-                                  'Site Visit',
+                                  '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[22].name :'Site Visit'}',
                                   style: TextStyle(
                                       color: CustomTheme.black,
                                       fontSize: 16,
@@ -1472,7 +1472,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   alignment: Alignment.center,
                                   color: CustomTheme.appThemeContrast,
                                   child: Text(
-                                    'Book Now',
+                                    '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[23].name :'Book Now'}',
                                     style: TextStyle(
                                         color: CustomTheme.white,
                                         fontSize: 16,
@@ -1529,7 +1529,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                           null
                   ? (value.propertyDetailsModel?.data?.details?.maxGuests)
                           .toString() +
-                      ' Guest'
+                  ' ${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[10].name :' Guest'}'
                   : ' ',
               style: TextStyle(
                   fontSize: getHeight(context: context, height: 12),
@@ -1552,7 +1552,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                           null
                   ? (value.propertyDetailsModel?.data?.details?.bedrooms)
                           .toString() +
-                      ' BedRoom'
+                  ' ${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[11].name :' BedRoom'}'
                   : ' ',
               style: TextStyle(
                   fontSize: getHeight(context: context, height: 12),
@@ -1575,7 +1575,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                           null
                   ? (value.propertyDetailsModel?.data?.details?.bathrooms)
                           .toString() +
-                      ' BathRoom'
+                  ' ${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[12].name : ' BathRoom'}'
                   : ' ',
               style: TextStyle(
                   fontSize: getHeight(context: context, height: 12),
@@ -1606,9 +1606,9 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
       return Row(
         children: [
           Text(
-            'Rent : ',
-            style: const TextStyle(
-                fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w500),
+            '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[6].name :'Rent'} : ',
+            style: TextStyle(
+                fontSize: getHeight(context: context, height: 16), color: Colors.grey, fontWeight: FontWeight.w500),
           ),
           Text(
             model?.data?.details != null &&
@@ -1617,7 +1617,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                 ? '$rupee ${model?.data?.details?.rent}'
                 : 'Unavailable',
             style: TextStyle(
-                fontSize: 16, color: Colors.black, fontWeight: FontWeight.w500),
+                fontSize: getHeight(context: context, height: 16), color: Colors.black, fontWeight: FontWeight.w500),
           ),
         ],
       );
@@ -1626,9 +1626,9 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Rent : ',
-            style: const TextStyle(
-                fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w500),
+            '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[6].name :'Rent'} : ',
+            style: TextStyle(
+                fontSize: getHeight(context: context, height: 16), color: Colors.grey, fontWeight: FontWeight.w500),
           ),
           Text(
             model?.data != null &&
@@ -1637,18 +1637,18 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                 ? '$rupee ${model?.data?.details?.monthlyRent}'
                 : ' ',
             style: TextStyle(
-                fontSize: 16, color: Colors.black, fontWeight: FontWeight.w500),
+                fontSize: getHeight(context: context, height: 16), color: Colors.black, fontWeight: FontWeight.w500),
           ),
           Spacer(),
           Text(
-            'Deposit : ',
-            style: const TextStyle(
-                fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w500),
+            '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[7].name :'Deposit'} : ',
+            style: TextStyle(
+                fontSize: getHeight(context: context, height: 16), color: Colors.grey, fontWeight: FontWeight.w500),
           ),
           Text(
             '$rupee 10000',
             style: TextStyle(
-                fontSize: 16, color: Colors.black, fontWeight: FontWeight.w500),
+                fontSize: getHeight(context: context, height: 16), color: Colors.black, fontWeight: FontWeight.w500),
           ),
         ],
       );
@@ -1657,9 +1657,9 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Rent : ',
-            style: const TextStyle(
-                fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w500),
+            '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[6].name :'Rent'} : ',
+            style: TextStyle(
+                fontSize: getHeight(context: context, height: 16), color: Colors.grey, fontWeight: FontWeight.w500),
           ),
           Text(
             model?.data != null &&
@@ -1673,9 +1673,9 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
           ),
           Spacer(),
           Text(
-            'Deposit : ',
-            style: const TextStyle(
-                fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w500),
+            '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[7].name :'Deposit'} : ',
+            style: TextStyle(
+                fontSize: getHeight(context: context, height: 16), color: Colors.grey, fontWeight: FontWeight.w500),
           ),
           Text(
             model?.data != null &&
@@ -1684,7 +1684,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                 ? '$rupee ${model?.data?.details?.rmsDeposit}'
                 : ' ',
             style: TextStyle(
-                fontSize: 16, color: Colors.black, fontWeight: FontWeight.w500),
+                fontSize: getHeight(context: context, height: 16), color: Colors.black, fontWeight: FontWeight.w500),
           ),
         ],
       );
@@ -1826,7 +1826,10 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                 baseColor: Colors.grey[200] as Color,
                                 highlightColor: Colors.grey[350] as Color),
                             errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
+                                Container(
+                                    alignment: Alignment.center,
+                                    height: _mainHeight * 0.125,
+                                    child: const Icon(Icons.error)),
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1964,7 +1967,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                     left: _mainWidth * 0.01,
                                     top: _mainHeight * 0.003),
                                 child: Text(
-                                  'More',
+                                  '${nullCheck(list: model.propertyDetailsLang) ? model.propertyDetailsLang[28].name :'More Info'}',
                                   style: TextStyle(
                                     fontSize:
                                         getHeight(context: context, height: 14),

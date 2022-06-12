@@ -130,321 +130,325 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
     _mainWidth = MediaQuery.of(context).size.width;
     return _connectionStatus
         ? Scaffold(
-            body: GestureDetector(
-              onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-              child: Container(
-                color: CustomTheme.appTheme,
-                height: _mainHeight,
-                width: _mainWidth,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(left: 25, right: 25),
-                        child: SizedBox(
-                          height: _mainHeight * 0.3,
-                          child: Image.asset(
-                            Images.brandLogo_Transparent,
+            body: Consumer<LoginViewModel>(
+              builder: (context, value, child) {
+                return GestureDetector(
+                  onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+                  child: Container(
+                    color: CustomTheme.appTheme,
+                    height: _mainHeight,
+                    width: _mainWidth,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(left: 25, right: 25),
+                            child: SizedBox(
+                              height: _mainHeight * 0.3,
+                              child: Image.asset(
+                                Images.brandLogo_Transparent,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(bottom: 5),
-                        margin: EdgeInsets.only(right: 20),
-                        alignment: Alignment.centerRight,
-                        child: AnimatedTextKit(
-                          animatedTexts: [
-                            ColorizeAnimatedText('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[23].name :'You are Almost there'} ! ',
-                                textStyle: const TextStyle(
-                                  fontSize: 30,
-                                ),
-                                colors: [
-                                  Colors.white,
-                                  CustomTheme.appTheme,
-                                ]),
-                          ],
-                          isRepeatingAnimation: true,
-                          repeatForever: true,
-                        ),
-                      ),
-                      Container(
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(30))),
-                        height: _mainHeight * 0.654,
-                        width: _mainWidth,
-                        padding: EdgeInsets.only(left: 25, right: 25),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Visibility(
-                              visible: widget.from == 'Gmail',
-                              child: Container(
-                                height: _mainHeight * 0.2,
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 10,
+                          Container(
+                            padding: EdgeInsets.only(bottom: 5),
+                            margin: EdgeInsets.only(right: 20),
+                            alignment: Alignment.centerRight,
+                            child: AnimatedTextKit(
+                              animatedTexts: [
+                                ColorizeAnimatedText('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[23].name :'You are Almost there'} ! ',
+                                    textStyle: const TextStyle(
+                                      fontSize: 30,
                                     ),
-                                    Center(
-                                      child: CircleAvatar(
-                                          backgroundImage: NetworkImage(
-                                            widget.googleData?.photoUrl ?? " ",
+                                    colors: [
+                                      Colors.white,
+                                      CustomTheme.appTheme,
+                                    ]),
+                              ],
+                              isRepeatingAnimation: true,
+                              repeatForever: true,
+                            ),
+                          ),
+                          Container(
+                            decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(30))),
+                            height: _mainHeight * 0.654,
+                            width: _mainWidth,
+                            padding: EdgeInsets.only(left: 25, right: 25),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Visibility(
+                                  visible: widget.from == 'Gmail',
+                                  child: Container(
+                                    height: _mainHeight * 0.2,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Center(
+                                          child: CircleAvatar(
+                                              backgroundImage: NetworkImage(
+                                                widget.googleData?.photoUrl ?? " ",
+                                              ),
+                                              maxRadius: 30),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Center(
+                                          child: Text(
+                                            '${widget.googleData?.email}',
+                                            style: TextStyle(
+                                                color: Colors.black.withGreen(70),
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 22),
                                           ),
-                                          maxRadius: 30),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                          'Hello ${widget.googleData?.displayName},Gmail Verification is done.Now Please enter few more mandatory details to complete your registration .',
+                                          style: TextStyle(
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 16),
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Center(
-                                      child: Text(
-                                        '${widget.googleData?.email}',
-                                        style: TextStyle(
-                                            color: Colors.black.withGreen(70),
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 22),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      'Hello ${widget.googleData?.displayName},Gmail Verification is done.Now Please enter few more mandatory details to complete your registration .',
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Visibility(
-                              visible: widget.from == 'OTP',
-                              child: SizedBox(
-                                height: 40,
-                              ),
-                            ),
-                            Visibility(
-                              visible: widget.from == 'OTP',
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 10),
-                                child: Container(
-                                  margin: EdgeInsets.only(top: 10),
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
-                                    color: Colors.white,
                                   ),
-                                  child: Neumorphic(
-                                    style: NeumorphicStyle(
-                                      depth: -2,
-                                      color: Colors.white,
-                                    ),
-                                    child: TextFormField(
-                                      controller: _nameController,
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[12].name :"Name"}',
-                                        prefixIcon: Icon(Icons.person),
+                                ),
+                                Visibility(
+                                  visible: widget.from == 'OTP',
+                                  child: SizedBox(
+                                    height: 40,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: widget.from == 'OTP',
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: Container(
+                                      margin: EdgeInsets.only(top: 10),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                        BorderRadius.all(Radius.circular(20)),
+                                        color: Colors.white,
+                                      ),
+                                      child: Neumorphic(
+                                        style: NeumorphicStyle(
+                                          depth: -2,
+                                          color: Colors.white,
+                                        ),
+                                        child: TextFormField(
+                                          controller: _nameController,
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            hintText: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[12].name :"Name"}',
+                                            prefixIcon: Icon(Icons.person),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Visibility(
-                                visible: widget.from == 'Gmail',
-                                child: Container(
-                                  margin: EdgeInsets.only(top: 10),
-                                  decoration: BoxDecoration(
-                                    borderRadius:
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Visibility(
+                                    visible: widget.from == 'Gmail',
+                                    child: Container(
+                                      margin: EdgeInsets.only(top: 10),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
                                         BorderRadius.all(Radius.circular(20)),
-                                    color: Colors.white,
-                                  ),
-                                  child: Neumorphic(
-                                    style: NeumorphicStyle(
-                                      depth: -2,
-                                      color: Colors.white,
-                                    ),
-                                    child: TextFormField(
-                                      controller: _phoneNumberController,
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText:  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[13].name :"Phone Number"}',
-                                        prefixIcon: Icon(Icons.contact_page),
+                                        color: Colors.white,
                                       ),
-                                    ),
+                                      child: Neumorphic(
+                                        style: NeumorphicStyle(
+                                          depth: -2,
+                                          color: Colors.white,
+                                        ),
+                                        child: TextFormField(
+                                          controller: _phoneNumberController,
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            hintText:  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[13].name :"Phone Number"}',
+                                            prefixIcon: Icon(Icons.contact_page),
+                                          ),
+                                        ),
+                                      ),
+                                    )),
+                                Visibility(
+                                  visible: widget.from == 'Gmail',
+                                  child: SizedBox(
+                                    height: 10,
                                   ),
-                                )),
-                            Visibility(
-                              visible: widget.from == 'Gmail',
-                              child: SizedBox(
-                                height: 10,
-                              ),
-                            ),
-                            Visibility(
-                              visible: widget.from == 'OTP',
-                              child: Container(
-                                padding: const EdgeInsets.only(top: 0),
-                                margin: EdgeInsets.only(top: 10),
-                                decoration: BoxDecoration(
-                                  borderRadius:
+                                ),
+                                Visibility(
+                                  visible: widget.from == 'OTP',
+                                  child: Container(
+                                    padding: const EdgeInsets.only(top: 0),
+                                    margin: EdgeInsets.only(top: 10),
+                                    decoration: BoxDecoration(
+                                      borderRadius:
                                       BorderRadius.all(Radius.circular(20)),
-                                  color: Colors.white,
-                                ),
-                                child: Neumorphic(
-                                  style: NeumorphicStyle(
-                                    depth: -10,
-                                    color: Colors.white,
-                                  ),
-                                  child: TextFormField(
-                                    validator: (value) {
-                                      if (value != null && value.length < 6) {
-                                        return "Enter proper email";
-                                      }
-                                      return null;
-                                    },
-                                    keyboardType: TextInputType.emailAddress,
-                                    controller: _emailController,
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText:'${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[1].name :"Email"}',
-                                      prefixIcon: Icon(Icons.email_outlined),
+                                      color: Colors.white,
+                                    ),
+                                    child: Neumorphic(
+                                      style: NeumorphicStyle(
+                                        depth: -10,
+                                        color: Colors.white,
+                                      ),
+                                      child: TextFormField(
+                                        validator: (value) {
+                                          if (value != null && value.length < 6) {
+                                            return "Enter proper email";
+                                          }
+                                          return null;
+                                        },
+                                        keyboardType: TextInputType.emailAddress,
+                                        controller: _emailController,
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          hintText:'${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[1].name :"Email"}',
+                                          prefixIcon: Icon(Icons.email_outlined),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Container(
-                              height: 40,
-                              width: _mainWidth,
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.grey, width: 1.0),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton(
-                                  items: getTypeList
-                                      .map((type) => DropdownMenuItem(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(10.0),
-                                              child: Text(type),
-                                            ),
-                                            value: type,
-                                          ))
-                                      .toList(),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      typeValue = value.toString();
-                                    });
-                                  },
-                                  value: typeValue,
+                                SizedBox(
+                                  height: 20,
                                 ),
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              height: 40,
-                              width: _mainWidth,
-                              decoration: BoxDecoration(
-                                border:
+                                Container(
+                                  height: 40,
+                                  width: _mainWidth,
+                                  decoration: BoxDecoration(
+                                    border:
                                     Border.all(color: Colors.grey, width: 1.0),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton(
-                                  items: getCityList
-                                      .map((type) => DropdownMenuItem(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(10.0),
-                                              child: Text(type),
-                                            ),
-                                            value: type,
-                                          ))
-                                      .toList(),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedCity = value.toString();
-                                    });
-                                  },
-                                  value: selectedCity,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton(
+                                      items: getTypeList
+                                          .map((type) => DropdownMenuItem(
+                                        child: Padding(
+                                          padding:
+                                          const EdgeInsets.all(10.0),
+                                          child: Text(type),
+                                        ),
+                                        value: type,
+                                      ))
+                                          .toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          typeValue = value.toString();
+                                        });
+                                      },
+                                      value: typeValue,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              height: 40,
-                              width: _mainWidth,
-                              decoration: BoxDecoration(
-                                border:
+                                SizedBox(height: 10),
+                                Container(
+                                  height: 40,
+                                  width: _mainWidth,
+                                  decoration: BoxDecoration(
+                                    border:
                                     Border.all(color: Colors.grey, width: 1.0),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton(
-                                  items: getRMSList
-                                      .map((type) => DropdownMenuItem(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(10.0),
-                                              child: Text(type),
-                                            ),
-                                            value: type,
-                                          ))
-                                      .toList(),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      sourceRMS = value.toString();
-                                    });
-                                  },
-                                  value: sourceRMS,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton(
+                                      items: getCityList
+                                          .map((type) => DropdownMenuItem(
+                                        child: Padding(
+                                          padding:
+                                          const EdgeInsets.all(10.0),
+                                          child: Text(type),
+                                        ),
+                                        value: type,
+                                      ))
+                                          .toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedCity = value.toString();
+                                        });
+                                      },
+                                      value: selectedCity,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Spacer(),
-                            Container(
-                              width: _mainWidth,
-                              height: 50,
-                              margin: EdgeInsets.only(bottom: 15),
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor:
+                                SizedBox(height: 10),
+                                Container(
+                                  height: 40,
+                                  width: _mainWidth,
+                                  decoration: BoxDecoration(
+                                    border:
+                                    Border.all(color: Colors.grey, width: 1.0),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton(
+                                      items: getRMSList
+                                          .map((type) => DropdownMenuItem(
+                                        child: Padding(
+                                          padding:
+                                          const EdgeInsets.all(10.0),
+                                          child: Text(type),
+                                        ),
+                                        value: type,
+                                      ))
+                                          .toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          sourceRMS = value.toString();
+                                        });
+                                      },
+                                      value: sourceRMS,
+                                    ),
+                                  ),
+                                ),
+                                Spacer(),
+                                Container(
+                                  width: _mainWidth,
+                                  height: 50,
+                                  margin: EdgeInsets.only(bottom: 15),
+                                  child: ElevatedButton(
+                                    style: ButtonStyle(
+                                        backgroundColor:
                                         MaterialStateProperty.all<Color>(
                                             CustomTheme.appTheme),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                          borderRadius:
+                                        shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
                                               BorderRadius.circular(40)),
-                                    )),
-                                onPressed: () async {
-                                  if (widget.from == 'Gmail') {
-                                    await calledFromGmailPage();
-                                  } else if (widget.from == 'OTP') {
-                                    await calledFromOTPPage();
-                                  }
-                                },
-                                child: Center(child:  Text('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[15].name :"REGISTER"}')),
-                              ),
+                                        )),
+                                    onPressed: () async {
+                                      if (widget.from == 'Gmail') {
+                                        await calledFromGmailPage();
+                                      } else if (widget.from == 'OTP') {
+                                        await calledFromOTPPage();
+                                      }
+                                    },
+                                    child: Center(child:  Text('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[15].name :"REGISTER"}')),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      )
-                    ],
+                          )
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
           )
         : RMSWidgets.networkErrorPage(context: context);

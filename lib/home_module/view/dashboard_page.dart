@@ -126,35 +126,35 @@ class _DashboardPageState extends State<DashboardPage> {
               _bottomNavigationProvider.shiftBottom(index: value);
             },
             index: _bottomNavigationProvider.selectedIndex,
-            height: 50,
+            height: MediaQuery.of(context).size.height*0.055,
             backgroundColor: Colors.white,
             buttonBackgroundColor: CustomTheme.appTheme,
             color: CustomTheme.appTheme,
             animationDuration: const Duration(milliseconds: 100),
-            items: const <Widget>[
+            items:  <Widget>[
               Icon(
                 Icons.home_rounded,
-                size: 30,
+                size:  MediaQuery.of(context).size.height*0.03,
                 color: Colors.white,
               ),
               Icon(
                 Icons.search_rounded,
-                size: 30,
+                size:  MediaQuery.of(context).size.height*0.03,
                 color: Colors.white,
               ),
               Icon(
                 Icons.favorite_outline_rounded,
-                size: 30,
+                size:  MediaQuery.of(context).size.height*0.03,
                 color: Colors.white,
               ),
               Icon(
                 Icons.line_weight_rounded,
-                size: 30,
+                size:  MediaQuery.of(context).size.height*0.03,
                 color: Colors.white,
               ),
               Icon(
                 Icons.person_outline_rounded,
-                size: 30,
+                size:  MediaQuery.of(context).size.height*0.03,
                 color: Colors.white,
               )
             ],
