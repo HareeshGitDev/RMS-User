@@ -423,7 +423,7 @@ class _LoginPageState extends State<LoginPage> {
                                                       arguments: {
                                                         'gmailData': data,
                                                         'from': 'Gmail',
-                                                        'fromExternalApi':
+                                                        'fromExternalLink':
                                                         widget.fromExternalLink,
                                                         'onClick': widget.onClick
                                                       });
