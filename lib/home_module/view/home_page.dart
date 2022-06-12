@@ -230,6 +230,65 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(
                             height: _mainHeight * 0.01,
                           ),
+                          Container(
+                            //color: Colors.grey.shade50,
+                            height: _mainHeight * 0.13,
+                            padding: EdgeInsets.only(
+                              left: _mainWidth * 0.03,
+                              right: _mainWidth * 0.03,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                    '${nullCheck(list: value.languageData) ? value.languageData[16].name : '5 Reasons to choose RentMyStay'}',
+                                    style:  getHeaderStyle),
+                                SizedBox(
+                                  height: _mainHeight * 0.01,
+                                ),
+                                Container(
+                                  height: _mainHeight * 0.075,
+                                  child: ListView.separated(
+                                      itemBuilder: (_, index) {
+                                        return Container(
+                                          alignment: Alignment.center,
+                                          padding: EdgeInsets.only(
+                                            left: _mainWidth * 0.02,
+                                            right: _mainWidth * 0.01,
+                                            top: _mainHeight * 0.005,
+                                          ),
+                                          width: _mainWidth * 0.42,
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: Colors
+                                                      .grey
+                                                      .shade300),
+                                              borderRadius:
+                                              BorderRadius
+                                                  .circular(
+                                                  5)),
+                                          child: Text(
+                                            getReasonsList[index],
+                                            maxLines: 3,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: getHeight(
+                                                    context: context,
+                                                    height: 12),
+                                                color: Colors.black87,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        );
+                                      },
+                                      scrollDirection: Axis.horizontal,
+                                      separatorBuilder: (_, __) => SizedBox(
+                                        width: _mainWidth * 0.025,
+                                      ),
+                                      itemCount: getReasonsList.length),
+                                ),
+                              ],
+                            ),
+                          ),
                           /*Container(
                             height: _mainHeight * 0.07,
                             padding: EdgeInsets.only(
@@ -286,54 +345,7 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(
                             height: _mainHeight * 0.03,
                           ),*/
-                          CarouselSlider(
-                            items: _homeViewModel
-                                .getAdsImageList()
-                                .map(
-                                  (imageUrl) => CachedNetworkImage(
-                                    imageUrl: imageUrl,
-                                    imageBuilder: (context, imageProvider) =>
-                                        Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                    placeholder: (context, url) =>
-                                        Shimmer.fromColors(
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey,
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              height: _mainHeight * 0.2,
-                                            ),
-                                            baseColor:
-                                                Colors.grey[200] as Color,
-                                            highlightColor:
-                                                Colors.grey[350] as Color),
-                                    errorWidget: (context, url, error) =>
-                                        const Icon(Icons.error),
-                                  ),
-                                )
-                                .toList(),
-                            options: CarouselOptions(
-                                height: _mainHeight * 0.2,
-                                enlargeCenterPage: true,
-                                autoPlayInterval: Duration(seconds: 6),
-                                autoPlay: true,
-                                aspectRatio: 16 / 9,
-                                autoPlayCurve: Curves.fastOutSlowIn,
-                                enableInfiniteScroll: true,
-                                viewportFraction: 0.8),
-                          ),
-                          SizedBox(
-                            height: _mainHeight * 0.02,
-                          ),
+
                           Container(
                             width: _mainWidth,
                             padding: EdgeInsets.only(
@@ -425,6 +437,54 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(
                             height: _mainHeight * 0.03,
                           ),
+                          CarouselSlider(
+                            items: _homeViewModel
+                                .getAdsImageList()
+                                .map(
+                                  (imageUrl) => CachedNetworkImage(
+                                imageUrl: imageUrl,
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                placeholder: (context, url) =>
+                                    Shimmer.fromColors(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            borderRadius:
+                                            BorderRadius.circular(10),
+                                          ),
+                                          height: _mainHeight * 0.2,
+                                        ),
+                                        baseColor:
+                                        Colors.grey[200] as Color,
+                                        highlightColor:
+                                        Colors.grey[350] as Color),
+                                errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                              ),
+                            )
+                                .toList(),
+                            options: CarouselOptions(
+                                height: _mainHeight * 0.2,
+                                enlargeCenterPage: true,
+                                autoPlayInterval: Duration(seconds: 6),
+                                autoPlay: true,
+                                aspectRatio: 16 / 9,
+                                autoPlayCurve: Curves.fastOutSlowIn,
+                                enableInfiniteScroll: true,
+                                viewportFraction: 0.8),
+                          ),
+                          SizedBox(
+                            height: _mainHeight * 0.02,
+                          ),
                           Container(
                             padding: EdgeInsets.only(
                               left: _mainWidth * 0.035,
@@ -441,66 +501,7 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(
                             height: _mainHeight * 0.005,
                           ),
-                          Container(
-                            //color: Colors.grey.shade50,
-                            height: _mainHeight * 0.13,
-                            padding: EdgeInsets.only(
-                              top: _mainHeight * 0.01,
-                              left: _mainWidth * 0.03,
-                              right: _mainWidth * 0.03,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${nullCheck(list: value.languageData) ? value.languageData[16].name : '5 Reasons to choose RentMyStay'}',
-                                  style:  getHeaderStyle),
-                                SizedBox(
-                                  height: _mainHeight * 0.01,
-                                ),
-                                Container(
-                                  height: _mainHeight * 0.075,
-                                  child: ListView.separated(
-                                      itemBuilder: (_, index) {
-                                        return Container(
-                                          alignment: Alignment.center,
-                                          padding: EdgeInsets.only(
-                                            left: _mainWidth * 0.02,
-                                            right: _mainWidth * 0.01,
-                                            top: _mainHeight * 0.005,
-                                          ),
-                                          width: _mainWidth * 0.42,
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: Colors
-                                                      .grey
-                                                      .shade300),
-                                              borderRadius:
-                                              BorderRadius
-                                                  .circular(
-                                                  5)),
-                                          child: Text(
-                                            getReasonsList[index],
-                                            maxLines: 3,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontSize: getHeight(
-                                                    context: context,
-                                                    height: 12),
-                                                color: Colors.black87,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                        );
-                                      },
-                                      scrollDirection: Axis.horizontal,
-                                      separatorBuilder: (_, __) => SizedBox(
-                                            width: _mainWidth * 0.025,
-                                          ),
-                                      itemCount: getReasonsList.length),
-                                ),
-                              ],
-                            ),
-                          ),
+
                           SizedBox(
                             height: _mainHeight * 0.02,
                           ),
@@ -579,7 +580,7 @@ class _HomePageState extends State<HomePage> {
         model.homePageModel.data?.trendingProps != null &&
         model.homePageModel.data?.trendingProps!.length != 0) {
       return Container(
-        height: _mainHeight * 0.235,
+        height: _mainHeight * 0.255,
         decoration: BoxDecoration(
           //  color: Colors.amber,
           borderRadius: BorderRadius.circular(10),
@@ -646,8 +647,10 @@ class _HomePageState extends State<HomePage> {
                                       left: _mainWidth * 0.01,
                                       right: _mainWidth * 0.01,
                                       top: _mainHeight * 0.005),
+
                                   child: Text(
-                                    data.title ?? '',
+
+                                    '${data.unitType ??''} - ${data.propType ??''}',
                                     style: TextStyle(
                                         fontSize: getHeight(
                                             context: context, height: 12),
@@ -658,22 +661,55 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 Container(
+                                    padding: EdgeInsets.only(
+                                        left: _mainWidth * 0.01,
+                                        right: _mainWidth * 0.01,
+                                        top: _mainHeight * 0.005),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.home,color:Colors.grey ,size: _mainHeight*0.015,),
+                                      SizedBox(width: _mainWidth*0.01,),
+                                      Text(
+                                        data.buildingName != null
+                                            ? data.buildingName.toString()
+                                            : '',
+                                        style: TextStyle(
+                                          fontSize: getHeight(
+                                              context: context, height: 12),
+                                          color: Colors.black54,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
                                   padding: EdgeInsets.only(
                                       left: _mainWidth * 0.01,
                                       right: _mainWidth * 0.01,
                                       top: _mainHeight * 0.005),
-                                  child: Text(
-                                    data.buildingName != null
-                                        ? data.buildingName.toString()
-                                        : '',
-                                    style: TextStyle(
-                                      fontSize: getHeight(
-                                          context: context, height: 12),
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                        Images.locationIcon,
+                                        height: _mainHeight * 0.01,
+                                        width: _mainWidth * 0.03,
+                                      ),
+                                      SizedBox(width: _mainWidth*0.01,),
+                                      Text(
+                                        data.area != null && data.area?.trim() != '' ?'${data.area}':'Bangalore',
+                                        style: TextStyle(
+                                          fontSize: getHeight(
+                                              context: context, height: 12),
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 Container(

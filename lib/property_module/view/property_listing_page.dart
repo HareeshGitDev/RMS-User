@@ -364,7 +364,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                                 .ellipsis,
                                                           ),
                                                         ),
-                                                        Text(' - '),
+                                                        Spacer(),
                                                         Visibility(
                                                             visible: data
                                                                 .rmsProp !=
@@ -380,7 +380,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                               data.rmsProp ==
                                                                   "RMS Prop",
                                                           child: Container(
-                                                            width: _mainWidth*0.28,
+                                                            padding: EdgeInsets.only(right: _mainWidth*0.02),
+                                                            //width: _mainWidth*0.28,
                                                             child: Text(
                                                               data.buildingName ??
                                                                   '',
