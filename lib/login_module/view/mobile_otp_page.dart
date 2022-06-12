@@ -286,7 +286,7 @@ class _OtpState extends State<MobileOtpPage> {
               'uid':userCredential.user?.uid,
               'from':'OTP',
               'mobile':phoneNumber,
-              'fromExternalApi':
+              'fromExternalLink':
               widget.fromExternalLink,
               'onClick': widget.onClick
             },);
@@ -352,7 +352,7 @@ class _OtpState extends State<MobileOtpPage> {
             'from': 'OTP',
             'uid':userCredential.user?.uid,
             'mobile':widget.number,
-            'fromExternalApi':
+            'fromExternalLink':
             widget.fromExternalLink,
             'onClick': widget.onClick
 

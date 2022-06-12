@@ -11,14 +11,12 @@ import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../../language_module/model/language_model.dart';
 import '../../theme/custom_theme.dart';
@@ -27,7 +25,6 @@ import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/shared_prefrences_util.dart';
 import '../model/gmail_signin_request_model.dart';
 import '../model/login_response_model.dart';
-import '../model/signup_response_model.dart';
 
 class LoginPage extends StatefulWidget {
   final bool fromExternalLink;
@@ -420,7 +417,7 @@ class _LoginPageState extends State<LoginPage> {
                                                   arguments: {
                                                     'gmailData': data,
                                                     'from': 'Gmail',
-                                                    'fromExternalApi':
+                                                    'fromExternalLink':
                                                         widget.fromExternalLink,
                                                     'onClick': widget.onClick
                                                   });

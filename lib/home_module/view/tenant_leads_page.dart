@@ -111,122 +111,201 @@ class _TenantLeadsPageState extends State<TenantLeadsPage> {
                 return Container(
                   height: _mainHeight,
                   width: _mainWidth,
-                  color: Colors.white,
-                  child: ListView.separated(
-                      itemBuilder: (_, index) {
-                        var data = value.tenantLeadsModel.data?[index];
-                        return Container(
-                          color: Colors.amber,
-                         height: _mainHeight * 0.15,
-                          child: Card(
+                  padding: EdgeInsets.only(
+                      left: _mainWidth * 0.01,
+                      right: _mainWidth * 0.01,
+                      top: _mainHeight * 0.01,
+                      bottom: _mainHeight * 0.01),
+                  //color: Colors.white,
+                  child: Expanded(
+                    child: ListView.separated(
+                        itemBuilder: (_, index) {
+                          var data = value.tenantLeadsModel.data?[index];
+                          return Card(   shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
                             child: Container(
-
+                             // color: Colors.amber,
+                             height: _mainHeight * 0.15,
+                              width: _mainWidth,
+                              padding: EdgeInsets.only(
+                                left: _mainWidth * 0.015,
+                                right: _mainWidth * 0.015,
+                                top: _mainWidth * 0.020,
+                                bottom: _mainWidth * 0.015,
+                              ),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                                //mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    height: 50,
-                                    width: _mainWidth,
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '${nullCheck(list: value.tenantLeadsLang) ? value.tenantLeadsLang[2].name : 'Prop Name'} : ',
-                                          style: TextStyle(
-                                              height: getHeight(
-                                                  context: context, height: 12),
-                                              color: Colors.grey),
-                                        ),
-                                        Text(
-                                          data?.propertyName ?? '',
-                                          style: TextStyle(
-                                              height: getHeight(
-                                                  context: context, height: 14),
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ],
-                                    ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '${nullCheck(list: value.tenantLeadsLang) ? value.tenantLeadsLang[2].name : 'Prop Name'} : ',
+                                        style: TextStyle(
+                                            fontSize: getHeight(
+                                                context: context, height: 12),
+                                            color: Colors.grey),
+                                      ),
+                                      Spacer(),
+                                      Text(
+                                        data?.propertyName ?? '',
+                                        style: TextStyle(
+                                            fontSize: getHeight(
+                                                context: context, height: 14),
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
                                   ),
-                                  Container(
-                                    height: 50,
-                                    width: _mainWidth,
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          '${nullCheck(list: value.tenantLeadsLang) ? value.tenantLeadsLang[3].name : 'Site Visit Date'} : ',
-                                          style: TextStyle(
-                                              height: getHeight(
-                                                  context: context, height: 12),
-                                              color: Colors.grey),
-                                        ),
-                                        Text(
-                                          data?.siteVisitDate ?? '',
-                                          style: TextStyle(
-                                              height: getHeight(
-                                                  context: context, height: 14),
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ],
-                                    ),
+                                  SizedBox(height: 10,),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '${nullCheck(list: value.tenantLeadsLang) ? value.tenantLeadsLang[3].name : 'Site Visit Date'} : ',
+                                        style: TextStyle(
+                                            fontSize: getHeight(
+                                                context: context, height: 12),
+                                            color: Colors.grey),
+                                      ),
+                                      Spacer(),
+                                      Text(
+                                        data?.siteVisitDate ?? '',
+                                        style: TextStyle(
+                                            fontSize: getHeight(
+                                                context: context, height: 14),
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
                                   ),
-                                  Container(
-                                    height: 50,
-                                    width: _mainWidth,
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          '${nullCheck(list: value.tenantLeadsLang) ? value.tenantLeadsLang[4].name : 'Contact Details'} : ',
-                                          style: TextStyle(
-                                              height: getHeight(
-                                                  context: context, height: 12),
-                                              color: Colors.grey),
-                                        ),
-                                        Text(
-                                          data?.contactDetails ?? '',
-                                          style: TextStyle(
-                                              height: getHeight(
-                                                  context: context, height: 14),
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ],
-                                    ),
+                                  SizedBox(height: 10,),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '${nullCheck(list: value.tenantLeadsLang) ? value.tenantLeadsLang[4].name : 'Contact Details'} : ',
+                                        style: TextStyle(
+                                            fontSize: getHeight(
+                                                context: context, height: 12),
+                                            color: Colors.grey),
+                                      ),
+                                      Spacer(),
+                                      Text(
+                                        data?.contactDetails ?? '',
+                                        style: TextStyle(
+                                            fontSize: getHeight(
+                                                context: context, height: 14),
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
                                   ),
-                                  Container(
-                                    height: 50,
-                                    width: _mainWidth,
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          '${nullCheck(list: value.tenantLeadsLang) ? value.tenantLeadsLang[5].name : 'Email'} : ',
-                                          style: TextStyle(
-                                              height: getHeight(
-                                                  context: context, height: 12),
-                                              color: Colors.grey),
-                                        ),
-                                        Text(
-                                          data?.emailId ?? '',
-                                          style: TextStyle(
-                                              height: getHeight(
-                                                  context: context, height: 14),
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ],
-                                    ),
+                                  SizedBox(height: 10,),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '${nullCheck(list: value.tenantLeadsLang) ? value.tenantLeadsLang[5].name : 'Email'} : ',
+                                        style: TextStyle(
+                                            fontSize: getHeight(
+                                                context: context, height: 12),
+                                            color: Colors.grey),
+                                      ),
+                                      Spacer(),
+                                      Text(
+                                        data?.emailId ?? '',
+                                        style: TextStyle(
+                                            fontSize: getHeight(
+                                                context: context, height: 14),
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
                                   ),
+                                /*  Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '${nullCheck(list: value.tenantLeadsLang) ? value.tenantLeadsLang[2].name : 'Prop Name'} : ',
+                                        style: TextStyle(
+                                            height: getHeight(
+                                                context: context, height: 12),
+                                            color: Colors.grey),
+                                      ),
+                                      Text(
+                                        data?.propertyName ?? '',
+                                        style: TextStyle(
+                                            height: getHeight(
+                                                context: context, height: 14),
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '${nullCheck(list: value.tenantLeadsLang) ? value.tenantLeadsLang[3].name : 'Site Visit Date'} : ',
+                                        style: TextStyle(
+                                            height: getHeight(
+                                                context: context, height: 12),
+                                            color: Colors.grey),
+                                      ),
+                                      Text(
+                                        data?.siteVisitDate ?? '',
+                                        style: TextStyle(
+                                            height: getHeight(
+                                                context: context, height: 14),
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '${nullCheck(list: value.tenantLeadsLang) ? value.tenantLeadsLang[4].name : 'Contact Details'} : ',
+                                        style: TextStyle(
+                                            height: getHeight(
+                                                context: context, height: 12),
+                                            color: Colors.grey),
+                                      ),
+                                      Text(
+                                        data?.contactDetails ?? '',
+                                        style: TextStyle(
+                                            height: getHeight(
+                                                context: context, height: 14),
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '${nullCheck(list: value.tenantLeadsLang) ? value.tenantLeadsLang[5].name : 'Email'} : ',
+                                        style: TextStyle(
+                                            height: getHeight(
+                                                context: context, height: 12),
+                                            color: Colors.grey),
+                                      ),
+                                      Text(
+                                        data?.emailId ?? '',
+                                        style: TextStyle(
+                                            height: getHeight(
+                                                context: context, height: 14),
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
+                                  ),*/
                                 ],
                               ),
                             ),
-                          ),
-                        );
-                      },
-                      separatorBuilder: (_, __) => SizedBox(
-                            height: 0,
-                          ),
-                      itemCount: value.tenantLeadsModel.data?.length ?? 0),
+                          );
+                        },
+                        separatorBuilder: (_, __) => SizedBox(
+                              height: 0,
+                            ),
+                        itemCount: value.tenantLeadsModel.data?.length ?? 0),
+                  ),
                 );
               } else if ((value.tenantLeadsModel.msg != null &&
                       value.tenantLeadsModel.data != null &&
