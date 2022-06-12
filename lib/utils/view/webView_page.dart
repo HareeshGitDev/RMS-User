@@ -10,7 +10,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_webview_pro/webview_flutter.dart';
 import 'package:webview_flutter/platform_interface.dart';
-import 'package:flutter_webview_pro/webview_flutter.dart' as webViewAndroid;
+//import 'package:flutter_webview_pro/webview_flutter.dart' as webViewAndroid;
 import 'package:webview_flutter/webview_flutter.dart' as webViewIOS;
 
 class Web_View_Container extends StatefulWidget {
@@ -27,7 +27,7 @@ class _WebViewContainerState extends State<Web_View_Container> {
   ValueNotifier<bool> showLoader = ValueNotifier(true);
   ValueNotifier<int> progressIndicator = ValueNotifier(0);
 
-  late webViewAndroid.WebViewController _webViewAndroidController;
+ // late webViewAndroid.WebViewController _webViewAndroidController;
   late webViewIOS.WebViewController _webViewIosController;
 
   var _mainHeight;
@@ -109,7 +109,7 @@ class _WebViewContainerState extends State<Web_View_Container> {
               Expanded(
                 child: Stack(
                   children: [
-                    Platform.isIOS? webViewIOS.WebView(
+                    /*Platform.isIOS? */webViewIOS.WebView(
                       onProgress: (progress) {
                         progressIndicator.value = progress;
                       },
@@ -129,7 +129,7 @@ class _WebViewContainerState extends State<Web_View_Container> {
                       allowsInlineMediaPlayback: false,
                       gestureNavigationEnabled: true,
 
-                    ):webViewAndroid.WebView(
+                    ),/*:webViewAndroid.WebView(
                       onProgress: (progress) {
                         progressIndicator.value = progress;
                       },
@@ -149,7 +149,7 @@ class _WebViewContainerState extends State<Web_View_Container> {
                       allowsInlineMediaPlayback: false,
                       gestureNavigationEnabled: true,
 
-                    ),
+                    ),*/
                    Positioned(
                       top: _mainHeight * 0.4,
                       left: _mainWidth * 0.4,
