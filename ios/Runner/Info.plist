@@ -18,14 +18,8 @@
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
-	<key>NSAppleMusicUsageDescription</key>
-    <string>RentMyStay requires this access to let you upload photo and video for any query.</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>FirebaseDynamicLinksCustomDomains</key>
-	<array>
-	    <string>https://rentmystay.com/rentals</string>
-	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -43,6 +37,10 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<true/>
+	<key>FirebaseDynamicLinksCustomDomains</key>
+	<array>
+		<string>https://rentmystay.com/rentals</string>
+	</array>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>https</string>
@@ -54,6 +52,8 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>RentMyStay requires this access to let you upload photo and video for any query.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>RentMyStay requires camera access to capture photos to let you upload profile pic and id and any query image  </string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
