@@ -366,6 +366,14 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                         ),
                                                         Text(' - '),
                                                         Visibility(
+                                                            visible: data
+                                                                .rmsProp !=
+                                                                null &&
+                                                                data.rmsProp ==
+                                                                    "RMS Prop",
+                                                            child: Icon(Icons.home,size: _mainHeight*0.02,color: Colors.grey,)),
+                                                        SizedBox(width: _mainWidth*0.002,),
+                                                        Visibility(
                                                           visible: data
                                                                       .rmsProp !=
                                                                   null &&
