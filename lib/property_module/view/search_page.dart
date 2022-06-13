@@ -17,6 +17,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../home_module/model/home_page_model.dart';
+import '../../images.dart';
 import '../../theme/custom_theme.dart';
 import '../../theme/fonts.dart';
 import '../../utils/constants/app_consts.dart';
@@ -930,7 +931,7 @@ class _SearchPageState extends State<SearchPage> {
         model.homePageModel.data?.trendingProps != null &&
         model.homePageModel.data?.trendingProps!.length != 0) {
       return Container(
-        height: _mainHeight * 0.23,
+        height: _mainHeight * 0.26,
         decoration: BoxDecoration(
           //  color: Colors.amber,
           borderRadius: BorderRadius.circular(10),
@@ -997,8 +998,10 @@ class _SearchPageState extends State<SearchPage> {
                                       left: _mainWidth * 0.01,
                                       right: _mainWidth * 0.01,
                                       top: _mainHeight * 0.005),
+
                                   child: Text(
-                                    data.title ?? '',
+
+                                    '${data.unitType ??''} - ${data.propType ??''}',
                                     style: TextStyle(
                                         fontSize: getHeight(
                                             context: context, height: 12),
@@ -1013,18 +1016,57 @@ class _SearchPageState extends State<SearchPage> {
                                       left: _mainWidth * 0.01,
                                       right: _mainWidth * 0.01,
                                       top: _mainHeight * 0.005),
-                                  child: Text(
-                                    data.buildingName != null
-                                        ? data.buildingName.toString()
-                                        : '',
-                                    style: TextStyle(
-                                      fontSize: getHeight(
-                                          context: context, height: 12),
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.home,color:Colors.grey ,size: _mainHeight*0.015,),
+                                      SizedBox(width: _mainWidth*0.01,),
+                                      Container(
+                                        width: _mainWidth*0.35,
+                                        child: Text(
+                                          data.buildingName != null
+                                              ? data.buildingName.toString()
+                                              : '',
+                                          style: TextStyle(
+                                            fontSize: getHeight(
+                                                context: context, height: 12),
+                                            color: Colors.black54,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(
+                                      left: _mainWidth * 0.01,
+                                      right: _mainWidth * 0.01,
+                                      top: _mainHeight * 0.005),
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                        Images.locationIcon,
+                                        height: _mainHeight * 0.01,
+                                        width: _mainWidth * 0.03,
+                                      ),
+                                      SizedBox(width: _mainWidth*0.01,),
+                                      Container(
+                                        width: _mainWidth*0.35,
+                                        child: Text(
+                                          data.area != null && data.area?.trim() != '' ?'${data.area}':'Bangalore',
+                                          style: TextStyle(
+                                            fontSize: getHeight(
+                                                context: context, height: 12),
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 Container(
@@ -1092,10 +1134,33 @@ class _SearchPageState extends State<SearchPage> {
                                       SizedBox(
                                         width: _mainWidth * 0.005,
                                       ),
-                                      data.monthRentOff != null &&
-                                          data.monthRentOff.toString() !=
-                                              '0'
+                                      /*data.monthRentOff != null &&
+                                              data.monthRentOff.toString() !=
+                                                  '0'
                                           ? Container(
+                                              width: _mainWidth * 0.15,
+                                              alignment: Alignment.centerLeft,
+                                              padding: EdgeInsets.only(
+                                                  right: _mainWidth * 0.01,
+                                                  top: _mainHeight * 0.003),
+                                              child: FittedBox(
+                                                child: Text(
+                                                  '${data.monthRentOff.toString()}% OFF',
+                                                  style: TextStyle(
+                                                    fontSize: getHeight(
+                                                        context: context,
+                                                        height: 12),
+                                                    color:
+                                                        CustomTheme.myFavColor,
+                                                    fontWeight: FontWeight.w600,
+
+                                                    //fontStyle: FontStyle.italic,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : Container(),*/
+                                      Container(
                                         width: _mainWidth * 0.15,
                                         alignment: Alignment.centerLeft,
                                         padding: EdgeInsets.only(
@@ -1103,7 +1168,7 @@ class _SearchPageState extends State<SearchPage> {
                                             top: _mainHeight * 0.003),
                                         child: FittedBox(
                                           child: Text(
-                                            '${data.monthRentOff.toString()}% OFF',
+                                            ' ( < 3 Month )',
                                             style: TextStyle(
                                               fontSize: getHeight(
                                                   context: context,
@@ -1117,28 +1182,123 @@ class _SearchPageState extends State<SearchPage> {
                                           ),
                                         ),
                                       )
-                                          : Container(),
                                     ],
                                   ),
                                 ),
                                 Container(
-                                  alignment: Alignment.centerLeft,
                                   padding: EdgeInsets.only(
                                       left: _mainWidth * 0.01,
-                                      top: _mainHeight * 0.003),
-                                  child: Text(
-                                    nullCheck(list: model.searchPageLang)
-                                        ? '${model.searchPageLang[10].name}'
-                                        :'More Info',
-                                    style: TextStyle(
-                                      fontSize: getHeight(
-                                          context: context, height: 12),
-                                      color: CustomTheme.appThemeContrast,
+                                      right: _mainWidth * 0.01,
+                                      top: _mainHeight * 0.005),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: _mainWidth * 0.13,
+                                        alignment: Alignment.centerLeft,
+                                        padding: EdgeInsets.only(
+                                            right: _mainWidth * 0.01,
+                                            top: _mainHeight * 0.003),
+                                        child: FittedBox(
+                                          child: Text(
+                                            data.rmsRent != null
+                                                ? rupee + ' ${data.rmsRent}'
+                                                : '',
+                                            style: TextStyle(
+                                              fontSize: getHeight(
+                                                  context: context, height: 12),
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: _mainWidth * 0.005,
+                                      ),
+                                      showOrgPrice(
+                                          monthlyRent:
+                                          data.rmsRent ?? '0',
+                                          orgRent: data.rmsRent ?? '0')
+                                          ? Container()
+                                          : Container(
+                                        width: _mainWidth * 0.1,
+                                        alignment: Alignment.centerLeft,
+                                        padding: EdgeInsets.only(
+                                            right: _mainWidth * 0.01,
+                                            top: _mainHeight * 0.003),
+                                        child: FittedBox(
+                                          child: Text(
+                                            data.orgRmsRent != null
+                                                ? rupee +
+                                                '${data.orgRmsRent}'
+                                                : '',
+                                            style: TextStyle(
+                                              fontSize: getHeight(
+                                                  context: context,
+                                                  height: 10),
+                                              color: Colors.grey,
+                                              decoration: TextDecoration
+                                                  .lineThrough,
+                                              fontWeight: FontWeight.w600,
 
-                                      fontWeight: FontWeight.w600,
+                                              //fontStyle: FontStyle.italic,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: _mainWidth * 0.005,
+                                      ),
+                                      /*data.monthRentOff != null &&
+                                              data.monthRentOff.toString() !=
+                                                  '0'
+                                          ? Container(
+                                              width: _mainWidth * 0.15,
+                                              alignment: Alignment.centerLeft,
+                                              padding: EdgeInsets.only(
+                                                  right: _mainWidth * 0.01,
+                                                  top: _mainHeight * 0.003),
+                                              child: FittedBox(
+                                                child: Text(
+                                                  '${data.monthRentOff.toString()}% OFF',
+                                                  style: TextStyle(
+                                                    fontSize: getHeight(
+                                                        context: context,
+                                                        height: 12),
+                                                    color:
+                                                        CustomTheme.myFavColor,
+                                                    fontWeight: FontWeight.w600,
 
-                                      //fontStyle: FontStyle.italic,
-                                    ),
+                                                    //fontStyle: FontStyle.italic,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : Container(),*/
+                                      Container(
+                                        width: _mainWidth * 0.15,
+                                        alignment: Alignment.centerLeft,
+                                        padding: EdgeInsets.only(
+                                            right: _mainWidth * 0.01,
+                                            top: _mainHeight * 0.003),
+                                        child: FittedBox(
+                                          child: Text(
+                                            ' ( > 3 Month )',
+                                            style: TextStyle(
+                                              fontSize: getHeight(
+                                                  context: context,
+                                                  height: 12),
+                                              color:
+                                              CustomTheme.myFavColor,
+                                              fontWeight: FontWeight.w600,
+
+                                              //fontStyle: FontStyle.italic,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
                                   ),
                                 ),
                               ],

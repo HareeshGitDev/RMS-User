@@ -329,6 +329,7 @@ class _BookingPageState extends State<BookingPage> {
 
                                       color: Colors.grey),
                                 ),
+                                subtitle: Text('${showformatDate(checkInDate)}   to   ${showformatDate(checkOutDate)}'),
                                 state: StepState.complete,
                                 content: _getSelectDateView(
                                     context: context,

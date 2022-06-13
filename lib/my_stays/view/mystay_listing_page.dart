@@ -479,8 +479,8 @@ class _MyStayListPageState extends State<MyStayListPage> {
                                       ),
                                     ),
                                     Text(
-                                      data.checkInStatus == '0' && data.bookingStatus=='Success'
-                                          ? 'Upcoming'
+                                      data.checkOutStatus == '1' && data.bookingStatus=='Success'
+                                          ? 'Completed'
                                           : data.bookingStatus.toString(),
                                       style: TextStyle(
                                         color: CustomTheme.myFavColor,

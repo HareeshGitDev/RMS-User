@@ -148,7 +148,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 color: Colors.white,
               ),
               Icon(
-                Icons.line_weight_rounded,
+                Icons.work_outline_outlined,
                 size:  MediaQuery.of(context).size.height*0.03,
                 color: Colors.white,
               ),
