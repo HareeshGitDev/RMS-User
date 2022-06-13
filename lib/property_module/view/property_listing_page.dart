@@ -311,7 +311,6 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                     height: _mainHeight * 0.02,
                                                   ),
                                                   Container(
-
                                                     padding: EdgeInsets.only(
                                                       left: _mainWidth * 0.02,
                                                     ),
@@ -344,35 +343,44 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                         ),
                                                         Text(' - '),
                                                         Container(
-
                                                           child: Text(
                                                             '${data.propType}',
                                                             style: TextStyle(
                                                               fontSize: getHeight(
                                                                   context:
-                                                                  context,
+                                                                      context,
                                                                   height: 12),
                                                               color:
-                                                              Colors.black,
+                                                                  Colors.black,
                                                               fontWeight:
-                                                              FontWeight
-                                                                  .w500,
+                                                                  FontWeight
+                                                                      .w500,
                                                             ),
                                                             maxLines: 1,
                                                             overflow:
-                                                            TextOverflow
-                                                                .ellipsis,
+                                                                TextOverflow
+                                                                    .ellipsis,
                                                           ),
                                                         ),
                                                         Spacer(),
                                                         Visibility(
                                                             visible: data
-                                                                .rmsProp !=
-                                                                null &&
+                                                                        .rmsProp !=
+                                                                    null &&
                                                                 data.rmsProp ==
                                                                     "RMS Prop",
-                                                            child: Icon(Icons.home,size: _mainHeight*0.02,color: Colors.grey,)),
-                                                        SizedBox(width: _mainWidth*0.002,),
+                                                            child: Icon(
+                                                              Icons.home,
+                                                              size:
+                                                                  _mainHeight *
+                                                                      0.02,
+                                                              color:
+                                                                  Colors.grey,
+                                                            )),
+                                                        SizedBox(
+                                                          width: _mainWidth *
+                                                              0.002,
+                                                        ),
                                                         Visibility(
                                                           visible: data
                                                                       .rmsProp !=
@@ -380,7 +388,10 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                               data.rmsProp ==
                                                                   "RMS Prop",
                                                           child: Container(
-                                                            padding: EdgeInsets.only(right: _mainWidth*0.02),
+                                                            padding: EdgeInsets.only(
+                                                                right:
+                                                                    _mainWidth *
+                                                                        0.02),
                                                             //width: _mainWidth*0.28,
                                                             child: Text(
                                                               data.buildingName ??
@@ -403,7 +414,6 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                             ),
                                                           ),
                                                         ),
-
                                                       ],
                                                     ),
                                                   ),
@@ -731,18 +741,14 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                         'booked',
                                                     child: Container(
                                                       alignment:
-                                                          Alignment.topCenter,
+                                                          Alignment.center,
                                                       height:
                                                           _mainHeight * 0.022,
-                                                      width: _mainWidth * 0.17,
-                                                      padding: EdgeInsets.only(
-                                                          left:
-                                                              _mainWidth * 0.02,
-                                                          right: _mainWidth *
-                                                              0.02),
+                                                      width: _mainWidth * 0.18,
+
                                                       decoration: BoxDecoration(
                                                           color: CustomTheme
-                                                              .highlightColor,
+                                                              .appThemeContrast,
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(5)),
@@ -1438,7 +1444,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                               Column(
                                 children: [
                                   Text(
-                                    '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[12].name : 'Min Price Selected'}',
+                                    '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[12].name : 'Min Price'} ${nullCheck(list: value.propertyListingLang) ? data < 30 ? value.propertyListingLang[29].name : value.propertyListingLang[30].name : data < 30 ? 'Daily' : 'Monthly'}',
                                     style: TextStyle(
                                         color: Colors.blueGrey,
                                         fontWeight: FontWeight.w500,
@@ -1458,7 +1464,8 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                               Column(
                                 children: [
                                   Text(
-                                    '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[13].name : 'Max Price Selected'}',
+                                    '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[13].name : 'Max Price'} ${nullCheck(list: value.propertyListingLang) ? data < 30 ? value.propertyListingLang[29].name : value.propertyListingLang[30].name : data < 30 ? 'Daily' : 'Monthly'}',
+
                                     style: TextStyle(
                                         color: Colors.blueGrey,
                                         fontWeight: FontWeight.w500,

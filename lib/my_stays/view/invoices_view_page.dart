@@ -150,7 +150,8 @@ class _InvoiceState extends State<InvoicePage> {
                         color: Colors.white,
                         padding: EdgeInsets.symmetric(
                             horizontal: _mainWidth * 0.02,
-                            vertical: _mainHeight * 0.02),
+                            vertical: _mainHeight * 0.01
+                        ),
                         child: ListView.separated(
                             itemBuilder: (context, index) {
                               var data =
@@ -159,6 +160,7 @@ class _InvoiceState extends State<InvoicePage> {
                               return Container(
                                 // color: Colors.purple,
                                 child: ExpansionTile(
+
                                   backgroundColor: Colors.grey.shade50,
                                   collapsedBackgroundColor: Colors.grey.shade50,
                                   tilePadding: EdgeInsets.zero,
@@ -182,7 +184,7 @@ class _InvoiceState extends State<InvoicePage> {
                                                 fontWeight: FontWeight.w700,
                                                 fontSize: getHeight(
                                                     context: context,
-                                                    height: 20)),
+                                                    height: 16)),
                                           ),
                                         ),
                                         Spacer(),
@@ -192,7 +194,7 @@ class _InvoiceState extends State<InvoicePage> {
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: getHeight(
                                                     context: context,
-                                                    height: 18))),
+                                                    height: 14))),
                                         SizedBox(
                                           width: _mainWidth * 0.02,
                                         ),
@@ -224,6 +226,25 @@ class _InvoiceState extends State<InvoicePage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
+                                        Row(
+                                          children: [
+                                            Text('ID : ',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: getHeight(
+                                                        context: context,
+                                                        height: 12))),
+                                            Text('${data?.invoiceId ?? ''}',
+                                                style: TextStyle(
+                                                    color: Colors.black87
+                                                        .withAlpha(180),
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: getHeight(
+                                                        context: context,
+                                                        height: 12))),
+                                          ],
+                                        ),
                                         Row(
                                           children: [
                                             Text('From : ',
@@ -262,25 +283,7 @@ class _InvoiceState extends State<InvoicePage> {
                                                         height: 12))),
                                           ],
                                         ),
-                                        Row(
-                                          children: [
-                                            Text('Id : ',
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: getHeight(
-                                                        context: context,
-                                                        height: 12))),
-                                            Text('${data?.invoiceId ?? ''}',
-                                                style: TextStyle(
-                                                    color: Colors.black87
-                                                        .withAlpha(180),
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: getHeight(
-                                                        context: context,
-                                                        height: 12))),
-                                          ],
-                                        )
+
                                       ],
                                     ),
                                   ),
@@ -503,7 +506,7 @@ class _InvoiceState extends State<InvoicePage> {
                             },
                             separatorBuilder: (context, index) {
                               return SizedBox(
-                                height: 25,
+                                height: _mainHeight*0.005,
                               );
                             },
                             itemCount:

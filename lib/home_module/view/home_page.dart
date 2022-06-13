@@ -1527,7 +1527,7 @@ class _HomePageState extends State<HomePage> {
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(20.0))),
       content: Container(
-        height: _mainHeight * 0.1,
+        height: _mainHeight * 0.12,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1535,7 +1535,7 @@ class _HomePageState extends State<HomePage> {
               'Are you sure to exit the app ?',
               style: TextStyle(
                   fontWeight: FontWeight.w500,
-                  fontSize: 20,
+                  fontSize: getHeight(context: context,height: 20),
                   color: Colors.black),
             ),
             SizedBox(
@@ -1561,7 +1561,7 @@ class _HomePageState extends State<HomePage> {
                       'No',
                       style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          fontSize: 16,
+                          fontSize: getHeight(context: context, height: 16),
                           color: Colors.white),
                     ),
                   ),
@@ -1572,7 +1572,7 @@ class _HomePageState extends State<HomePage> {
                   child: ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
-                            CustomTheme.appTheme),
+                            CustomTheme.appThemeContrast),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
@@ -1583,7 +1583,7 @@ class _HomePageState extends State<HomePage> {
                       'Yes',
                       style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          fontSize: 16,
+                          fontSize: getHeight(context: context, height: 16),
                           color: Colors.white),
                     ),
                   ),

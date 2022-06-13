@@ -636,6 +636,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                               style: getHeadingStyle,
                                             ),
                                           ),
+
                                           SizedBox(
                                             height: _mainHeight * 0.005,
                                           ),
@@ -659,6 +660,59 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                         [],
                                                   ))
                                               : Container(),
+                                          SizedBox(
+                                            height: _mainHeight * 0.005,
+                                          ),
+
+                                          Container(
+                                            padding: getHeadingPadding,
+                                            child: GestureDetector(
+                                              onTap: () async {
+                                                if ((value.propertyDetailsModel?.data
+                                                    ?.details !=
+                                                    null &&
+                                                    value
+                                                        .propertyDetailsModel
+                                                        ?.data
+                                                        ?.details
+                                                        ?.glat !=
+                                                        null) &&
+                                                    (value.propertyDetailsModel?.data
+                                                        ?.details !=
+                                                        null &&
+                                                        value
+                                                            .propertyDetailsModel
+                                                            ?.data
+                                                            ?.details
+                                                            ?.glng !=
+                                                            null)) {
+                                                  var latitude = (value
+                                                      .propertyDetailsModel
+                                                      ?.data
+                                                      ?.details
+                                                      ?.glat)
+                                                      .toString();
+                                                  var longitude = (value
+                                                      .propertyDetailsModel
+                                                      ?.data
+                                                      ?.details
+                                                      ?.glng)
+                                                      .toString();
+                                                  await SystemService
+                                                      .launchGoogleMaps(
+                                                      latitude:
+                                                      latitude,
+                                                      longitude:
+                                                      longitude);
+                                                }
+                                              },
+                                              child: Text('View on Map',style: TextStyle(
+                                                  fontSize: getHeight(context: context, height: 14),
+                                                  color: CustomTheme.appThemeContrast,
+                                                fontWeight: FontWeight.w600
+                                              ),),
+                                            ),
+                                          ),
                                           SizedBox(
                                             height: _mainHeight * 0.005,
                                           ),

@@ -169,8 +169,42 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
                   ),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
+          Container(alignment: Alignment.centerLeft,
+            padding: EdgeInsets.only(left: 15, right: 15,top: 5),
+            child: Text(
+              'Booking Id: ${widget.bookingId}',
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
+                  fontSize: 16),
+              textAlign: TextAlign.start,
+            ),
+          ),
+                Container(alignment: Alignment.centerLeft,
+                  padding: EdgeInsets.only(left: 15, right: 15,top: 5 ),
+                  child: Text(
+                    'Property Id: ${widget.propertyId}',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black87,
+                        fontSize: 16),
+                    textAlign: TextAlign.start,
+                  ),
+                ),
+                Container(alignment: Alignment.centerLeft,
+                  padding: EdgeInsets.only(left: 15, right: 15, top: 5),
+                  child: Text(
+                    'Address : ${widget.address}',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black87,
+                        fontSize: 16),
+                    textAlign: TextAlign.start,
+                  ),
+                ),
+                SizedBox(height: 10,),
                 Container(
                   padding: EdgeInsets.only(
                     left: 15,
@@ -204,7 +238,8 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
-                                  color: Colors.grey),
+                                  color: Colors.black87
+                              ),
                             ),
                           ),
                         ],
@@ -216,7 +251,7 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
                   height: 20,
                 ),
                 Container(
-                  height: _mainHeight * 0.045,
+                  height: _mainHeight * 0.15,
                   padding: EdgeInsets.only(
                     left: 15,
                     right: 15,
@@ -228,6 +263,10 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
                   child: Neumorphic(
                     style: NeumorphicStyle(
                       depth: -2,
+                      intensity: 5,
+                      shadowLightColor: CustomTheme.appTheme.withAlpha(200),
+                      //CustomTheme.appTheme.withAlpha(150),
+                      shadowDarkColor: Colors.grey.shade400,
                       color: Colors.white,
                     ),
                     child: TextFormField(
@@ -252,7 +291,123 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
                 SizedBox(
                   height: 30,
                 ),
-                Container(
+                ExpansionTile(
+                  childrenPadding: EdgeInsets.only(
+                    bottom: _mainHeight*0.01
+                  ),
+                  title:  Text(
+                    '${nullCheck(list: _viewModel.ticketLang) ? _viewModel.ticketLang[12].name :'Add Images of Your Issue'}',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: CustomTheme.appTheme,
+                        fontSize: 16),
+                  ),
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(
+                        left: 15,
+                        right: 15,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              final String? model =
+                              await CapturePhotoPage.captureImageByGallery(
+                                context: context,
+                                function: (imagePath) async {},
+                              );
+                              log(model.toString());
+                              if (model != null) {
+                                setState(() {
+                                  imageList.add(File(model));
+                                });
+                              }
+                            },
+                            child: Container(
+                              width: _mainWidth * 0.4,
+                              height: _mainHeight * 0.05,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: CustomTheme.appTheme),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.folder_open,
+                                    color: CustomTheme.appTheme,
+                                  ),
+                                  SizedBox(
+                                    width: _mainWidth * 0.03,
+                                  ),
+                                  Container(
+                                    child: Text(
+                                      '${nullCheck(list: _viewModel.ticketLang) ? _viewModel.ticketLang[13].name :"Gallery"}',
+                                      style: TextStyle(
+                                        color: CustomTheme.appTheme,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              final String? model =
+                              await CapturePhotoPage.captureImageByCamera(
+                                context: context,
+                                function: (imagePath) async {},
+                              );
+                              if (model != null) {
+                                setState(() {
+                                  imageList.add(File(model));
+                                });
+                              }
+                            },
+                            child: Container(
+                              width: _mainWidth * 0.4,
+                              height: _mainHeight * 0.05,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: CustomTheme.appTheme),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.camera_alt_outlined,
+                                    color: CustomTheme.appTheme,
+                                  ),
+                                  SizedBox(
+                                    width: _mainWidth * 0.03,
+                                  ),
+                                  Container(
+                                    child: Text(
+                                      '${nullCheck(list: _viewModel.ticketLang) ? _viewModel.ticketLang[14].name :"Camera"}',
+                                      style: TextStyle(
+                                        color: CustomTheme.appTheme,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                /*Container(
                   padding: EdgeInsets.only(left: 15, top: 2, bottom: 2),
                   color: CustomTheme.appTheme,
                   alignment: Alignment.centerLeft,
@@ -368,7 +523,7 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
                       ),
                     ],
                   ),
-                ),
+                ),*/
 
                 SizedBox(
                   height: 30,
@@ -429,7 +584,7 @@ class _GenerateTicketPageState extends State<GenerateTicketPage> {
         child: ElevatedButton(
           style: ButtonStyle(
               backgroundColor:
-                  MaterialStateProperty.all<Color>(CustomTheme.appTheme),
+                  MaterialStateProperty.all<Color>(CustomTheme.appThemeContrast),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               )),
