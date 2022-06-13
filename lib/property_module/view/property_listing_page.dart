@@ -1535,7 +1535,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                     SizedBox(
                       height: _mainHeight * 0.02,
                     ),
-                    FittedBox(
+                   /* FittedBox(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -1604,7 +1604,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                     ),
                     SizedBox(
                       height: _mainHeight * 0.02,
-                    ),
+                    ), */
                     FittedBox(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

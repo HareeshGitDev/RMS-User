@@ -241,7 +241,7 @@ class _HomePageState extends State<HomePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                    '${nullCheck(list: value.languageData) ? value.languageData[16].name : '5 Reasons to choose RentMyStay'}',
+                                    '${nullCheck(list: value.languageData) ? value.languageData[16].name : 'Reasons to choose RentMyStay'}',
                                     style:  getHeaderStyle),
                                 SizedBox(
                                   height: _mainHeight * 0.01,
@@ -580,7 +580,7 @@ class _HomePageState extends State<HomePage> {
         model.homePageModel.data?.trendingProps != null &&
         model.homePageModel.data?.trendingProps!.length != 0) {
       return Container(
-        height: _mainHeight * 0.255,
+        height: _mainHeight * 0.26,
         decoration: BoxDecoration(
           //  color: Colors.amber,
           borderRadius: BorderRadius.circular(10),
@@ -669,18 +669,21 @@ class _HomePageState extends State<HomePage> {
                                     children: [
                                       Icon(Icons.home,color:Colors.grey ,size: _mainHeight*0.015,),
                                       SizedBox(width: _mainWidth*0.01,),
-                                      Text(
-                                        data.buildingName != null
-                                            ? data.buildingName.toString()
-                                            : '',
-                                        style: TextStyle(
-                                          fontSize: getHeight(
-                                              context: context, height: 12),
-                                          color: Colors.black54,
-                                          fontWeight: FontWeight.w500,
+                                      Container(
+                                        width: _mainWidth*0.35,
+                                        child: Text(
+                                          data.buildingName != null
+                                              ? data.buildingName.toString()
+                                              : '',
+                                          style: TextStyle(
+                                            fontSize: getHeight(
+                                                context: context, height: 12),
+                                            color: Colors.black54,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ],
                                   ),
@@ -698,16 +701,19 @@ class _HomePageState extends State<HomePage> {
                                         width: _mainWidth * 0.03,
                                       ),
                                       SizedBox(width: _mainWidth*0.01,),
-                                      Text(
-                                        data.area != null && data.area?.trim() != '' ?'${data.area}':'Bangalore',
-                                        style: TextStyle(
-                                          fontSize: getHeight(
-                                              context: context, height: 12),
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.w500,
+                                      Container(
+                                        width: _mainWidth*0.35,
+                                        child: Text(
+                                          data.area != null && data.area?.trim() != '' ?'${data.area}':'Bangalore',
+                                          style: TextStyle(
+                                            fontSize: getHeight(
+                                                context: context, height: 12),
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ],
                                   ),
@@ -1300,7 +1306,7 @@ class _HomePageState extends State<HomePage> {
             getTile(
               context: context,
               leading: Icon(
-                Icons.line_weight_rounded,
+                Icons.work_outline_outlined,
                 color: CustomTheme.appTheme,
                 size: 20,
               ),

@@ -17,7 +17,8 @@ import '../../utils/service/shared_prefrences_util.dart';
 import '../viewmodel/mystay_viewmodel.dart';
 
 class GenerateTicketPage extends StatefulWidget {
-  final String bookingId;
+
+final String bookingId;
   final String propertyId;
   final String address;
 
