@@ -34,7 +34,8 @@ class MyStayViewModel extends ChangeNotifier {
   Future<void> getMyStayList() async {
     final MyStayListModel response = await _myStayApiService.fetchMyStayList();
     myStayListModel = response;
-    log('Total Stay List :: ${myStayListModel.data?.result?.length}');
+    activeBookingList=response.data != null && response.data?.result != null && response.data?.result!.length != 0?response.data?.result:[];
+    /*log('Total Stay List :: ${myStayListModel.data?.result?.length}');
     if (myStayListModel.data != null && myStayListModel.data?.result != null) {
       completedBookingList = myStayListModel.data?.result
               ?.where((element) => element.checkOutStatus == '1' || element.bookingStatus=='Cancel' )
@@ -48,7 +49,7 @@ class MyStayViewModel extends ChangeNotifier {
               .toList() ??
           [];
       log('Active Stay List :: ${activeBookingList?.length}');
-    }
+    }*/
 
     notifyListeners();
   }

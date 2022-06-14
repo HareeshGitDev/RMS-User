@@ -103,10 +103,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
-    return _connectionStatus?DefaultTabController(
-      length: 2,
-      initialIndex: 0,
-      child: Scaffold(
+    return _connectionStatus? Scaffold(
           appBar: AppBar(
             elevation: 5,
             leading: widget.fromBottom
@@ -136,31 +133,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
                   fontWeight: FontWeight.w700),
             ),
             titleSpacing: 0,
-            bottom: TabBar(
-              indicatorColor: CustomTheme.white,
-              tabs: [
-                Tab(
-                  child: Text(
-                    nullCheck(
-                            list: context.watch<MyStayViewModel>().myStayLang)
-                        ? '${context.watch<MyStayViewModel>().myStayLang[1].name}'
-                        : "Active Bookings",
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-                Tab(
-                    child: Text(
-                  nullCheck(list: context.watch<MyStayViewModel>().myStayLang)
-                      ? '${context.watch<MyStayViewModel>().myStayLang[2].name}'
-                      : "Completed Bookings",
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                )),
-              ],
-            ),
+
           ),
           body: Consumer<MyStayViewModel>(
             builder: (context, value, child) {
@@ -173,21 +146,13 @@ class _MyStayListPageState extends State<MyStayListPage> {
                     right: _mainWidth * 0.02,
                     top: _mainHeight * 0.01),
                 margin: EdgeInsets.only(bottom: _mainHeight * 0.01),
-                child: TabBarView(
-                  children: <Widget>[
-                    getActiveTab(
-                        activeBookingList: value.activeBookingList,
-                        context: context,
-                        langList: value.myStayLang),
-                    getCompletedTab(
-                        completedBookingList: value.completedBookingList,
-                        context: context,
-                        langList: value.myStayLang),
-                  ],
-                ),
+                child: getActiveTab(
+                    activeBookingList: value.activeBookingList,
+                    context: context,
+                    langList: value.myStayLang),
               );
             },
-          )),
+          ),
     ):RMSWidgets.networkErrorPage(context: context);
   }
 
@@ -319,8 +284,9 @@ class _MyStayListPageState extends State<MyStayListPage> {
                                       ),
                                     ),
                                     Text(
-                                      data.checkInStatus == '0' && data.bookingStatus=='Success'
-                                          ? 'Upcoming'
+
+                                      data.checkOutStatus == '1'
+                                          ? 'Completed'
                                           : data.bookingStatus.toString(),
                                       style: TextStyle(
                                         color: CustomTheme.myFavColor,
