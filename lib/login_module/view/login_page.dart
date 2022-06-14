@@ -53,9 +53,11 @@ class _LoginPageState extends State<LoginPage> {
   var _mainHeight;
   final GlobalKey<FormState> _formKey = GlobalKey();
   var _mainWidth;
+  bool isObscure = true;
   late StreamSubscription<ConnectivityResult> _connectivitySubs;
   final Connectivity _connectivity = Connectivity();
   bool _connectionStatus = true;
+
   SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
 
   getLanguageData() async {
@@ -63,6 +65,7 @@ class _LoginPageState extends State<LoginPage> {
         language: await preferenceUtil.getString(rms_language) ?? 'english',
         pageName: 'loginPage');
   }
+
   bool nullCheck({required List<LanguageModel> list}) =>
       list.isNotEmpty ? true : false;
 
@@ -144,14 +147,15 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           Container(
-                            padding: EdgeInsets.only( left: _mainWidth*0.035),
-                            margin: EdgeInsets.only(right: _mainWidth*0.035),
+                            padding: EdgeInsets.only(left: _mainWidth * 0.035),
+                            margin: EdgeInsets.only(right: _mainWidth * 0.035),
                             alignment: Alignment.centerLeft,
                             child: AnimatedTextKit(
                               animatedTexts: [
-                                ColorizeAnimatedText('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[0].name :'Welcome Back'} ! ',
+                                ColorizeAnimatedText(
+                                    '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[0].name : 'Welcome Back'} ! ',
                                     textStyle: TextStyle(
-                                      fontSize: _mainWidth*0.06,
+                                      fontSize: _mainWidth * 0.05,
                                     ),
                                     colors: [
                                       Colors.white,
@@ -163,14 +167,16 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           SizedBox(
-                            height: _mainHeight*0.025,
+                            height: _mainHeight * 0.025,
                           ),
                           Expanded(
                             child: Container(
                               width: _mainWidth,
                               height: _mainHeight * 0.6,
-                              padding:
-                              EdgeInsets.only(left: _mainWidth*0.04, top: _mainHeight*0.03, right: _mainWidth*0.04),
+                              padding: EdgeInsets.only(
+                                  left: _mainWidth * 0.04,
+                                  top: _mainHeight * 0.03,
+                                  right: _mainWidth * 0.04),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.only(
@@ -183,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
                                     //margin: EdgeInsets.only(top: 10),
                                     decoration: BoxDecoration(
                                       borderRadius:
-                                      BorderRadius.all(Radius.circular(20)),
+                                          BorderRadius.all(Radius.circular(20)),
                                       color: Colors.white,
                                     ),
                                     child: Neumorphic(
@@ -193,14 +199,13 @@ class _LoginPageState extends State<LoginPage> {
                                       ),
                                       child: TextFormField(
                                         validator: (value) {
-                                          String p =
-                                              "[a-zA-Z0-9\+\.\_\%\-\+]{1,256}" +
-                                                  "\\@" +
-                                                  "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
-                                                  "(" +
-                                                  "\\." +
-                                                  "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
-                                                  ")+";
+                                          String p = "[a-zA-Z0-9\+\.\_\%\-\+]{1,256}" +
+                                              "\\@" +
+                                              "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                                              "(" +
+                                              "\\." +
+                                              "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                                              ")+";
                                           RegExp regExp = RegExp(p);
                                           if (value != null &&
                                               value.isNotEmpty &&
@@ -210,24 +215,27 @@ class _LoginPageState extends State<LoginPage> {
                                             return "Enter Valid email";
                                           }
                                         },
-                                        keyboardType: TextInputType.emailAddress,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
                                         controller: _emailController,
                                         decoration: InputDecoration(
                                           border: InputBorder.none,
-                                          hintText:'${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[1].name :'Email'}',
-                                          prefixIcon: Icon(Icons.email_outlined),
+                                          hintText:
+                                              '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[1].name?.substring(0, 5) : 'Email'}',
+                                          prefixIcon:
+                                              Icon(Icons.email_outlined),
                                         ),
                                       ),
                                     ),
                                   ),
                                   SizedBox(
-                                    height: _mainHeight*0.01,
+                                    height: _mainHeight * 0.01,
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(top: 10),
                                     decoration: BoxDecoration(
                                       borderRadius:
-                                      BorderRadius.all(Radius.circular(20)),
+                                          BorderRadius.all(Radius.circular(20)),
                                       color: Colors.white,
                                     ),
                                     child: Neumorphic(
@@ -237,40 +245,54 @@ class _LoginPageState extends State<LoginPage> {
                                       ),
                                       child: TextFormField(
                                         validator: (value) {
-                                          if (value != null && value.length < 6) {
+                                          if (value != null &&
+                                              value.length < 6) {
                                             return " Too Short Password";
                                           }
                                           return null;
                                         },
                                         autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
+                                            AutovalidateMode.onUserInteraction,
                                         controller: _passwordController,
-                                        keyboardType: TextInputType.visiblePassword,
-                                        obscureText: true,
+                                        keyboardType:
+                                            TextInputType.visiblePassword,
+                                        obscureText: isObscure,
                                         decoration: InputDecoration(
+                                          suffix: InkWell(
+                                            onTap: () => setState(() {
+                                              isObscure = !isObscure;
+                                            }),
+                                            child: Icon(
+                                              Icons.remove_red_eye_rounded,
+                                              color: isObscure
+                                                  ? Colors.grey
+                                                  : CustomTheme.appTheme,
+                                            ),
+                                          ),
                                           border: InputBorder.none,
-                                          hintText: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[2].name :"Password"}',
+                                          hintText:
+                                              '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[2].name : "Password"}',
                                           prefixIcon: Icon(Icons.lock_outline),
                                         ),
                                       ),
                                     ),
                                   ),
                                   SizedBox(
-                                    height: _mainHeight*0.045,
+                                    height: _mainHeight * 0.045,
                                   ),
                                   Container(
                                     width: _mainWidth,
-                                    height: _mainHeight*0.05,
+                                    height: _mainHeight * 0.05,
                                     child: ElevatedButton(
                                       style: ButtonStyle(
                                           backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              CustomTheme.appThemeContrast),
+                                              MaterialStateProperty.all<Color>(
+                                                  CustomTheme.appThemeContrast),
                                           shape: MaterialStateProperty.all<
                                               RoundedRectangleBorder>(
                                             RoundedRectangleBorder(
                                                 borderRadius:
-                                                BorderRadius.circular(40)),
+                                                    BorderRadius.circular(40)),
                                           )),
                                       onPressed: () async {
                                         FocusScope.of(context)
@@ -281,21 +303,26 @@ class _LoginPageState extends State<LoginPage> {
                                               context: context,
                                               message: 'Please wait');
                                           final LoginResponseModel response =
-                                          await _loginViewModel.getLoginDetails(
-                                              email: _emailController.text,
-                                              password:
-                                              _passwordController.text);
+                                              await _loginViewModel
+                                                  .getLoginDetails(
+                                                      email:
+                                                          _emailController.text,
+                                                      password:
+                                                          _passwordController
+                                                              .text);
                                           Navigator.pop(context);
                                           if (response.msg?.toLowerCase() !=
-                                              'failure' &&
+                                                  'failure' &&
                                               response.data != null) {
-                                            await setSPValues(response: response);
+                                            await setSPValues(
+                                                response: response);
 
                                             String? fcmToken =
-                                            await messaging.getToken();
+                                                await messaging.getToken();
                                             if (fcmToken != null) {
-                                              await _loginViewModel.updateFCMToken(
-                                                  fcmToken: fcmToken);
+                                              await _loginViewModel
+                                                  .updateFCMToken(
+                                                      fcmToken: fcmToken);
                                             }
                                             if (widget.fromExternalLink &&
                                                 widget.onClick != null) {
@@ -304,39 +331,42 @@ class _LoginPageState extends State<LoginPage> {
                                               Navigator.pushNamedAndRemoveUntil(
                                                 context,
                                                 AppRoutes.dashboardPage,
-                                                    (route) => false,
+                                                (route) => false,
                                               );
                                             }
                                           }
                                         }
                                         //
                                       },
-                                      child: Center(child: Text('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[3].name :"LOGIN"}')),
+                                      child: Center(
+                                          child: Text(
+                                              '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[3].name : "LOGIN"}')),
                                     ),
                                   ),
                                   SizedBox(
-                                    height: _mainHeight*0.015,
+                                    height: _mainHeight * 0.015,
                                   ),
                                   Align(
                                     alignment: Alignment.centerRight,
                                     child: GestureDetector(
                                         onTap: () => showForgotPasswordDialog(
-                                            context: context,value: value),
+                                            context: context, value: value),
                                         child: Text(
-                                          '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[4].name :'Forgot Password'}',
+                                          '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[4].name : 'Forgot Password'} ?',
                                           style: TextStyle(
                                               fontSize: 14,
-                                              color: CustomTheme.appThemeContrast,
+                                              color: Colors.grey,
                                               fontWeight: FontWeight.w600),
                                         )),
                                   ),
                                   SizedBox(
-                                    height: _mainHeight*0.045,
+                                    height: _mainHeight * 0.045,
                                   ),
                                   Text(
-                                    '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[5].name :'Or'}',
+                                    '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[5].name : 'Or'}',
                                     style: TextStyle(
-                                        fontSize: 18, fontWeight: FontWeight.w400),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w400),
                                   ),
                                   SizedBox(
                                     height: 20,
@@ -349,14 +379,15 @@ class _LoginPageState extends State<LoginPage> {
                                       GestureDetector(
                                         onTap: () => _showBottomSheet(context),
                                         child: Container(
-                                          height: _mainHeight*0.045,
-                                          padding:
-                                          EdgeInsets.only(left: _mainWidth*0.03, right: _mainWidth*0.03),
+                                          height: _mainHeight * 0.045,
+                                          padding: EdgeInsets.only(
+                                              left: _mainWidth * 0.03,
+                                              right: _mainWidth * 0.03),
                                           decoration: BoxDecoration(
                                               border: Border.all(
                                                   color: CustomTheme.appTheme),
                                               borderRadius:
-                                              BorderRadius.circular(40)),
+                                                  BorderRadius.circular(40)),
                                           child: Row(
                                             children: [
                                               Icon(
@@ -364,13 +395,14 @@ class _LoginPageState extends State<LoginPage> {
                                                 color: CustomTheme.appTheme,
                                               ),
                                               SizedBox(
-                                                width: _mainWidth*0.015,
+                                                width: _mainWidth * 0.015,
                                               ),
                                               Text(
                                                 '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[6].name : 'SignIn with OTP'}',
                                                 style: TextStyle(
                                                     fontSize: 14,
-                                                    fontWeight: FontWeight.w600),
+                                                    fontWeight:
+                                                        FontWeight.w600),
                                               ),
                                             ],
                                           ),
@@ -383,20 +415,21 @@ class _LoginPageState extends State<LoginPage> {
                                             RMSWidgets.showLoaderDialog(
                                                 context: context,
                                                 message: 'Please wait...');
-                                            final data =
-                                            await GoogleAuthService.loginIn();
+                                            final data = await GoogleAuthService
+                                                .loginIn();
 
                                             if (data != null) {
-                                              final LoginResponseModel response =
-                                              await _loginViewModel
-                                                  .registerUserAfterGmail(
-                                                  model:
-                                                  GmailSignInRequestModel(
-                                                    name: data.displayName,
-                                                    email: data.email,
-                                                    id: data.id,
-                                                    picture: data.photoUrl,
-                                                  ));
+                                              final LoginResponseModel
+                                                  response =
+                                                  await _loginViewModel
+                                                      .registerUserAfterGmail(
+                                                          model:
+                                                              GmailSignInRequestModel(
+                                                name: data.displayName,
+                                                email: data.email,
+                                                id: data.id,
+                                                picture: data.photoUrl,
+                                              ));
 
                                               Navigator.of(context).pop();
                                               if (response.msg?.toLowerCase() !=
@@ -407,14 +440,15 @@ class _LoginPageState extends State<LoginPage> {
                                                     response.data?.contactNum ==
                                                         '') {
                                                   SharedPreferenceUtil shared =
-                                                  SharedPreferenceUtil();
+                                                      SharedPreferenceUtil();
                                                   await shared.setString(
                                                       rms_registeredUserToken,
                                                       '${response.data?.appToken}');
                                                   await shared.setString(
                                                       rms_gmapKey,
                                                       '${response.data?.gmapKey}');
-                                                  await shared.setString(rms_userId,
+                                                  await shared.setString(
+                                                      rms_userId,
                                                       '${response.data?.id}');
 
                                                   Navigator.of(context).pushNamed(
@@ -423,19 +457,21 @@ class _LoginPageState extends State<LoginPage> {
                                                       arguments: {
                                                         'gmailData': data,
                                                         'from': 'Gmail',
-                                                        'fromExternalLink':
-                                                        widget.fromExternalLink,
-                                                        'onClick': widget.onClick
+                                                        'fromExternalLink': widget
+                                                            .fromExternalLink,
+                                                        'onClick':
+                                                            widget.onClick
                                                       });
                                                 } else {
                                                   await setSPValues(
                                                       response: response);
                                                   String? fcmToken =
-                                                  await messaging.getToken();
+                                                      await messaging
+                                                          .getToken();
                                                   if (fcmToken != null) {
                                                     await _loginViewModel
                                                         .updateFCMToken(
-                                                        fcmToken: fcmToken);
+                                                            fcmToken: fcmToken);
                                                   }
                                                   if (widget.fromExternalLink &&
                                                       widget.onClick != null) {
@@ -445,7 +481,7 @@ class _LoginPageState extends State<LoginPage> {
                                                         .pushNamedAndRemoveUntil(
                                                       context,
                                                       AppRoutes.dashboardPage,
-                                                          (route) => false,
+                                                      (route) => false,
                                                     );
                                                   }
                                                 }
@@ -461,9 +497,10 @@ class _LoginPageState extends State<LoginPage> {
                                                 left: 15, right: 15),
                                             decoration: BoxDecoration(
                                                 border: Border.all(
-                                                    color: CustomTheme.appTheme),
+                                                    color:
+                                                        CustomTheme.appTheme),
                                                 borderRadius:
-                                                BorderRadius.circular(40)),
+                                                    BorderRadius.circular(40)),
                                             child: Row(
                                               children: [
                                                 Icon(
@@ -474,10 +511,11 @@ class _LoginPageState extends State<LoginPage> {
                                                   width: 10,
                                                 ),
                                                 Text(
-                                                  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[7].name :'SignIn With Gmail'}',
+                                                  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[7].name : 'SignIn With Gmail'}',
                                                   style: TextStyle(
                                                       fontSize: 14,
-                                                      fontWeight: FontWeight.w600),
+                                                      fontWeight:
+                                                          FontWeight.w600),
                                                 ),
                                               ],
                                             ),
@@ -490,11 +528,11 @@ class _LoginPageState extends State<LoginPage> {
                                     height: 20,
                                   ),
                                   GestureDetector(
-                                    onTap: () => Navigator.of(context).pushNamed(
-                                        AppRoutes.registrationPage,
-                                        arguments: {
+                                    onTap: () => Navigator.of(context)
+                                        .pushNamed(AppRoutes.registrationPage,
+                                            arguments: {
                                           'fromExternalLink':
-                                          widget.fromExternalLink,
+                                              widget.fromExternalLink,
                                           'onClick': widget.onClick
                                         }),
                                     child: Container(
@@ -502,14 +540,17 @@ class _LoginPageState extends State<LoginPage> {
                                       child: RichText(
                                         text: TextSpan(children: [
                                           TextSpan(
-                                              text:'${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[8].name : "Don't have an account"} ? ',
+                                              text:
+                                                  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[8].name : "Don't have an account"} ? ',
                                               style: TextStyle(
                                                 color: Colors.black,
                                               )),
                                           TextSpan(
-                                              text: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[9].name :'Sign Up'}',
+                                              text:
+                                                  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[9].name : 'Sign Up'}',
                                               style: TextStyle(
-                                                color: CustomTheme.appThemeContrast,
+                                                color: CustomTheme
+                                                    .appThemeContrast,
                                               )),
                                         ]),
                                       ),
@@ -517,8 +558,8 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   Spacer(),
                                   GestureDetector(
-                                    onTap: () => _handleURLButtonPress(
-                                        context, privacy_policy, 'Privacy Policy'),
+                                    onTap: () => _handleURLButtonPress(context,
+                                        privacy_policy, 'Privacy Policy'),
                                     child: Container(
                                       // color: Colors.white,
                                       margin: EdgeInsets.only(bottom: 10),
@@ -527,12 +568,13 @@ class _LoginPageState extends State<LoginPage> {
                                         text: TextSpan(children: [
                                           TextSpan(
                                               text:
-                                              '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[10].name :"By Signing in, you are agree to our "} ',
+                                                  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[10].name : "By Signing in, you are agree to our "} ',
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 12)),
                                           TextSpan(
-                                              text: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[11].name :"Privacy Policy"}',
+                                              text:
+                                                  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[11].name : "Privacy Policy"}',
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 color: CustomTheme.appTheme,
@@ -570,7 +612,8 @@ class _LoginPageState extends State<LoginPage> {
     await shared.setString(rms_userId, '${response.data?.id}');
   }
 
-  void showForgotPasswordDialog({required BuildContext context,required LoginViewModel value}) {
+  void showForgotPasswordDialog(
+      {required BuildContext context, required LoginViewModel value}) {
     showDialog(
         context: context,
         builder: (context) {
@@ -579,7 +622,7 @@ class _LoginPageState extends State<LoginPage> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             title: Text(
-              '${nullCheck(list: value.loginLang) ? value.loginLang[4].name :'Forgot Password'} ?',
+              '${nullCheck(list: value.loginLang) ? value.loginLang[4].name : 'Forgot Password'} ?',
               style: TextStyle(
                   color: CustomTheme.appThemeContrast,
                   fontWeight: FontWeight.w600,
@@ -590,9 +633,10 @@ class _LoginPageState extends State<LoginPage> {
               width: MediaQuery.of(context).size.width,
               child: Column(
                 children: [
-                  Text('${nullCheck(list: value.loginLang) ? value.loginLang[24].name :'Please enter your Email ID to get Password Link'} !'),
+                  Text(
+                      '${nullCheck(list: value.loginLang) ? value.loginLang[24].name : 'Please enter your Email ID to get Password Link'} !'),
                   SizedBox(
-                    height: _mainHeight*0.035,
+                    height: _mainHeight * 0.035,
                   ),
                   Neumorphic(
                     style: NeumorphicStyle(
@@ -610,8 +654,12 @@ class _LoginPageState extends State<LoginPage> {
                       controller: _resetEmailController,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: '${nullCheck(list: value.loginLang) ? value.loginLang[1].name :'Email'}',
-                        prefixIcon: Icon(Icons.email_outlined,size: _mainHeight*0.02,),
+                        hintText:
+                            '${nullCheck(list: value.loginLang) ? value.loginLang[1].name : 'Email'}',
+                        prefixIcon: Icon(
+                          Icons.email_outlined,
+                          size: _mainHeight * 0.02,
+                        ),
                       ),
                     ),
                   ),
@@ -621,7 +669,7 @@ class _LoginPageState extends State<LoginPage> {
             elevation: 5,
             actions: [
               Container(
-                padding: EdgeInsets.only(bottom: _mainHeight*0.015),
+                padding: EdgeInsets.only(bottom: _mainHeight * 0.015),
                 width: _mainWidth * 0.4,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -655,8 +703,10 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   },
                   child: Text(
-                    '${nullCheck(list: value.loginLang) ? value.loginLang[25].name :'Recover'}',
-                    style: TextStyle(fontSize: getHeight(context: context, height: 14), color: CustomTheme.black),
+                    '${nullCheck(list: value.loginLang) ? value.loginLang[25].name : 'Recover'}',
+                    style: TextStyle(
+                        fontSize: getHeight(context: context, height: 14),
+                        color: CustomTheme.black),
                   ),
                 ),
               ),
@@ -675,7 +725,6 @@ class _LoginPageState extends State<LoginPage> {
         builder: (context) {
           return Container(
             decoration: BoxDecoration(
-
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(16),
                     topRight: Radius.circular(16))),
@@ -695,7 +744,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Image.asset(Images.mobSignIn),
                     ),
                     Text(
-                    '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[16].name :'Registration or Login'}',
+                      '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[16].name : 'Registration or Login'}',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -736,7 +785,8 @@ class _LoginPageState extends State<LoginPage> {
                                 fontWeight: FontWeight.bold,
                               ),
                               decoration: InputDecoration(
-                                hintText: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[13].name :"Phone Number"}',
+                                hintText:
+                                    '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[13].name : "Phone Number"}',
                                 hintStyle:
                                     TextStyle(color: Colors.blueGrey.shade200),
                                 enabledBorder: OutlineInputBorder(

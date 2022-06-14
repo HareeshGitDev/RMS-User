@@ -222,7 +222,7 @@ class PropertyDetailsViewModel extends ChangeNotifier {
       amenitiesList.add(AmenitiesModel(
           name: 'Caretaker',
           imageUrl:
-              'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/security-01.png?alt=media&token=d7299698-17c6-4238-a408-bb203604c6b9'));
+              'https://www.rentmystay.com/resource/img/guard.png'));
     }
     if (amenitiesNew?.stoveCylinder == '1') {
       amenitiesList.add(AmenitiesModel(
@@ -232,7 +232,7 @@ class PropertyDetailsViewModel extends ChangeNotifier {
     }
     if (amenitiesNew?.washingMachine == '1') {
       amenitiesList.add(AmenitiesModel(
-          name: 'W.M(Common area)',
+          name: 'WM(Common)',
           imageUrl:
               'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/washing-machine-01.png?alt=media&token=283dccfe-8a2c-48b9-83fd-f0a738ec81cc'));
     }

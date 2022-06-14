@@ -55,14 +55,14 @@ class HomeViewModel extends ChangeNotifier {
         value: "Hsr-layout-Bengaluru-Karnataka-India",
       ),
       CitySuggestionModel(
-        cityName: 'Kundanhalli',
+        cityName: 'Kundalahalli',
         imageUrl:
             "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/kundahalli.png?alt=media&token=73f33a3f-8219-4c28-8cd4-4f8cb2b14905",
         value:
             "Kundanahalli-Gate-ITPL-Main-Road-Brookefield-Bengaluru-Karnataka-India",
       ),
       CitySuggestionModel(
-        cityName: 'Maratahalli',
+        cityName: 'Marathahalli',
         imageUrl:
             "https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/marathalli.png?alt=media&token=92c56d6f-6a73-4717-8a85-8a1530a95282",
         value: "Marathahalli-Bengaluru-Karnataka-India",

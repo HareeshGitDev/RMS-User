@@ -276,6 +276,113 @@ class _WishListPageState extends State<WishListPage> {
                                             ),
                                             Container(
                                               padding: EdgeInsets.only(
+                                                left: _mainWidth * 0.02,
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Visibility(
+                                                    visible: data
+                                                        .rmsProp !=
+                                                        null &&
+                                                        data.rmsProp ==
+                                                            "RMS Prop",
+                                                    child: Container(
+                                                      child: Text(
+                                                        "${data.unitType ?? ''}",
+                                                        overflow:
+                                                        TextOverflow
+                                                            .ellipsis,
+                                                        maxLines: 1,
+                                                        style: TextStyle(
+                                                            fontSize: getHeight(
+                                                                context:
+                                                                context,
+                                                                height:
+                                                                12),
+                                                            fontWeight:
+                                                            FontWeight
+                                                                .w700),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Text(' - '),
+                                                  Container(
+                                                    child: Text(
+                                                      '${data.propType}',
+                                                      style: TextStyle(
+                                                        fontSize: getHeight(
+                                                            context:
+                                                            context,
+                                                            height: 12),
+                                                        color:
+                                                        Colors.black,
+                                                        fontWeight:
+                                                        FontWeight
+                                                            .w500,
+                                                      ),
+                                                      maxLines: 1,
+                                                      overflow:
+                                                      TextOverflow
+                                                          .ellipsis,
+                                                    ),
+                                                  ),
+                                                  Spacer(),
+                                                  Visibility(
+                                                      visible: data
+                                                          .rmsProp !=
+                                                          null &&
+                                                          data.rmsProp ==
+                                                              "RMS Prop",
+                                                      child: Icon(
+                                                        Icons.home,
+                                                        size:
+                                                        _mainHeight *
+                                                            0.02,
+                                                        color:
+                                                        Colors.grey,
+                                                      )),
+                                                  SizedBox(
+                                                    width: _mainWidth *
+                                                        0.002,
+                                                  ),
+                                                  Visibility(
+                                                    visible: data
+                                                        .rmsProp !=
+                                                        null &&
+                                                        data.rmsProp ==
+                                                            "RMS Prop",
+                                                    child: Container(
+                                                      padding: EdgeInsets.only(
+                                                          right:
+                                                          _mainWidth *
+                                                              0.02),
+                                                      //width: _mainWidth*0.28,
+                                                      child: Text(
+                                                        data.buildingName ??
+                                                            '',
+                                                        overflow:
+                                                        TextOverflow
+                                                            .ellipsis,
+                                                        maxLines: 1,
+                                                        style: TextStyle(
+                                                          fontSize: getHeight(
+                                                              context:
+                                                              context,
+                                                              height: 12),
+                                                          color: Colors
+                                                              .black,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w500,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                           /* Container(
+                                              padding: EdgeInsets.only(
                                                   left: _mainWidth * 0.02,
                                                   right: _mainWidth * 0.02),
                                               child: Row(
@@ -328,7 +435,7 @@ class _WishListPageState extends State<WishListPage> {
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                               ),
-                                            ),
+                                            ),*/
                                             SizedBox(
                                               height: _mainHeight * 0.01,
                                             ),
@@ -486,7 +593,7 @@ class _WishListPageState extends State<WishListPage> {
                                             ),
                                           ],
                                         ),
-                                        Positioned(
+                                     /*   Positioned(
                                           top: _mainHeight * 0.02,
                                           left: _mainWidth * 0.04,
                                           child: Visibility(
@@ -533,7 +640,7 @@ class _WishListPageState extends State<WishListPage> {
                                               ]),
                                             ),
                                           ),
-                                        ),
+                                        ),*/
                                         Positioned(
                                           right: _mainWidth * 0.04,
                                           top: _mainHeight * 0.02,
@@ -596,7 +703,7 @@ class _WishListPageState extends State<WishListPage> {
                                                   ),
                                           ),
                                         ),
-                                        Positioned(
+                                       /* Positioned(
                                           left: _mainWidth * 0.04,
                                           top: _mainHeight * 0.2,
                                           child: Container(
@@ -629,7 +736,7 @@ class _WishListPageState extends State<WishListPage> {
                                               ),
                                             ),
                                           ),
-                                        ),
+                                        ),*/
                                       ],
                                     ),
                                   ),

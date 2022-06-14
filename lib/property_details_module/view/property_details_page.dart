@@ -321,50 +321,61 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                         ),
                                                       ])),
                                                 ),
-                                                GestureDetector(
-                                                  onTap: () async {
-                                                    if ((value.propertyDetailsModel?.data
-                                                                    ?.details !=
-                                                                null &&
-                                                            value
+                                                Container(
+                                                  height: _mainHeight*0.05,
+                                                  //  color: Colors.amber,
+                                                  child: Column(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () async {
+                                                          if ((value.propertyDetailsModel?.data
+                                                                          ?.details !=
+                                                                      null &&
+                                                                  value
+                                                                          .propertyDetailsModel
+                                                                          ?.data
+                                                                          ?.details
+                                                                          ?.glat !=
+                                                                      null) &&
+                                                              (value.propertyDetailsModel?.data
+                                                                          ?.details !=
+                                                                      null &&
+                                                                  value
+                                                                          .propertyDetailsModel
+                                                                          ?.data
+                                                                          ?.details
+                                                                          ?.glng !=
+                                                                      null)) {
+                                                            var latitude = (value
                                                                     .propertyDetailsModel
                                                                     ?.data
                                                                     ?.details
-                                                                    ?.glat !=
-                                                                null) &&
-                                                        (value.propertyDetailsModel?.data
-                                                                    ?.details !=
-                                                                null &&
-                                                            value
+                                                                    ?.glat)
+                                                                .toString();
+                                                            var longitude = (value
                                                                     .propertyDetailsModel
                                                                     ?.data
                                                                     ?.details
-                                                                    ?.glng !=
-                                                                null)) {
-                                                      var latitude = (value
-                                                              .propertyDetailsModel
-                                                              ?.data
-                                                              ?.details
-                                                              ?.glat)
-                                                          .toString();
-                                                      var longitude = (value
-                                                              .propertyDetailsModel
-                                                              ?.data
-                                                              ?.details
-                                                              ?.glng)
-                                                          .toString();
-                                                      await SystemService
-                                                          .launchGoogleMaps(
-                                                              latitude:
-                                                                  latitude,
-                                                              longitude:
-                                                                  longitude);
-                                                    }
-                                                  },
-                                                  child: Image.asset(
-                                                    Images.locationIcon,
-                                                    height: _mainHeight * 0.06,
-                                                    width: _mainWidth * 0.06,
+                                                                    ?.glng)
+                                                                .toString();
+                                                            await SystemService
+                                                                .launchGoogleMaps(
+                                                                    latitude:
+                                                                        latitude,
+                                                                    longitude:
+                                                                        longitude);
+                                                          }
+                                                        },
+                                                        child: Image.asset(
+                                                          Images.locationIcon,
+
+                                                          width: _mainWidth * 0.06,
+                                                        ),
+                                                      ),
+                                                      Text('Map',style: TextStyle(
+                                                        fontSize: getHeight(context: context, height: 12)
+                                                      ),)
+                                                    ],
                                                   ),
                                                 ),
 
@@ -762,7 +773,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                       child: Image.asset(
                                                         Images.callIcon,
                                                         width:
-                                                            _mainWidth * 0.06,
+                                                            _mainWidth * 0.09,
                                                         height:
                                                             _mainHeight * 0.06,
                                                       ) /*Icon(
@@ -795,7 +806,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                       child: Image.asset(
                                                         Images.whatsapplogo,
                                                         width:
-                                                            _mainWidth * 0.06,
+                                                            _mainWidth * 0.09,
                                                         height:
                                                             _mainHeight * 0.06,
                                                       )),
@@ -1034,8 +1045,14 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                           width: _mainWidth,
                                           child: Row(
                                             children: [
-                                              BackButton(
-                                                color: Colors.white,
+                                              Container(
+                                                margin: const EdgeInsets.only(left:8.0),
+                                                child: CircleAvatar(
+                                                   backgroundColor: Colors.grey.shade400,
+                                                  child: BackButton(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
                                               ),
                                               Spacer(),
                                               GestureDetector(

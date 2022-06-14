@@ -14,3 +14,4 @@ const String cancellationPolicyUrl =
     'https://www.rentmystay.com/info/cancellation_policy/1';
 const String faqUrl=
     'https://www.rentmystay.com/info/faq/1';
+const String supportUrl='https://www.rentmystay.com/info/contact_rms/1';

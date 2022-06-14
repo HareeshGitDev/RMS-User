@@ -157,8 +157,8 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
                             child: AnimatedTextKit(
                               animatedTexts: [
                                 ColorizeAnimatedText('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[23].name :'You are Almost there'} ! ',
-                                    textStyle: const TextStyle(
-                                      fontSize: 30,
+                                    textStyle: TextStyle(
+                                      fontSize: _mainWidth*0.05,
                                     ),
                                     colors: [
                                       Colors.white,

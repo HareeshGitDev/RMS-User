@@ -18,6 +18,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../../language_module/model/language_model.dart';
 import '../../theme/custom_theme.dart';
+import '../../theme/fonts.dart';
 import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/shared_prefrences_util.dart';
 import '../model/login_response_model.dart';
@@ -43,6 +44,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final _phoneNumberController = TextEditingController();
   final _referalController = TextEditingController();
   var _mainHeight;
+  bool isObscure = true;
   var _mainWidth;
   String typeValue = 'I am';
   String selectedCity = 'Select City';
@@ -142,9 +144,9 @@ getLanguageData();
                     alignment: Alignment.centerRight,
                     child: AnimatedTextKit(
                       animatedTexts: [
-                        ColorizeAnimatedText('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[23].name :'Welcome to RentMyStay family'} !',
+                        ColorizeAnimatedText('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[23].name :'Welcome to RentMyStay family'}',
                             textStyle:
-                            TextStyle(fontSize: 25,),
+                            TextStyle(fontSize: getHeight(context:context,height: 20),),
                             colors: [
                               Colors.white,
                               CustomTheme.appTheme,
@@ -192,10 +194,43 @@ getLanguageData();
                         SizedBox(
                           height: 5,
                         ),
-                        _textInput(
-                            hint: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[2].name :"Password"}',
-                            icon: Icons.vpn_key_outlined,
-                            controller: _passwordController),
+                        Container(
+                          margin: EdgeInsets.only(top: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            color: Colors.white,
+                          ),
+                          child: Neumorphic(
+                            style: NeumorphicStyle(
+                              depth: -2,
+                              color: Colors.white,
+                            ),
+                            child: TextFormField(
+                              controller: _passwordController,
+                              obscureText: isObscure,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+
+                                hintText: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[2].name :"Password"}',
+                                prefixIcon: Icon(Icons.vpn_key_outlined),
+                                  suffix: InkWell(
+                                    onTap: () => setState(() {
+                                      isObscure = !isObscure;
+                                    }),
+                                    child: Icon(
+                                      Icons.remove_red_eye_rounded,
+                                      color: isObscure
+                                          ? Colors.grey
+                                          : CustomTheme.appTheme,
+                                    ),
+                                  )
+
+
+                              ),
+                            ),
+                          ),
+                        ),
+
                         SizedBox(
                           height: 5,
                         ),

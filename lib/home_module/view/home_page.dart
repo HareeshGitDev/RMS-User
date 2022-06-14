@@ -728,7 +728,7 @@ class _HomePageState extends State<HomePage> {
                                     ],
                                   ),
                                 ),
-                                Container(
+                                data.monthlyRent != null && data.monthlyRent !='0'? Container(
                                   padding: EdgeInsets.only(
                                       left: _mainWidth * 0.01,
                                       right: _mainWidth * 0.01,
@@ -841,7 +841,7 @@ class _HomePageState extends State<HomePage> {
                                       )
                                     ],
                                   ),
-                                ),
+                                ):Container(),
                                 Container(
                                   padding: EdgeInsets.only(
                                       left: _mainWidth * 0.01,
@@ -1450,6 +1450,20 @@ class _HomePageState extends State<HomePage> {
                   'lang':
                       await preferenceUtil.getString(rms_language) ?? 'english',
                 },
+              ),
+            ),
+            getTile(
+              context: context,
+              leading: Icon(
+                Icons.person,
+                color: CustomTheme.appTheme,
+                size: 20,
+              ),
+              title: /*nullCheck(list: list) ? '${list[10].name}' : */'Contact Us',
+              onTap: () async => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Web_View_Container(supportUrl, 'Contact Us')),
               ),
             ),
             getTile(
