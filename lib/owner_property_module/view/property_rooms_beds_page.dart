@@ -101,7 +101,7 @@ class _PropertyRoomsBedsPageState extends State<PropertyRoomsBedsPage> {
                   '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[18].name :'Max Guests'}',
                   style: TextStyle(
                     fontSize: 18,
-                    color: CustomTheme.appThemeContrast,
+                    color: Colors.black,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -172,7 +172,7 @@ class _PropertyRoomsBedsPageState extends State<PropertyRoomsBedsPage> {
                   '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[19].name :'No. of Bed Rooms'}',
                   style: TextStyle(
                     fontSize: 18,
-                    color: CustomTheme.appThemeContrast,
+                    color: Colors.black,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -243,7 +243,7 @@ class _PropertyRoomsBedsPageState extends State<PropertyRoomsBedsPage> {
                   '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[20].name :'No. of Bath Rooms'}',
                   style: TextStyle(
                     fontSize: 18,
-                    color: CustomTheme.appThemeContrast,
+                    color: Colors.black,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -318,7 +318,7 @@ class _PropertyRoomsBedsPageState extends State<PropertyRoomsBedsPage> {
                   child: ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor:
-                        MaterialStateProperty.all<Color>(CustomTheme.appTheme),
+                        MaterialStateProperty.all<Color>(CustomTheme.appThemeContrast),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),

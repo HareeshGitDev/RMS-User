@@ -118,7 +118,7 @@ class _PropertyRentPageState extends State<PropertyRentPage> {
           style: ButtonStyle(
               backgroundColor:
               MaterialStateProperty.all<Color>(
-                  CustomTheme.appTheme),
+                  CustomTheme.appThemeContrast),
               shape: MaterialStateProperty.all<
                   RoundedRectangleBorder>(
                 RoundedRectangleBorder(
@@ -327,7 +327,7 @@ class _PropertyRentPageState extends State<PropertyRentPage> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.only(left: 10),
-                  hintText: "0",
+
                 ),
               ),
             ),
@@ -368,7 +368,7 @@ class _PropertyRentPageState extends State<PropertyRentPage> {
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.only(left: 10),
-                      hintText: "0",
+
                     ),
                   ),
                 ),
@@ -446,7 +446,7 @@ class _PropertyRentPageState extends State<PropertyRentPage> {
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.only(left: 10),
-                      hintText: "0",
+
                     ),
                   ),
                 ),
@@ -484,7 +484,6 @@ class _PropertyRentPageState extends State<PropertyRentPage> {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.only(left: 10),
-                        hintText: "0",
                       ),
                     ),
                   ),

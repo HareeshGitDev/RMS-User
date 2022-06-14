@@ -451,7 +451,7 @@ class _EditPropertyPhotosPageState extends State<EditPropertyPhotosPage> {
         child: ElevatedButton(
           style: ButtonStyle(
               backgroundColor:
-                  MaterialStateProperty.all<Color>(CustomTheme.appTheme),
+                  MaterialStateProperty.all<Color>(CustomTheme.appThemeContrast),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               )),

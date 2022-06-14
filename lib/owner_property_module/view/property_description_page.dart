@@ -147,7 +147,7 @@ class _PropertyDescriptionPageState extends State<PropertyDescriptionPage> {
         child: ElevatedButton(
           style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all<Color>(
-                  CustomTheme.appTheme),
+                  CustomTheme.appThemeContrast),
               shape:
               MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(

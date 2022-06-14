@@ -171,7 +171,7 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
         child: ElevatedButton(
           style: ButtonStyle(
               backgroundColor:
-                  MaterialStateProperty.all<Color>(CustomTheme.appTheme),
+                  MaterialStateProperty.all<Color>(CustomTheme.appThemeContrast),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               )),

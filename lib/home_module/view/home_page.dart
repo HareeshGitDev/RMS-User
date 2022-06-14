@@ -182,7 +182,10 @@ class _HomePageState extends State<HomePage> {
                         ),
                         child: Row(
                           children: [
-                            Icon(Icons.search_rounded,size: _mainWidth*0.05,),
+                            Icon(
+                              Icons.search_rounded,
+                              size: _mainWidth * 0.05,
+                            ),
                             SizedBox(
                               width: _mainWidth * 0.02,
                             ),
@@ -242,7 +245,7 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Text(
                                     '${nullCheck(list: value.languageData) ? value.languageData[16].name : 'Reasons to choose RentMyStay'}',
-                                    style:  getHeaderStyle),
+                                    style: getHeaderStyle),
                                 SizedBox(
                                   height: _mainHeight * 0.01,
                                 ),
@@ -260,13 +263,9 @@ class _HomePageState extends State<HomePage> {
                                           width: _mainWidth * 0.42,
                                           decoration: BoxDecoration(
                                               border: Border.all(
-                                                  color: Colors
-                                                      .grey
-                                                      .shade300),
+                                                  color: Colors.grey.shade300),
                                               borderRadius:
-                                              BorderRadius
-                                                  .circular(
-                                                  5)),
+                                                  BorderRadius.circular(5)),
                                           child: Text(
                                             getReasonsList[index],
                                             maxLines: 3,
@@ -282,8 +281,8 @@ class _HomePageState extends State<HomePage> {
                                       },
                                       scrollDirection: Axis.horizontal,
                                       separatorBuilder: (_, __) => SizedBox(
-                                        width: _mainWidth * 0.025,
-                                      ),
+                                            width: _mainWidth * 0.025,
+                                          ),
                                       itemCount: getReasonsList.length),
                                 ),
                               ],
@@ -356,7 +355,7 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Text(
                                   '${nullCheck(list: value.languageData) ? value.languageData[17].name : 'Trending'}',
-                                  style:  getHeaderStyle,
+                                  style: getHeaderStyle,
                                 ),
                                 Spacer(),
                                 InkWell(
@@ -364,7 +363,8 @@ class _HomePageState extends State<HomePage> {
                                     Navigator.of(context).pushNamed(
                                         AppRoutes.propertyListingPage,
                                         arguments: {
-                                          'location': 'Bengaluru-Karnataka-India',
+                                          'location':
+                                              'Bengaluru-Karnataka-India',
                                           'property': Property.fromLocation,
                                         });
                                   },
@@ -372,8 +372,8 @@ class _HomePageState extends State<HomePage> {
                                     '${nullCheck(list: value.languageData) ? value.languageData[24].name : 'See All'}',
                                     style: TextStyle(
                                         color: CustomTheme.appThemeContrast,
-                                        fontSize:
-                                        getHeight(context: context, height: 14),
+                                        fontSize: getHeight(
+                                            context: context, height: 14),
                                         fontWeight: FontWeight.w500),
                                   ),
                                 ),
@@ -442,9 +442,9 @@ class _HomePageState extends State<HomePage> {
                                 .getAdsImageList()
                                 .map(
                                   (imageUrl) => CachedNetworkImage(
-                                imageUrl: imageUrl,
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
+                                    imageUrl: imageUrl,
+                                    imageBuilder: (context, imageProvider) =>
+                                        Container(
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                         image: DecorationImage(
@@ -453,24 +453,24 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                       ),
                                     ),
-                                placeholder: (context, url) =>
-                                    Shimmer.fromColors(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey,
-                                            borderRadius:
-                                            BorderRadius.circular(10),
-                                          ),
-                                          height: _mainHeight * 0.2,
-                                        ),
-                                        baseColor:
-                                        Colors.grey[200] as Color,
-                                        highlightColor:
-                                        Colors.grey[350] as Color),
-                                errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
-                              ),
-                            )
+                                    placeholder: (context, url) =>
+                                        Shimmer.fromColors(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              height: _mainHeight * 0.2,
+                                            ),
+                                            baseColor:
+                                                Colors.grey[200] as Color,
+                                            highlightColor:
+                                                Colors.grey[350] as Color),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  ),
+                                )
                                 .toList(),
                             options: CarouselOptions(
                                 height: _mainHeight * 0.2,
@@ -491,7 +491,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             child: Text(
                               '${nullCheck(list: value.languageData) ? value.languageData[14].name : 'Explore Your Wanderlust'}',
-                              style:  getHeaderStyle,
+                              style: getHeaderStyle,
                             ),
                           ),
                           SizedBox(
@@ -501,7 +501,6 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(
                             height: _mainHeight * 0.005,
                           ),
-
                           SizedBox(
                             height: _mainHeight * 0.02,
                           ),
@@ -633,11 +632,10 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   baseColor: Colors.grey[200] as Color,
                                   highlightColor: Colors.grey[350] as Color),
-                              errorWidget: (context, url, error) =>
-                                  Container(
-                                    alignment: Alignment.center,
-                                      height: _mainHeight * 0.125,
-                                      child: const Icon(Icons.error)),
+                              errorWidget: (context, url, error) => Container(
+                                  alignment: Alignment.center,
+                                  height: _mainHeight * 0.125,
+                                  child: const Icon(Icons.error)),
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -647,10 +645,8 @@ class _HomePageState extends State<HomePage> {
                                       left: _mainWidth * 0.01,
                                       right: _mainWidth * 0.01,
                                       top: _mainHeight * 0.005),
-
                                   child: Text(
-
-                                    '${data.unitType ??''} - ${data.propType ??''}',
+                                    '${data.unitType ?? ''} - ${data.propType ?? ''}',
                                     style: TextStyle(
                                         fontSize: getHeight(
                                             context: context, height: 12),
@@ -661,16 +657,22 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 Container(
-                                    padding: EdgeInsets.only(
-                                        left: _mainWidth * 0.01,
-                                        right: _mainWidth * 0.01,
-                                        top: _mainHeight * 0.005),
+                                  padding: EdgeInsets.only(
+                                      left: _mainWidth * 0.01,
+                                      right: _mainWidth * 0.01,
+                                      top: _mainHeight * 0.005),
                                   child: Row(
                                     children: [
-                                      Icon(Icons.home,color:Colors.grey ,size: _mainHeight*0.015,),
-                                      SizedBox(width: _mainWidth*0.01,),
+                                      Icon(
+                                        Icons.home,
+                                        color: Colors.grey,
+                                        size: _mainHeight * 0.015,
+                                      ),
+                                      SizedBox(
+                                        width: _mainWidth * 0.01,
+                                      ),
                                       Container(
-                                        width: _mainWidth*0.35,
+                                        width: _mainWidth * 0.35,
                                         child: Text(
                                           data.buildingName != null
                                               ? data.buildingName.toString()
@@ -700,11 +702,19 @@ class _HomePageState extends State<HomePage> {
                                         height: _mainHeight * 0.01,
                                         width: _mainWidth * 0.03,
                                       ),
-                                      SizedBox(width: _mainWidth*0.01,),
+                                      SizedBox(
+                                        width: _mainWidth * 0.01,
+                                      ),
                                       Container(
-                                        width: _mainWidth*0.35,
+                                        width: _mainWidth * 0.35,
                                         child: Text(
-                                          data.area != null && data.area?.trim() != '' ?'${data.area}':'Bangalore',
+                                          data.area != null &&
+                                                  data.area?.trim() != ''
+                                              ? '${data.area}'
+                                              : data.city != null &&
+                                                      data.city?.trim() != ''
+                                                  ? '${data.city}'
+                                                  : 'Bangalore',
                                           style: TextStyle(
                                             fontSize: getHeight(
                                                 context: context, height: 12),
@@ -820,10 +830,8 @@ class _HomePageState extends State<HomePage> {
                                             ' ( < 3 Month )',
                                             style: TextStyle(
                                               fontSize: getHeight(
-                                                  context: context,
-                                                  height: 12),
-                                              color:
-                                              CustomTheme.myFavColor,
+                                                  context: context, height: 12),
+                                              color: CustomTheme.myFavColor,
                                               fontWeight: FontWeight.w600,
 
                                               //fontStyle: FontStyle.italic,
@@ -866,36 +874,35 @@ class _HomePageState extends State<HomePage> {
                                         width: _mainWidth * 0.005,
                                       ),
                                       showOrgPrice(
-                                          monthlyRent:
-                                          data.rmsRent ?? '0',
-                                          orgRent: data.rmsRent ?? '0')
+                                              monthlyRent: data.rmsRent ?? '0',
+                                              orgRent: data.rmsRent ?? '0')
                                           ? Container()
                                           : Container(
-                                        width: _mainWidth * 0.1,
-                                        alignment: Alignment.centerLeft,
-                                        padding: EdgeInsets.only(
-                                            right: _mainWidth * 0.01,
-                                            top: _mainHeight * 0.003),
-                                        child: FittedBox(
-                                          child: Text(
-                                            data.orgRmsRent != null
-                                                ? rupee +
-                                                '${data.orgRmsRent}'
-                                                : '',
-                                            style: TextStyle(
-                                              fontSize: getHeight(
-                                                  context: context,
-                                                  height: 10),
-                                              color: Colors.grey,
-                                              decoration: TextDecoration
-                                                  .lineThrough,
-                                              fontWeight: FontWeight.w600,
+                                              width: _mainWidth * 0.1,
+                                              alignment: Alignment.centerLeft,
+                                              padding: EdgeInsets.only(
+                                                  right: _mainWidth * 0.01,
+                                                  top: _mainHeight * 0.003),
+                                              child: FittedBox(
+                                                child: Text(
+                                                  data.orgRmsRent != null
+                                                      ? rupee +
+                                                          '${data.orgRmsRent}'
+                                                      : '',
+                                                  style: TextStyle(
+                                                    fontSize: getHeight(
+                                                        context: context,
+                                                        height: 10),
+                                                    color: Colors.grey,
+                                                    decoration: TextDecoration
+                                                        .lineThrough,
+                                                    fontWeight: FontWeight.w600,
 
-                                              //fontStyle: FontStyle.italic,
+                                                    //fontStyle: FontStyle.italic,
+                                                  ),
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                      ),
                                       SizedBox(
                                         width: _mainWidth * 0.005,
                                       ),
@@ -936,10 +943,8 @@ class _HomePageState extends State<HomePage> {
                                             ' ( > 3 Month )',
                                             style: TextStyle(
                                               fontSize: getHeight(
-                                                  context: context,
-                                                  height: 12),
-                                              color:
-                                              CustomTheme.myFavColor,
+                                                  context: context, height: 12),
+                                              color: CustomTheme.myFavColor,
                                               fontWeight: FontWeight.w600,
 
                                               //fontStyle: FontStyle.italic,
@@ -951,7 +956,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
 
-                              /* Container(
+                                /* Container(
                                   alignment: Alignment.centerRight,
                                   padding: EdgeInsets.only(
                                       left: _mainWidth * 0.01,
@@ -982,9 +987,7 @@ class _HomePageState extends State<HomePage> {
                     child: GestureDetector(
                       onTap: () async {
                         if (data.wishlist != null && data.wishlist == 1) {
-
                           if (data.propId != null) {
-
                             int response = await _homeViewModel.addToWishlist(
                                 propertyId: data.propId ?? '');
                             if (response == 200) {
@@ -997,11 +1000,9 @@ class _HomePageState extends State<HomePage> {
                                   color: CustomTheme.appTheme);
                             }
                           }
-                        }
-                        else if (data.wishlist != null && data.wishlist == 0) {
-
+                        } else if (data.wishlist != null &&
+                            data.wishlist == 0) {
                           if (data.propId != null) {
-
                             int response = await _homeViewModel.addToWishlist(
                                 propertyId: data.propId ?? '');
                             if (response == 200) {
@@ -1048,31 +1049,27 @@ class _HomePageState extends State<HomePage> {
       ));
     } else {
       return Container(
-          height: _mainHeight * 0.23,
+        height: _mainHeight * 0.23,
         width: _mainWidth,
         //color: Colors.amber,
-        child: ListView.separated(itemBuilder: (_,index){
-
-          return Shimmer
-              .fromColors(
-              child:
-              Container(
-                decoration: BoxDecoration(
-                  color:
-                  Colors.grey,
-                  borderRadius: BorderRadius.circular(10)
+        child: ListView.separated(
+            itemBuilder: (_, index) {
+              return Shimmer.fromColors(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(10)),
+                    height: _mainHeight * 0.22,
+                    width: _mainWidth * 0.42,
+                  ),
+                  baseColor: Colors.grey[200] as Color,
+                  highlightColor: Colors.grey[350] as Color);
+            },
+            itemCount: 4,
+            separatorBuilder: (_, __) => SizedBox(
+                  width: _mainWidth * 0.02,
                 ),
-                height:_mainHeight * 0.22,
-                width: _mainWidth*0.42,
-                
-              ),
-              baseColor: Colors.grey[200]
-              as Color,
-              highlightColor:
-              Colors.grey[350] as Color);
-        },itemCount: 4,
-            separatorBuilder: (_,__)=>SizedBox(width: _mainWidth*0.02,),
-            scrollDirection:Axis.horizontal),
+            scrollDirection: Axis.horizontal),
       );
     }
   }
@@ -1111,7 +1108,10 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 InkWell(
-                  onTap: () =>RMSWidgets.getToast(message: 'Coming Soon...', color: CustomTheme.appTheme,center: true),
+                  onTap: () => RMSWidgets.getToast(
+                      message: 'Coming Soon...',
+                      color: CustomTheme.appTheme,
+                      center: true),
                   child: CachedNetworkImage(
                     height: _mainHeight * 0.15,
                     imageUrl: data.imagePath ?? '',
@@ -1169,7 +1169,8 @@ class _HomePageState extends State<HomePage> {
           key: 'Head to the hills',
           imagePath:
               'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/Screenshot%202022-06-10%20at%201.15.48%20AM.png?alt=media&token=431d2ac6-8d80-4532-8c34-f18cf5a46e6b',
-          callback: () =>RMSWidgets.getToast(message: 'Coming Soon', color: CustomTheme.appTheme)),
+          callback: () => RMSWidgets.getToast(
+              message: 'Coming Soon', color: CustomTheme.appTheme)),
     );
     explorePropertiesList.add(
       UtilsModel(
@@ -1427,7 +1428,8 @@ class _HomePageState extends State<HomePage> {
                       title: nullCheck(list: list)
                           ? '${list[22].name}'
                           : 'Tenants Leads',
-                      onTap: () => Navigator.of(context).pushNamed(AppRoutes.tenantLeadsPage),
+                      onTap: () => Navigator.of(context)
+                          .pushNamed(AppRoutes.tenantLeadsPage),
                     ),
                   ],
                 );
@@ -1737,9 +1739,9 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-  TextStyle get getHeaderStyle =>TextStyle(
+
+  TextStyle get getHeaderStyle => TextStyle(
       color: CustomTheme.appTheme,
-      fontSize: getHeight(context: context,height: 18),
-      fontWeight: FontWeight.w500
-  );
+      fontSize: getHeight(context: context, height: 18),
+      fontWeight: FontWeight.w500);
 }
