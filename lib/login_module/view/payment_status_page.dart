@@ -153,7 +153,7 @@ class _PaymentStatusPageState extends State<PaymentStatusPage> {
                           ),
                           Container(
                               child: Text(
-                            'A Receipt with your payment Id has been emailed to you ',
+                            'Receipt for your payment has been emailed to you ',
                             style: TextStyle(fontSize: 18),
                             textAlign: TextAlign.center,
                           )),
@@ -173,16 +173,16 @@ class _PaymentStatusPageState extends State<PaymentStatusPage> {
                               'Payment of $rupee ' +
                                   (double.parse(widget.amount))
                                       .toString() +
-                                  '   Failed ',
+                                  '  Failed ',
                               style: TextStyle(fontSize: 18)),
                           SizedBox(
                             height: 5,
                           ),
-                          Text('For', style: TextStyle(fontSize: 18)),
+                          Text('for ${widget.title}', style: TextStyle(fontSize: 18)),
                           SizedBox(
                             height: 5,
                           ),
-                          Text(widget.title, style: TextStyle(fontSize: 18)),
+                          //Text(, style: TextStyle(fontSize: 18)),
                           SizedBox(
                             height: 10,
                           ),

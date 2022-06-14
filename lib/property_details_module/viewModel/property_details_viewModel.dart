@@ -220,7 +220,7 @@ class PropertyDetailsViewModel extends ChangeNotifier {
     }
     if (amenitiesNew?.security == '1') {
       amenitiesList.add(AmenitiesModel(
-          name: 'Security',
+          name: 'Caretaker',
           imageUrl:
               'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/security-01.png?alt=media&token=d7299698-17c6-4238-a408-bb203604c6b9'));
     }
@@ -232,13 +232,13 @@ class PropertyDetailsViewModel extends ChangeNotifier {
     }
     if (amenitiesNew?.washingMachine == '1') {
       amenitiesList.add(AmenitiesModel(
-          name: 'Washing Machine',
+          name: 'W.M(Common area)',
           imageUrl:
               'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/washing-machine-01.png?alt=media&token=283dccfe-8a2c-48b9-83fd-f0a738ec81cc'));
     }
     if (amenitiesNew?.sofaDeewan == '1') {
       amenitiesList.add(AmenitiesModel(
-          name: 'Sofa Deewan',
+          name: 'Sofa/Deewan',
           imageUrl:
               'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/sofa-01.png?alt=media&token=320dd081-072a-482a-98c1-1b0987f2dd4d'));
     }

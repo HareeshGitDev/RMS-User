@@ -460,7 +460,7 @@ class _BookingPageState extends State<BookingPage> {
                               Step(
                                 isActive: true,
                                 title: Text(
-                                  '$maxGuest Guests',
+                                  '$maxGuest ${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[8].name : 'Guest '}',
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
