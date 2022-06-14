@@ -131,7 +131,7 @@ getLanguageData();
                   Padding(
                     padding: const EdgeInsets.only(left: 25, right: 25),
                     child: SizedBox(
-                      height: _mainHeight * 0.26,
+                      height: _mainHeight * 0.20,
                       child: Image.asset(Images.brandLogo_Transparent,
                       ),
                     ),
@@ -142,7 +142,7 @@ getLanguageData();
                     alignment: Alignment.centerRight,
                     child: AnimatedTextKit(
                       animatedTexts: [
-                        ColorizeAnimatedText('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[23].name :'You are Almost there!'} !',
+                        ColorizeAnimatedText('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[23].name :'Welcome to RentMyStay family'} !',
                             textStyle:
                             TextStyle(fontSize: 25,),
                             colors: [
@@ -159,7 +159,7 @@ getLanguageData();
                         color: Colors.white,
                         borderRadius:
                         BorderRadius.vertical(top: Radius.circular(30))),
-                    height: _mainHeight * 0.705,
+                    height: _mainHeight * 0.77,
                     width: _mainWidth,
                     padding: EdgeInsets.only(left: 25, right: 25),
                     child: Column(
@@ -178,7 +178,7 @@ getLanguageData();
                           height: 5,
                         ),
                         _textInput(
-                            hint: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[1].name :"Email"}',
+                            hint: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[1].name :"Email (OTP will be sent)"}',
                             icon: Icons.email_outlined,
 
                             controller: _emailController),
@@ -186,7 +186,7 @@ getLanguageData();
                           height: 5,
                         ),
                         _textInput(
-                            hint: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[13].name :"Phone Number"}',
+                            hint: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[13].name :"Phone Number (OTP will be sent)"}',
                             icon: Icons.phone_android_outlined,
                             controller: _phoneNumberController),
                         SizedBox(
@@ -293,7 +293,7 @@ getLanguageData();
                             ),
                           ),
                         ),
-                        Spacer(),
+                        SizedBox(height: 20,),
                         Container(
                           width: _mainWidth,
                           height: 50,
@@ -301,7 +301,7 @@ getLanguageData();
                           child: ElevatedButton(
                             style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all<Color>(
-                                    CustomTheme.appTheme),
+                                    CustomTheme.appThemeContrast),
                                 shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
@@ -399,7 +399,34 @@ getLanguageData();
                                 }
                               }
                             },
-                            child: Center(child: Text('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[15].name :"REGISTER"}')),
+                            child: Center(child: Text('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[15].name :"Sign Up"}')),
+                          ),
+                        ),
+
+                        GestureDetector(
+                          onTap: () => Navigator.of(context).pushNamed(
+                              AppRoutes.loginPage,
+                              arguments: {
+                                'fromExternalLink':
+                                widget.fromExternalLink,
+                                'onClick': widget.onClick
+                              }),
+                          child: Container(
+                            color: Colors.white,
+                            child: RichText(
+                              text: TextSpan(children: [
+                                TextSpan(
+                                    text:'${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[27].name : "have an account"} ? ',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    )),
+                                TextSpan(
+                                    text: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[26].name :'Sign In'}',
+                                    style: TextStyle(
+                                      color: CustomTheme.appThemeContrast,
+                                    )),
+                              ]),
+                            ),
                           ),
                         ),
                       ],
@@ -445,7 +472,7 @@ getLanguageData();
 
   List<String> get getTypeList => [
         'I am',
-        'Tenants',
+        'Tenant',
         'Owner',
       ];
 

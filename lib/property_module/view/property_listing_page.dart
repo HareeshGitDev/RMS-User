@@ -1465,7 +1465,6 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                 children: [
                                   Text(
                                     '${nullCheck(list: value.propertyListingLang) ? value.propertyListingLang[13].name : 'Max Price'} ${nullCheck(list: value.propertyListingLang) ? data < 30 ? value.propertyListingLang[29].name : value.propertyListingLang[30].name : data < 30 ? 'Daily' : 'Monthly'}',
-
                                     style: TextStyle(
                                         color: Colors.blueGrey,
                                         fontWeight: FontWeight.w500,

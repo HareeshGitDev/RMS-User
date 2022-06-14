@@ -93,7 +93,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    //   initUniLinks();
+    initUniLinks();
     terminatedMessage();
     super.initState();
   }

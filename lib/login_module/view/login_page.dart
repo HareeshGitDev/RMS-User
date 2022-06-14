@@ -265,7 +265,7 @@ class _LoginPageState extends State<LoginPage> {
                                       style: ButtonStyle(
                                           backgroundColor:
                                           MaterialStateProperty.all<Color>(
-                                              CustomTheme.appTheme),
+                                              CustomTheme.appThemeContrast),
                                           shape: MaterialStateProperty.all<
                                               RoundedRectangleBorder>(
                                             RoundedRectangleBorder(
@@ -507,7 +507,7 @@ class _LoginPageState extends State<LoginPage> {
                                                 color: Colors.black,
                                               )),
                                           TextSpan(
-                                              text: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[9].name :"Register"}',
+                                              text: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[9].name :'Sign Up'}',
                                               style: TextStyle(
                                                 color: CustomTheme.appThemeContrast,
                                               )),
@@ -590,7 +590,7 @@ class _LoginPageState extends State<LoginPage> {
               width: MediaQuery.of(context).size.width,
               child: Column(
                 children: [
-                  Text('${nullCheck(list: value.loginLang) ? value.loginLang[24].name :'Please Enter Email to get Password Reset Link'} !'),
+                  Text('${nullCheck(list: value.loginLang) ? value.loginLang[24].name :'Please enter your Email ID to get Password Link'} !'),
                   SizedBox(
                     height: _mainHeight*0.035,
                   ),
@@ -628,7 +628,7 @@ class _LoginPageState extends State<LoginPage> {
                     primary: Colors.white,
                     side: BorderSide(
                       width: 1.0,
-                      color: CustomTheme.appTheme,
+                      color: CustomTheme.appThemeContrast,
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),

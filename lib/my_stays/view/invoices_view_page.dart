@@ -202,7 +202,7 @@ class _InvoiceState extends State<InvoicePage> {
                                           data?.pendingBalance != null &&
                                                   data?.pendingBalance == 0
                                               ? Icons.check
-                                              : futureInvoice(fromDate: data?.fromDate ??'')?Icons.add_alert:Icons.alarm,
+                                              : futureInvoice(fromDate: data?.fromDate ??'')?Icons.alarm:Icons.alarm,
                                           color: data?.pendingBalance != null &&
                                                   data?.pendingBalance == 0
                                               ? CustomTheme.myFavColor

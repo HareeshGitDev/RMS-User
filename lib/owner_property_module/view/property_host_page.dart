@@ -25,16 +25,29 @@ class _HostPropertyPageState extends State<HostPropertyPage> {
   var _mainHeight;
   late OwnerPropertyViewModel _viewModel;
   var _mainWidth;
-
+  var name = '';
+  var email = '';
+  var mobilenumber = '';
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _nameController = TextEditingController();
   final _addressController = TextEditingController();
   final _commentsController = TextEditingController();
+
   int units = 0;
   String? lat;
   String? lang;
   SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
+  Future<void> pref() async {
+    name = (await preferenceUtil.getString(rms_name) ?? '').toString();
+    email = (await preferenceUtil.getString(rms_email) ?? '').toString();
+    mobilenumber = (await preferenceUtil.getString(rms_phoneNumber) ?? '').toString();
+    _nameController.text = name;
+    _phoneController.text = mobilenumber;
+    _emailController.text = email;
+
+  }
+
 
   getLanguageData() async {
     await _viewModel.getLanguagesData(
@@ -47,8 +60,11 @@ class _HostPropertyPageState extends State<HostPropertyPage> {
   @override
   void initState() {
     super.initState();
+    pref();
     _viewModel = Provider.of<OwnerPropertyViewModel>(context, listen: false);
     getLanguageData();
+
+
   }
 
   @override
@@ -245,7 +261,7 @@ class _HostPropertyPageState extends State<HostPropertyPage> {
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(left: 10, top: 10),
                           border: InputBorder.none,
-                          hintText: '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[29].name :"Any Comment"}...',
+                          hintText: '${nullCheck(list: value.ownerPropertyLang) ? value.ownerPropertyLang[29].name :"Description"}...',
                         ),
                       ),
                     ),

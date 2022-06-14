@@ -188,7 +188,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                         }else{
                           Navigator.pushNamed(
                               context,
-                              AppRoutes.loginPage,
+                              AppRoutes.registrationPage,
                               arguments:{
                                 'fromExternalLink':false,
                               }
