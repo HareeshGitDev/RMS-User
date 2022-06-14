@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "172037116875-alv78intkjvhn1p67l2ng4uefd5g5lmg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rms.rentmystayuserflutter",
+            "certificate_hash": "d35e21e9361ad3460a68e252ea12fceea00db5a5"
+          }
+        },
+        {
           "client_id": "172037116875-p6ks2ee7df1fvb99nmjkf0a1j0vvst5a.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -58,6 +66,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "172037116875-897ejfse9iv3btp8g6nohs1g44to03di.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tcp.rentmystay",
+            "certificate_hash": "ae23e8bb8b7b3864970ab4f76c36294224303188"
+          }
+        },
         {
           "client_id": "172037116875-ga0mlrefv8ruu28j67cho92imqh9nkpt.apps.googleusercontent.com",
           "client_type": 1,
