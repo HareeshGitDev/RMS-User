@@ -167,9 +167,13 @@ class _MyStayListPageState extends State<MyStayListPage> {
                 itemBuilder: (context, index) {
                   var data = activeBookingList[index];
                   return GestureDetector(
-                    onTap: () => Navigator.of(context).pushNamed(
+                    onTap: () {
+                      if(data !=null && data.bookingStatus !=null && data.bookingStatus?.toLowerCase() =="cancel"){
+                        RMSWidgets.getToast(message: "Booking is Cancelled", color: CustomTheme.errorColor);
+                      }else{
+                      Navigator.of(context).pushNamed(
                         AppRoutes.myStayDetailsPage,
-                        arguments: data.bookingId),
+                        arguments: data.bookingId);}},
                     child: Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0),
@@ -285,8 +289,8 @@ class _MyStayListPageState extends State<MyStayListPage> {
                                     ),
                                     Text(
 
-                                      data.checkOutStatus == '1'
-                                          ? 'Completed'
+                                      data.checkInStatus == '0'
+                                          ? 'Upcoming'
                                           : data.bookingStatus.toString(),
                                       style: TextStyle(
                                         color: CustomTheme.myFavColor,
@@ -331,9 +335,11 @@ class _MyStayListPageState extends State<MyStayListPage> {
                 itemBuilder: (context, index) {
                   var data = completedBookingList[index];
                   return GestureDetector(
-                    onTap: data.bookingStatus != null && data.bookingStatus?.toLowerCase() !='success'?()=>RMSWidgets.getToast(message: 'Booking is Cancelled.', color: CustomTheme.errorColor) :() => Navigator.of(context).pushNamed(
-                        AppRoutes.myStayDetailsPage,
-                        arguments: data.bookingId),
+                    onTap:(){
+                      data.bookingStatus != null && data.bookingStatus?.toLowerCase() !='success'?RMSWidgets.getToast(message: 'Booking is Cancelled.', color: CustomTheme.errorColor) :() => Navigator.of(context).pushNamed(
+                          AppRoutes.myStayDetailsPage,
+                          arguments: data.bookingId);
+                    } ,
                     child: Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
