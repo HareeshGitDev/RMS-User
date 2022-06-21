@@ -169,7 +169,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
                   return GestureDetector(
                     onTap: () {
                       if(data !=null && data.bookingStatus !=null && data.bookingStatus?.toLowerCase() =="cancel"){
-                        RMSWidgets.getToast(message: "Booking is Cancelled", color: CustomTheme.errorColor);
+                        RMSWidgets.getToast(message: "Booking is Cancelled", color: CustomTheme.highlightColor);
                       }else{
                       Navigator.of(context).pushNamed(
                         AppRoutes.myStayDetailsPage,
@@ -289,7 +289,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
                                     ),
                                     Text(
 
-                                      data.checkInStatus == '0'
+                                      data.checkInStatus == '0' && data.bookingStatus?.toLowerCase() !="cancel"
                                           ? 'Upcoming'
                                           : data.bookingStatus.toString(),
                                       style: TextStyle(
