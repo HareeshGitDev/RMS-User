@@ -376,148 +376,152 @@ class _LoginPageState extends State<LoginPage> {
                                         ? MainAxisAlignment.spaceBetween
                                         : MainAxisAlignment.center,
                                     children: [
-                                      GestureDetector(
-                                        onTap: () => _showBottomSheet(context),
-                                        child: Container(
-                                          height: _mainHeight * 0.045,
-                                          padding: EdgeInsets.only(
-                                              left: _mainWidth * 0.03,
-                                              right: _mainWidth * 0.03),
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: CustomTheme.appTheme),
-                                              borderRadius:
-                                                  BorderRadius.circular(40)),
-                                          child: Row(
-                                            children: [
-                                              Icon(
-                                                Icons.mobile_friendly,
-                                                color: CustomTheme.appTheme,
-                                              ),
-                                              SizedBox(
-                                                width: _mainWidth * 0.015,
-                                              ),
-                                              Text(
-                                                '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[6].name : 'SignIn with OTP'}',
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Visibility(
-                                        visible: Platform.isAndroid,
+                                      Expanded(
                                         child: GestureDetector(
-                                          onTap: () async {
-                                            RMSWidgets.showLoaderDialog(
-                                                context: context,
-                                                message: 'Please wait...');
-                                            final data = await GoogleAuthService
-                                                .loginIn();
-
-                                            if (data != null) {
-                                              final LoginResponseModel
-                                                  response =
-                                                  await _loginViewModel
-                                                      .registerUserAfterGmail(
-                                                          model:
-                                                              GmailSignInRequestModel(
-                                                name: data.displayName,
-                                                email: data.email,
-                                                id: data.id,
-                                                picture: data.photoUrl,
-                                              ));
-
-                                              Navigator.of(context).pop();
-                                              if (response.msg?.toLowerCase() !=
-                                                  'failure') {
-                                                if (response.data != null &&
-                                                    response.data?.contactNum !=
-                                                        null &&
-                                                    response.data?.contactNum ==
-                                                        '') {
-                                                  SharedPreferenceUtil shared =
-                                                      SharedPreferenceUtil();
-                                                  await shared.setString(
-                                                      rms_registeredUserToken,
-                                                      '${response.data?.appToken}');
-                                                  await shared.setString(
-                                                      rms_gmapKey,
-                                                      '${response.data?.gmapKey}');
-                                                  await shared.setString(
-                                                      rms_userId,
-                                                      '${response.data?.id}');
-
-                                                  Navigator.of(context).pushNamed(
-                                                      AppRoutes
-                                                          .firebaseRegistrationPage,
-                                                      arguments: {
-                                                        'gmailData': data,
-                                                        'from': 'Gmail',
-                                                        'fromExternalLink': widget
-                                                            .fromExternalLink,
-                                                        'onClick':
-                                                            widget.onClick
-                                                      });
-                                                } else {
-                                                  await setSPValues(
-                                                      response: response);
-                                                  String? fcmToken =
-                                                      await messaging
-                                                          .getToken();
-                                                  if (fcmToken != null) {
-                                                    await _loginViewModel
-                                                        .updateFCMToken(
-                                                            fcmToken: fcmToken);
-                                                  }
-                                                  if (widget.fromExternalLink &&
-                                                      widget.onClick != null) {
-                                                    widget.onClick!();
-                                                  } else {
-                                                    Navigator
-                                                        .pushNamedAndRemoveUntil(
-                                                      context,
-                                                      AppRoutes.dashboardPage,
-                                                      (route) => false,
-                                                    );
-                                                  }
-                                                }
-                                              }
-                                            } else {
-                                              log('Gmail SignIn Failed');
-                                              Navigator.of(context).pop();
-                                            }
-                                          },
+                                          onTap: () => _showBottomSheet(context),
                                           child: Container(
-                                            height: 40,
+                                            height: _mainHeight * 0.045,
                                             padding: EdgeInsets.only(
-                                                left: 15, right: 15),
+                                                left: _mainWidth * 0.03,
+                                                right: _mainWidth * 0.03),
                                             decoration: BoxDecoration(
                                                 border: Border.all(
-                                                    color:
-                                                        CustomTheme.appTheme),
+                                                    color: CustomTheme.appTheme),
                                                 borderRadius:
                                                     BorderRadius.circular(40)),
                                             child: Row(
                                               children: [
                                                 Icon(
-                                                  Icons.mail,
+                                                  Icons.mobile_friendly,
                                                   color: CustomTheme.appTheme,
                                                 ),
                                                 SizedBox(
-                                                  width: 10,
+                                                  width: _mainWidth * 0.015,
                                                 ),
                                                 Text(
-                                                  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[7].name : 'SignIn With Gmail'}',
+                                                  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[6].name : 'SignIn with OTP'}',
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
                                                           FontWeight.w600),
                                                 ),
                                               ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Visibility(
+                                          visible: Platform.isAndroid,
+                                          child: GestureDetector(
+                                            onTap: () async {
+                                              RMSWidgets.showLoaderDialog(
+                                                  context: context,
+                                                  message: 'Please wait...');
+                                              final data = await GoogleAuthService
+                                                  .loginIn();
+
+                                              if (data != null) {
+                                                final LoginResponseModel
+                                                    response =
+                                                    await _loginViewModel
+                                                        .registerUserAfterGmail(
+                                                            model:
+                                                                GmailSignInRequestModel(
+                                                  name: data.displayName,
+                                                  email: data.email,
+                                                  id: data.id,
+                                                  picture: data.photoUrl,
+                                                ));
+
+                                                Navigator.of(context).pop();
+                                                if (response.msg?.toLowerCase() !=
+                                                    'failure') {
+                                                  if (response.data != null &&
+                                                      response.data?.contactNum !=
+                                                          null &&
+                                                      response.data?.contactNum ==
+                                                          '') {
+                                                    SharedPreferenceUtil shared =
+                                                        SharedPreferenceUtil();
+                                                    await shared.setString(
+                                                        rms_registeredUserToken,
+                                                        '${response.data?.appToken}');
+                                                    await shared.setString(
+                                                        rms_gmapKey,
+                                                        '${response.data?.gmapKey}');
+                                                    await shared.setString(
+                                                        rms_userId,
+                                                        '${response.data?.id}');
+
+                                                    Navigator.of(context).pushNamed(
+                                                        AppRoutes
+                                                            .firebaseRegistrationPage,
+                                                        arguments: {
+                                                          'gmailData': data,
+                                                          'from': 'Gmail',
+                                                          'fromExternalLink': widget
+                                                              .fromExternalLink,
+                                                          'onClick':
+                                                              widget.onClick
+                                                        });
+                                                  } else {
+                                                    await setSPValues(
+                                                        response: response);
+                                                    String? fcmToken =
+                                                        await messaging
+                                                            .getToken();
+                                                    if (fcmToken != null) {
+                                                      await _loginViewModel
+                                                          .updateFCMToken(
+                                                              fcmToken: fcmToken);
+                                                    }
+                                                    if (widget.fromExternalLink &&
+                                                        widget.onClick != null) {
+                                                      widget.onClick!();
+                                                    } else {
+                                                      Navigator
+                                                          .pushNamedAndRemoveUntil(
+                                                        context,
+                                                        AppRoutes.dashboardPage,
+                                                        (route) => false,
+                                                      );
+                                                    }
+                                                  }
+                                                }
+                                              } else {
+                                                log('Gmail SignIn Failed');
+                                                Navigator.of(context).pop();
+                                              }
+                                            },
+                                            child: Container(
+                                              height: 40,
+                                              padding: EdgeInsets.only(
+                                                  left: 15, right: 15),
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color:
+                                                          CustomTheme.appTheme),
+                                                  borderRadius:
+                                                      BorderRadius.circular(40)),
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.mail,
+                                                    color: CustomTheme.appTheme,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Text(
+                                                    '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[7].name : 'SignIn With Gmail'}',
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
