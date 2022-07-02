@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
@@ -106,6 +107,8 @@ class _FeedbackState extends State<FeedbackPage> {
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
+    _viewModel.getMyBankDetails(bookingId: widget.bookingId);
+
     getLanguageData();
   }
 
@@ -122,6 +125,10 @@ class _FeedbackState extends State<FeedbackPage> {
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
+    _bankIfscController.text=(_viewModel.myBankDetailsModel.data?.ifscCode ?? "");
+    _banknumberController.text=(_viewModel.myBankDetailsModel.data?.accNo ?? "");
+    _banknameController.text=(_viewModel.myBankDetailsModel.data?.bankName ?? "");
+    _nameController.text=(_viewModel.myBankDetailsModel.data?.accHolder ?? "");
     return _connectionStatus?Scaffold(
       appBar: AppBar(
         title: Text(
@@ -134,6 +141,8 @@ class _FeedbackState extends State<FeedbackPage> {
       ),
       body: Consumer<MyStayViewModel>(
         builder: (BuildContext context, value, Widget? child) {
+
+
           return GestureDetector(
             onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
             child: Container(
@@ -267,6 +276,35 @@ class _FeedbackState extends State<FeedbackPage> {
                                         :'Enter IFSC Code Here',
                                     focusNode: _ifscScope,
                                   ),
+                                 SizedBox(height: 20,),
+                                  value.myBankDetailsModel.data?.bankdetails !=null? Container(
+
+
+                                   width: double.infinity,
+                                   child: Neumorphic(
+                                     style: const NeumorphicStyle(
+                                       depth: -2,
+                                       color: Colors.white,
+                                     ),
+                                     child: Column(
+                                       crossAxisAlignment: CrossAxisAlignment.start,
+                                       children: [
+
+                                         Padding(
+                                           padding:  EdgeInsets.only(left: 15, right: 15,top: 15),
+                                           child: const Text("Bank Details",
+
+                                           ),
+                                         ),
+                                         Padding(
+                                           padding:  EdgeInsets.only(left: 15, right: 15,bottom: 15,top: 5),
+
+                                           child: Text("${value.myBankDetailsModel.data?.bankdetails}"),
+                                         )
+                                       ],
+                                     ),
+                                   ),
+                                 ):Container()
                                 ],
                               ),
                             );
@@ -542,7 +580,10 @@ class _FeedbackState extends State<FeedbackPage> {
                     '${_nameController.text} ${_banknameController.text} ${_banknumberController.text} ${_bankIfscController.text}';
                 int response = await _viewModel.submitFeedbackAndBankDetails(
                     bookingId: widget.bookingId,
-                    bankDetails: bankDetails,
+                    bank_name: _banknameController.text.toString(),
+                    account_number: _banknumberController.text.toString(),
+                    account_name: _nameController.text.toString(),
+                    ifsc_code: _bankIfscController.text.toString(),
                     email: widget.email,
                     ratings: rmsRating.toString(),
                     buildingRatings: buildingRating.toString(),
@@ -568,11 +609,14 @@ class _FeedbackState extends State<FeedbackPage> {
                   bookingId: widget.bookingId,
                   email: widget.email,
                   ratings: rmsRating.toString(),
-                  bankDetails: '',
+               bank_name: _banknameController.text.toString(),
+                  account_number: _banknumberController.text.toString(),
+                  account_name: _nameController.text.toString(),
+                  ifsc_code: _bankIfscController.text.toString(),
                   buildingRatings: buildingRating.toString(),
                   suggestions: _suggestionController.text,
                   friendRecommendation:
-                      shouldRecommendFriend.value ? 'Yes' : 'No');
+                      shouldRecommendFriend.value ? 'Yes' : 'No', );
               log(response.toString());
               if (response == 200) {
                 RMSWidgets.showSnackbar(

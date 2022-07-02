@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:RentMyStay_user/my_stays/model/Invoice_Details_Model.dart';
 import 'package:RentMyStay_user/my_stays/model/invoice_payment_model.dart';
+import 'package:RentMyStay_user/my_stays/model/my_bank_details_model.dart';
 import 'package:RentMyStay_user/my_stays/model/mystay_details_model.dart';
 import 'package:RentMyStay_user/my_stays/model/refund_splitup_model.dart';
 import 'package:RentMyStay_user/my_stays/model/ticket_response_model.dart';
@@ -30,7 +31,7 @@ class MyStayViewModel extends ChangeNotifier {
   List<LanguageModel> refundSplitUpLang = [];
   List<LanguageModel> feedBackLang = [];
   List<LanguageModel> ticketLang = [];
-
+MyBankDetailsModel myBankDetailsModel =MyBankDetailsModel();
   Future<void> getMyStayList() async {
     final MyStayListModel response = await _myStayApiService.fetchMyStayList();
     myStayListModel = response;
@@ -51,6 +52,13 @@ class MyStayViewModel extends ChangeNotifier {
       log('Active Stay List :: ${activeBookingList?.length}');
     }*/
 
+    notifyListeners();
+  }
+
+  Future<void> getMyBankDetails({required String bookingId}) async {
+    final MyBankDetailsModel response =
+    await _myStayApiService.fetchMyBankDetails(bookingId: bookingId);
+    myBankDetailsModel = response;
     notifyListeners();
   }
 
@@ -79,7 +87,10 @@ class MyStayViewModel extends ChangeNotifier {
       {required String bookingId,
       required String email,
       required String ratings,
-      String? bankDetails,
+        required String account_number,
+        required String account_name,
+        required String ifsc_code,
+        required String bank_name,
       required String buildingRatings,
       required String suggestions,
       required String friendRecommendation}) async {
@@ -87,10 +98,13 @@ class MyStayViewModel extends ChangeNotifier {
         bookingId: bookingId,
         email: email,
         ratings: ratings,
-        bankDetails: bankDetails,
+
         buildingRatings: buildingRatings,
         suggestions: suggestions,
-        friendRecommendation: friendRecommendation);
+        friendRecommendation: friendRecommendation, bank_name: bank_name, account_number: account_number, account_name: account_name, ifsc_code: ifsc_code,
+
+
+    );
     return response;
   }
 

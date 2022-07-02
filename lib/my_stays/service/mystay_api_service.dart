@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:RentMyStay_user/my_stays/model/invoice_payment_model.dart';
+import 'package:RentMyStay_user/my_stays/model/my_bank_details_model.dart';
 import 'package:RentMyStay_user/my_stays/model/ticket_response_model.dart';
 import 'package:dio/dio.dart';
 
@@ -54,6 +55,26 @@ class MyStayApiService {
     }
   }
 
+  Future<MyBankDetailsModel> fetchMyBankDetails(
+      {required String bookingId}) async {
+    String url = AppUrls.feedbackAndBankDetailsUrl;
+    final response = await _apiService.getApiCallWithQueryParams(
+      endPoint: url,
+      queryParams: {
+        'booking_id': bookingId,
+      },
+    );
+    final data = response as Map<String, dynamic>;
+
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
+      return MyBankDetailsModel(
+        msg: 'failure',
+      );
+    } else {
+      return MyBankDetailsModel.fromJson(data);
+    }
+  }
+
   Future<RefundSplitUpModel> fetchRefundSplitUpDetails(
       {required String bookingId}) async {
     String url = AppUrls.refundDetailsUrl;
@@ -91,7 +112,11 @@ class MyStayApiService {
       {required String bookingId,
       required String email,
       required String ratings,
-      String? bankDetails,
+
+       required String account_number,
+       required String account_name,
+       required String ifsc_code,
+       required String bank_name,
       required String buildingRatings,
       required String suggestions,
       required String friendRecommendation}) async {
@@ -99,11 +124,15 @@ class MyStayApiService {
     final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
       "booking_id": bookingId,
       "email": email,
-      "bankdetails": bankDetails,
+
       "rating": ratings,
       "building_rating": buildingRatings,
       "frnd_recomd": friendRecommendation,
       "suggest": suggestions,
+      "acc_holder":account_name,
+      "acc_no":account_number,
+      "ifsc_code":ifsc_code,
+      "bank_name":bank_name
     });
     final data = response as Map<String, dynamic>;
 
