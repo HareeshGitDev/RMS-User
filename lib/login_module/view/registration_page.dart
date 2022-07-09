@@ -164,307 +164,311 @@ getLanguageData();
                     height: _mainHeight * 0.77,
                     width: _mainWidth,
                     padding: EdgeInsets.only(left: 25, right: 25),
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: _textInput(
-                              hint: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[12].name :"Name"}',
-                              icon: Icons.person_outline,
-                              controller: _nameController),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        _textInput(
-                            hint: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[1].name :"Email (OTP will be sent)"}',
-                            icon: Icons.email_outlined,
 
-                            controller: _emailController),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        _textInput(
-                            hint: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[13].name :"Phone Number (OTP will be sent)"}',
-                            icon: Icons.phone_android_outlined,
-                            controller: _phoneNumberController),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            color: Colors.white,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: 20,
                           ),
-                          child: Neumorphic(
-                            style: NeumorphicStyle(
-                              depth: -2,
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: _textInput(
+                                hint: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[12].name :"Name"}',
+                                icon: Icons.person_outline,
+                                controller: _nameController),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          _textInput(
+                              hint: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[1].name :"Email (OTP will be sent)"}',
+                              icon: Icons.email_outlined,
+
+                              controller: _emailController),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          _textInput(
+                              hint: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[13].name :"Phone Number (OTP will be sent)"}',
+                              icon: Icons.phone_android_outlined,
+                              controller: _phoneNumberController),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(20)),
                               color: Colors.white,
                             ),
-                            child: TextFormField(
-                              controller: _passwordController,
-                              obscureText: isObscure,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
+                            child: Neumorphic(
+                              style: NeumorphicStyle(
+                                depth: -2,
+                                color: Colors.white,
+                              ),
+                              child: TextFormField(
+                                controller: _passwordController,
+                                obscureText: isObscure,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
 
-                                hintText: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[2].name :"Password"}',
-                                prefixIcon: Icon(Icons.vpn_key_outlined),
-                                  suffix: InkWell(
-                                    onTap: () => setState(() {
-                                      isObscure = !isObscure;
-                                    }),
-                                    child: Icon(
-                                      Icons.remove_red_eye_rounded,
-                                      color: isObscure
-                                          ? Colors.grey
-                                          : CustomTheme.appTheme,
-                                    ),
-                                  )
+                                  hintText: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[2].name :"Password"}',
+                                  prefixIcon: Icon(Icons.vpn_key_outlined),
+                                    suffix: InkWell(
+                                      onTap: () => setState(() {
+                                        isObscure = !isObscure;
+                                      }),
+                                      child: Icon(
+                                        Icons.remove_red_eye_rounded,
+                                        color: isObscure
+                                            ? Colors.grey
+                                            : CustomTheme.appTheme,
+                                      ),
+                                    )
 
 
+                                ),
                               ),
                             ),
                           ),
-                        ),
 
-                        SizedBox(
-                          height: 5,
-                        ),
-                        _textInput(
-                            hint: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[14].name :"Apply Referal Code (Optional)"}',
-                            icon: Icons.ac_unit_outlined,
-                            controller: _referalController),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          height: 40,
-                          width: _mainWidth,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 1.0),
-                            borderRadius: BorderRadius.circular(6),
+                          SizedBox(
+                            height: 5,
                           ),
-                          child: DropdownButtonHideUnderline(
+                          _textInput(
+                              hint: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[14].name :"Apply Referal Code (Optional)"}',
+                              icon: Icons.ac_unit_outlined,
+                              controller: _referalController),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                            height: 40,
+                            width: _mainWidth,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey, width: 1.0),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: DropdownButtonHideUnderline(
 
-                            child:
-                            DropdownButton(
+                              child:
+                              DropdownButton(
 
-                              items: getTypeList
-                                  .map((type) => DropdownMenuItem(
+                                items: getTypeList
+                                    .map((type) => DropdownMenuItem(
 
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text(type),
-                                ),
-                                value: type,
-                              ))
-                                  .toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  typeValue = value.toString();
-                                });
-                              },
-                              value: typeValue,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text(type),
+                                  ),
+                                  value: type,
+                                ))
+                                    .toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    typeValue = value.toString();
+                                  });
+                                },
+                                value: typeValue,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        Container(
-                          height: 40,
-                          width: _mainWidth,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 1.0),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                              items: getCityList
-                                  .map((type) => DropdownMenuItem(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text(type),
-                                ),
-                                value: type,
-                              ))
-                                  .toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedCity = value.toString();
-                                });
-                              },
-                              value: selectedCity,
+                          SizedBox(height: 10),
+                          Container(
+                            height: 40,
+                            width: _mainWidth,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey, width: 1.0),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                items: getCityList
+                                    .map((type) => DropdownMenuItem(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text(type),
+                                  ),
+                                  value: type,
+                                ))
+                                    .toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedCity = value.toString();
+                                  });
+                                },
+                                value: selectedCity,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        Container(
-                          height: 40,
-                          width: _mainWidth,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 1.0),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                              items: getRMSList
-                                  .map((type) => DropdownMenuItem(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text(type),
-                                ),
-                                value: type,
-                              ))
-                                  .toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  sourceRMS = value.toString();
-                                });
-                              },
-                              value: sourceRMS,
+                          SizedBox(height: 10),
+                          Container(
+                            height: 40,
+                            width: _mainWidth,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey, width: 1.0),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                items: getRMSList
+                                    .map((type) => DropdownMenuItem(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text(type),
+                                  ),
+                                  value: type,
+                                ))
+                                    .toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    sourceRMS = value.toString();
+                                  });
+                                },
+                                value: sourceRMS,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 20,),
-                        Container(
-                          width: _mainWidth,
-                          height: 50,
-                          margin: EdgeInsets.only(bottom: 15),
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all<Color>(
-                                    CustomTheme.appThemeContrast),
-                                shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(40)),
-                                )),
-                            onPressed: () async {
+                          SizedBox(height: 20,),
+                          Container(
+                            width: _mainWidth,
+                            height: 50,
+                            margin: EdgeInsets.only(bottom: 15),
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all<Color>(
+                                      CustomTheme.appThemeContrast),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(40)),
+                                  )),
+                              onPressed: () async {
 
-                              if (_nameController.text.isEmpty) {
-                                Fluttertoast.showToast(
-                                    msg: 'Please Enter Enter Your Name',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.CENTER);
-                              }
-                              else if(_emailController.text.isEmpty)
-                              {
-                                Fluttertoast.showToast(
-                                    msg: 'Please Enter E-mail Address',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.CENTER);
-                              }
-                              else if(_phoneNumberController.text.isEmpty)
-                              {
-                                Fluttertoast.showToast(
-                                    msg: 'Please Enter Your Mobile Number',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.CENTER);
-                              }
-                              else if(_passwordController.text.isEmpty)
-                              {
-                                Fluttertoast.showToast(
-                                    msg: 'Please Enter Your Password',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.CENTER);
-                              }
-                              else if(typeValue.isEmpty||typeValue=='I am')
-                              {
-                                Fluttertoast.showToast(
-                                    msg: 'Please Select All Field',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.CENTER);
-                              }
-                              else if(selectedCity.isEmpty || selectedCity =='Select City')
-                              {
-                                Fluttertoast.showToast(
-                                    msg: 'Please Select City',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.CENTER);
-                              }
-                              else if(sourceRMS.isEmpty || sourceRMS == 'How do you Know RMS')
-                              {
-                                Fluttertoast.showToast(
-                                    msg: 'Please Select Source',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.CENTER);
-                              }
-                              else {
-                                RMSWidgets.showLoaderDialog(
-                                    context: context, message: 'Please wait...');
-                                final SignUpResponseModel response =
-                                await _loginViewModel.signUpUser(
-                                    signUpRequestModel: SignUpRequestModel(
-                                      email: _emailController.text,
-                                      password: _passwordController.text,
-                                      phonenumber:
-                                      _phoneNumberController.text,
-                                      sourceRms: sourceRMS,
-                                      referal: _referalController.text,
-                                      iam: typeValue,
-                                      city: selectedCity,
-                                      fname: _nameController.text,
-                                    ));
-                                Navigator.of(context).pop();
-
-                                if (response.msg?.toLowerCase() != 'failure') {
-                                  await setSPValues(response: response);
-                                  String? fcmToken =
-                                  await messaging.getToken();
-                                  if (fcmToken != null) {
-                                    await _loginViewModel.updateFCMToken(
-                                        fcmToken: fcmToken);
-                                  }
-                                  RMSWidgets.getToast(
-                                      message:'You have been Successfully registered',
-                                      color: CustomTheme.myFavColor);
-                                  if(widget.fromExternalLink && widget.onClick != null){
-                                    widget.onClick!();
-                                  }else{
-                                    Navigator.pushNamedAndRemoveUntil(
-                                      context,
-                                      AppRoutes.dashboardPage,
-                                          (route) => false,
-                                    );
-                                  }
-
+                                if (_nameController.text.isEmpty) {
+                                  Fluttertoast.showToast(
+                                      msg: 'Please Enter Enter Your Name',
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER);
                                 }
-                              }
-                            },
-                            child: Center(child: Text('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[15].name :"Sign Up"}')),
-                          ),
-                        ),
+                                else if(_emailController.text.isEmpty)
+                                {
+                                  Fluttertoast.showToast(
+                                      msg: 'Please Enter E-mail Address',
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER);
+                                }
+                                else if(_phoneNumberController.text.isEmpty)
+                                {
+                                  Fluttertoast.showToast(
+                                      msg: 'Please Enter Your Mobile Number',
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER);
+                                }
+                                else if(_passwordController.text.isEmpty)
+                                {
+                                  Fluttertoast.showToast(
+                                      msg: 'Please Enter Your Password',
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER);
+                                }
+                                else if(typeValue.isEmpty||typeValue=='I am')
+                                {
+                                  Fluttertoast.showToast(
+                                      msg: 'Please Select All Field',
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER);
+                                }
+                                else if(selectedCity.isEmpty || selectedCity =='Select City')
+                                {
+                                  Fluttertoast.showToast(
+                                      msg: 'Please Select City',
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER);
+                                }
+                                else if(sourceRMS.isEmpty || sourceRMS == 'How do you Know RMS')
+                                {
+                                  Fluttertoast.showToast(
+                                      msg: 'Please Select Source',
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER);
+                                }
+                                else {
+                                  RMSWidgets.showLoaderDialog(
+                                      context: context, message: 'Please wait...');
+                                  final SignUpResponseModel response =
+                                  await _loginViewModel.signUpUser(
+                                      signUpRequestModel: SignUpRequestModel(
+                                        email: _emailController.text,
+                                        password: _passwordController.text,
+                                        phonenumber:
+                                        _phoneNumberController.text,
+                                        sourceRms: sourceRMS,
+                                        referal: _referalController.text,
+                                        iam: typeValue,
+                                        city: selectedCity,
+                                        fname: _nameController.text,
+                                      ));
+                                  Navigator.of(context).pop();
 
-                        GestureDetector(
-                          onTap: () => Navigator.of(context).pushNamed(
-                              AppRoutes.loginPage,
-                              arguments: {
-                                'fromExternalLink':
-                                widget.fromExternalLink,
-                                'onClick': widget.onClick
-                              }),
-                          child: Container(
-                            color: Colors.white,
-                            child: RichText(
-                              text: TextSpan(children: [
-                                TextSpan(
-                                    text:'${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[27].name : "have an account"} ? ',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                    )),
-                                TextSpan(
-                                    text: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[26].name :'Sign In'}',
-                                    style: TextStyle(
-                                      color: CustomTheme.appThemeContrast,
-                                    )),
-                              ]),
+                                  if (response.msg?.toLowerCase() != 'failure') {
+                                    await setSPValues(response: response);
+                                    String? fcmToken =
+                                    await messaging.getToken();
+                                    if (fcmToken != null) {
+                                      await _loginViewModel.updateFCMToken(
+                                          fcmToken: fcmToken);
+                                    }
+                                    RMSWidgets.getToast(
+                                        message:'You have been Successfully registered',
+                                        color: CustomTheme.myFavColor);
+                                    if(widget.fromExternalLink && widget.onClick != null){
+                                      widget.onClick!();
+                                    }else{
+                                      Navigator.pushNamedAndRemoveUntil(
+                                        context,
+                                        AppRoutes.dashboardPage,
+                                            (route) => false,
+                                      );
+                                    }
+
+                                  }
+                                }
+                              },
+                              child: Center(child: Text('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[15].name :"Sign Up"}')),
                             ),
                           ),
-                        ),
-                      ],
+
+                          GestureDetector(
+                            onTap: () => Navigator.of(context).pushNamed(
+                                AppRoutes.loginPage,
+                                arguments: {
+                                  'fromExternalLink':
+                                  widget.fromExternalLink,
+                                  'onClick': widget.onClick
+                                }),
+                            child: Container(
+                              margin: EdgeInsets.only(bottom: 30),
+                              color: Colors.white,
+                              child: RichText(
+                                text: TextSpan(children: [
+                                  TextSpan(
+                                      text:'${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[27].name : "have an account"} ? ',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                      )),
+                                  TextSpan(
+                                      text: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[26].name :'Sign In'}',
+                                      style: TextStyle(
+                                        color: CustomTheme.appThemeContrast,
+                                      )),
+                                ]),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   )
                 ],
