@@ -104,376 +104,507 @@ class _MyStayListPageState extends State<MyStayListPage> {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
     return _connectionStatus? Scaffold(
-          appBar: AppBar(
-            elevation: 5,
-            leading: widget.fromBottom
-                ? WillPopScope(
-                    child: Container(),
-                    onWillPop: () async {
-                      Provider.of<BottomNavigationProvider>(context,
-                              listen: false)
-                          .shiftBottom(index: 0);
-                      return false;
-                    })
-                : const BackButton(),
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15))),
-            backgroundColor: CustomTheme.appTheme,
-            toolbarHeight: _mainHeight * 0.05,
-            centerTitle: widget.fromBottom,
-            title: Text(
-              nullCheck(list: context.watch<MyStayViewModel>().myStayLang)
-                  ? '${context.watch<MyStayViewModel>().myStayLang[0].name}'
-                  : 'My Stays',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700),
-            ),
-            titleSpacing: 0,
+      appBar: AppBar(
+        elevation: 5,
+        leading: widget.fromBottom
+            ? WillPopScope(
+            child: Container(),
+            onWillPop: () async {
+              Provider.of<BottomNavigationProvider>(context,
+                  listen: false)
+                  .shiftBottom(index: 0);
+              return false;
+            })
+            : const BackButton(),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(15),
+                bottomRight: Radius.circular(15))),
+        backgroundColor: CustomTheme.appTheme,
+        toolbarHeight: _mainHeight * 0.05,
+        centerTitle: widget.fromBottom,
+        title: Text(
+          nullCheck(list: context.watch<MyStayViewModel>().myStayLang)
+              ? '${context.watch<MyStayViewModel>().myStayLang[0].name}'
+              : 'My Stays',
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w700),
+        ),
+        titleSpacing: 0,
 
-          ),
-          body: Consumer<MyStayViewModel>(
-            builder: (context, value, child) {
-              return Container(
-                color: Colors.white,
-                height: _mainHeight,
-                width: _mainWidth,
-                padding: EdgeInsets.only(
-                    left: _mainWidth * 0.02,
-                    right: _mainWidth * 0.02,
-                    top: _mainHeight * 0.01),
-                margin: EdgeInsets.only(bottom: _mainHeight * 0.01),
-                child: getActiveTab(
-                    activeBookingList: value.activeBookingList,
-                    context: context,
-                    langList: value.myStayLang),
-              );
-            },
-          ),
+      ),
+      body: Consumer<MyStayViewModel>(
+        builder: (context, value, child) {
+          return Container(
+            color: Colors.white,
+            height: _mainHeight,
+            width: _mainWidth,
+            padding: EdgeInsets.only(
+                left: _mainWidth * 0.02,
+                right: _mainWidth * 0.02,
+                top: _mainHeight * 0.01),
+            margin: EdgeInsets.only(bottom: _mainHeight * 0.01),
+            child: getActiveTab(
+                activeBookingList: value.activeBookingList,
+                context: context,
+                langList: value.myStayLang),
+          );
+        },
+      ),
     ):RMSWidgets.networkErrorPage(context: context);
   }
 
   Widget getActiveTab(
       {required List<Result>? activeBookingList,
-      required BuildContext context,
-      required List<LanguageModel> langList}) {
+        required BuildContext context,
+        required List<LanguageModel> langList}) {
     return activeBookingList != null && activeBookingList.isNotEmpty
         ? Container(
-            width: _mainWidth,
-            child: ListView.separated(
-                itemBuilder: (context, index) {
-                  var data = activeBookingList[index];
-                  return GestureDetector(
-                    onTap: data.bookingStatus != null && data.bookingStatus?.toLowerCase() !='success'?()=>RMSWidgets.getToast(message: 'Booking is Cancelled.', color: CustomTheme.errorColor) :() => Navigator.of(context).pushNamed(
-                        AppRoutes.myStayDetailsPage,
-                        arguments: data.bookingId),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      color: Colors.white,
-                      child: Row(
-                        children: [
-                          Container(
-                            height: _mainHeight * 0.085,
-                            width: _mainWidth * 0.20,
-                            padding: EdgeInsets.only(
-                                right: _mainWidth * 0.02,
-                                bottom: _mainHeight * 0.005,
-                                left: _mainWidth * 0.02),
-                            child: CachedNetworkImage(
-                              imageUrl: data.picThumbnail ?? '',
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.cover,
-                                  ),
+      width: _mainWidth,
+      child: ListView.separated(
+          itemBuilder: (context, index) {
+            var data = activeBookingList[index];
+            return GestureDetector(
+              onTap: data.bookingStatus != null && data.bookingStatus?.toLowerCase() !='success'?()=>RMSWidgets.getToast(message: 'Booking is Cancelled.', color: CustomTheme.errorColor) :() => Navigator.of(context).pushNamed(
+                  AppRoutes.myStayDetailsPage,
+                  arguments: data.bookingId),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                color: Colors.white,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      height: _mainHeight * 0.12,
+                      width: _mainWidth * 0.21,
+                      padding: EdgeInsets.only(
+                          right: _mainWidth * 0.02,
+                          bottom: _mainHeight * 0.005,
+                          left: _mainWidth * 0.01),
+                      child: CachedNetworkImage(
+                        imageUrl: data.picThumbnail ?? '',
+                        imageBuilder: (context, imageProvider) =>
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                              placeholder: (context, url) => Shimmer.fromColors(
-                                  child: Container(
-                                    height: _mainHeight * 0.075,
-                                    width: _mainWidth * 0.2,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  baseColor: Colors.grey[200] as Color,
-                                  highlightColor: Colors.grey[350] as Color),
-                              errorWidget: (context, url, error) => const Icon(
-                                Icons.error,
-                                color: Colors.red,
+                            ),
+                        placeholder: (context, url) => Shimmer.fromColors(
+                            child: Container(
+                              height: _mainHeight * 0.075,
+                              width: _mainWidth * 0.2,
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(10),
                               ),
                             ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            baseColor: Colors.grey[200] as Color,
+                            highlightColor: Colors.grey[350] as Color),
+                        errorWidget: (context, url, error) => const Icon(
+                          Icons.error,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: _mainWidth * 0.72,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Container(
-                                  width: _mainWidth * 0.72,
-                                  child: Text(
-                                    data.title ?? '',
+                              Row(
+                                children: [
+                                  const Text(
+                                    'Booking ID: ',
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        color: Color(0xff787878),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    data.bookingId ?? '',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500),
-                                  )),
-                              SizedBox(
-                                height: _mainHeight * 0.005,
+                                  ),
+                                ],
                               ),
-                              Container(
-                                width: _mainWidth * 0.72,
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      '${data.numGuests ?? " "} guests',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14),
-                                    ),
-                                    Spacer(),
-                                    Text(
-                                      DateTimeService.checkDateFormat(
-                                              data.travelFromDate) ??
-                                          '',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      DateTimeService.checkDateFormat(
-                                              data.travelToDate) ??
-                                          '',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: _mainHeight * 0.005,
-                              ),
-                              Container(
-                                width: _mainWidth * 0.72,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'ID: ${data.bookingId}',
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Text(
 
-                                      data.checkInStatus == '0' && data.bookingStatus.toString().toLowerCase() !="cancel"
-                                          ? 'Upcoming'
-                                          : data.bookingStatus.toString(),
-                                      style: TextStyle(
-                                        color: CustomTheme.myFavColor,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ],
+                              Text(
+
+                                data.checkInStatus == '0' && data.bookingStatus.toString().toLowerCase() !="cancel"
+                                    ? 'Upcoming '
+                                    : "${data.bookingStatus.toString().toUpperCase()} ",
+                                style: TextStyle(
+                                  color: data.bookingStatus.toString().toLowerCase() =="cancel"?CustomTheme.errorColor:data.bookingStatus.toString().toLowerCase() =="success"?CustomTheme.myFavColor:CustomTheme.appThemeContrast2,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
                             ],
                           ),
-                        ],
-                      ),
+                        ),
+                        SizedBox(height: 5,),
+                        // Row(
+                        //   children: [
+                        //     Text(
+                        //       'Booking Status: ',
+                        //       overflow: TextOverflow.ellipsis,
+                        //       maxLines: 1,
+                        //       style: TextStyle(
+                        //           color: Color(0xff787878),
+                        //           fontSize: 14,
+                        //           fontWeight: FontWeight.bold),
+                        //     ),
+                        //     Text(
+                        //
+                        //       data.checkInStatus == '0' && data.bookingStatus.toString().toLowerCase() !="cancel"
+                        //           ? 'Upcoming'
+                        //           : data.bookingStatus.toString().toUpperCase(),
+                        //       style: TextStyle(
+                        //         color: CustomTheme.myFavColor,
+                        //         fontSize: 12,
+                        //         fontWeight: FontWeight.w700,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        SizedBox(height: 5,),
+                        Column(
+                          children: [
+                            Container(
+                              width: _mainWidth * 0.72,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: const [
+                                  Text(
+                                    "Check-In",
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        color: Color(0xff787878),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    'Check-Out',
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        color: Color(0xff787878),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Container(
+                              width: _mainWidth * 0.72,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children:  [
+                                  Text(
+                                    DateTimeService.checkDateFormat(
+                                        data.travelFromDate) ??
+                                        '',
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    DateTimeService.checkDateFormat(
+                                        data.travelToDate) ??
+                                        '',
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 5,),
+
+                        Container(
+                            width: _mainWidth * 0.72,
+                            child: Text(
+                              data.title ?? '',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 3,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold),
+                            )),
+                        SizedBox(
+                          height: _mainHeight * 0.009,
+                        ),
+                        // Container(
+                        //   width: _mainWidth * 0.72,
+                        //   child: Row(
+                        //     children: [
+                        //       Text(
+                        //         '${data.numGuests ?? " "} guests',
+                        //         style: TextStyle(
+                        //             color: Colors.black,
+                        //             fontWeight: FontWeight.w400,
+                        //             fontSize: 14),
+                        //       ),
+                        //       Spacer(),
+                        //       Text(
+                        //         DateTimeService.checkDateFormat(
+                        //                 data.travelFromDate) ??
+                        //             '',
+                        //         style: TextStyle(
+                        //             color: Colors.black,
+                        //             fontWeight: FontWeight.w400,
+                        //             fontSize: 14),
+                        //       ),
+                        //       SizedBox(
+                        //         width: 10,
+                        //       ),
+                        //       Text(
+                        //         DateTimeService.checkDateFormat(
+                        //                 data.travelToDate) ??
+                        //             '',
+                        //         style: TextStyle(
+                        //             color: Colors.black,
+                        //             fontWeight: FontWeight.w400,
+                        //             fontSize: 14),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        // SizedBox(
+                        //   height: _mainHeight * 0.005,
+                        // ),
+                        // Container(
+                        //   width: _mainWidth * 0.72,
+                        //   child: Row(
+                        //     mainAxisAlignment:
+                        //         MainAxisAlignment.spaceBetween,
+                        //     children: [
+                        //       Text(
+                        //         'ID: ${data.bookingId}',
+                        //         style: TextStyle(
+                        //           color: Colors.grey,
+                        //           fontSize: 12,
+                        //           fontWeight: FontWeight.w500,
+                        //         ),
+                        //       ),
+                        //       Text(
+                        //
+                        //         data.checkInStatus == '0' && data.bookingStatus.toString().toLowerCase() !="cancel"
+                        //             ? 'Upcoming'
+                        //             : data.bookingStatus.toString(),
+                        //         style: TextStyle(
+                        //           color: CustomTheme.myFavColor,
+                        //           fontSize: 12,
+                        //           fontWeight: FontWeight.w700,
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                      ],
                     ),
-                  );
-                },
-                separatorBuilder: (context, index) =>
-                    SizedBox(height: _mainHeight * 0.005),
-                itemCount: activeBookingList.length),
-          )
+                  ],
+                ),
+              ),
+            );
+          },
+          separatorBuilder: (context, index) =>
+              SizedBox(height: _mainHeight * 0.005),
+          itemCount: activeBookingList.length),
+    )
         : activeBookingList != null && activeBookingList.isEmpty
-            ? RMSWidgets.noData(
-                context: context,
-                message: nullCheck(list: langList)
-                    ? '${langList[3].name}'
-                    : 'No Any Active Bookings Found.')
-            : Center(
-                child: RMSWidgets.getLoader(
-                color: CustomTheme.appTheme,
-              ));
+        ? RMSWidgets.noData(
+        context: context,
+        message: nullCheck(list: langList)
+            ? '${langList[3].name}'
+            : 'No Any Active Bookings Found.')
+        : Center(
+        child: RMSWidgets.getLoader(
+          color: CustomTheme.appTheme,
+        ));
   }
 
   Widget getCompletedTab(
       {required List<Result>? completedBookingList,
-      required BuildContext context,
-      required List<LanguageModel> langList}) {
+        required BuildContext context,
+        required List<LanguageModel> langList}) {
     return completedBookingList != null && completedBookingList.isNotEmpty
         ? Container(
-            width: _mainWidth,
-            child: ListView.separated(
-                itemBuilder: (context, index) {
-                  var data = completedBookingList[index];
-                  return GestureDetector(
-                    onTap: data.bookingStatus != null && data.bookingStatus?.toLowerCase() !='success'?()=>RMSWidgets.getToast(message: 'Booking is Cancelled.', color: CustomTheme.errorColor) :() => Navigator.of(context).pushNamed(
-                        AppRoutes.myStayDetailsPage,
-                        arguments: data.bookingId),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      color: Colors.blueGrey.shade100,
-                      child: Row(
-                        children: [
-                          Container(
-                            height: _mainHeight * 0.085,
-                            width: _mainWidth * 0.20,
-                            padding: EdgeInsets.only(right: _mainWidth * 0.02),
-                            child: CachedNetworkImage(
-                              imageUrl: data.picThumbnail.toString(),
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.cover,
-                                  ),
+      width: _mainWidth,
+      child: ListView.separated(
+          itemBuilder: (context, index) {
+            var data = completedBookingList[index];
+            return GestureDetector(
+              onTap: data.bookingStatus != null && data.bookingStatus?.toLowerCase() !='success'?()=>RMSWidgets.getToast(message: 'Booking is Cancelled.', color: CustomTheme.errorColor) :() => Navigator.of(context).pushNamed(
+                  AppRoutes.myStayDetailsPage,
+                  arguments: data.bookingId),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                color: Colors.blueGrey.shade100,
+                child: Row(
+                  children: [
+                    Container(
+                      height: _mainHeight * 0.085,
+                      width: _mainWidth * 0.20,
+                      padding: EdgeInsets.only(right: _mainWidth * 0.02),
+                      child: CachedNetworkImage(
+                        imageUrl: data.picThumbnail.toString(),
+                        imageBuilder: (context, imageProvider) =>
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
                                 ),
-                              ),
-                              placeholder: (context, url) => Shimmer.fromColors(
-                                  child: Container(
-                                    height: _mainHeight * 0.075,
-                                    width: _mainWidth * 0.2,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  baseColor: Colors.grey[200] as Color,
-                                  highlightColor: Colors.grey[350] as Color),
-                              errorWidget: (context, url, error) => const Icon(
-                                Icons.error,
-                                color: Colors.red,
                               ),
                             ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                  width: _mainWidth * 0.72,
-                                  child: Text(
-                                    data.title ?? '',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500),
-                                  )),
-                              SizedBox(
-                                height: _mainHeight * 0.005,
+                        placeholder: (context, url) => Shimmer.fromColors(
+                            child: Container(
+                              height: _mainHeight * 0.075,
+                              width: _mainWidth * 0.2,
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              Container(
-                                width: _mainWidth * 0.72,
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      '${data.numGuests ?? " "} guests',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14),
-                                    ),
-                                    Spacer(),
-                                    Text(
-                                      DateTimeService.checkDateFormat(
-                                              data.travelFromDate) ??
-                                          '',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      DateTimeService.checkDateFormat(
-                                              data.travelToDate) ??
-                                          '',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14),
-                                    ),
-                                  ],
+                            ),
+                            baseColor: Colors.grey[200] as Color,
+                            highlightColor: Colors.grey[350] as Color),
+                        errorWidget: (context, url, error) => const Icon(
+                          Icons.error,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            width: _mainWidth * 0.72,
+                            child: Text(
+                              data.title ?? '',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            )),
+                        SizedBox(
+                          height: _mainHeight * 0.005,
+                        ),
+                        Container(
+                          width: _mainWidth * 0.72,
+                          child: Row(
+                            children: [
+                              Text(
+                                '${data.numGuests ?? " "} guests',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14),
+                              ),
+                              Spacer(),
+                              Text(
+                                DateTimeService.checkDateFormat(
+                                    data.travelFromDate) ??
+                                    '',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                DateTimeService.checkDateFormat(
+                                    data.travelToDate) ??
+                                    '',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: _mainHeight * 0.005,
+                        ),
+                        Container(
+                          width: _mainWidth * 0.72,
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'ID: ${data.bookingId}',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              SizedBox(
-                                height: _mainHeight * 0.005,
-                              ),
-                              Container(
-                                width: _mainWidth * 0.72,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'ID: ${data.bookingId}',
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Text(
-                                      data.checkOutStatus == '1' && data.bookingStatus=='Success'
-                                          ? 'Completed'
-                                          : data.bookingStatus.toString(),
-                                      style: TextStyle(
-                                        color: CustomTheme.myFavColor,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ],
+                              Text(
+                                data.checkOutStatus == '1' && data.bookingStatus=='Success'
+                                    ? 'Completed'
+                                    : data.bookingStatus.toString(),
+                                style: TextStyle(
+                                  color: CustomTheme.myFavColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
                             ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  );
-                },
-                separatorBuilder: (context, index) =>
-                    SizedBox(height: _mainHeight * 0.005),
-                itemCount: completedBookingList.length),
-          )
+                  ],
+                ),
+              ),
+            );
+          },
+          separatorBuilder: (context, index) =>
+              SizedBox(height: _mainHeight * 0.005),
+          itemCount: completedBookingList.length),
+    )
         : completedBookingList != null && completedBookingList.isEmpty
-            ? RMSWidgets.noData(
-                context: context,
-                message: nullCheck(list: langList)
-                    ? '${langList[4].name}'
-                    : 'No Any Completed Bookings Found.')
-            : Center(child: RMSWidgets.getLoader(color: CustomTheme.appTheme));
+        ? RMSWidgets.noData(
+        context: context,
+        message: nullCheck(list: langList)
+            ? '${langList[4].name}'
+            : 'No Any Completed Bookings Found.')
+        : Center(child: RMSWidgets.getLoader(color: CustomTheme.appTheme));
   }
 }
