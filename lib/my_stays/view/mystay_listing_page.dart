@@ -167,27 +167,24 @@ class _MyStayListPageState extends State<MyStayListPage> {
                 itemBuilder: (context, index) {
                   var data = activeBookingList[index];
                   return GestureDetector(
-                    onTap: () {
-                      if(data !=null && data.bookingStatus !=null && data.bookingStatus?.toLowerCase() =="cancel"){
-                        RMSWidgets.getToast(message: "Booking is Cancelled", color: CustomTheme.highlightColor);
-                      }else{
-                      Navigator.of(context).pushNamed(
+                    onTap: data.bookingStatus != null && data.bookingStatus?.toLowerCase() !='success'?()=>RMSWidgets.getToast(message: 'Booking is Cancelled.', color: CustomTheme.errorColor) :() => Navigator.of(context).pushNamed(
                         AppRoutes.myStayDetailsPage,
-                        arguments: data.bookingId);}},
+                        arguments: data.bookingId),
                     child: Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0),
                       ),
                       color: Colors.white,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Container(
-                            height: _mainHeight * 0.085,
-                            width: _mainWidth * 0.20,
+                            height: _mainHeight * 0.12,
+                            width: _mainWidth * 0.21,
                             padding: EdgeInsets.only(
                                 right: _mainWidth * 0.02,
                                 bottom: _mainHeight * 0.005,
-                                left: _mainWidth * 0.02),
+                                left: _mainWidth * 0.01),
                             child: CachedNetworkImage(
                               imageUrl: data.picThumbnail ?? '',
                               imageBuilder: (context, imageProvider) =>
@@ -220,87 +217,197 @@ class _MyStayListPageState extends State<MyStayListPage> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                  width: _mainWidth * 0.72,
-                                  child: Text(
-                                    data.title ?? '',
+                              Row(
+                                children: [
+                                  const Text(
+                                    'Booking ID: ',
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        color: Color(0xff787878),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    data.bookingId ?? '',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 5,),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Booking Status: ',
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        color: Color(0xff787878),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+
+                                    data.checkInStatus == '0' && data.bookingStatus.toString().toLowerCase() !="cancel"
+                                        ? 'Upcoming'
+                                        : data.bookingStatus.toString().toUpperCase(),
+                                    style: TextStyle(
+                                      color: CustomTheme.myFavColor,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 5,),
+                              Column(
+                                children: [
+                                  Container(
+                                    width: _mainWidth * 0.72,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: const [
+                                        Text(
+                                          "Check-In",
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                              color: Color(0xff787878),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                         'Check-Out',
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                              color: Color(0xff787878),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    width: _mainWidth * 0.72,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children:  [
+                                        Text(
+                                          DateTimeService.checkDateFormat(
+                                              data.travelFromDate) ??
+                                              '',
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          DateTimeService.checkDateFormat(
+                                              data.travelToDate) ??
+                                              '',
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 5,),
+
+                              Container(
+                                  width: _mainWidth * 0.72,
+                                  child: Text(
+                                    data.title ?? '',
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 3,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
                                   )),
                               SizedBox(
-                                height: _mainHeight * 0.005,
+                                height: _mainHeight * 0.009,
                               ),
-                              Container(
-                                width: _mainWidth * 0.72,
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      '${data.numGuests ?? " "} guests',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14),
-                                    ),
-                                    Spacer(),
-                                    Text(
-                                      DateTimeService.checkDateFormat(
-                                              data.travelFromDate) ??
-                                          '',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      DateTimeService.checkDateFormat(
-                                              data.travelToDate) ??
-                                          '',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: _mainHeight * 0.005,
-                              ),
-                              Container(
-                                width: _mainWidth * 0.72,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'ID: ${data.bookingId}',
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Text(
-
-                                      data.checkInStatus == '0' && data.bookingStatus?.toLowerCase() !="cancel"
-                                          ? 'Upcoming'
-                                          : data.bookingStatus.toString(),
-                                      style: TextStyle(
-                                        color: CustomTheme.myFavColor,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              // Container(
+                              //   width: _mainWidth * 0.72,
+                              //   child: Row(
+                              //     children: [
+                              //       Text(
+                              //         '${data.numGuests ?? " "} guests',
+                              //         style: TextStyle(
+                              //             color: Colors.black,
+                              //             fontWeight: FontWeight.w400,
+                              //             fontSize: 14),
+                              //       ),
+                              //       Spacer(),
+                              //       Text(
+                              //         DateTimeService.checkDateFormat(
+                              //                 data.travelFromDate) ??
+                              //             '',
+                              //         style: TextStyle(
+                              //             color: Colors.black,
+                              //             fontWeight: FontWeight.w400,
+                              //             fontSize: 14),
+                              //       ),
+                              //       SizedBox(
+                              //         width: 10,
+                              //       ),
+                              //       Text(
+                              //         DateTimeService.checkDateFormat(
+                              //                 data.travelToDate) ??
+                              //             '',
+                              //         style: TextStyle(
+                              //             color: Colors.black,
+                              //             fontWeight: FontWeight.w400,
+                              //             fontSize: 14),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
+                              // SizedBox(
+                              //   height: _mainHeight * 0.005,
+                              // ),
+                              // Container(
+                              //   width: _mainWidth * 0.72,
+                              //   child: Row(
+                              //     mainAxisAlignment:
+                              //         MainAxisAlignment.spaceBetween,
+                              //     children: [
+                              //       Text(
+                              //         'ID: ${data.bookingId}',
+                              //         style: TextStyle(
+                              //           color: Colors.grey,
+                              //           fontSize: 12,
+                              //           fontWeight: FontWeight.w500,
+                              //         ),
+                              //       ),
+                              //       Text(
+                              //
+                              //         data.checkInStatus == '0' && data.bookingStatus.toString().toLowerCase() !="cancel"
+                              //             ? 'Upcoming'
+                              //             : data.bookingStatus.toString(),
+                              //         style: TextStyle(
+                              //           color: CustomTheme.myFavColor,
+                              //           fontSize: 12,
+                              //           fontWeight: FontWeight.w700,
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
                             ],
                           ),
                         ],
@@ -335,11 +442,9 @@ class _MyStayListPageState extends State<MyStayListPage> {
                 itemBuilder: (context, index) {
                   var data = completedBookingList[index];
                   return GestureDetector(
-                    onTap:(){
-                      data.bookingStatus != null && data.bookingStatus?.toLowerCase() !='success'?RMSWidgets.getToast(message: 'Booking is Cancelled.', color: CustomTheme.errorColor) :() => Navigator.of(context).pushNamed(
-                          AppRoutes.myStayDetailsPage,
-                          arguments: data.bookingId);
-                    } ,
+                    onTap: data.bookingStatus != null && data.bookingStatus?.toLowerCase() !='success'?()=>RMSWidgets.getToast(message: 'Booking is Cancelled.', color: CustomTheme.errorColor) :() => Navigator.of(context).pushNamed(
+                        AppRoutes.myStayDetailsPage,
+                        arguments: data.bookingId),
                     child: Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),

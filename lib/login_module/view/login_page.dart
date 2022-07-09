@@ -125,46 +125,68 @@ class _LoginPageState extends State<LoginPage> {
     _mainWidth = MediaQuery.of(context).size.width;
     return _connectionStatus
         ? Scaffold(
+      backgroundColor:   Colors.white,
             body: Consumer<LoginViewModel>(
               builder: (context, value, child) {
                 return Form(
                   key: _formKey,
                   child: SingleChildScrollView(
                     child: Container(
-                      color: CustomTheme.appTheme,
+                      //color: CustomTheme.appTheme,
                       height: _mainHeight,
                       width: _mainWidth,
                       //padding: EdgeInsets.only(left: 25, right: 25),
                       child: Column(
                         children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 25, right: 25),
-                            child: SizedBox(
-                              height: _mainHeight * 0.3,
-                              child: Image.asset(
-                                'assets/images/transparent_logo_rms.png',
-                              ),
-                            ),
-                          ),
+                          // Padding(
+                          //   padding: const EdgeInsets.only(left: 25, right: 25),
+                          //   child: SizedBox(
+                          //     height: _mainHeight * 0.3,
+                          //     child: Image.asset(
+                          //       'assets/images/transparent_logo_rms.png',
+                          //     ),
+                          //   ),
+                          // ),
                           Container(
-                            padding: EdgeInsets.only(left: _mainWidth * 0.035),
+                            padding: EdgeInsets.only(left: _mainWidth * 0.035,top: _mainHeight*0.18),
                             margin: EdgeInsets.only(right: _mainWidth * 0.035),
                             alignment: Alignment.centerLeft,
-                            child: AnimatedTextKit(
-                              animatedTexts: [
-                                ColorizeAnimatedText(
-                                    '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[0].name : 'Welcome Back'} ! ',
-                                    textStyle: TextStyle(
-                                      fontSize: _mainWidth * 0.05,
-                                    ),
-                                    colors: [
-                                      Colors.white,
-                                      CustomTheme.appTheme,
-                                    ]),
+
+                            child:Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[0].name : 'Welcome'}',
+                                            style: const TextStyle(
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.bold
+                                            ),
+                                ),
+                                Text(
+                                  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[28].name : ' Back'}',
+                                            style: const TextStyle(
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.bold
+                                            ),
+                                ),
                               ],
-                              isRepeatingAnimation: true,
-                              repeatForever: true,
                             ),
+
+                            // child: AnimatedTextKit(
+                            //   animatedTexts: [
+                            //     ColorizeAnimatedText(
+                            //         '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[0].name : 'Welcome Back'} ! ',
+                            //         textStyle: TextStyle(
+                            //           fontSize: _mainWidth * 0.05,
+                            //         ),
+                            //         colors: [
+                            //           Colors.white,
+                            //           CustomTheme.appTheme,
+                            //         ]),
+                            //   ],
+                            //   isRepeatingAnimation: true,
+                            //   repeatForever: true,
+                            // ),
                           ),
                           SizedBox(
                             height: _mainHeight * 0.025,
@@ -177,104 +199,102 @@ class _LoginPageState extends State<LoginPage> {
                                   left: _mainWidth * 0.04,
                                   top: _mainHeight * 0.03,
                                   right: _mainWidth * 0.04),
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(25.0),
-                                    topRight: Radius.circular(25.0)),
+                                // borderRadius: BorderRadius.only(
+                                //     topLeft: Radius.circular(25.0),
+                                //     topRight: Radius.circular(25.0)),
                               ),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Container(
-                                    //margin: EdgeInsets.only(top: 10),
-                                    decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(20)),
-                                      color: Colors.white,
+                                  Text("Email",
+                                  style: TextStyle(
+                                    color: Color(0xffB8B8B8),
+                                    fontWeight: FontWeight.w600,
+
+                                  ),
+                                  ),
+                                  SizedBox(
+                                    height: 9,
+                                  ),
+                                  TextFormField(
+                                    validator: (value) {
+                                      String p = "[a-zA-Z0-9\+\.\_\%\-\+]{1,256}" +
+                                          "\\@" +
+                                          "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                                          "(" +
+                                          "\\." +
+                                          "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                                          ")+";
+                                      RegExp regExp = RegExp(p);
+                                      if (value != null &&
+                                          value.isNotEmpty &&
+                                          regExp.hasMatch(value)) {
+                                        return null;
+                                      } else {
+                                        return "Enter Valid email";
+                                      }
+                                    },
+                                    keyboardType:
+                                        TextInputType.emailAddress,
+                                    controller: _emailController,
+                                    decoration: InputDecoration(
+                                      border: new OutlineInputBorder(
+                                          borderSide: new BorderSide(color: Colors.grey)),
+                                      contentPadding: EdgeInsets.only(top: 0,bottom: 0,left: 10,right: 10),
+                                      hintText:
+                                          '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[1].name : 'Enter your email'}',
+                                      // prefixIcon:
+                                      //     Icon(Icons.email_outlined),
                                     ),
-                                    child: Neumorphic(
-                                      style: NeumorphicStyle(
-                                        depth: -3,
-                                        color: Colors.white,
-                                      ),
-                                      child: TextFormField(
-                                        validator: (value) {
-                                          String p = "[a-zA-Z0-9\+\.\_\%\-\+]{1,256}" +
-                                              "\\@" +
-                                              "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
-                                              "(" +
-                                              "\\." +
-                                              "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
-                                              ")+";
-                                          RegExp regExp = RegExp(p);
-                                          if (value != null &&
-                                              value.isNotEmpty &&
-                                              regExp.hasMatch(value)) {
-                                            return null;
-                                          } else {
-                                            return "Enter Valid email";
-                                          }
-                                        },
-                                        keyboardType:
-                                            TextInputType.emailAddress,
-                                        controller: _emailController,
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          hintText:
-                                              '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[1].name?.substring(0, 5) : 'Email'}',
-                                          prefixIcon:
-                                              Icon(Icons.email_outlined),
-                                        ),
-                                      ),
+                                  ),
+
+                                  SizedBox(
+                                    height:9,
+                                  ),
+                                  Text("Password",
+                                    style: TextStyle(
+                                      color: Color(0xffB8B8B8),
+                                      fontWeight: FontWeight.w600,
+
                                     ),
                                   ),
                                   SizedBox(
-                                    height: _mainHeight * 0.01,
+                                    height: 9,
                                   ),
-                                  Container(
-                                    margin: EdgeInsets.only(top: 10),
-                                    decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(20)),
-                                      color: Colors.white,
-                                    ),
-                                    child: Neumorphic(
-                                      style: NeumorphicStyle(
-                                        depth: -3,
-                                        color: Colors.white,
-                                      ),
-                                      child: TextFormField(
-                                        validator: (value) {
-                                          if (value != null &&
-                                              value.length < 6) {
-                                            return " Too Short Password";
-                                          }
-                                          return null;
-                                        },
-                                        autovalidateMode:
-                                            AutovalidateMode.onUserInteraction,
-                                        controller: _passwordController,
-                                        keyboardType:
-                                            TextInputType.visiblePassword,
-                                        obscureText: isObscure,
-                                        decoration: InputDecoration(
-                                          suffix: InkWell(
-                                            onTap: () => setState(() {
-                                              isObscure = !isObscure;
-                                            }),
-                                            child: Icon(
-                                              Icons.remove_red_eye_rounded,
-                                              color: isObscure
-                                                  ? Colors.grey
-                                                  : CustomTheme.appTheme,
-                                            ),
-                                          ),
-                                          border: InputBorder.none,
-                                          hintText:
-                                              '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[2].name : "Password"}',
-                                          prefixIcon: Icon(Icons.lock_outline),
+                                  TextFormField(
+                                    validator: (value) {
+                                      if (value != null &&
+                                          value.length < 6) {
+                                        return " Too Short Password";
+                                      }
+                                      return null;
+                                    },
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    controller: _passwordController,
+                                    keyboardType:
+                                        TextInputType.visiblePassword,
+                                    obscureText: isObscure,
+                                    decoration: InputDecoration(
+                                      suffix: InkWell(
+                                        onTap: () => setState(() {
+                                          isObscure = !isObscure;
+                                        }),
+                                        child: Icon(
+                                          Icons.remove_red_eye_rounded,
+                                          color: isObscure
+                                              ? Colors.grey
+                                              : CustomTheme.appTheme,
                                         ),
                                       ),
+                                      border: new OutlineInputBorder(
+                                          borderSide: new BorderSide(color: Colors.grey)),
+                                      contentPadding: EdgeInsets.only(top: 0,bottom: 0,left: 10,right: 10),
+                                      hintText:
+                                          '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[2].name : "Password"}',
+                                      // prefixIcon: Icon(Icons.lock_outline),
                                     ),
                                   ),
                                   SizedBox(
@@ -292,7 +312,7 @@ class _LoginPageState extends State<LoginPage> {
                                               RoundedRectangleBorder>(
                                             RoundedRectangleBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(40)),
+                                                    BorderRadius.circular(7)),
                                           )),
                                       onPressed: () async {
                                         FocusScope.of(context)
@@ -347,7 +367,7 @@ class _LoginPageState extends State<LoginPage> {
                                     height: _mainHeight * 0.015,
                                   ),
                                   Align(
-                                    alignment: Alignment.centerRight,
+                                    alignment: Alignment.center,
                                     child: GestureDetector(
                                         onTap: () => showForgotPasswordDialog(
                                             context: context, value: value),
@@ -362,166 +382,163 @@ class _LoginPageState extends State<LoginPage> {
                                   SizedBox(
                                     height: _mainHeight * 0.045,
                                   ),
-                                  Text(
-                                    '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[5].name : 'Or'}',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w400),
+
+                                  Row(
+mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Expanded(
+                                          //flex:2,
+                                          child: Divider(
+
+                                            thickness: 1.6,
+                                          )),
+                                      SizedBox(width: 10,),
+                                    Text(
+                                          '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[5].name : 'Or'}',
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w400),
+                                        ),
+
+                                      SizedBox(width: 10,),
+                                      Expanded(
+                                          // flex:2,
+                                          child: Divider(
+
+                                            thickness: 1.6,
+                                          )),
+                                    ],
                                   ),
                                   SizedBox(
                                     height: 20,
                                   ),
                                   Row(
-                                    mainAxisAlignment: Platform.isAndroid
-                                        ? MainAxisAlignment.spaceBetween
-                                        : MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Expanded(
-                                        child: GestureDetector(
-                                          onTap: () => _showBottomSheet(context),
-                                          child: Container(
-                                            height: _mainHeight * 0.045,
-                                            padding: EdgeInsets.only(
-                                                left: _mainWidth * 0.03,
-                                                right: _mainWidth * 0.03),
-                                            decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: CustomTheme.appTheme),
-                                                borderRadius:
-                                                    BorderRadius.circular(40)),
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.mobile_friendly,
-                                                  color: CustomTheme.appTheme,
-                                                ),
-                                                SizedBox(
-                                                  width: _mainWidth * 0.015,
-                                                ),
-                                                Text(
-                                                  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[6].name : 'SignIn with OTP'}',
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                              ],
-                                            ),
+
+                                      GestureDetector(
+                                        onTap: () => _showBottomSheet(context),
+                                        child: Container(
+                                          padding: EdgeInsets.only(
+                                              left: 10, right: 10,
+                                              top: 10,bottom: 10
+                                          ),
+                                          decoration: BoxDecoration(
+                                              color:
+                                              Color(0xfff0f5f5),
+                                              border: Border.all(
+                                                  color:
+                                                  Color(0xfff0f5f5)),
+                                              borderRadius:
+                                              BorderRadius.circular(7)),
+                                          child: Icon(
+                                            Icons.mobile_friendly,
+                                            color: CustomTheme.appTheme,
                                           ),
                                         ),
                                       ),
-                                      Expanded(
-                                        child: Visibility(
-                                          visible: Platform.isAndroid,
-                                          child: GestureDetector(
-                                            onTap: () async {
-                                              RMSWidgets.showLoaderDialog(
-                                                  context: context,
-                                                  message: 'Please wait...');
-                                              final data = await GoogleAuthService
-                                                  .loginIn();
+                                      SizedBox(width: 30,),
+                                      Visibility(
+                                        visible: Platform.isAndroid,
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            RMSWidgets.showLoaderDialog(
+                                                context: context,
+                                                message: 'Please wait...');
+                                            final data = await GoogleAuthService
+                                                .loginIn();
 
-                                              if (data != null) {
-                                                final LoginResponseModel
-                                                    response =
+                                            if (data != null) {
+                                              final LoginResponseModel
+                                                  response =
+                                                  await _loginViewModel
+                                                      .registerUserAfterGmail(
+                                                          model:
+                                                              GmailSignInRequestModel(
+                                                name: data.displayName,
+                                                email: data.email,
+                                                id: data.id,
+                                                picture: data.photoUrl,
+                                              ));
+
+                                              Navigator.of(context).pop();
+                                              if (response.msg?.toLowerCase() !=
+                                                  'failure') {
+                                                if (response.data != null &&
+                                                    response.data?.contactNum !=
+                                                        null &&
+                                                    response.data?.contactNum ==
+                                                        '') {
+                                                  SharedPreferenceUtil shared =
+                                                      SharedPreferenceUtil();
+                                                  await shared.setString(
+                                                      rms_registeredUserToken,
+                                                      '${response.data?.appToken}');
+                                                  await shared.setString(
+                                                      rms_gmapKey,
+                                                      '${response.data?.gmapKey}');
+                                                  await shared.setString(
+                                                      rms_userId,
+                                                      '${response.data?.id}');
+
+                                                  Navigator.of(context).pushNamed(
+                                                      AppRoutes
+                                                          .firebaseRegistrationPage,
+                                                      arguments: {
+                                                        'gmailData': data,
+                                                        'from': 'Gmail',
+                                                        'fromExternalLink': widget
+                                                            .fromExternalLink,
+                                                        'onClick':
+                                                            widget.onClick
+                                                      });
+                                                } else {
+                                                  await setSPValues(
+                                                      response: response);
+                                                  String? fcmToken =
+                                                      await messaging
+                                                          .getToken();
+                                                  if (fcmToken != null) {
                                                     await _loginViewModel
-                                                        .registerUserAfterGmail(
-                                                            model:
-                                                                GmailSignInRequestModel(
-                                                  name: data.displayName,
-                                                  email: data.email,
-                                                  id: data.id,
-                                                  picture: data.photoUrl,
-                                                ));
-
-                                                Navigator.of(context).pop();
-                                                if (response.msg?.toLowerCase() !=
-                                                    'failure') {
-                                                  if (response.data != null &&
-                                                      response.data?.contactNum !=
-                                                          null &&
-                                                      response.data?.contactNum ==
-                                                          '') {
-                                                    SharedPreferenceUtil shared =
-                                                        SharedPreferenceUtil();
-                                                    await shared.setString(
-                                                        rms_registeredUserToken,
-                                                        '${response.data?.appToken}');
-                                                    await shared.setString(
-                                                        rms_gmapKey,
-                                                        '${response.data?.gmapKey}');
-                                                    await shared.setString(
-                                                        rms_userId,
-                                                        '${response.data?.id}');
-
-                                                    Navigator.of(context).pushNamed(
-                                                        AppRoutes
-                                                            .firebaseRegistrationPage,
-                                                        arguments: {
-                                                          'gmailData': data,
-                                                          'from': 'Gmail',
-                                                          'fromExternalLink': widget
-                                                              .fromExternalLink,
-                                                          'onClick':
-                                                              widget.onClick
-                                                        });
+                                                        .updateFCMToken(
+                                                            fcmToken: fcmToken);
+                                                  }
+                                                  if (widget.fromExternalLink &&
+                                                      widget.onClick != null) {
+                                                    widget.onClick!();
                                                   } else {
-                                                    await setSPValues(
-                                                        response: response);
-                                                    String? fcmToken =
-                                                        await messaging
-                                                            .getToken();
-                                                    if (fcmToken != null) {
-                                                      await _loginViewModel
-                                                          .updateFCMToken(
-                                                              fcmToken: fcmToken);
-                                                    }
-                                                    if (widget.fromExternalLink &&
-                                                        widget.onClick != null) {
-                                                      widget.onClick!();
-                                                    } else {
-                                                      Navigator
-                                                          .pushNamedAndRemoveUntil(
-                                                        context,
-                                                        AppRoutes.dashboardPage,
-                                                        (route) => false,
-                                                      );
-                                                    }
+                                                    Navigator
+                                                        .pushNamedAndRemoveUntil(
+                                                      context,
+                                                      AppRoutes.dashboardPage,
+                                                      (route) => false,
+                                                    );
                                                   }
                                                 }
-                                              } else {
-                                                log('Gmail SignIn Failed');
-                                                Navigator.of(context).pop();
                                               }
-                                            },
-                                            child: Container(
-                                              height: 40,
-                                              padding: EdgeInsets.only(
-                                                  left: 15, right: 15),
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color:
-                                                          CustomTheme.appTheme),
-                                                  borderRadius:
-                                                      BorderRadius.circular(40)),
-                                              child: Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.mail,
-                                                    color: CustomTheme.appTheme,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  Text(
-                                                    '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[7].name : 'SignIn With Gmail'}',
-                                                    style: TextStyle(
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w600),
-                                                  ),
-                                                ],
-                                              ),
+                                            } else {
+                                              log('Gmail SignIn Failed');
+                                              Navigator.of(context).pop();
+                                            }
+                                          },
+                                          child: Container(
+                                            // height: 40,
+                                            padding: EdgeInsets.only(
+                                                left: 10, right: 10,
+                                            top: 10,bottom: 10
+                                            ),
+                                            decoration: BoxDecoration(
+                                                color:
+                                                Color(0xfff0f5f5),
+                                                border: Border.all(
+                                                    color:
+                                                        Color(0xfff0f5f5)),
+                                                borderRadius:
+                                                    BorderRadius.circular(7)),
+
+                                            child: Icon(
+                                              Icons.mail,
+                                              color: CustomTheme.appTheme,
                                             ),
                                           ),
                                         ),
@@ -531,6 +548,7 @@ class _LoginPageState extends State<LoginPage> {
                                   SizedBox(
                                     height: 20,
                                   ),
+                                  Spacer(),
                                   GestureDetector(
                                     onTap: () => Navigator.of(context)
                                         .pushNamed(AppRoutes.registrationPage,
@@ -540,55 +558,61 @@ class _LoginPageState extends State<LoginPage> {
                                           'onClick': widget.onClick
                                         }),
                                     child: Container(
+                                      margin: EdgeInsets.only(bottom: 35),
                                       color: Colors.white,
-                                      child: RichText(
-                                        text: TextSpan(children: [
-                                          TextSpan(
-                                              text:
-                                                  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[8].name : "Don't have an account"} ? ',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                              )),
-                                          TextSpan(
-                                              text:
-                                                  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[9].name : 'Sign Up'}',
-                                              style: TextStyle(
-                                                color: CustomTheme
-                                                    .appThemeContrast,
-                                              )),
-                                        ]),
+
+                                      child: Center(
+                                        child: RichText(
+                                          text: TextSpan(children: [
+                                            TextSpan(
+                                                text:
+                                                    '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[8].name : "Don't have an account"} ? ',
+                                                style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontWeight: FontWeight.w600
+                                                )),
+                                            TextSpan(
+                                                text:
+                                                    '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[9].name : 'Sign Up'}',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: CustomTheme
+                                                      .appThemeContrast,
+                                                )),
+                                          ]),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                  Spacer(),
-                                  GestureDetector(
-                                    onTap: () => _handleURLButtonPress(context,
-                                        privacy_policy, 'Privacy Policy'),
-                                    child: Container(
-                                      // color: Colors.white,
-                                      margin: EdgeInsets.only(bottom: 10),
-                                      alignment: Alignment.bottomLeft,
-                                      child: RichText(
-                                        text: TextSpan(children: [
-                                          TextSpan(
-                                              text:
-                                                  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[10].name : "By Signing in, you are agree to our "} ',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 12)),
-                                          TextSpan(
-                                              text:
-                                                  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[11].name : "Privacy Policy"}',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: CustomTheme.appTheme,
-                                                fontStyle: FontStyle.italic,
-                                                fontWeight: FontWeight.w600,
-                                              )),
-                                        ]),
-                                      ),
-                                    ),
-                                  ),
+                                  // Spacer(),
+                                  // GestureDetector(
+                                  //   onTap: () => _handleURLButtonPress(context,
+                                  //       privacy_policy, 'Privacy Policy'),
+                                  //   child: Container(
+                                  //     // color: Colors.white,
+                                  //     margin: EdgeInsets.only(bottom: 10),
+                                  //     alignment: Alignment.bottomLeft,
+                                  //     child: RichText(
+                                  //       text: TextSpan(children: [
+                                  //         TextSpan(
+                                  //             text:
+                                  //                 '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[10].name : "By Signing in, you are agree to our "} ',
+                                  //             style: TextStyle(
+                                  //                 color: Colors.black,
+                                  //                 fontSize: 12)),
+                                  //         TextSpan(
+                                  //             text:
+                                  //                 '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[11].name : "Privacy Policy"}',
+                                  //             style: TextStyle(
+                                  //               fontSize: 16,
+                                  //               color: CustomTheme.appTheme,
+                                  //               fontStyle: FontStyle.italic,
+                                  //               fontWeight: FontWeight.w600,
+                                  //             )),
+                                  //       ]),
+                                  //     ),
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),
@@ -659,7 +683,7 @@ class _LoginPageState extends State<LoginPage> {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText:
-                            '${nullCheck(list: value.loginLang) ? value.loginLang[1].name : 'Email'}',
+                            '${nullCheck(list: value.loginLang) ? value.loginLang[1].name : 'Enter your email address'}',
                         prefixIcon: Icon(
                           Icons.email_outlined,
                           size: _mainHeight * 0.02,
@@ -790,7 +814,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               decoration: InputDecoration(
                                 hintText:
-                                    '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[13].name : "Phone Number"}',
+                                    '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[13].name : "Enter your password"}',
                                 hintStyle:
                                     TextStyle(color: Colors.blueGrey.shade200),
                                 enabledBorder: OutlineInputBorder(
