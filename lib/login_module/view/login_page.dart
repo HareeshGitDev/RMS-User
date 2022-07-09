@@ -125,504 +125,564 @@ class _LoginPageState extends State<LoginPage> {
     _mainWidth = MediaQuery.of(context).size.width;
     return _connectionStatus
         ? Scaffold(
+
       backgroundColor:   Colors.white,
-            body: Consumer<LoginViewModel>(
-              builder: (context, value, child) {
-                return Form(
-                  key: _formKey,
-                  child: SingleChildScrollView(
-                    child: Container(
-                      //color: CustomTheme.appTheme,
-                      height: _mainHeight,
-                      width: _mainWidth,
-                      //padding: EdgeInsets.only(left: 25, right: 25),
-                      child: Column(
-                        children: <Widget>[
-                          // Padding(
-                          //   padding: const EdgeInsets.only(left: 25, right: 25),
-                          //   child: SizedBox(
-                          //     height: _mainHeight * 0.3,
-                          //     child: Image.asset(
-                          //       'assets/images/transparent_logo_rms.png',
-                          //     ),
-                          //   ),
-                          // ),
-                          Container(
-                            padding: EdgeInsets.only(left: _mainWidth * 0.035,top: _mainHeight*0.18),
-                            margin: EdgeInsets.only(right: _mainWidth * 0.035),
-                            alignment: Alignment.centerLeft,
 
-                            child:Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[0].name : 'Welcome'}',
-                                            style: const TextStyle(
-                                              fontSize: 30,
-                                              fontWeight: FontWeight.bold
-                                            ),
-                                ),
-                                Text(
-                                  '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[28].name : ' Back'}',
-                                            style: const TextStyle(
-                                              fontSize: 30,
-                                              fontWeight: FontWeight.bold
-                                            ),
-                                ),
-                              ],
-                            ),
+            body: Container(
+              decoration: BoxDecoration(
+                  image: DecorationImage(image: AssetImage(
+                    "assets/images/loginBackground.png",
+                  ),
+                      fit: BoxFit.cover
 
-                            // child: AnimatedTextKit(
-                            //   animatedTexts: [
-                            //     ColorizeAnimatedText(
-                            //         '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[0].name : 'Welcome Back'} ! ',
-                            //         textStyle: TextStyle(
-                            //           fontSize: _mainWidth * 0.05,
-                            //         ),
-                            //         colors: [
-                            //           Colors.white,
-                            //           CustomTheme.appTheme,
-                            //         ]),
-                            //   ],
-                            //   isRepeatingAnimation: true,
-                            //   repeatForever: true,
+                  )
+              ),
+              child: Consumer<LoginViewModel>(
+                builder: (context, value, child) {
+                  return Form(
+                    key: _formKey,
+                    child: SingleChildScrollView(
+                      child: Container(
+                        //color: CustomTheme.appTheme,
+                        height: _mainHeight,
+                        width: _mainWidth,
+
+                        //padding: EdgeInsets.only(left: 25, right: 25),
+                        child: Column(
+                          children: <Widget>[
+                            // Padding(
+                            //   padding: const EdgeInsets.only(left: 25, right: 25),
+                            //   child: SizedBox(
+                            //     height: _mainHeight * 0.3,
+                            //     child: Image.asset(
+                            //       'assets/images/transparent_logo_rms.png',
+                            //     ),
+                            //   ),
                             // ),
-                          ),
-                          SizedBox(
-                            height: _mainHeight * 0.025,
-                          ),
-                          Expanded(
-                            child: Container(
-                              width: _mainWidth,
-                              height: _mainHeight * 0.6,
-                              padding: EdgeInsets.only(
-                                  left: _mainWidth * 0.04,
-                                  top: _mainHeight * 0.03,
-                                  right: _mainWidth * 0.04),
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                // borderRadius: BorderRadius.only(
-                                //     topLeft: Radius.circular(25.0),
-                                //     topRight: Radius.circular(25.0)),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text("Email",
-                                  style: TextStyle(
-                                    color: Color(0xffB8B8B8),
-                                    fontWeight: FontWeight.w600,
+                            Container(
+                              padding: EdgeInsets.only(left: _mainWidth * 0.035,top: _mainHeight*0.12),
+                              margin: EdgeInsets.only(right: _mainWidth * 0.035),
+                              alignment: Alignment.centerLeft,
 
-                                  ),
-                                  ),
-                                  SizedBox(
-                                    height: 9,
-                                  ),
-                                  TextFormField(
-                                    validator: (value) {
-                                      String p = "[a-zA-Z0-9\+\.\_\%\-\+]{1,256}" +
-                                          "\\@" +
-                                          "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
-                                          "(" +
-                                          "\\." +
-                                          "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
-                                          ")+";
-                                      RegExp regExp = RegExp(p);
-                                      if (value != null &&
-                                          value.isNotEmpty &&
-                                          regExp.hasMatch(value)) {
-                                        return null;
-                                      } else {
-                                        return "Enter Valid email";
-                                      }
-                                    },
-                                    keyboardType:
-                                        TextInputType.emailAddress,
-                                    controller: _emailController,
-                                    decoration: InputDecoration(
-                                      border: new OutlineInputBorder(
-                                          borderSide: new BorderSide(color: Colors.grey)),
-                                      contentPadding: EdgeInsets.only(top: 0,bottom: 0,left: 10,right: 10),
-                                      hintText:
-                                          '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[1].name : 'Enter your email'}',
-                                      // prefixIcon:
-                                      //     Icon(Icons.email_outlined),
+                              child:Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(bottom: 40),
+                                    child: Center(
+                                      child: Image(
+                                        image: AssetImage("assets/images/logo.png"),
+                                        width: 130,
+
+                                      ),
                                     ),
                                   ),
-
-                                  SizedBox(
-                                    height:9,
+                                  Text(
+                                    '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[0].name : 'Welcome'}',
+                                              style: const TextStyle(
+                                                fontSize: 30,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold
+                                              ),
                                   ),
-                                  Text("Password",
+                                  Text(
+                                    '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[28].name : ' Back'}',
+                                              style: const TextStyle(
+                                                fontSize: 30,
+                                                  color: Colors.white,
+                                                fontWeight: FontWeight.bold
+                                              ),
+                                  ),
+                                ],
+                              ),
+
+                              // child: AnimatedTextKit(
+                              //   animatedTexts: [
+                              //     ColorizeAnimatedText(
+                              //         '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[0].name : 'Welcome Back'} ! ',
+                              //         textStyle: TextStyle(
+                              //           fontSize: _mainWidth * 0.05,
+                              //         ),
+                              //         colors: [
+                              //           Colors.white,
+                              //           CustomTheme.appTheme,
+                              //         ]),
+                              //   ],
+                              //   isRepeatingAnimation: true,
+                              //   repeatForever: true,
+                              // ),
+                            ),
+                            SizedBox(
+                              height: _mainHeight * 0.025,
+                            ),
+                            Expanded(
+                              child: Container(
+                                width: _mainWidth,
+                                height: _mainHeight * 0.6,
+                                padding: EdgeInsets.only(
+                                    left: _mainWidth * 0.04,
+                                    top: _mainHeight * 0.03,
+                                    right: _mainWidth * 0.04),
+                                decoration: const BoxDecoration(
+
+                                  // borderRadius: BorderRadius.only(
+                                  //     topLeft: Radius.circular(25.0),
+                                  //     topRight: Radius.circular(25.0)),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    const Text("Email",
                                     style: TextStyle(
-                                      color: Color(0xffB8B8B8),
+                                      color: Colors.white,
                                       fontWeight: FontWeight.w600,
 
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 9,
-                                  ),
-                                  TextFormField(
-                                    validator: (value) {
-                                      if (value != null &&
-                                          value.length < 6) {
-                                        return " Too Short Password";
-                                      }
-                                      return null;
-                                    },
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                    controller: _passwordController,
-                                    keyboardType:
-                                        TextInputType.visiblePassword,
-                                    obscureText: isObscure,
-                                    decoration: InputDecoration(
-                                      suffix: InkWell(
-                                        onTap: () => setState(() {
-                                          isObscure = !isObscure;
-                                        }),
-                                        child: Icon(
-                                          Icons.remove_red_eye_rounded,
-                                          color: isObscure
-                                              ? Colors.grey
-                                              : CustomTheme.appTheme,
-                                        ),
-                                      ),
-                                      border: new OutlineInputBorder(
-                                          borderSide: new BorderSide(color: Colors.grey)),
-                                      contentPadding: EdgeInsets.only(top: 0,bottom: 0,left: 10,right: 10),
-                                      hintText:
-                                          '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[2].name : "Password"}',
-                                      // prefixIcon: Icon(Icons.lock_outline),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: _mainHeight * 0.045,
-                                  ),
-                                  Container(
-                                    width: _mainWidth,
-                                    height: _mainHeight * 0.05,
-                                    child: ElevatedButton(
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all<Color>(
-                                                  CustomTheme.appThemeContrast),
-                                          shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(7)),
-                                          )),
-                                      onPressed: () async {
-                                        FocusScope.of(context)
-                                            .requestFocus(FocusNode());
-                                        if (_formKey.currentState != null &&
-                                            _formKey.currentState!.validate()) {
-                                          RMSWidgets.showLoaderDialog(
-                                              context: context,
-                                              message: 'Please wait');
-                                          final LoginResponseModel response =
-                                              await _loginViewModel
-                                                  .getLoginDetails(
-                                                      email:
-                                                          _emailController.text,
-                                                      password:
-                                                          _passwordController
-                                                              .text);
-                                          Navigator.pop(context);
-                                          if (response.msg?.toLowerCase() !=
-                                                  'failure' &&
-                                              response.data != null) {
-                                            await setSPValues(
-                                                response: response);
-
-                                            String? fcmToken =
-                                                await messaging.getToken();
-                                            if (fcmToken != null) {
-                                              await _loginViewModel
-                                                  .updateFCMToken(
-                                                      fcmToken: fcmToken);
-                                            }
-                                            if (widget.fromExternalLink &&
-                                                widget.onClick != null) {
-                                              widget.onClick!();
-                                            } else {
-                                              Navigator.pushNamedAndRemoveUntil(
-                                                context,
-                                                AppRoutes.dashboardPage,
-                                                (route) => false,
-                                              );
-                                            }
-                                          }
+                                    SizedBox(
+                                      height: 9,
+                                    ),
+                                    TextFormField(
+                                      validator: (value) {
+                                        String p = "[a-zA-Z0-9\+\.\_\%\-\+]{1,256}" +
+                                            "\\@" +
+                                            "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                                            "(" +
+                                            "\\." +
+                                            "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                                            ")+";
+                                        RegExp regExp = RegExp(p);
+                                        if (value != null &&
+                                            value.isNotEmpty &&
+                                            regExp.hasMatch(value)) {
+                                          return null;
+                                        } else {
+                                          return "Enter Valid email";
                                         }
-                                        //
                                       },
-                                      child: Center(
-                                          child: Text(
-                                              '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[3].name : "LOGIN"}')),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: _mainHeight * 0.015,
-                                  ),
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: GestureDetector(
-                                        onTap: () => showForgotPasswordDialog(
-                                            context: context, value: value),
-                                        child: Text(
-                                          '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[4].name : 'Forgot Password'} ?',
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.grey,
-                                              fontWeight: FontWeight.w600),
-                                        )),
-                                  ),
-                                  SizedBox(
-                                    height: _mainHeight * 0.045,
-                                  ),
+                                      keyboardType:
+                                          TextInputType.emailAddress,
+                                      controller: _emailController,
+                                      decoration: InputDecoration(
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide:
+                                            BorderSide( color: Colors.white.withOpacity(0.8),),
+                                            borderRadius: BorderRadius.circular(10)),
 
-                                  Row(
-mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Expanded(
-                                          //flex:2,
-                                          child: Divider(
-
-                                            thickness: 1.6,
-                                          )),
-                                      SizedBox(width: 10,),
-                                    Text(
-                                          '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[5].name : 'Or'}',
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w400),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide:
+                                            BorderSide( color: Colors.white.withOpacity(0.8),),
+                                            borderRadius: BorderRadius.circular(10)),
+                                        hintStyle: TextStyle(
+                                          color: Colors.white.withOpacity(0.8),
                                         ),
+                                        contentPadding: EdgeInsets.only(top: 0,bottom: 0,left: 10,right: 10),
+                                        hintText:
+                                            '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[1].name : 'Enter your email'}',
+                                        // prefixIcon:
+                                        //     Icon(Icons.email_outlined),
 
-                                      SizedBox(width: 10,),
-                                      Expanded(
-                                          // flex:2,
-                                          child: Divider(
-
-                                            thickness: 1.6,
-                                          )),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-
-                                      GestureDetector(
-                                        onTap: () => _showBottomSheet(context),
-                                        child: Container(
-                                          padding: EdgeInsets.only(
-                                              left: 10, right: 10,
-                                              top: 10,bottom: 10
-                                          ),
-                                          decoration: BoxDecoration(
-                                              color:
-                                              Color(0xfff0f5f5),
-                                              border: Border.all(
-                                                  color:
-                                                  Color(0xfff0f5f5)),
-                                              borderRadius:
-                                              BorderRadius.circular(7)),
-                                          child: Icon(
-                                            Icons.mobile_friendly,
-                                            color: CustomTheme.appTheme,
-                                          ),
-                                        ),
                                       ),
-                                      SizedBox(width: 30,),
-                                      Visibility(
-                                        visible: Platform.isAndroid,
-                                        child: GestureDetector(
-                                          onTap: () async {
+                                    ),
+
+                                    SizedBox(
+                                      height:9,
+                                    ),
+                                    Text("Password",
+                                      style: TextStyle(
+                                      color:  Colors.white,
+                                        fontWeight: FontWeight.w600,
+
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 9,
+                                    ),
+                                    TextFormField(
+                                      validator: (value) {
+                                        if (value != null &&
+                                            value.length < 6) {
+                                          return " Too Short Password";
+                                        }
+                                        return null;
+                                      },
+                                      autovalidateMode:
+                                          AutovalidateMode.onUserInteraction,
+                                      controller: _passwordController,
+                                      keyboardType:
+                                          TextInputType.visiblePassword,
+                                      obscureText: isObscure,
+                                      decoration: InputDecoration(
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide:
+                                            BorderSide( color: Colors.white.withOpacity(0.8),),
+                                            borderRadius: BorderRadius.circular(10)),
+
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide:
+                                            BorderSide( color: Colors.white.withOpacity(0.8),),
+                                            borderRadius: BorderRadius.circular(10)),
+                                        hintStyle: TextStyle(
+                                          color: Colors.white.withOpacity(0.8),
+                                        ),
+                                        suffix: InkWell(
+                                          onTap: () => setState(() {
+                                            isObscure = !isObscure;
+                                          }),
+                                          child: Icon(
+                                            Icons.remove_red_eye_rounded,
+                                            color: isObscure
+                                                ? Colors.grey
+                                                : CustomTheme.appTheme,
+                                          ),
+                                        ),
+                                        border: new OutlineInputBorder(
+                                            borderSide: new BorderSide(color: Colors.grey)),
+                                        contentPadding: EdgeInsets.only(top: 0,bottom: 0,left: 10,right: 10),
+                                        hintText:
+                                            '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[2].name : "Password"}',
+                                        // prefixIcon: Icon(Icons.lock_outline),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: _mainHeight * 0.045,
+                                    ),
+                                    Container(
+                                      width: _mainWidth,
+                                      height: _mainHeight * 0.05,
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all<Color>(
+                                                    Colors.white),
+                                            shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(7)),
+                                            )),
+                                        onPressed: () async {
+                                          FocusScope.of(context)
+                                              .requestFocus(FocusNode());
+                                          if (_formKey.currentState != null &&
+                                              _formKey.currentState!.validate()) {
                                             RMSWidgets.showLoaderDialog(
                                                 context: context,
-                                                message: 'Please wait...');
-                                            final data = await GoogleAuthService
-                                                .loginIn();
+                                                message: 'Please wait');
+                                            final LoginResponseModel response =
+                                                await _loginViewModel
+                                                    .getLoginDetails(
+                                                        email:
+                                                            _emailController.text,
+                                                        password:
+                                                            _passwordController
+                                                                .text);
+                                            Navigator.pop(context);
+                                            if (response.msg?.toLowerCase() !=
+                                                    'failure' &&
+                                                response.data != null) {
+                                              await setSPValues(
+                                                  response: response);
 
-                                            if (data != null) {
-                                              final LoginResponseModel
-                                                  response =
-                                                  await _loginViewModel
-                                                      .registerUserAfterGmail(
-                                                          model:
-                                                              GmailSignInRequestModel(
-                                                name: data.displayName,
-                                                email: data.email,
-                                                id: data.id,
-                                                picture: data.photoUrl,
-                                              ));
-
-                                              Navigator.of(context).pop();
-                                              if (response.msg?.toLowerCase() !=
-                                                  'failure') {
-                                                if (response.data != null &&
-                                                    response.data?.contactNum !=
-                                                        null &&
-                                                    response.data?.contactNum ==
-                                                        '') {
-                                                  SharedPreferenceUtil shared =
-                                                      SharedPreferenceUtil();
-                                                  await shared.setString(
-                                                      rms_registeredUserToken,
-                                                      '${response.data?.appToken}');
-                                                  await shared.setString(
-                                                      rms_gmapKey,
-                                                      '${response.data?.gmapKey}');
-                                                  await shared.setString(
-                                                      rms_userId,
-                                                      '${response.data?.id}');
-
-                                                  Navigator.of(context).pushNamed(
-                                                      AppRoutes
-                                                          .firebaseRegistrationPage,
-                                                      arguments: {
-                                                        'gmailData': data,
-                                                        'from': 'Gmail',
-                                                        'fromExternalLink': widget
-                                                            .fromExternalLink,
-                                                        'onClick':
-                                                            widget.onClick
-                                                      });
-                                                } else {
-                                                  await setSPValues(
-                                                      response: response);
-                                                  String? fcmToken =
-                                                      await messaging
-                                                          .getToken();
-                                                  if (fcmToken != null) {
-                                                    await _loginViewModel
-                                                        .updateFCMToken(
-                                                            fcmToken: fcmToken);
-                                                  }
-                                                  if (widget.fromExternalLink &&
-                                                      widget.onClick != null) {
-                                                    widget.onClick!();
-                                                  } else {
-                                                    Navigator
-                                                        .pushNamedAndRemoveUntil(
-                                                      context,
-                                                      AppRoutes.dashboardPage,
-                                                      (route) => false,
-                                                    );
-                                                  }
-                                                }
+                                              String? fcmToken =
+                                                  await messaging.getToken();
+                                              if (fcmToken != null) {
+                                                await _loginViewModel
+                                                    .updateFCMToken(
+                                                        fcmToken: fcmToken);
                                               }
-                                            } else {
-                                              log('Gmail SignIn Failed');
-                                              Navigator.of(context).pop();
+                                              if (widget.fromExternalLink &&
+                                                  widget.onClick != null) {
+                                                widget.onClick!();
+                                              } else {
+                                                Navigator.pushNamedAndRemoveUntil(
+                                                  context,
+                                                  AppRoutes.dashboardPage,
+                                                  (route) => false,
+                                                );
+                                              }
                                             }
-                                          },
+                                          }
+                                          //
+                                        },
+                                        child: Center(
+                                            child: Text(
+                                                '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[3].name : "LOGIN"}',
+                                              style: TextStyle(
+                                                color: CustomTheme.appThemeContrast,
+                                                fontWeight: FontWeight.bold
+                                              ),
+
+                                            ),
+
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: _mainHeight * 0.015,
+                                    ),
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: GestureDetector(
+                                          onTap: () => showForgotPasswordDialog(
+                                              context: context, value: value),
+                                          child: Text(
+                                            '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[4].name : 'Forgot Password'} ?',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w600),
+                                          )),
+                                    ),
+                                    SizedBox(
+                                      height: _mainHeight * 0.045,
+                                    ),
+
+                                    Row(
+mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Expanded(
+                                            //flex:2,
+                                            child: Divider(
+                                              color: Colors.white.withOpacity(0.7),
+                                              thickness: 1.6,
+                                            )),
+                                        SizedBox(width: 10,),
+                                      Text(
+                                            '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[5].name : 'Or'}',
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                color: Colors.white.withOpacity(0.7),
+
+                                                fontWeight: FontWeight.w400),
+                                          ),
+
+                                        SizedBox(width: 10,),
+                                        Expanded(
+                                            // flex:2,
+                                            child: Divider(
+                                              color: Colors.white.withOpacity(0.7),
+
+                                              thickness: 1.6,
+                                            )),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+
+                                        GestureDetector(
+                                          onTap: () => _showBottomSheet(context),
                                           child: Container(
-                                            // height: 40,
                                             padding: EdgeInsets.only(
                                                 left: 10, right: 10,
-                                            top: 10,bottom: 10
+                                                top: 10,bottom: 10
                                             ),
                                             decoration: BoxDecoration(
                                                 color:
-                                                Color(0xfff0f5f5),
+                                                Colors.white.withOpacity(0.1),
                                                 border: Border.all(
                                                     color:
-                                                        Color(0xfff0f5f5)),
+                                                    Colors.white.withOpacity(0.1),),
                                                 borderRadius:
-                                                    BorderRadius.circular(7)),
-
+                                                BorderRadius.circular(7)),
                                             child: Icon(
-                                              Icons.mail,
-                                              color: CustomTheme.appTheme,
+                                              Icons.mobile_friendly,
+                                              color: CustomTheme.white,
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Spacer(),
-                                  GestureDetector(
-                                    onTap: () => Navigator.of(context)
-                                        .pushNamed(AppRoutes.registrationPage,
-                                            arguments: {
-                                          'fromExternalLink':
-                                              widget.fromExternalLink,
-                                          'onClick': widget.onClick
-                                        }),
-                                    child: Container(
-                                      margin: EdgeInsets.only(bottom: 35),
-                                      color: Colors.white,
+                                        SizedBox(width: 30,),
+                                        Visibility(
+                                          visible: Platform.isAndroid,
+                                          child: GestureDetector(
+                                            onTap: () async {
+                                              RMSWidgets.showLoaderDialog(
+                                                  context: context,
+                                                  message: 'Please wait...');
+                                              final data = await GoogleAuthService
+                                                  .loginIn();
 
-                                      child: Center(
-                                        child: RichText(
-                                          text: TextSpan(children: [
-                                            TextSpan(
-                                                text:
-                                                    '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[8].name : "Don't have an account"} ? ',
-                                                style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontWeight: FontWeight.w600
-                                                )),
-                                            TextSpan(
-                                                text:
-                                                    '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[9].name : 'Sign Up'}',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: CustomTheme
-                                                      .appThemeContrast,
-                                                )),
-                                          ]),
+                                              if (data != null) {
+                                                final LoginResponseModel
+                                                    response =
+                                                    await _loginViewModel
+                                                        .registerUserAfterGmail(
+                                                            model:
+                                                                GmailSignInRequestModel(
+                                                  name: data.displayName,
+                                                  email: data.email,
+                                                  id: data.id,
+                                                  picture: data.photoUrl,
+                                                ));
+
+                                                Navigator.of(context).pop();
+                                                if (response.msg?.toLowerCase() !=
+                                                    'failure') {
+                                                  if (response.data != null &&
+                                                      response.data?.contactNum !=
+                                                          null &&
+                                                      response.data?.contactNum ==
+                                                          '') {
+                                                    SharedPreferenceUtil shared =
+                                                        SharedPreferenceUtil();
+                                                    await shared.setString(
+                                                        rms_registeredUserToken,
+                                                        '${response.data?.appToken}');
+                                                    await shared.setString(
+                                                        rms_gmapKey,
+                                                        '${response.data?.gmapKey}');
+                                                    await shared.setString(
+                                                        rms_userId,
+                                                        '${response.data?.id}');
+
+                                                    Navigator.of(context).pushNamed(
+                                                        AppRoutes
+                                                            .firebaseRegistrationPage,
+                                                        arguments: {
+                                                          'gmailData': data,
+                                                          'from': 'Gmail',
+                                                          'fromExternalLink': widget
+                                                              .fromExternalLink,
+                                                          'onClick':
+                                                              widget.onClick
+                                                        });
+                                                  } else {
+                                                    await setSPValues(
+                                                        response: response);
+                                                    String? fcmToken =
+                                                        await messaging
+                                                            .getToken();
+                                                    if (fcmToken != null) {
+                                                      await _loginViewModel
+                                                          .updateFCMToken(
+                                                              fcmToken: fcmToken);
+                                                    }
+                                                    if (widget.fromExternalLink &&
+                                                        widget.onClick != null) {
+                                                      widget.onClick!();
+                                                    } else {
+                                                      Navigator
+                                                          .pushNamedAndRemoveUntil(
+                                                        context,
+                                                        AppRoutes.dashboardPage,
+                                                        (route) => false,
+                                                      );
+                                                    }
+                                                  }
+                                                }
+                                              } else {
+                                                log('Gmail SignIn Failed');
+                                                Navigator.of(context).pop();
+                                              }
+                                            },
+                                            child: Container(
+                                              // height: 40,
+                                              padding: EdgeInsets.only(
+                                                  left: 10, right: 10,
+                                              top: 10,bottom: 10
+                                              ),
+                                              decoration: BoxDecoration(
+                                                  color:
+                                                  Colors.white.withOpacity(0.1),
+                                                  border: Border.all(
+                                                      color:
+                                                      Colors.white.withOpacity(0.1),),
+                                                  borderRadius:
+                                                      BorderRadius.circular(7)),
+
+                                              child: Icon(
+                                                Icons.mail,
+                                                color: CustomTheme.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Spacer(),
+                                    GestureDetector(
+                                      onTap: () => Navigator.of(context)
+                                          .pushNamed(AppRoutes.registrationPage,
+                                              arguments: {
+                                            'fromExternalLink':
+                                                widget.fromExternalLink,
+                                            'onClick': widget.onClick
+                                          }),
+                                      child: Container(
+                                        margin: EdgeInsets.only(bottom: 35),
+
+
+                                        child: Center(
+                                          child: RichText(
+                                            text: TextSpan(children: [
+                                              TextSpan(
+                                                  text:
+                                                      '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[8].name : "Don't have an account"} ? ',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w400
+                                                  )),
+                                              TextSpan(
+                                                  text:
+                                                      '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[9].name : 'Sign Up'}',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+
+                                                    color: CustomTheme
+                                                        .white,
+                                                  )),
+                                            ]),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  // Spacer(),
-                                  // GestureDetector(
-                                  //   onTap: () => _handleURLButtonPress(context,
-                                  //       privacy_policy, 'Privacy Policy'),
-                                  //   child: Container(
-                                  //     // color: Colors.white,
-                                  //     margin: EdgeInsets.only(bottom: 10),
-                                  //     alignment: Alignment.bottomLeft,
-                                  //     child: RichText(
-                                  //       text: TextSpan(children: [
-                                  //         TextSpan(
-                                  //             text:
-                                  //                 '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[10].name : "By Signing in, you are agree to our "} ',
-                                  //             style: TextStyle(
-                                  //                 color: Colors.black,
-                                  //                 fontSize: 12)),
-                                  //         TextSpan(
-                                  //             text:
-                                  //                 '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[11].name : "Privacy Policy"}',
-                                  //             style: TextStyle(
-                                  //               fontSize: 16,
-                                  //               color: CustomTheme.appTheme,
-                                  //               fontStyle: FontStyle.italic,
-                                  //               fontWeight: FontWeight.w600,
-                                  //             )),
-                                  //       ]),
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                ],
+                                    // Spacer(),
+                                    // GestureDetector(
+                                    //   onTap: () => _handleURLButtonPress(context,
+                                    //       privacy_policy, 'Privacy Policy'),
+                                    //   child: Container(
+                                    //     // color: Colors.white,
+                                    //     margin: EdgeInsets.only(bottom: 10),
+                                    //     alignment: Alignment.bottomLeft,
+                                    //     child: RichText(
+                                    //       text: TextSpan(children: [
+                                    //         TextSpan(
+                                    //             text:
+                                    //                 '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[10].name : "By Signing in, you are agree to our "} ',
+                                    //             style: TextStyle(
+                                    //                 color: Colors.black,
+                                    //                 fontSize: 12)),
+                                    //         TextSpan(
+                                    //             text:
+                                    //                 '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[11].name : "Privacy Policy"}',
+                                    //             style: TextStyle(
+                                    //               fontSize: 16,
+                                    //               color: CustomTheme.appTheme,
+                                    //               fontStyle: FontStyle.italic,
+                                    //               fontWeight: FontWeight.w600,
+                                    //             )),
+                                    //       ]),
+                                    //     ),
+                                    //   ),
+                                    // ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           )
         : RMSWidgets.networkErrorPage(context: context);
