@@ -283,6 +283,7 @@ getLanguageData();
                             TextFormField(
                               controller: _passwordController,
                               obscureText: isObscure,
+                              style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
 
                                   enabledBorder: OutlineInputBorder(
@@ -454,7 +455,7 @@ getLanguageData();
                               child: ElevatedButton(
                                 style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all<Color>(
-                                        CustomTheme.appThemeContrast),
+                                      Colors.white  ),
                                     shape: MaterialStateProperty.all<
                                         RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
@@ -552,7 +553,11 @@ getLanguageData();
                                     }
                                   }
                                 },
-                                child: Center(child: Text('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[15].name :"Sign Up"}')),
+                                child: Center(child: Text('${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[15].name :"Sign Up"}',
+                                style: TextStyle(
+                                  color: CustomTheme.appThemeContrast
+                                ),
+                                )),
                               ),
                             ),
                             SizedBox(height: 50,),
@@ -593,6 +598,7 @@ getLanguageData();
       ),
 
       child: TextFormField(
+        style: TextStyle(color: Colors.white),
         controller: controller,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(

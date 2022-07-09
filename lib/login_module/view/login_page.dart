@@ -243,6 +243,7 @@ class _LoginPageState extends State<LoginPage> {
                                       height: 9,
                                     ),
                                     TextFormField(
+                                      style: TextStyle(color: Colors.white),
                                       validator: (value) {
                                         String p = "[a-zA-Z0-9\+\.\_\%\-\+]{1,256}" +
                                             "\\@" +
@@ -299,6 +300,7 @@ class _LoginPageState extends State<LoginPage> {
                                       height: 9,
                                     ),
                                     TextFormField(
+                                      style: TextStyle(color: Colors.white),
                                       validator: (value) {
                                         if (value != null &&
                                             value.length < 6) {
@@ -325,6 +327,7 @@ class _LoginPageState extends State<LoginPage> {
                                         hintStyle: TextStyle(
                                           color: Colors.white.withOpacity(0.8),
                                         ),
+
                                         suffix: InkWell(
                                           onTap: () => setState(() {
                                             isObscure = !isObscure;
@@ -732,6 +735,7 @@ mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         color: Colors.white,
                         lightSource: LightSource.bottomLeft),
                     child: TextFormField(
+                      style: TextStyle(color: Colors.white),
                       validator: (value) {
                         if (value != null && value.length < 6) {
                           return "Enter proper email";
