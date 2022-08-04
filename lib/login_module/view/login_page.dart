@@ -130,7 +130,11 @@ class _LoginPageState extends State<LoginPage> {
 
             body: Container(
               decoration: BoxDecoration(
-                  image: DecorationImage(image: AssetImage(
+
+
+                  image: DecorationImage(
+                      colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.9), BlendMode.dstATop),
+                      image: AssetImage(
                     "assets/images/loginBackground.png",
                   ),
                       fit: BoxFit.cover
@@ -172,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
                                     child: Center(
                                       child: Image(
                                         image: AssetImage("assets/images/logo.png"),
-                                        width: 130,
+                                        width: 210,
 
                                       ),
                                     ),
@@ -361,8 +365,7 @@ class _LoginPageState extends State<LoginPage> {
                                             shape: MaterialStateProperty.all<
                                                 RoundedRectangleBorder>(
                                               RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(7)),
+                                                  borderRadius: BorderRadius.circular(40)),
                                             )),
                                         onPressed: () async {
                                           FocusScope.of(context)
@@ -833,7 +836,9 @@ mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         color: CustomTheme.appTheme.withAlpha(20),
                         shape: BoxShape.circle,
                       ),
-                      child: Image.asset(Images.mobSignIn),
+                      child: Image.asset(Images.mobSignIn,
+
+                      ),
                     ),
                     Text(
                       '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[16].name : 'Registration or Login'}',

@@ -1459,12 +1459,16 @@ class _HomePageState extends State<HomePage> {
                 color: CustomTheme.appTheme,
                 size: 20,
               ),
-              title: /*nullCheck(list: list) ? '${list[10].name}' : */'Contact Us',
-              onTap: () async => Navigator.push(
+              title: nullCheck(list: list) ? '${list[9].name}' : 'Contact Us',
+              onTap: () async {
+                SharedPreferenceUtil prefs=SharedPreferenceUtil();
+                var token= await preferenceUtil.getString(rms_registeredUserToken);
+                Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => Web_View_Container(supportUrl, 'Contact Us')),
-              ),
+                    builder: (context) => Web_View_Container(supportUrl+token.toString(), 'Contact Us')));
+              }
+
             ),
             getTile(
               context: context,

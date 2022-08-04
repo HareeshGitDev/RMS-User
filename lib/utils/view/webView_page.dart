@@ -91,7 +91,7 @@ class _WebViewContainerState extends State<Web_View_Container> {
 
   @override
   Widget build(BuildContext context) {
-
+log("${widget.url}");
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
     return _connectionStatus?Scaffold(

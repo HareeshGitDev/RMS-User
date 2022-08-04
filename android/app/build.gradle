@@ -55,7 +55,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 32
         multiDexEnabled true
-        versionCode 142
+        versionCode 143
         versionName flutterVersionName
     }
     lintOptions {

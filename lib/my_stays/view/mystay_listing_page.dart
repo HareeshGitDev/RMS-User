@@ -104,6 +104,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
     return _connectionStatus? Scaffold(
+
       appBar: AppBar(
         elevation: 5,
         leading: widget.fromBottom
@@ -138,7 +139,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
       body: Consumer<MyStayViewModel>(
         builder: (context, value, child) {
           return Container(
-            color: Colors.white,
+           color: Colors.grey.withOpacity(0.1),
             height: _mainHeight,
             width: _mainWidth,
             padding: EdgeInsets.only(
@@ -175,261 +176,286 @@ class _MyStayListPageState extends State<MyStayListPage> {
                   borderRadius: BorderRadius.circular(5.0),
                 ),
                 color: Colors.white,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      height: _mainHeight * 0.12,
-                      width: _mainWidth * 0.21,
-                      padding: EdgeInsets.only(
-                          right: _mainWidth * 0.02,
-                          bottom: _mainHeight * 0.005,
-                          left: _mainWidth * 0.01),
-                      child: CachedNetworkImage(
-                        imageUrl: data.picThumbnail ?? '',
-                        imageBuilder: (context, imageProvider) =>
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                        placeholder: (context, url) => Shimmer.fromColors(
-                            child: Container(
-                              height: _mainHeight * 0.075,
-                              width: _mainWidth * 0.2,
-                              decoration: BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            baseColor: Colors.grey[200] as Color,
-                            highlightColor: Colors.grey[350] as Color),
-                        errorWidget: (context, url, error) => const Icon(
-                          Icons.error,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Container(
-                          width: _mainWidth * 0.72,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  const Text(
-                                    'Booking ID: ',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        color: Color(0xff787878),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold),
+                          height: _mainHeight * 0.11,
+                          width: _mainWidth * 0.40,
+                          padding: EdgeInsets.only(
+                              right: _mainWidth * 0.02,
+                              bottom: _mainHeight * 0.005,
+                              left: _mainWidth * 0.02,top:_mainHeight * 0.005 ),
+                          child: CachedNetworkImage(
+                            imageUrl: data.picThumbnail ?? '',
+                            imageBuilder: (context, imageProvider) =>
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                  Text(
-                                    data.bookingId ?? '',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              ),
-
-                              Text(
-
-                                data.checkInStatus == '0' && data.bookingStatus.toString().toLowerCase() !="cancel"
-                                    ? 'Upcoming '
-                                    : "${data.bookingStatus.toString().toUpperCase()} ",
-                                style: TextStyle(
-                                  color: data.bookingStatus.toString().toLowerCase() =="cancel"?CustomTheme.errorColor:data.bookingStatus.toString().toLowerCase() =="success"?CustomTheme.myFavColor:CustomTheme.appThemeContrast2,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w700,
                                 ),
-                              ),
-                            ],
+                            placeholder: (context, url) => Shimmer.fromColors(
+                                child: Container(
+                                  height: _mainHeight * 0.075,
+                                  width: _mainWidth * 0.2,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                baseColor: Colors.grey[200] as Color,
+                                highlightColor: Colors.grey[350] as Color),
+                            errorWidget: (context, url, error) => const Icon(
+                              Icons.error,
+                              color: Colors.red,
+                            ),
                           ),
                         ),
-                        SizedBox(height: 5,),
-                        // Row(
-                        //   children: [
-                        //     Text(
-                        //       'Booking Status: ',
-                        //       overflow: TextOverflow.ellipsis,
-                        //       maxLines: 1,
-                        //       style: TextStyle(
-                        //           color: Color(0xff787878),
-                        //           fontSize: 14,
-                        //           fontWeight: FontWeight.bold),
-                        //     ),
-                        //     Text(
-                        //
-                        //       data.checkInStatus == '0' && data.bookingStatus.toString().toLowerCase() !="cancel"
-                        //           ? 'Upcoming'
-                        //           : data.bookingStatus.toString().toUpperCase(),
-                        //       style: TextStyle(
-                        //         color: CustomTheme.myFavColor,
-                        //         fontSize: 12,
-                        //         fontWeight: FontWeight.w700,
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
-                        SizedBox(height: 5,),
                         Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              width: _mainWidth * 0.72,
+                           //   width: _mainWidth * 0.72,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text(
-                                    "Check-In",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        color: Color(0xff787878),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold),
+mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Text(
+                                        'Booking ID: ',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                            color: Color(0xff787878),
+                                            fontSize: 12,
+                                           ),
+                                      ),
+                                      Text(
+                                        data.bookingId ?? '',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+
+
+                                    ],
                                   ),
+SizedBox(width: 5,),
                                   Text(
-                                    'Check-Out',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
+
+                                    data.checkInStatus == '0' && data.bookingStatus.toString().toLowerCase() !="cancel"
+                                        ? 'Success '
+                                        : "${data.bookingStatus.toString()} ",
                                     style: TextStyle(
-                                        color: Color(0xff787878),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold),
-                                  )
+                                      color: data.bookingStatus.toString().toLowerCase() =="cancel"?Color(0xffF28C28):data.bookingStatus.toString().toLowerCase() =="success"?Color(0xff9ACD32):Color(0xff4682B4),
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+
                                 ],
                               ),
                             ),
+                            SizedBox(height: 5,),
+                            // Row(
+                            //   children: [
+                            //     Text(
+                            //       'Booking Status: ',
+                            //       overflow: TextOverflow.ellipsis,
+                            //       maxLines: 1,
+                            //       style: TextStyle(
+                            //           color: Color(0xff787878),
+                            //           fontSize: 14,
+                            //           fontWeight: FontWeight.bold),
+                            //     ),
+                            //     Text(
+                            //
+                            //       data.checkInStatus == '0' && data.bookingStatus.toString().toLowerCase() !="cancel"
+                            //           ? 'Upcoming'
+                            //           : data.bookingStatus.toString().toUpperCase(),
+                            //       style: TextStyle(
+                            //         color: CustomTheme.myFavColor,
+                            //         fontSize: 12,
+                            //         fontWeight: FontWeight.w700,
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
+                            // SizedBox(height: 5,),
+                            Column(
+                              children: [
+
+                                Container(
+                                //  width: _mainWidth * 0.72,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children:  [
+                                      Text(
+                                      "${  DateTimeService.checkDateFormat(
+                                      data.travelFromDate) ??
+                                      ''
+          } - ${  DateTimeService.checkDateFormat(
+                                          data.travelFromDate) ??
+                                          ''}",
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                          color: Color(0xff787878),
+                                          fontSize: 12,),
+                                      ),
+                                      // Text(
+                                      //   DateTimeService.checkDateFormat(
+                                      //       data.travelToDate) ??
+                                      //       '',
+                                      //   overflow: TextOverflow.ellipsis,
+                                      //   maxLines: 1,
+                                      //   style: TextStyle(
+                                      //       color: Colors.black,
+                                      //       fontSize: 12,
+                                      //       fontWeight: FontWeight.bold),
+                                      // )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 5,),
                             Container(
-                              width: _mainWidth * 0.72,
+                            //  width: _mainWidth * 0.72,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children:  [
-                                  Text(
-                                    DateTimeService.checkDateFormat(
-                                        data.travelFromDate) ??
-                                        '',
+                                  const Text(
+                              "Booking Name: ",
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                     style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold),
+                                      color: Color(0xff787878),
+                                      fontSize: 12,),
                                   ),
                                   Text(
-                                    DateTimeService.checkDateFormat(
-                                        data.travelToDate) ??
-                                        '',
+                                    data.firstname ??'',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                      color: Color(0xff787878),
+                                      fontSize: 12,),
                                   )
                                 ],
                               ),
                             ),
+                            const SizedBox(height: 5,),
+
+                            SizedBox(
+                              height: _mainHeight * 0.009,
+                            ),
+                            // Container(
+                            //   width: _mainWidth * 0.72,
+                            //   child: Row(
+                            //     children: [
+                            //       Text(
+                            //         '${data.numGuests ?? " "} guests',
+                            //         style: TextStyle(
+                            //             color: Colors.black,
+                            //             fontWeight: FontWeight.w400,
+                            //             fontSize: 14),
+                            //       ),
+                            //       Spacer(),
+                            //       Text(
+                            //         DateTimeService.checkDateFormat(
+                            //                 data.travelFromDate) ??
+                            //             '',
+                            //         style: TextStyle(
+                            //             color: Colors.black,
+                            //             fontWeight: FontWeight.w400,
+                            //             fontSize: 14),
+                            //       ),
+                            //       SizedBox(
+                            //         width: 10,
+                            //       ),
+                            //       Text(
+                            //         DateTimeService.checkDateFormat(
+                            //                 data.travelToDate) ??
+                            //             '',
+                            //         style: TextStyle(
+                            //             color: Colors.black,
+                            //             fontWeight: FontWeight.w400,
+                            //             fontSize: 14),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
+                            // SizedBox(
+                            //   height: _mainHeight * 0.005,
+                            // ),
+                            // Container(
+                            //   width: _mainWidth * 0.72,
+                            //   child: Row(
+                            //     mainAxisAlignment:
+                            //         MainAxisAlignment.spaceBetween,
+                            //     children: [
+                            //       Text(
+                            //         'ID: ${data.bookingId}',
+                            //         style: TextStyle(
+                            //           color: Colors.grey,
+                            //           fontSize: 12,
+                            //           fontWeight: FontWeight.w500,
+                            //         ),
+                            //       ),
+                            //       Text(
+                            //
+                            //         data.checkInStatus == '0' && data.bookingStatus.toString().toLowerCase() !="cancel"
+                            //             ? 'Upcoming'
+                            //             : data.bookingStatus.toString(),
+                            //         style: TextStyle(
+                            //           color: CustomTheme.myFavColor,
+                            //           fontSize: 12,
+                            //           fontWeight: FontWeight.w700,
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
                           ],
                         ),
-                        SizedBox(height: 5,),
 
-                        Container(
-                            width: _mainWidth * 0.72,
-                            child: Text(
+                      ],
+                    ),  Container(
+                      margin: EdgeInsets.only(left: 10,bottom: 10,right: 5),
+
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
                               data.title ?? '',
                               overflow: TextOverflow.ellipsis,
                               maxLines: 3,
                               style: TextStyle(
-                                  color: Colors.black,
+                                  color: CustomTheme.appTheme,
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold),
-                            )),
-                        SizedBox(
-                          height: _mainHeight * 0.009,
-                        ),
-                        // Container(
-                        //   width: _mainWidth * 0.72,
-                        //   child: Row(
-                        //     children: [
-                        //       Text(
-                        //         '${data.numGuests ?? " "} guests',
-                        //         style: TextStyle(
-                        //             color: Colors.black,
-                        //             fontWeight: FontWeight.w400,
-                        //             fontSize: 14),
-                        //       ),
-                        //       Spacer(),
-                        //       Text(
-                        //         DateTimeService.checkDateFormat(
-                        //                 data.travelFromDate) ??
-                        //             '',
-                        //         style: TextStyle(
-                        //             color: Colors.black,
-                        //             fontWeight: FontWeight.w400,
-                        //             fontSize: 14),
-                        //       ),
-                        //       SizedBox(
-                        //         width: 10,
-                        //       ),
-                        //       Text(
-                        //         DateTimeService.checkDateFormat(
-                        //                 data.travelToDate) ??
-                        //             '',
-                        //         style: TextStyle(
-                        //             color: Colors.black,
-                        //             fontWeight: FontWeight.w400,
-                        //             fontSize: 14),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                        // SizedBox(
-                        //   height: _mainHeight * 0.005,
-                        // ),
-                        // Container(
-                        //   width: _mainWidth * 0.72,
-                        //   child: Row(
-                        //     mainAxisAlignment:
-                        //         MainAxisAlignment.spaceBetween,
-                        //     children: [
-                        //       Text(
-                        //         'ID: ${data.bookingId}',
-                        //         style: TextStyle(
-                        //           color: Colors.grey,
-                        //           fontSize: 12,
-                        //           fontWeight: FontWeight.w500,
-                        //         ),
-                        //       ),
-                        //       Text(
-                        //
-                        //         data.checkInStatus == '0' && data.bookingStatus.toString().toLowerCase() !="cancel"
-                        //             ? 'Upcoming'
-                        //             : data.bookingStatus.toString(),
-                        //         style: TextStyle(
-                        //           color: CustomTheme.myFavColor,
-                        //           fontSize: 12,
-                        //           fontWeight: FontWeight.w700,
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                      ],
-                    ),
+                            ),
+                            Text(
+                              data.address ?? '',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 3,
+                              style: TextStyle(
+                                  color: Color(0xff787878),
+                                  fontSize: 11,
+                               ),
+                            ),
+                          ],
+                        )),
                   ],
                 ),
               ),

@@ -13,6 +13,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -123,7 +124,9 @@ getLanguageData();
 
       body:  Container(
         decoration: BoxDecoration(
-            image: DecorationImage(image: AssetImage(
+            image: DecorationImage(
+                colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.9), BlendMode.dstATop),
+                image: AssetImage(
               "assets/images/loginBackground.png",
             ),
                 fit: BoxFit.cover
@@ -137,7 +140,7 @@ getLanguageData();
                   margin: EdgeInsets.only(right: _mainWidth * 0.035),
 
 
-                  padding: EdgeInsets.only(left: _mainWidth * 0.035,top: _mainHeight*0.12),
+                  padding: EdgeInsets.only(left: _mainWidth * 0.035,top: _mainHeight*0.08),
 
                   alignment: Alignment.centerLeft,
               height: _mainHeight,
@@ -147,11 +150,11 @@ getLanguageData();
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                      margin: EdgeInsets.only(bottom: 40),
+                      margin: EdgeInsets.only(bottom: 30),
                       child: Center(
                         child: Image(
                           image: AssetImage("assets/images/logo.png"),
-                          width: 130,
+                          width: 210,
 
                         ),
                       ),
@@ -165,7 +168,7 @@ getLanguageData();
                             'onClick': widget.onClick
                           }),
                       child: Container(
-                        margin: EdgeInsets.only(bottom: 30),
+                        margin: EdgeInsets.only(bottom: 20),
 
                         child: RichText(
                           text: TextSpan(children: [
@@ -268,11 +271,43 @@ getLanguageData();
                               height: 5,
                             ),
                             _textLabel(title: "Phone Number (OTP will be sent)"),
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(20)),
 
-                            _textInput(
-                                hint: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[13].name :"Phone Number (OTP will be sent)"}',
-                                icon: Icons.phone_android_outlined,
-                                controller: _phoneNumberController),
+                              ),
+
+                              child: TextFormField(
+                                style: TextStyle(color: Colors.white),
+                                controller: _phoneNumberController,
+                                keyboardType: TextInputType.phone,
+                                inputFormatters: [new FilteringTextInputFormatter.allow(RegExp("[0-9+]")),],
+                                decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                      BorderSide( color: Colors.white.withOpacity(0.8),),
+                                      borderRadius: BorderRadius.circular(10)),
+                                  hintStyle: TextStyle(
+                                    color: Color(0xff787878),
+                                  ),
+                                  contentPadding: EdgeInsets.only(top: 0,bottom: 0,left: 10,right: 10),
+
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                      BorderSide( color: Colors.white.withOpacity(0.8),),
+                                      borderRadius: BorderRadius.circular(10)),
+                                  hintText: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[13].name :"Phone Number (OTP will be sent)"}',
+
+                                  prefixIcon: Icon(Icons.phone_android_outlined,
+                                    color: Colors.white,
+                                  ),
+
+
+                                ),
+                              ),
+                            ),
+
                             SizedBox(
                               height: 5,
                             ),
@@ -296,7 +331,7 @@ getLanguageData();
                                       BorderSide( color: Colors.white.withOpacity(0.8),),
                                       borderRadius: BorderRadius.circular(10)),
                                   hintStyle: TextStyle(
-                                    color: Colors.white.withOpacity(0.8),
+                                    color: Color(0xff787878),
                                   ),
                                   contentPadding: EdgeInsets.only(top: 0,bottom: 0,left: 10,right: 10),
                                 hintText: '${nullCheck(list: _loginViewModel.loginLang) ? _loginViewModel.loginLang[2].name :"Password"}',
@@ -606,7 +641,7 @@ getLanguageData();
               BorderSide( color: Colors.white.withOpacity(0.8),),
               borderRadius: BorderRadius.circular(10)),
           hintStyle: TextStyle(
-            color: Colors.white.withOpacity(0.8),
+            color: Color(0xff787878),
           ),
           contentPadding: EdgeInsets.only(top: 0,bottom: 0,left: 10,right: 10),
 
