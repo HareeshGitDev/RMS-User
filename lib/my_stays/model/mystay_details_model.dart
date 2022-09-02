@@ -63,10 +63,13 @@ class Data {
   String? glng;
   dynamic agreementStatus;
   String? agreementLink;
+  String? service_agreement_link;
+
   String? pendingAmount;
 
   Data(
       {this.bookingId,
+        this.service_agreement_link,
         this.userId,
         this.propId,
         this.bookingStatus,
@@ -155,6 +158,7 @@ class Data {
     glng = json['glng'];
     agreementStatus = json['agreement_status'];
     agreementLink = json['agreement_link'];
+    service_agreement_link = json['service_agreement_link'];
     pendingAmount = json['pending_amount'];
   }
 
@@ -203,6 +207,7 @@ class Data {
     data['glng'] = this.glng;
     data['agreement_status'] = this.agreementStatus;
     data['agreement_link'] = this.agreementLink;
+    data['service_agreement_link'] = this.service_agreement_link;
     data['pending_amount'] = this.pendingAmount;
     return data;
   }
