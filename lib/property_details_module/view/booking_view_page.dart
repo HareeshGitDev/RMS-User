@@ -901,6 +901,28 @@ class _BookingPageState extends State<BookingPage> {
           ));
           Navigator.of(context).pop();
         }
+        else {
+          RMSWidgets.showLoaderDialog(context: context, message: 'Loading...');
+
+          checkInDate = DateTimeService.ddMMYYYYformatDate(
+               DateTime.now());
+          checkOutDate = DateTimeService.ddMMYYYYformatDate(
+            DateTime.now().add(const Duration(days: 1)));
+
+          await preferenceUtil.setString(rms_checkInDate, checkInDate);
+          await preferenceUtil.setString(rms_checkOutDate, checkOutDate);
+
+          await _viewModel.getBookingDetails(
+              model: BookingAmountRequestModel(
+                propId: (widget.propertyDetailsUtilModel.propId).toString(),
+                token: (widget.propertyDetailsUtilModel.token).toString(),
+                numOfGuests: (widget.propertyDetailsUtilModel.maxGuest).toString(),
+                couponCode: '',
+                fromDate: checkInDate,
+                toDate: checkOutDate,
+              ));
+          Navigator.of(context).pop();
+        }
       },
       child: model.msg == null
           ? RMSWidgets.showShimmer(

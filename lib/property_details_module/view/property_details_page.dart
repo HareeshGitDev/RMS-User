@@ -2366,7 +2366,7 @@ class _NearbyFacilitiesState extends State<NearbyFacilities> {
     for (int i = 0; i < widget.nearByList.length; i++) {
       tabList.add(Tab(
         child: Text(
-          '${widget.nearByList[i].placeType ?? 'Popular Places Near By'}',
+          widget.nearByList[i].placeType ?? 'Popular Places Near By',
           style: TextStyle(
             fontSize: getHeight(context: context, height: 14),
           ),
@@ -2385,7 +2385,7 @@ class _NearbyFacilitiesState extends State<NearbyFacilities> {
         children: [
           Container(
             height: MediaQuery.of(context).size.height * 0.15,
-            padding: EdgeInsets.only(top: 5),
+            padding: const EdgeInsets.only(top: 5),
             child: ListTileTheme.merge(
               child: ListView.separated(
                 itemBuilder: (context, index) {
@@ -2407,16 +2407,20 @@ class _NearbyFacilitiesState extends State<NearbyFacilities> {
                           size: 14,
                           color: Colors.grey.shade400,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
-                        Text(
-                          '${data.placeTitle ?? ''}',
-                          style: TextStyle(
-                              fontSize: getHeight(context: context, height: 12),
-                              color: Colors.grey.shade600),
+                        Container(
+                          width: MediaQuery.of(context).size.width/2,
+                          child: Text(
+                            data.placeTitle ?? '',
+                            maxLines: 3,
+                            style: TextStyle(
+                                fontSize: getHeight(context: context, height: 12),
+                                color: Colors.grey.shade600),
+                          ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         data.distance != null && data.distance.toString() != '0'
                             ? Text(
                                 '${data.distance ?? ''} Km',
