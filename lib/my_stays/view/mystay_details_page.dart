@@ -28,7 +28,8 @@ import 'invoices_view_page.dart';
 class MyStayDetailsPage extends StatefulWidget {
   final String bookingId;
 
-  const MyStayDetailsPage({Key? key, required this.bookingId})
+
+  const MyStayDetailsPage({Key? key, required this.bookingId,})
       : super(key: key);
 
   @override
@@ -252,7 +253,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                             margin: EdgeInsets.only(
                                                 left: 10, right: 10),
                                             child: Text(
-                                              '${value.myStayDetailsModel?.data?.title}',
+                                              '${value.myStayDetailsModel?.data?.title} ${value.myStayDetailsModel?.data?.unit}',
                                               maxLines: 3,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
@@ -449,80 +450,83 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                               width: _mainWidth,
                               color: CustomTheme.appThemeContrast,
                               height: _mainHeight * 0.03,
-                              child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text.rich(
-                                      TextSpan(
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                        children: [
-                                          WidgetSpan(
-                                            child: Icon(Icons.outbond_outlined,
-                                                size: 20, color: Colors.white),
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text.rich(
+                                        TextSpan(
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500,
                                           ),
-                                          TextSpan(
-                                           text:
-                                                '  ${DateTimeService.checkDateFormat(value
-                                                    .myStayDetailsModel
-                                                    ?.data
-                                                    ?.travelFromDate) ??''}',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white,
-                                                fontWeight:
-                                                FontWeight.w500),
-                                          )
-                                        ],
+                                          children: [
+                                            WidgetSpan(
+                                              child: Icon(Icons.outbond_outlined,
+                                                  size: 20, color: Colors.white),
+                                            ),
+                                            TextSpan(
+                                             text:
+                                                  '  ${DateTimeService.checkDateFormat(value
+                                                      .myStayDetailsModel
+                                                      ?.data
+                                                      ?.travelFromDate) ??''}',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.white,
+                                                  fontWeight:
+                                                  FontWeight.w500),
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                    ),
 
 
-                                    Text.rich(
-                                      TextSpan(
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                        children: [
-                                          WidgetSpan(
-                                            child: Icon(
-                                                Icons.calendar_today_outlined,
-                                                size: 20,
-                                                color: Colors.white),
+                                      Text.rich(
+                                        TextSpan(
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500,
                                           ),
-                                          TextSpan(
-                                            text:
-                                            '  ${value.myStayDetailsModel?.data?.nights ?? ''} ${nullCheck(list: value.bookingDetailsLang) ? '${value.bookingDetailsLang[3].name}' : 'Nights'}',
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    Text.rich(
-                                      TextSpan(
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500,
+                                          children: [
+                                            WidgetSpan(
+                                              child: Icon(
+                                                  Icons.calendar_today_outlined,
+                                                  size: 20,
+                                                  color: Colors.white),
+                                            ),
+                                            TextSpan(
+                                              text:
+                                              '  ${value.myStayDetailsModel?.data?.nights ?? ''} ${nullCheck(list: value.bookingDetailsLang) ? '${value.bookingDetailsLang[3].name}' : 'Nights'}',
+                                            )
+                                          ],
                                         ),
-                                        children: [
-                                          WidgetSpan(
-                                            child: Icon(Icons.outbond_outlined,
-                                                size: 20, color: Colors.white),
-                                          ),
-                                          TextSpan(
-                                            text:
-                                            '  ${getDate(value.myStayDetailsModel?.data)}',
-                                          )
-                                        ],
                                       ),
-                                    ),
-                                  ]),
+                                      Text.rich(
+                                        TextSpan(
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          children: [
+                                            WidgetSpan(
+                                              child: Icon(Icons.outbond_outlined,
+                                                  size: 20, color: Colors.white),
+                                            ),
+                                            TextSpan(
+                                              text:
+                                              '  ${getDate(value.myStayDetailsModel?.data)}',
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ]),
+                              ),
                             ),
                             Stack(
                               children: [

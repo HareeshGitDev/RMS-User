@@ -147,7 +147,7 @@ class NavigationService {
         return MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
                   create: (_) => MyStayViewModel(),
-                  child: MyStayDetailsPage(bookingId: bookingId),
+                  child: MyStayDetailsPage(bookingId: bookingId,),
                 ));
       case AppRoutes.generateTicketPage:
         final data = settings.arguments as Map<String, dynamic>;

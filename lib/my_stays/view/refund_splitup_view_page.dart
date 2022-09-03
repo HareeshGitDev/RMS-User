@@ -120,7 +120,9 @@ class _RefundSplitPageState extends State<RefundSplitPage> {
                     color: Colors.white,
                     width: _mainWidth,
                     child: SingleChildScrollView(
-                      child: Column(children: [
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                         getAdjustmentList(
                             adjustments:
                                 value.refundSplitUpModel?.data?.adjustments),
@@ -133,7 +135,7 @@ class _RefundSplitPageState extends State<RefundSplitPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(nullCheck(list: value.refundSplitUpLang)
-                                    ? ' ${value.refundSplitUpLang[0].name} '
+                                    ? '${value.refundSplitUpLang[0].name} '
                                     : 'Your Security Deposit'),
                                 Text(
                                     '$rupee ${value.refundSplitUpModel?.data?.depositReceived}')
@@ -156,9 +158,96 @@ class _RefundSplitPageState extends State<RefundSplitPage> {
                         ),
                         Container(
                             padding: EdgeInsets.only(left: 15, right: 15),
-                            child: Text(nullCheck(list: value.refundSplitUpLang)
-                                ? ' ${value.refundSplitUpLang[2].name} '
-                                : '* This is approximate deductions made from the security deposit amount.\n* The security deposit amount will be refundable within 3 - 5 working days after handing over keys and all scheduled deduction.\n* Kindly coordinate with caretaker and ensure that the flat inspection is done before your moveout in your presence to confirm about the damages so you are aware about the same. All damages will be charged accordingly. \n*In case of any queries please write to finance@rentmystay.com.'))
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                              Text("* ",),
+                            Container(
+                              width: MediaQuery.of(context).size.width/1.13,
+                              child:
+                                Text(nullCheck(list: value.refundSplitUpLang)
+                                    ? '${value.refundSplitUpLang[2].name} '
+                                    : 'This is approximate deductions made from the security deposit amount.'),
+
+
+                            )],
+                            )),
+                        SizedBox(height: 5,),
+                        Container(
+                            padding: EdgeInsets.only(left: 15, right: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                              Text("* ",),
+                            Container(
+                              width: MediaQuery.of(context).size.width/1.13,
+                                child: Text(nullCheck(list: value.refundSplitUpLang)
+                                    ? '${value.refundSplitUpLang[4].name} '
+                                    : 'The security deposit amount will be refundable within 3 - 5 working days after handing over keys and all scheduled deduction.'
+
+                                ),
+                            ),
+
+                              ],
+                            )),
+                            SizedBox(height: 5,),
+                        Container(
+                            padding: EdgeInsets.only(left: 15, right: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("* ",),
+                                Container(
+                                  width: MediaQuery.of(context).size.width/1.13,
+                                  child: Text(nullCheck(list: value.refundSplitUpLang)
+                                      ? '${value.refundSplitUpLang[5].name} '
+                                      : 'Kindly coordinate with caretaker and ensure that the flat inspection is done before your moveout in your presence to confirm about the damages so you are aware about the same. ',
+                                    maxLines: 5,
+
+
+                                  ),
+                                ),
+                              ],
+                            )),
+
+                            SizedBox(height: 5,),
+                            Container(
+                            padding: EdgeInsets.only(left: 15, right: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                              Text("* ",),
+                                Container(
+                                  width: MediaQuery.of(context).size.width/1.13,
+                                  child:
+                                Text(nullCheck(list: value.refundSplitUpLang)
+                                    ? '${value.refundSplitUpLang[6].name} '
+                                   : ' All damages will be charged accordingly. '
+                                ),),
+                              ],
+                            )),
+
+                            SizedBox(height: 5,),
+                            Container(
+                            padding: EdgeInsets.only(left: 15, right: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                              Text("* ",),
+                                Container(
+                                  width: MediaQuery.of(context).size.width/1.13,
+                                  child:
+                                Text(nullCheck(list: value.refundSplitUpLang)
+                                    ? '${value.refundSplitUpLang[7].name} '
+                                    : 'In case of any queries please write to finance@rentmystay.com.'),
+                                ),
+                              ],
+                            )),
                       ]),
                     ),
                   )

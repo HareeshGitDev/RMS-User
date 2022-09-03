@@ -65,6 +65,8 @@ class Result {
   String? firstname;
   String? address;
   String? picture;
+  String? unit;
+  String? unit_type;
   String? picThumbnail;
 
   Result(
@@ -72,6 +74,8 @@ class Result {
         this.bookingStatus,
         this.userId,
         this.propId,
+        this.unit,
+        this.unit_type,
         this.bookingDatetime,
         this.numGuests,
         this.nights,
@@ -97,6 +101,8 @@ class Result {
     bookingStatus = json['booking_status'];
     userId = json['user_id'];
     propId = json['prop_id'];
+    unit_type = json['unit_type'];
+    unit = json['unit'];
     bookingDatetime = json['booking_datetime'];
     numGuests = json['num_guests'];
     nights = json['nights'];
@@ -124,6 +130,8 @@ class Result {
     data['booking_status'] = this.bookingStatus;
     data['user_id'] = this.userId;
     data['prop_id'] = this.propId;
+    data['unit_type'] = this.unit_type;
+    data['unit'] = this.unit;
     data['booking_datetime'] = this.bookingDatetime;
     data['num_guests'] = this.numGuests;
     data['nights'] = this.nights;

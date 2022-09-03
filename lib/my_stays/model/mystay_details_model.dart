@@ -56,6 +56,7 @@ class Data {
   String? extendStatusTimeMark;
   String? furnishedType;
   String? type;
+  String? unit;
   String? picThumbnail;
   String? title;
   String? addressDisplay;
@@ -80,6 +81,7 @@ class Data {
         this.numGuests,
         this.nights,
         this.period,
+        this.unit,
         this.totalAmount,
         this.amountPaid,
         this.advanceAmount,
@@ -115,6 +117,7 @@ class Data {
     bookingId = json['booking_id'];
     userId = json['user_id'];
     propId = json['prop_id'];
+    unit = json['unit'];
     bookingStatus = json['booking_status'];
     travelFromDate = json['travel_from_date'];
     travelToDate = json['travel_to_date'];
@@ -163,6 +166,7 @@ class Data {
     data['booking_id'] = this.bookingId;
     data['user_id'] = this.userId;
     data['prop_id'] = this.propId;
+    data['unit'] = this.unit;
     data['booking_status'] = this.bookingStatus;
     data['travel_from_date'] = this.travelFromDate;
     data['travel_to_date'] = this.travelToDate;
