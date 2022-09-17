@@ -437,7 +437,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              data.title ?? '',
+                                '${data.title} ${data.unit}',
                               overflow: TextOverflow.ellipsis,
                               maxLines: 3,
                               style: TextStyle(

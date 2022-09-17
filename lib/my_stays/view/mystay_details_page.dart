@@ -252,7 +252,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                   margin: EdgeInsets.only(
                                       left: 10, right: 10),
                                   child: Text(
-                                    '${value.myStayDetailsModel?.data?.title}',
+                                    '${value.myStayDetailsModel?.data?.title} ${value.myStayDetailsModel?.data?.unit}',
                                     maxLines: 3,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
