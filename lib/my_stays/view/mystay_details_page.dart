@@ -93,7 +93,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
-    _viewModel.getMyStayDetails(bookingId: widget.bookingId);
+    _viewModel.getMyStayDetails(bookingId: widget.bookingId,context: context);
     getLanguageData();
     preferenceUtil.getToken().then((value) => token = value ?? '');
   }
@@ -1453,12 +1453,14 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                           message: 'Loading');
                       int response = await _viewModel
                           .checkInAndCheckOut(
+                        context: context,
                           bookingId:
                           widget.bookingId,
                           checkIn: true);
                       if (response == 200) {
                         await _viewModel
                             .getMyStayDetails(
+                          context: context,
                             bookingId:
                             widget.bookingId);
                       }
@@ -1470,12 +1472,14 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                           message: 'Loading');
                       int response = await _viewModel
                           .checkInAndCheckOut(
+                        context: context,
                           bookingId:
                           widget.bookingId,
                           checkIn: false);
                       if (response == 200) {
                         await _viewModel
                             .getMyStayDetails(
+                          context: context,
                             bookingId:
                             widget.bookingId);
                       }

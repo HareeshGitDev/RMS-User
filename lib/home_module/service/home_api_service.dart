@@ -6,6 +6,7 @@ import 'package:RentMyStay_user/home_module/model/invite_and_earn_model.dart';
 import 'package:RentMyStay_user/home_module/model/tenant_leads_model.dart';
 import 'package:RentMyStay_user/language_module/model/language_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../../utils/constants/api_urls.dart';
 import '../../utils/constants/sp_constants.dart';
@@ -24,10 +25,10 @@ class HomeApiService {
     return registeredEmail;
   }
 
-  Future<ReferAndEarnModel> fetchInviteEarnDetails() async {
+  Future<ReferAndEarnModel> fetchInviteEarnDetails({ required BuildContext context,}) async {
     String url = AppUrls.referUrl;
     final response = await _apiService
-        .getApiCallWithQueryParams(endPoint: url, queryParams: {
+        .getApiCallWithQueryParams(endPoint: url,context: context, queryParams: {
       'email': await _getRegisteredEmail(),
     });
     final data = response as Map<String, dynamic>;
@@ -41,9 +42,9 @@ class HomeApiService {
 
     }
   }
-  Future<int> addToWishList({required String propertyId}) async {
+  Future<int> addToWishList({required String propertyId, required BuildContext context,}) async {
     String url = AppUrls.addWishListPropertyUrl;
-    final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
+    final response = await _apiService.postApiCall(endPoint: url,context: context, bodyParams: {
       'prop_id': base64Encode(utf8.encode(propertyId)),
     });
 
@@ -51,9 +52,9 @@ class HomeApiService {
 
     return data['msg'].toString().toLowerCase().contains('failure') ? 404 : 200;
   }
-  Future<HomePageModel> fetchHomePageData() async {
+  Future<HomePageModel> fetchHomePageData({ required BuildContext context,}) async {
     String url = AppUrls.homePageUrl;
-    final response = await _apiService.getApiCall(endPoint: url);
+    final response = await _apiService.getApiCall(endPoint: url,context: context);
     final data = response as Map<String, dynamic>;
 
     if (data['msg'].toString().toLowerCase().contains('failure')) {
@@ -65,9 +66,9 @@ class HomeApiService {
 
     }
   }
-  Future<TenantLeadsModel> fetchTenantLeads() async {
+  Future<TenantLeadsModel> fetchTenantLeads({ required BuildContext context,}) async {
     String url = AppUrls.tenantLeadsUrl;
-    final response = await _apiService.getApiCall(endPoint: url);
+    final response = await _apiService.getApiCall(endPoint: url,context: context);
     final data = response as Map<String, dynamic>;
 
     if (data['msg'].toString().toLowerCase().contains('failure')) {

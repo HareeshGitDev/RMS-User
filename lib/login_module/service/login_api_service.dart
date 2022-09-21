@@ -9,6 +9,7 @@ import 'package:RentMyStay_user/login_module/model/signup_request_model.dart';
 import 'package:RentMyStay_user/login_module/model/signup_response_model.dart';
 import 'package:RentMyStay_user/utils/constants/api_urls.dart';
 import 'package:RentMyStay_user/utils/service/rms_user_api_service.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../model/otp_registration_otp_model.dart';
 
@@ -16,9 +17,10 @@ class LoginApiService {
   final RMSUserApiService _apiService = RMSUserApiService();
 
   Future<LoginResponseModel> fetchLoginDetails(
-      {required String email, required String password}) async {
+      {required String email, required String password, required BuildContext context,}) async {
     String url = AppUrls.loginUrl;
     final response = await _apiService.postApiCall(
+      context: context,
         endPoint: url,
         bodyParams: {
           'email': email,
@@ -36,9 +38,10 @@ class LoginApiService {
   }
 
   Future<SignUpResponseModel> signUpUser(
-      {required SignUpRequestModel model}) async {
+      {required SignUpRequestModel model, required BuildContext context,}) async {
     String url = AppUrls.signUpUrl;
     final response = await _apiService.postApiCall(
+      context: context,
         endPoint: url,
         bodyParams: {
           "fname": model.fname,
@@ -62,9 +65,10 @@ class LoginApiService {
     }
   }
 
-  Future<int> resetPassword({required String email}) async {
+  Future<int> resetPassword({required String email, required BuildContext context,}) async {
     String url = AppUrls.forgotPasswordUrl;
     final response = await _apiService.postApiCall(
+      context: context,
         endPoint: url,
         bodyParams: {
           'email': email,
@@ -76,9 +80,10 @@ class LoginApiService {
   }
 
   Future<LoginResponseModel> registerAfterGmail(
-      {required GmailSignInRequestModel model}) async {
+      {required GmailSignInRequestModel model, required BuildContext context,}) async {
     String url = AppUrls.signInWithGoogleUrl;
     final response = await _apiService.postApiCall(
+      context: context,
         endPoint: url, bodyParams: model.toJson(), fromLogin: true);
     final data = response as Map<String, dynamic>;
 
@@ -90,9 +95,10 @@ class LoginApiService {
   }
 
   Future<int> detailsValidationAfterGmail(
-      {required GmailRegistrationRequestModel model}) async {
+      {required GmailRegistrationRequestModel model, required BuildContext context,}) async {
     String url = AppUrls.registrationWithGoogleUrl;
     final response = await _apiService.postApiCall(
+      context: context,
         endPoint: url, bodyParams: model.toJson());
     final data = response as Map<String, dynamic>;
 
@@ -100,9 +106,10 @@ class LoginApiService {
   }
 
   Future<OtpRegistrationResponseModel> verifyOTP(
-      {required String mobileNumber, String? uid}) async {
+      {required String mobileNumber, String? uid, required BuildContext context,}) async {
     String url = AppUrls.loginOtpUrl;
     final response = await _apiService.getApiCallWithQueryParams(
+      context: context,
         endPoint: url,
         queryParams: {
           'mobileno': mobileNumber,
@@ -120,10 +127,10 @@ class LoginApiService {
   }
 
   Future<SignUpResponseModel> detailsValidationAfterOTP(
-      {required SignUpRequestModel model}) async {
+      {required SignUpRequestModel model, required BuildContext context,}) async {
     String url = AppUrls.signUpUrl;
 
-    final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
+    final response = await _apiService.postApiCall(endPoint: url,context: context, bodyParams: {
       "fname": model.fname,
       "email": model.email,
       "source_rms": model.sourceRms,
@@ -141,9 +148,9 @@ class LoginApiService {
         : SignUpResponseModel.fromJson(data);
   }
 
-  Future<int> updateFCMToken({required String fcmToken}) async {
+  Future<int> updateFCMToken({required String fcmToken, required BuildContext context,}) async {
     String url = AppUrls.fcmTokenUrl;
-    final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
+    final response = await _apiService.postApiCall(endPoint: url,context: context, bodyParams: {
       'token': fcmToken,
     });
 

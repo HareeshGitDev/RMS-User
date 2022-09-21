@@ -79,7 +79,7 @@ class _ReferAndEarnPageState extends State<ReferAndEarn> {
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
-    _homeViewModel.getInviteEarnDetails();
+    _homeViewModel.getInviteEarnDetails(context: context);
 
     getLanguageData();
   }

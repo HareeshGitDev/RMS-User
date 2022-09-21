@@ -104,8 +104,8 @@ class _HomePageState extends State<HomePage> {
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
-    _homeViewModel.getHomePageData();
-    _homeViewModel.getTenantLeads();
+    _homeViewModel.getHomePageData(context: context);
+    _homeViewModel.getTenantLeads(context: context);
     userDetails = getSharedPreferencesValues();
     preferenceUtil.getToken().then((value) => token = value ?? '');
     getExplorePropertiesList();
@@ -989,6 +989,7 @@ class _HomePageState extends State<HomePage> {
                         if (data.wishlist != null && data.wishlist == 1) {
                           if (data.propId != null) {
                             int response = await _homeViewModel.addToWishlist(
+                              context: context,
                                 propertyId: data.propId ?? '');
                             if (response == 200) {
                               setState(() {
@@ -1004,6 +1005,7 @@ class _HomePageState extends State<HomePage> {
                             data.wishlist == 0) {
                           if (data.propId != null) {
                             int response = await _homeViewModel.addToWishlist(
+                              context: context,
                                 propertyId: data.propId ?? '');
                             if (response == 200) {
                               setState(() {

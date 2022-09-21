@@ -6,9 +6,11 @@ class PaymentViewModel extends ChangeNotifier{
 
   Future<int> submitPaymentResponse(
       {required String paymentId,
+        required BuildContext context,
         required String paymentSignature,
         required String redirectApi}) async {
     return await _apiService.submitPaymentResponse(
+      context: context,
         paymentId: paymentId,
         paymentSignature: paymentSignature,
         redirectApi: redirectApi);

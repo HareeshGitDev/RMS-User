@@ -110,7 +110,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _viewModel = Provider.of<PropertyDetailsViewModel>(context, listen: false);
-    _viewModel.getPropertyDetails(propId: widget.propId);
+    _viewModel.getPropertyDetails(propId: widget.propId,context: context);
     getLanguageData();
   }
 
@@ -1077,6 +1077,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                             null) {
                                                       int response = await _viewModel
                                                           .addToWishlist(
+                                                        context: context,
                                                               propertyId: value
                                                                       .propertyDetailsModel
                                                                       ?.data
@@ -1121,6 +1122,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                             null) {
                                                       int response = await _viewModel
                                                           .addToWishlist(
+                                                        context: context,
                                                               propertyId: value
                                                                       .propertyDetailsModel
                                                                       ?.data
@@ -2242,6 +2244,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   null) {
                             int response = await _viewModel
                                 .addToWishlist(
+                              context: context,
                                 propertyId: data.propId ??
                                     '');
                             if (response == 200) {
@@ -2262,6 +2265,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   null) {
                             int response = await _viewModel
                                 .addToWishlist(
+                              context: context,
                                 propertyId: data.propId ??
                                     '');
                             if (response == 200) {

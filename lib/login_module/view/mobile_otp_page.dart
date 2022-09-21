@@ -282,6 +282,7 @@ class _OtpState extends State<MobileOtpPage> {
         if (userCredential.user != null && userCredential.user?.uid != null) {
           log('UserCredentials :: ' + userCredential.toString());
           final response = await _loginViewModel.verifyOTP(
+            context: context,
               mobileNumber: phoneNumber,
               uid: (userCredential.user?.uid).toString());
           if (response.msg?.toLowerCase() != 'failure' &&
@@ -347,6 +348,7 @@ class _OtpState extends State<MobileOtpPage> {
         log('UserCredentials :: ' + userCredential.toString());
         final response = await _loginViewModel.verifyOTP(
             mobileNumber: widget.number,
+            context: context,
             uid: (userCredential.user?.uid).toString());
         if (response.msg?.toLowerCase() != 'failure' &&
             response.data?.action?.toLowerCase() == 'sign-up') {

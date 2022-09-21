@@ -6,6 +6,7 @@ import 'package:RentMyStay_user/my_stays/model/invoice_payment_model.dart';
 import 'package:RentMyStay_user/my_stays/model/my_bank_details_model.dart';
 import 'package:RentMyStay_user/my_stays/model/ticket_response_model.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../../property_details_module/model/booking_amount_request_model.dart';
 import '../../property_details_module/model/booking_credential_response_model.dart';
@@ -21,9 +22,9 @@ import '../model/refund_splitup_model.dart';
 class MyStayApiService {
   final RMSUserApiService _apiService = RMSUserApiService();
 
-  Future<MyStayListModel> fetchMyStayList() async {
+  Future<MyStayListModel> fetchMyStayList({ required BuildContext context,}) async {
     String url = AppUrls.myStayListUrl;
-    final response = await _apiService.getApiCall(endPoint: url);
+    final response = await _apiService.getApiCall(endPoint: url,context: context);
     final data = response as Map<String, dynamic>;
 
     if (data['msg'].toString().toLowerCase().contains('failure')) {
@@ -36,9 +37,10 @@ class MyStayApiService {
   }
 
   Future<MyStayDetailsModel> fetchMyStayDetails(
-      {required String bookingId}) async {
+      {required String bookingId, required BuildContext context,}) async {
     String url = AppUrls.myBookingDetails;
     final response = await _apiService.getApiCallWithQueryParams(
+      context: context,
       endPoint: url,
       queryParams: {
         'booking_id': base64Encode(utf8.encode(bookingId)),
@@ -56,9 +58,10 @@ class MyStayApiService {
   }
 
   Future<MyBankDetailsModel> fetchMyBankDetails(
-      {required String bookingId}) async {
+      {required String bookingId, required BuildContext context,}) async {
     String url = AppUrls.feedbackAndBankDetailsUrl;
     final response = await _apiService.getApiCallWithQueryParams(
+      context: context,
       endPoint: url,
       queryParams: {
         'booking_id': bookingId,
@@ -76,9 +79,10 @@ class MyStayApiService {
   }
 
   Future<RefundSplitUpModel> fetchRefundSplitUpDetails(
-      {required String bookingId}) async {
+      {required String bookingId, required BuildContext context,}) async {
     String url = AppUrls.refundDetailsUrl;
     final response = await _apiService.getApiCallWithQueryParams(
+      context: context,
         endPoint: url, queryParams: {'booking_id': bookingId});
     final data = response as Map<String, dynamic>;
 
@@ -92,9 +96,10 @@ class MyStayApiService {
   }
 
   Future<InvoiceDetailsModel> fetchInvoiceDetails(
-      {required String bookingId}) async {
+      {required String bookingId, required BuildContext context,}) async {
     String url = AppUrls.invoiceDetailsUrl;
     final response = await _apiService.getApiCallWithQueryParams(
+      context: context,
         endPoint: url,
         queryParams: {'booking_id': base64Encode(utf8.encode(bookingId))});
     final data = response as Map<String, dynamic>;
@@ -112,7 +117,7 @@ class MyStayApiService {
       {required String bookingId,
       required String email,
       required String ratings,
-
+        required BuildContext context,
        required String account_number,
        required String account_name,
        required String ifsc_code,
@@ -121,7 +126,7 @@ class MyStayApiService {
       required String suggestions,
       required String friendRecommendation}) async {
     String url = AppUrls.feedbackAndBankDetailsUrl;
-    final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
+    final response = await _apiService.postApiCall(endPoint: url,context: context, bodyParams: {
       "booking_id": bookingId,
       "email": email,
 
@@ -140,10 +145,11 @@ class MyStayApiService {
   }
 
   Future<int> checkInAndCheckOut(
-      {required String bookingId, required bool checkIn}) async {
+      {required String bookingId, required bool checkIn, required BuildContext context,}) async {
     String checkInUrl = AppUrls.checkInUrl;
     String checkOutUrl = AppUrls.checkOutUrl;
     final response = await _apiService.postApiCall(
+      context: context,
         endPoint: checkIn ? checkInUrl : checkOutUrl,
         bodyParams: {'booking_id': bookingId});
     final data = response as Map<String, dynamic>;
@@ -151,9 +157,9 @@ class MyStayApiService {
     return data['msg'].toString().toLowerCase().contains('failure') ? 404:200;
   }
 
-  Future<TicketResponseModel> fetchTicketList() async {
+  Future<TicketResponseModel> fetchTicketList({ required BuildContext context,}) async {
     String url = AppUrls.ticketListUrl;
-    final response = await _apiService.getApiCall(endPoint: url);
+    final response = await _apiService.getApiCall(endPoint: url,context: context);
     final data = response as Map<String, dynamic>;
 
     if (data['msg'].toString().toLowerCase().contains('failure')) {
@@ -217,10 +223,10 @@ class MyStayApiService {
   }
 
   Future<String> downloadInvoice(
-      {required String bookingId, required String invoiceId}) async {
+      {required String bookingId, required String invoiceId, required BuildContext context,}) async {
     String url = AppUrls.invoiceDownloadUrl;
     final response = await _apiService
-        .getApiCallWithQueryParams(endPoint: url, queryParams: {
+        .getApiCallWithQueryParams(endPoint: url,context: context, queryParams: {
       'invoice_id': invoiceId,
       'booking_id': bookingId,
     });
@@ -233,9 +239,9 @@ class MyStayApiService {
   }
 
   Future<InvoicePaymentModel> fetchInvoicePaymentCredentials(
-      {required BookingAmountRequestModel model}) async {
+      {required BookingAmountRequestModel model, required BuildContext context,}) async {
     String url = AppUrls.invoicePaymentUrl;
-    final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
+    final response = await _apiService.postApiCall(endPoint: url,context: context, bodyParams: {
       "invoice_id": model.invoiceId,
       "amount": model.depositAmount,
       "billing_tel": model.phone,
@@ -255,9 +261,10 @@ class MyStayApiService {
     required String invoiceId,
     required String utrNumber,
     required String bookingId,
+    required BuildContext context,
   }) async {
     String url = AppUrls.utrInvoiceUpdateUrl;
-    final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
+    final response = await _apiService.postApiCall(endPoint: url,context: context, bodyParams: {
       "utr_no": utrNumber,
       'invoice_id': invoiceId,
       "booking_id": bookingId,

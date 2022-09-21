@@ -107,7 +107,7 @@ class _FeedbackState extends State<FeedbackPage> {
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
-    _viewModel.getMyBankDetails(bookingId: widget.bookingId);
+    _viewModel.getMyBankDetails(bookingId: widget.bookingId,context: context);
 
     getLanguageData();
   }
@@ -579,6 +579,7 @@ class _FeedbackState extends State<FeedbackPage> {
                 String bankDetails =
                     '${_nameController.text} ${_banknameController.text} ${_banknumberController.text} ${_bankIfscController.text}';
                 int response = await _viewModel.submitFeedbackAndBankDetails(
+                  context: context,
                     bookingId: widget.bookingId,
                     bank_name: _banknameController.text.toString(),
                     account_number: _banknumberController.text.toString(),
@@ -606,6 +607,7 @@ class _FeedbackState extends State<FeedbackPage> {
             } else {
               RMSWidgets.showLoaderDialog(context: context, message: 'Loading');
               int response = await _viewModel.submitFeedbackAndBankDetails(
+                context: context,
                   bookingId: widget.bookingId,
                   email: widget.email,
                   ratings: rmsRating.toString(),

@@ -430,6 +430,7 @@ class SiteVisitPagestate extends State<SiteVisitPage> {
                                     listen: false);
                             int response = await viewModel.scheduleSiteVisit(
                               email: _emailController.text,
+                              context: context,
                               name: _nameController.text,
                               propId: widget.propId,
                               phoneNumber: _phoneNumberController.text,

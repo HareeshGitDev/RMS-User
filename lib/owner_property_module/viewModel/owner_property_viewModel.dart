@@ -41,14 +41,14 @@ class OwnerPropertyViewModel extends ChangeNotifier {
     ),
   );
 
-  void getOwnerPropertyList() async {
-    final data = await _apiService.fetchOwnerPropertyList();
+  void getOwnerPropertyList({ required BuildContext context,}) async {
+    final data = await _apiService.fetchOwnerPropertyList(context: context);
     ownerPropertyListingModel = data;
     notifyListeners();
   }
 
-  void getOwnerPropertyDetails({required String propId}) async {
-    final data = await _apiService.fetchOwnerPropertyDetails(propId: propId);
+  void getOwnerPropertyDetails({required String propId, required BuildContext context,}) async {
+    final data = await _apiService.fetchOwnerPropertyDetails(propId: propId,context: context);
     ownerPropertyDetailsModel = data;
     if (ownerPropertyDetailsModel.data != null &&
         ownerPropertyDetailsModel.data?.propDetails != null &&
@@ -464,9 +464,11 @@ class OwnerPropertyViewModel extends ChangeNotifier {
     required String email,
     required String rent,
     required String propertyType,
+    required BuildContext context,
     required String roomType,
   }) async =>
       await _apiService.createProperty(
+        context: context,
           title: title,
           email: email,
           rent: rent,
@@ -478,12 +480,12 @@ class OwnerPropertyViewModel extends ChangeNotifier {
   }) async =>
       await _apiService.updatePropertyDetails(requestModel: requestModel);
 
-  Future<void> getSearchedPlace(String searchText) async {
+  Future<void> getSearchedPlace(String searchText,{ required BuildContext context,}) async {
     RMSUserApiService apiService = RMSUserApiService();
 
     String url =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$searchText&types=geocode&key=$googleMapKey&components=country:in';
-    final data = await apiService.getApiCallWithURL(endPoint: url)
+    final data = await apiService.getApiCallWithURL(endPoint: url,context: context)
         as Map<String, dynamic>;
 
     if (data['status'] == 'OK' && data['predictions'] != null) {
@@ -497,12 +499,12 @@ class OwnerPropertyViewModel extends ChangeNotifier {
     }
   }
 
-  Future<Map<String, double>?> getAddressByPlaceID(String placeId) async {
+  Future<Map<String, double>?> getAddressByPlaceID(String placeId,{ required BuildContext context,}) async {
     RMSUserApiService apiService = RMSUserApiService();
     log('Place ID :: $placeId');
     String url =
         'https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId.trim()}&fields=geometry&key=$googleMapKey';
-    final data = await apiService.getApiCallWithURL(endPoint: url)
+    final data = await apiService.getApiCallWithURL(endPoint: url,context: context)
         as Map<String, dynamic>;
 
     if (data['status'] == 'OK' &&
@@ -531,12 +533,14 @@ class OwnerPropertyViewModel extends ChangeNotifier {
           required String email,
           required String phone,
           required String address,
+            required BuildContext context,
           String? comment,
           required String units,
           String? lat,
           String? lang}) async =>
       _apiService.hostProperty(
           ownerName: ownerName,
+          context: context,
           email: email,
           phone: phone,
           address: address,

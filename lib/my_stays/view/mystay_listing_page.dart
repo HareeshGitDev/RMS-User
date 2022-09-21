@@ -86,7 +86,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
-    _viewModel.getMyStayList();
+    _viewModel.getMyStayList(context: context);
     getLanguageData();
   }
 

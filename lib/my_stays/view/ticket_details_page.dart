@@ -350,6 +350,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                                                 message: 'Loading');
                                             int response = await _viewModel
                                                 .updateTicketStatus(
+                                              context: context,
                                                     status: status,
                                                     ticketId: ticketId);
                                             Navigator.of(context).pop();
@@ -400,6 +401,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                                                 message: 'Loading');
                                             int response = await _viewModel
                                                 .updateTicketStatus(
+                                              context: context,
                                                     status: status,
                                                     ticketId: ticketId);
                                             Navigator.of(context).pop();
@@ -446,7 +448,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                                                 context: context,
                                                 message: 'Loading');
                                             int response = await _viewModel
-                                                .updateTicketStatus(
+                                                .updateTicketStatus(context: context,
                                                     status: status,
                                                     ticketId: ticketId);
                                             Navigator.of(context).pop();

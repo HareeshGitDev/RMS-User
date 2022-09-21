@@ -124,6 +124,7 @@ class _RazorpayPaymentPageState extends State<RazorpayPaymentPage> {
           context: context, message: 'Confirmation Pending...');
       int value = await _viewModel.submitPaymentResponse(
           paymentId: response.paymentId!,
+          context: context,
           paymentSignature: response.signature!,
           redirectApi: widget.paymentRequestModel.redirectApi);
 

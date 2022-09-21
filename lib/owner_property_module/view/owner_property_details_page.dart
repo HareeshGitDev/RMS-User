@@ -59,7 +59,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
   void initState() {
     super.initState();
     _viewModel = Provider.of<OwnerPropertyViewModel>(context, listen: false);
-    _viewModel.getOwnerPropertyDetails(propId: widget.propId);
+    _viewModel.getOwnerPropertyDetails(propId: widget.propId,context: context);
     getLanguageData();
   }
 
@@ -198,6 +198,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                                                 }).then((value) {
                                               showEditButton=false;
                                                   _viewModel.getOwnerPropertyDetails(
+                                                    context: context,
                                                     propId: widget.propId);
                                                 });
                                           }
@@ -292,6 +293,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                                           }).then((value) {
                                         showEditButton=false;
                                         _viewModel.getOwnerPropertyDetails(
+                                          context: context,
                                             propId: widget.propId);
                                       });
                                     }
@@ -368,6 +370,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                                               }).then((value) {
                                             showEditButton=false;
                                             _viewModel.getOwnerPropertyDetails(
+                                              context: context,
                                                 propId: widget.propId);
                                           });
                                         }
@@ -459,6 +462,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                                                 }).then((value) {
                                               showEditButton=false;
                                               _viewModel.getOwnerPropertyDetails(
+                                                context: context,
                                                   propId: widget.propId);
                                             });
                                           }
@@ -499,6 +503,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                                                 }).then((value) {
                                               showEditButton=false;
                                               _viewModel.getOwnerPropertyDetails(
+                                                context: context,
                                                   propId: widget.propId);
                                             });
                                           }
@@ -558,6 +563,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                                                 }).then((value) {
                                               showEditButton=false;
                                               _viewModel.getOwnerPropertyDetails(
+                                                context: context,
                                                   propId: widget.propId);
                                             });
                                           }
@@ -589,6 +595,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                                                 }).then((value) {
                                               showEditButton=false;
                                               _viewModel.getOwnerPropertyDetails(
+                                                context: context,
                                                   propId: widget.propId);
                                             });
                                           }
@@ -647,6 +654,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                                               }).then((value) {
                                             showEditButton=false;
                                             _viewModel.getOwnerPropertyDetails(
+                                              context: context,
                                                 propId: widget.propId);
                                           });
                                         }
@@ -677,6 +685,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                                               }).then((value) {
                                             showEditButton=false;
                                             _viewModel.getOwnerPropertyDetails(
+                                              context: context,
                                                 propId: widget.propId);
                                           });
                                         }
@@ -1036,6 +1045,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                     }).then((value) {
                       showEditButton=false;
                       _viewModel.getOwnerPropertyDetails(
+                        context: context,
                           propId: widget.propId);
                     });
                   }
@@ -1221,7 +1231,7 @@ class _OwnerPropertyDetailsPageState extends State<OwnerPropertyDetailsPage> {
                               ?.propDetails?.propId,
                         }).then((value) {
                           showEditButton=false;
-                          _viewModel.getOwnerPropertyDetails(
+                          _viewModel.getOwnerPropertyDetails(context: context,
                               propId: widget.propId);
                         });
                       }

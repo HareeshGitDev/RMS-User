@@ -8,8 +8,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
+import '../../login_module/service/google_auth_service.dart';
 import '../constants/api_urls.dart';
 import '../constants/sp_constants.dart';
+import 'navigation_service.dart';
 
 class RMSUserApiService {
   final String _baseURL = AppUrls.baseUrl;
@@ -66,6 +68,7 @@ class RMSUserApiService {
 
   Future<dynamic> getApiCall({
     required String endPoint,
+    required BuildContext context
   }) async {
     log('URL :: $_baseURL$endPoint  -- ${await getHeaders}');
     try {
@@ -73,7 +76,7 @@ class RMSUserApiService {
           headers: await getHeaders);
 
       return await _response(response,
-          url: Uri.https(_baseURL, endPoint).toString());
+          url: Uri.https(_baseURL, endPoint).toString(), context: context);
     } on SocketException {
       log('SocketException Happened');
     } catch (e) {
@@ -84,6 +87,7 @@ class RMSUserApiService {
 
   Future<dynamic> getApiCallWithQueryParams(
       {required String endPoint,
+        required BuildContext context,
       required Map<String, dynamic> queryParams,
       bool fromLogin = false}) async {
     log('URL :: $_baseURL$endPoint ---- QueryParams :: ${queryParams.toString()} -- ${fromLogin ? {} : await getHeaders} ');
@@ -93,6 +97,7 @@ class RMSUserApiService {
           headers: fromLogin ? {} : await getHeaders);
 
       return await _response(response,
+          context: context,
           url: Uri.https(_baseURL, endPoint).toString());
     } on SocketException {
       log('SocketException Happened');
@@ -104,6 +109,7 @@ class RMSUserApiService {
 
   Future<dynamic> getApiCallWithURL({
     required String endPoint,
+    required BuildContext context,
   }) async {
     log('URL :: $endPoint ');
     try {
@@ -114,6 +120,7 @@ class RMSUserApiService {
       );
 
       return await _response(response,
+          context: context,
           url: Uri.https(_baseURL, endPoint).toString());
     } on SocketException {
       log('SocketException Happened');
@@ -126,7 +133,9 @@ class RMSUserApiService {
   Future<dynamic> postApiCall(
       {required String endPoint,
       required Map<String, dynamic> bodyParams,
-      bool fromLogin = false}) async {
+      bool fromLogin = false,
+        required BuildContext context,
+      }) async {
     log('URL :: $_baseURL/$endPoint ---- Model :: ${bodyParams.toString()} -- ${fromLogin ? '' : await getHeaders}');
 
     try {
@@ -136,6 +145,7 @@ class RMSUserApiService {
         headers: fromLogin ? {} : await getHeaders,
       );
       return await _response(response,
+          context: context,
           url: Uri.https(_baseURL, endPoint).toString());
     } on SocketException {
       log('SocketException Happened');
@@ -216,7 +226,7 @@ class RMSUserApiService {
   }
 
   dynamic _response(http.Response response,
-      {String? url, BuildContext? context}) async {
+      {String? url, required BuildContext context}) async {
     log('Status Code :: ${response.statusCode} -- $url');
     switch (response.statusCode) {
       case 200:
@@ -227,6 +237,22 @@ class RMSUserApiService {
       case 400:
         return _getErrorResponse(json.decode(response.body));
       case 401:
+        RMSWidgets.showLoaderDialog(
+            context: context, message: 'Logging out');
+        SharedPreferenceUtil shared = SharedPreferenceUtil();
+        await GoogleAuthService.logOut();
+        await GoogleAuthService.logoutFromFirebase();
+        bool deletedAllValues = await shared.clearAll();
+        Navigator.of(context).pop();
+        if (deletedAllValues) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              AppRoutes.loginPage, (route) => false,
+              arguments: {
+                'fromExternalLink': false,
+              });
+        } else {
+          log('NOT ABLE TO DELETE VALUES FROM SP');
+        }
         return _getErrorResponse(json.decode(response.body));
       case 402:
         return _getErrorResponse(json.decode(response.body));

@@ -6,6 +6,7 @@ import 'package:RentMyStay_user/property_module/model/property_list_model.dart';
 import 'package:RentMyStay_user/property_module/model/wish_list_model.dart';
 import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../../home_module/model/home_page_model.dart';
 import '../../utils/constants/api_urls.dart';
@@ -21,6 +22,7 @@ class PropertyApiService {
     String? fromDate,
     String? toDate,
     required Property property,
+    required BuildContext context,
   }) async {
     String url = AppUrls.propertyListingUrl;
 
@@ -45,6 +47,7 @@ class PropertyApiService {
     }
 
     final response = await _apiService.getApiCallWithQueryParams(
+      context:context ,
         endPoint: url,
         queryParams: queryParams);
     final data = response as Map<String, dynamic>;
@@ -55,9 +58,9 @@ class PropertyApiService {
       return PropertyListModel.fromJson(data);
     }
   }
-  Future<HomePageModel> fetchHomePageData() async {
+  Future<HomePageModel> fetchHomePageData({ required BuildContext context,}) async {
     String url = AppUrls.homePageUrl;
-    final response = await _apiService.getApiCall(endPoint: url);
+    final response = await _apiService.getApiCall(endPoint: url,context: context);
     final data = response as Map<String, dynamic>;
 
     if (data['msg'].toString().toLowerCase().contains('failure')) {
@@ -69,9 +72,9 @@ class PropertyApiService {
 
     }
   }
-  Future<int> addToWishList({required String propertyId}) async {
+  Future<int> addToWishList({required String propertyId, required BuildContext context,}) async {
     String url = AppUrls.addWishListPropertyUrl;
-    final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
+    final response = await _apiService.postApiCall(endPoint: url,context: context, bodyParams: {
       'prop_id': base64Encode(utf8.encode(propertyId)),
     });
 
@@ -79,10 +82,10 @@ class PropertyApiService {
     return data['msg'].toString().toLowerCase().contains('failure') ? 404 : 200;
   }
 
-  Future<WishListModel> fetchWishList() async {
+  Future<WishListModel> fetchWishList({ required BuildContext context,}) async {
     String url = AppUrls.fetchWishListPropertyUrl;
     final response = await _apiService
-        .getApiCall(endPoint: url,);
+        .getApiCall(endPoint: url,context: context);
 
     final data = response as Map<String, dynamic>;
 
@@ -95,10 +98,12 @@ class PropertyApiService {
 
   Future<PropertyListModel> filterSortPropertyList({
     required FilterSortRequestModel requestModel,
+    required BuildContext context,
   }) async {
     String url = AppUrls.propertyListingUrl;
 
     final response = await _apiService.getApiCallWithQueryParams(
+      context: context,
         endPoint: url, queryParams: requestModel.toJson());
     final data = response as Map<String, dynamic>;
 

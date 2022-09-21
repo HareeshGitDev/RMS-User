@@ -11,9 +11,9 @@ class ProfileViewModel extends ChangeNotifier {
   List<LanguageModel> languageData = [];
   ProfileModel profileModel = ProfileModel();
 
-  Future<void> getProfileDetails() async {
+  Future<void> getProfileDetails({ required BuildContext context,}) async {
     final ProfileModel response =
-        await _profileApiService.fetchProfileDetails();
+        await _profileApiService.fetchProfileDetails(context:context );
     profileModel = response;
     notifyListeners();
   }

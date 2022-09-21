@@ -1,4 +1,5 @@
 import 'package:RentMyStay_user/utils/service/rms_user_api_service.dart';
+import 'package:flutter/cupertino.dart';
 
 
 class PaymentApiService {
@@ -6,9 +7,9 @@ class PaymentApiService {
 
 
   Future<int> submitPaymentResponse(
-      {required String paymentId, required String paymentSignature, required String redirectApi}) async {
+      {required String paymentId,  required BuildContext context,required String paymentSignature, required String redirectApi}) async {
     String url = redirectApi;
-    final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
+    final response = await _apiService.postApiCall(endPoint: url,context: context, bodyParams: {
       'razorpay_payment_id': paymentId,
       'razorpay_signature': paymentSignature,
     });

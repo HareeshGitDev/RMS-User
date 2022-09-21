@@ -46,7 +46,7 @@ class _OwnerPropertyListingPageState extends State<OwnerPropertyListingPage> {
     // TODO: implement initState
     super.initState();
     _viewModel = Provider.of<OwnerPropertyViewModel>(context, listen: false);
-    _viewModel.getOwnerPropertyList();
+    _viewModel.getOwnerPropertyList(context: context);
     getLanguageData();
   }
 

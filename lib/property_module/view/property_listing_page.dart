@@ -138,14 +138,17 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
     getLanguageData();
     if (widget.property == Property.fromLocation) {
       _propertyViewModel.getPropertyDetailsList(
+        context: context,
           address: widget.locationName, property: Property.fromLocation);
     } else if (widget.property == Property.fromBHK) {
       _propertyViewModel.getPropertyDetailsList(
+        context: context,
           address: widget.locationName,
           property: widget.property,
           propertyType: widget.propertyType);
     } else if (widget.property == Property.fromSearch) {
       _propertyViewModel.getPropertyDetailsList(
+        context: context,
           address: widget.locationName,
           property: Property.fromSearch,
           toDate: widget.checkOutDate,
@@ -153,6 +156,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
     } else if (widget.property == Property.fromCurrentLocation) {
       getCurrentLocationProperties().then((value) =>
           _propertyViewModel.getPropertyDetailsList(
+            context: context,
               address: value, property: Property.fromLocation));
     }
   }
@@ -645,6 +649,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                         int response =
                                                             await _propertyViewModel
                                                                 .addToWishlist(
+                                                              context: context,
                                                                     propertyId:
                                                                         data.propId ??
                                                                             '');
@@ -666,6 +671,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                         int response =
                                                             await _propertyViewModel
                                                                 .addToWishlist(
+                                                              context: context,
                                                                     propertyId:
                                                                         data.propId ??
                                                                             '');
@@ -938,7 +944,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                   return;
                 }
                 showSearchResults = true;
-                await value.getSearchedPlace(text);
+                await value.getSearchedPlace(text,context: context);
               },
               decoration: InputDecoration(
                   border: InputBorder.none,
@@ -1044,6 +1050,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                               );
 
                               await _propertyViewModel.filterSortPropertyList(
+                                context: context,
                                   requestModel: model);
                               Navigator.of(context).pop();
                               Navigator.of(context).pop();
@@ -1286,6 +1293,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                               model.address = _searchController.text;
 
                               await _propertyViewModel.filterSortPropertyList(
+                                context: context,
                                   requestModel: model);
                               Navigator.of(context).pop();
                               Navigator.of(context).pop();
@@ -1743,6 +1751,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                       _searchController.text = value.locations[index].location;
                       showSearchResults = false;
                       await _propertyViewModel.getPropertyDetailsList(
+                        context: context,
                           address: value.locations[index].location,
                           property: Property.fromSearch,
                           toDate: widget.checkOutDate,

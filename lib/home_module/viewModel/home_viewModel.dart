@@ -89,26 +89,27 @@ class HomeViewModel extends ChangeNotifier {
         'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/WhatsApp%20Image%202022-02-14%20at%2012.01.04%20PM.jpeg?alt=media&token=6d78225a-59f7-4a7c-8bf3-e5d3f3c66bca',
       ];
 
-  Future<void> getInviteEarnDetails() async {
+  Future<void> getInviteEarnDetails({ required BuildContext context,}) async {
     final ReferAndEarnModel response =
-        await _homeApiService.fetchInviteEarnDetails();
+        await _homeApiService.fetchInviteEarnDetails(context: context);
     referAndEarnModel = response;
     notifyListeners();
   }
   Future<int> addToWishlist({
     required String propertyId,
+    required BuildContext context,
   }) async =>
-      await _homeApiService.addToWishList(propertyId: propertyId);
+      await _homeApiService.addToWishList(propertyId: propertyId,context: context);
 
-  Future<void> getHomePageData() async {
+  Future<void> getHomePageData({ required BuildContext context,}) async {
     final response =
-    await _homeApiService.fetchHomePageData();
+    await _homeApiService.fetchHomePageData(context: context);
     homePageModel = response;
    notifyListeners();
   }
-  Future<void> getTenantLeads() async {
+  Future<void> getTenantLeads({ required BuildContext context,}) async {
     final response =
-    await _homeApiService.fetchTenantLeads();
+    await _homeApiService.fetchTenantLeads(context: context);
    tenantLeadsModel = response;
     notifyListeners();
   }

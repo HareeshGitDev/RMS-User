@@ -140,6 +140,7 @@ class _BookingPageState extends State<BookingPage> {
         DateTimeService.ddMMYYYYformatDate(
             DateTime.now().add(const Duration(days: 1)));
     _viewModel.getBookingDetails(
+      context: context,
         model: BookingAmountRequestModel(
       propId: (widget.propertyDetailsUtilModel.propId).toString(),
       token: (widget.propertyDetailsUtilModel.token).toString(),
@@ -554,6 +555,7 @@ class _BookingPageState extends State<BookingPage> {
                                             message: 'Loading...');
 
                                         await _viewModel.getBookingDetails(
+                                          context: context,
                                             model: BookingAmountRequestModel(
                                           propId: (widget
                                                   .propertyDetailsUtilModel
@@ -714,6 +716,7 @@ class _BookingPageState extends State<BookingPage> {
                                       context: context, message: 'Loading');
                                   BookingCredentialResponseModel response =
                                       await _viewModel.getBookingCredentials(
+                                        context: context,
                                           model: BookingAmountRequestModel(
                                     propId:
                                         (widget.propertyDetailsUtilModel.propId)
@@ -891,6 +894,7 @@ class _BookingPageState extends State<BookingPage> {
           await preferenceUtil.setString(rms_checkOutDate, checkOutDate);
 
           await _viewModel.getBookingDetails(
+            context: context,
               model: BookingAmountRequestModel(
             propId: (widget.propertyDetailsUtilModel.propId).toString(),
             token: (widget.propertyDetailsUtilModel.token).toString(),
@@ -913,6 +917,7 @@ class _BookingPageState extends State<BookingPage> {
           await preferenceUtil.setString(rms_checkOutDate, checkOutDate);
 
           await _viewModel.getBookingDetails(
+            context: context,
               model: BookingAmountRequestModel(
                 propId: (widget.propertyDetailsUtilModel.propId).toString(),
                 token: (widget.propertyDetailsUtilModel.token).toString(),

@@ -133,7 +133,7 @@ class _SearchPageState extends State<SearchPage> {
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _propertyViewModel = Provider.of<PropertyViewModel>(context, listen: false);
-    _propertyViewModel.getHomePageData();
+    _propertyViewModel.getHomePageData(context: context);
     getLanguageData();
     locationsList = getLocationsList();
     searchedValues = getSearchedValues();
@@ -217,7 +217,7 @@ class _SearchPageState extends State<SearchPage> {
                                 return;
                               }
                               showSearchResults = true;
-                              await value.getSearchedPlace(text);
+                              await value.getSearchedPlace(text,context: context);
                             },
                             decoration: InputDecoration(
                                 border: InputBorder.none,
@@ -1316,6 +1316,7 @@ class _SearchPageState extends State<SearchPage> {
                           if (data.propId != null) {
 
                             int response = await _propertyViewModel.addToWishlist(
+                              context: context,
                                 propertyId: data.propId ?? '');
                             if (response == 200) {
                               setState(() {
@@ -1333,6 +1334,7 @@ class _SearchPageState extends State<SearchPage> {
                           if (data.propId != null) {
 
                             int response = await _propertyViewModel.addToWishlist(
+                              context: context,
                                 propertyId: data.propId ?? '');
                             if (response == 200) {
                               setState(() {

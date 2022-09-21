@@ -32,8 +32,8 @@ class MyStayViewModel extends ChangeNotifier {
   List<LanguageModel> feedBackLang = [];
   List<LanguageModel> ticketLang = [];
 MyBankDetailsModel myBankDetailsModel =MyBankDetailsModel();
-  Future<void> getMyStayList() async {
-    final MyStayListModel response = await _myStayApiService.fetchMyStayList();
+  Future<void> getMyStayList({ required BuildContext context,}) async {
+    final MyStayListModel response = await _myStayApiService.fetchMyStayList(context: context);
     myStayListModel = response;
     activeBookingList=response.data != null && response.data?.result != null && response.data?.result!.length != 0?response.data?.result:[];
     /*log('Total Stay List :: ${myStayListModel.data?.result?.length}');
@@ -55,30 +55,30 @@ MyBankDetailsModel myBankDetailsModel =MyBankDetailsModel();
     notifyListeners();
   }
 
-  Future<void> getMyBankDetails({required String bookingId}) async {
+  Future<void> getMyBankDetails({required String bookingId, required BuildContext context,}) async {
     final MyBankDetailsModel response =
-    await _myStayApiService.fetchMyBankDetails(bookingId: bookingId);
+    await _myStayApiService.fetchMyBankDetails(bookingId: bookingId,context: context);
     myBankDetailsModel = response;
     notifyListeners();
   }
 
-  Future<void> getMyStayDetails({required String bookingId}) async {
+  Future<void> getMyStayDetails({required String bookingId, required BuildContext context,}) async {
     final MyStayDetailsModel response =
-        await _myStayApiService.fetchMyStayDetails(bookingId: bookingId);
+        await _myStayApiService.fetchMyStayDetails(bookingId: bookingId,context: context);
     myStayDetailsModel = response;
     notifyListeners();
   }
 
-  Future<void> getRefundSplitUpDetails({required String bookingId}) async {
+  Future<void> getRefundSplitUpDetails({required String bookingId, required BuildContext context,}) async {
     final RefundSplitUpModel response =
-        await _myStayApiService.fetchRefundSplitUpDetails(bookingId: bookingId);
+        await _myStayApiService.fetchRefundSplitUpDetails(bookingId: bookingId,context: context);
     refundSplitUpModel = response;
     notifyListeners();
   }
 
-  Future<void> getInvoiceDetails({required String bookingId}) async {
+  Future<void> getInvoiceDetails({ required BuildContext context,required String bookingId}) async {
     final InvoiceDetailsModel response =
-        await _myStayApiService.fetchInvoiceDetails(bookingId: bookingId);
+        await _myStayApiService.fetchInvoiceDetails(bookingId: bookingId,context: context);
     invoiceDetailsModel = response;
     notifyListeners();
   }
@@ -92,9 +92,11 @@ MyBankDetailsModel myBankDetailsModel =MyBankDetailsModel();
         required String ifsc_code,
         required String bank_name,
       required String buildingRatings,
+        required BuildContext context,
       required String suggestions,
       required String friendRecommendation}) async {
     final int response = await _myStayApiService.submitFeedbackAndBankDetails(
+      context: context,
         bookingId: bookingId,
         email: email,
         ratings: ratings,
@@ -109,27 +111,29 @@ MyBankDetailsModel myBankDetailsModel =MyBankDetailsModel();
   }
 
   Future<int> checkInAndCheckOut(
-      {required String bookingId, required bool checkIn}) async {
+      {required String bookingId, required BuildContext context, required bool checkIn}) async {
     final int response = await _myStayApiService.checkInAndCheckOut(
+      context: context,
         bookingId: bookingId, checkIn: checkIn);
     return response;
   }
 
-  Future<void> getTicketList() async {
-    final response = await _myStayApiService.fetchTicketList();
+  Future<void> getTicketList({ required BuildContext context,}) async {
+    final response = await _myStayApiService.fetchTicketList(context: context);
     ticketResponseModel = response;
     notifyListeners();
   }
 
   Future<int> updateTicketStatus(
-          {required String status, required String ticketId}) async =>
+          {required String status, required BuildContext context, required String ticketId}) async =>
       await _myStayApiService.updateTicketStatus(
           status: status, ticketId: ticketId);
 
   Future<void> uploadImage({
     required String filePath,
+    required BuildContext context,
   }) async {
-    final response = await _myStayApiService.fetchTicketList();
+    final response = await _myStayApiService.fetchTicketList(context: context);
     ticketResponseModel = response;
     notifyListeners();
   }
@@ -154,22 +158,26 @@ MyBankDetailsModel myBankDetailsModel =MyBankDetailsModel();
   Future<String> downloadInvoice({
     required String bookingId,
     required String invoiceId,
+    required BuildContext context,
   }) async {
     return await _myStayApiService.downloadInvoice(
+      context: context,
         bookingId: bookingId, invoiceId: invoiceId);
   }
 
   Future<InvoicePaymentModel> fetchInvoicePaymentCredentials(
-      {required BookingAmountRequestModel model}) async {
-    return await _myStayApiService.fetchInvoicePaymentCredentials(model: model);
+      {required BookingAmountRequestModel model, required BuildContext context,}) async {
+    return await _myStayApiService.fetchInvoicePaymentCredentials(model: model,context: context);
   }
 
   Future<int> updateInvoiceUTRPayment({
     required String invoiceId,
     required String utrNumber,
+    required BuildContext context,
     required String bookingId,
   }) async =>
       await _myStayApiService.updateInvoiceUTRPayment(
+        context: context,
           invoiceId: invoiceId, utrNumber: utrNumber, bookingId: bookingId);
 
   Future<void> getLanguagesData(

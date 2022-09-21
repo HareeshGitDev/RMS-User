@@ -54,7 +54,7 @@ class _TestWidgetState extends State<TestWidget> {
   void initState() {
     super.initState();
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
-    _viewModel.getInvoiceDetails(bookingId: 41769.toString());
+    _viewModel.getInvoiceDetails(bookingId: 41769.toString(),context: context);
   }
 
   @override
@@ -331,6 +331,7 @@ class _TestWidgetState extends State<TestWidget> {
                                           String invoiceLink =
                                               await _viewModel
                                                   .downloadInvoice(
+                                                context: context,
                                                       bookingId:
                                                           41769.toString(),
                                                       invoiceId:
