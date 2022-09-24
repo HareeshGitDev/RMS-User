@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:RentMyStay_user/my_stays/model/Invoice_Details_Model.dart';
+import 'package:RentMyStay_user/my_stays/model/amenities_check_model.dart';
 import 'package:RentMyStay_user/my_stays/model/invoice_payment_model.dart';
 import 'package:RentMyStay_user/my_stays/model/my_bank_details_model.dart';
 import 'package:RentMyStay_user/my_stays/model/mystay_details_model.dart';
@@ -22,6 +23,7 @@ class MyStayViewModel extends ChangeNotifier {
   List<Result>? completedBookingList;
   MyStayDetailsModel? myStayDetailsModel;
   RefundSplitUpModel? refundSplitUpModel;
+
   InvoiceDetailsModel? invoiceDetailsModel;
   TicketResponseModel? ticketResponseModel;
   final LanguageApiService _languageApiService = LanguageApiService();
@@ -31,6 +33,7 @@ class MyStayViewModel extends ChangeNotifier {
   List<LanguageModel> refundSplitUpLang = [];
   List<LanguageModel> feedBackLang = [];
   List<LanguageModel> ticketLang = [];
+  AmenitiesCheckModel? amenitiesCheckModel;
 MyBankDetailsModel myBankDetailsModel =MyBankDetailsModel();
   Future<void> getMyStayList() async {
     final MyStayListModel response = await _myStayApiService.fetchMyStayList();
@@ -59,6 +62,15 @@ MyBankDetailsModel myBankDetailsModel =MyBankDetailsModel();
     final MyBankDetailsModel response =
     await _myStayApiService.fetchMyBankDetails(bookingId: bookingId);
     myBankDetailsModel = response;
+    notifyListeners();
+  }
+
+
+
+  Future<void> getAmenitiesCheckInList({required String bookingId}) async {
+    final AmenitiesCheckModel response =
+    await _myStayApiService.getAmenitiesCheck(bookingId: bookingId);
+    amenitiesCheckModel = response;
     notifyListeners();
   }
 

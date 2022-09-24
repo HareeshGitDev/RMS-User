@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:RentMyStay_user/my_stays/model/amenities_check_model.dart';
 import 'package:RentMyStay_user/my_stays/model/invoice_payment_model.dart';
 import 'package:RentMyStay_user/my_stays/model/my_bank_details_model.dart';
 import 'package:RentMyStay_user/my_stays/model/ticket_response_model.dart';
@@ -74,6 +75,63 @@ class MyStayApiService {
       return MyBankDetailsModel.fromJson(data);
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  Future<AmenitiesCheckModel> getAmenitiesCheck(
+      {required String bookingId}) async {
+    String url = AppUrls.checkInFeedback;
+    final response = await _apiService.getApiCallWithQueryParams(
+      endPoint: url,
+      queryParams: {
+        'booking_id': bookingId,
+      },
+    );
+    final data = response as Map<String, dynamic>;
+
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
+      return AmenitiesCheckModel(
+        msg: 'failure',
+      );
+    } else {
+      return AmenitiesCheckModel.fromJson(data);
+    }
+  }
+
+
+
 
   Future<RefundSplitUpModel> fetchRefundSplitUpDetails(
       {required String bookingId}) async {

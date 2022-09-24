@@ -11,6 +11,8 @@ import 'package:RentMyStay_user/login_module/view/firebase_registration_page.dar
 import 'package:RentMyStay_user/login_module/view/payment_status_page.dart';
 import 'package:RentMyStay_user/login_module/viewModel/login_viewModel.dart';
 import 'package:RentMyStay_user/my_stays/model/ticket_response_model.dart';
+import 'package:RentMyStay_user/my_stays/view/checkin_form.dart';
+import 'package:RentMyStay_user/my_stays/view/checkout_form.dart';
 import 'package:RentMyStay_user/my_stays/view/generate_ticket_page.dart';
 import 'package:RentMyStay_user/my_stays/view/refund_splitup_view_page.dart';
 import 'package:RentMyStay_user/my_stays/view/ticket_details_page.dart';
@@ -149,6 +151,29 @@ class NavigationService {
                   create: (_) => MyStayViewModel(),
                   child: MyStayDetailsPage(bookingId: bookingId,),
                 ));
+
+
+
+
+
+      case AppRoutes.checkinForm:
+        String bookingId = settings.arguments as String;
+        return MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider(
+              create: (_) => MyStayViewModel(),
+              child: CheckInForm(bookingId: bookingId,),
+            ));
+
+
+
+      case AppRoutes.checkoutForm:
+        String bookingId = settings.arguments as String;
+        return MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider(
+              create: (_) => MyStayViewModel(),
+              child: CheckOutForm(bookingId: bookingId,),
+            ));
+
       case AppRoutes.generateTicketPage:
         final data = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
@@ -513,4 +538,6 @@ class AppRoutes {
   static const String propertyRulesPage = 'propertyRulesPage';
   static const String propertyLocationPage = 'propertyLocationPage';
   static const String tenantLeadsPage = 'tenantLeadsPage';
+  static const String checkinForm = 'checkinPage';
+  static const String checkoutForm = 'checkOutPage';
 }
