@@ -1051,49 +1051,6 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                               height: _mainHeight * 0.01,
                             ),
 
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-
-
-                                /*_gridInput(
-                              hint: nullCheck(list: value.bookingDetailsLang)
-                                  ? ' ${value.bookingDetailsLang[16].name} '
-                                  : "Privacy Policies",
-                              icon: Icon(
-                                Icons.policy_outlined,
-                                size: _mainHeight * 0.032,
-                                color: CustomTheme.appTheme,
-                              ),
-                              callBack: () => _handleURLButtonPress(context,
-                                  privacyPolicyLink, nullCheck(list: value.bookingDetailsLang)
-                                      ? ' ${value.bookingDetailsLang[16].name} '
-                                      :'Privacy Policy', '1'),
-                          ), */
-                                _gridInput(
-                                  hint:  "Check-In form",
-                                  icon: Icon(
-                                    Icons.fact_check_outlined,
-                                    size: _mainHeight * 0.032,
-                                    color: CustomTheme.appTheme,
-                                  ),
-                                  callBack: () => Navigator.of(context)
-                                      .pushNamed(AppRoutes.checkinForm,
-                                      arguments:widget.bookingId)
-                                ),
-                                _gridInput(
-                                    hint:  "Check-Out form",
-                                    icon: Icon(
-                                      Icons.fact_check_outlined,
-                                      size: _mainHeight * 0.032,
-                                      color: CustomTheme.appTheme,
-                                    ),
-                                    callBack: () => Navigator.of(context)
-                                        .pushNamed(AppRoutes.checkoutForm,
-                                        arguments:widget.bookingId)
-                                ),
-                              ],
-                            ),
                           ],
                         ),
                       )
