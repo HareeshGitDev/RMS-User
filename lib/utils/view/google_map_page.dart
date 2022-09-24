@@ -138,7 +138,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                             return;
                           }
                           showSearchResults = true;
-                          await value.getSearchedPlace(text);
+                          await value.getSearchedPlace(text,context: context);
                         },
                         decoration: InputDecoration(
                             border: InputBorder.none,
@@ -221,7 +221,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
               onTap: () async{
 
                FocusScope.of(context).requestFocus(FocusNode());
-               Map<String,double>? latLng= await value.getAddressByPlaceID(value.locations[index].placeId);
+               Map<String,double>? latLng= await value.getAddressByPlaceID(value.locations[index].placeId,context: context);
 
                _searchController.text = value.locations[index].location;
                showSearchResults = false;

@@ -156,13 +156,13 @@ class NavigationService {
 
 
 
-      case AppRoutes.checkinForm:
-        String bookingId = settings.arguments as String;
-        return MaterialPageRoute(
-            builder: (context) => ChangeNotifierProvider(
-              create: (_) => MyStayViewModel(),
-              child: CheckInForm(bookingId: bookingId,),
-            ));
+      // case AppRoutes.checkinForm:
+      //   String bookingId = settings.arguments as String;
+      //   return MaterialPageRoute(
+      //       builder: (context) => ChangeNotifierProvider(
+      //         create: (_) => MyStayViewModel(),
+      //         child: CheckInForm(bookingId: bookingId,),
+      //       ));
 
 
 

@@ -378,6 +378,7 @@ class _LoginPageState extends State<LoginPage> {
                                             final LoginResponseModel response =
                                                 await _loginViewModel
                                                     .getLoginDetails(
+                                                  context: context,
                                                         email:
                                                             _emailController.text,
                                                         password:
@@ -395,6 +396,7 @@ class _LoginPageState extends State<LoginPage> {
                                               if (fcmToken != null) {
                                                 await _loginViewModel
                                                     .updateFCMToken(
+                                                  context: context,
                                                         fcmToken: fcmToken);
                                               }
                                               if (widget.fromExternalLink &&
@@ -517,6 +519,7 @@ mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                     response =
                                                     await _loginViewModel
                                                         .registerUserAfterGmail(
+                                                      context: context,
                                                             model:
                                                                 GmailSignInRequestModel(
                                                   name: data.displayName,
@@ -565,6 +568,7 @@ mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                     if (fcmToken != null) {
                                                       await _loginViewModel
                                                           .updateFCMToken(
+                                                        context: context,
                                                               fcmToken: fcmToken);
                                                     }
                                                     if (widget.fromExternalLink &&
@@ -781,6 +785,7 @@ mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     RMSWidgets.showLoaderDialog(
                         context: context, message: 'Please wait...');
                     final int response = await _loginViewModel.resetPassword(
+                      context: context,
                         email: _resetEmailController.text);
                     Navigator.pop(context);
 

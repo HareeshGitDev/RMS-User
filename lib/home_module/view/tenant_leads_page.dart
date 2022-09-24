@@ -70,7 +70,7 @@ class _TenantLeadsPageState extends State<TenantLeadsPage> {
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
-    _homeViewModel.getTenantLeads();
+    _homeViewModel.getTenantLeads(context: context);
     getLanguageData();
   }
 

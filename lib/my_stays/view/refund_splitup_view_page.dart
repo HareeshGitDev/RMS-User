@@ -83,7 +83,7 @@ class _RefundSplitPageState extends State<RefundSplitPage> {
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
-    _viewModel.getRefundSplitUpDetails(bookingId: widget.bookingId);
+    _viewModel.getRefundSplitUpDetails(bookingId: widget.bookingId,context: context);
     getLanguageData();
   }
 

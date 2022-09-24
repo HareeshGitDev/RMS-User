@@ -548,6 +548,7 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
     } else {
       RMSWidgets.showLoaderDialog(context: context, message: 'Please wait...');
       final int response = await _loginViewModel.detailsValidationAfterGmail(
+        context: context,
           model: GmailRegistrationRequestModel(
         city: selectedCity,
         iam: typeValue,
@@ -560,7 +561,7 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
         await setSPValues();
         String? fcmToken = await messaging.getToken();
         if (fcmToken != null) {
-          await _loginViewModel.updateFCMToken(fcmToken: fcmToken);
+          await _loginViewModel.updateFCMToken(fcmToken: fcmToken,context: context);
         }
         if (widget.fromExternalLink && widget.onClick != null) {
           widget.onClick!();
@@ -605,6 +606,7 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
       RMSWidgets.showLoaderDialog(context: context, message: 'Please wait...');
 
       final response = await _loginViewModel.detailsValidationAfterOTP(
+        context: context,
           model: SignUpRequestModel(
         sourceRms: sourceRMS,
         iam: typeValue,
@@ -621,7 +623,7 @@ class _RegistrationPageState extends State<FirebaseRegistrationPage> {
         await setSPValuesForOTP(response: response);
         String? fcmToken = await messaging.getToken();
         if (fcmToken != null) {
-          await _loginViewModel.updateFCMToken(fcmToken: fcmToken);
+          await _loginViewModel.updateFCMToken(fcmToken: fcmToken,context: context);
         }
         if (widget.fromExternalLink && widget.onClick != null) {
           widget.onClick!();

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:RentMyStay_user/owner_property_module/model/owner_property_details_model.dart';
 import 'package:RentMyStay_user/owner_property_module/model/owner_property_listing_model.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'dart:io';
 import '../../utils/constants/api_urls.dart';
 import '../../utils/service/rms_user_api_service.dart';
@@ -12,10 +13,10 @@ import '../model/owner_property_details_request_model.dart';
 class OwnerPropertyApiService {
   final RMSUserApiService _apiService = RMSUserApiService();
 
-  Future<OwnerPropertyListingModel> fetchOwnerPropertyList() async {
+  Future<OwnerPropertyListingModel> fetchOwnerPropertyList({ required BuildContext context,}) async {
     String url = AppUrls.ownerPropertyListingUrl;
 
-    final response = await _apiService.getApiCall(endPoint: url);
+    final response = await _apiService.getApiCall(endPoint: url,context: context);
     final data = response as Map<String, dynamic>;
 
     return data['msg'].toString().toLowerCase().contains('failure')
@@ -24,11 +25,11 @@ class OwnerPropertyApiService {
   }
 
   Future<OwnerPropertyDetailsModel> fetchOwnerPropertyDetails(
-      {required String propId}) async {
+      {required String propId, required BuildContext context,}) async {
     String url = AppUrls.ownerPropertyUrl;
 
     final response = await _apiService
-        .getApiCallWithQueryParams(endPoint: url, queryParams: {'id': propId});
+        .getApiCallWithQueryParams(endPoint: url, queryParams: {'id': propId,}, context: context);
     final data = response as Map<String, dynamic>;
 
     return data['msg'].toString().toLowerCase().contains('failure')
@@ -42,10 +43,11 @@ class OwnerPropertyApiService {
     required String rent,
     required String propertyType,
     required String roomType,
+    required BuildContext context,
   }) async {
     String url = AppUrls.ownerPropertyUrl;
 
-    final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
+    final response = await _apiService.postApiCall(endPoint: url,context: context, bodyParams: {
       'title': title,
       'email': email,
       'rent': rent,
@@ -186,6 +188,7 @@ class OwnerPropertyApiService {
       required String email,
       required String phone,
       required String address,
+        required BuildContext context,
       String? comment,
       required String units,
       String? lat,
@@ -193,7 +196,7 @@ class OwnerPropertyApiService {
     String url = AppUrls.hostPropertyUrl;
 
     final response =
-        await _apiService.postApiCall(endPoint: url, bodyParams: {
+        await _apiService.postApiCall(endPoint: url,context: context, bodyParams: {
           'email_id':email,
           'owner_name':ownerName,
           'contact_no':phone,

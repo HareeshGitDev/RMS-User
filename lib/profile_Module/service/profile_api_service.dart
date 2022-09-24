@@ -1,4 +1,5 @@
 import 'package:RentMyStay_user/profile_Module/model/profile_model.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../../utils/constants/api_urls.dart';
 import '../../utils/constants/sp_constants.dart';
@@ -8,10 +9,11 @@ import '../../utils/service/shared_prefrences_util.dart';
 class ProfileApiService {
   final RMSUserApiService _apiService = RMSUserApiService();
 
-  Future<ProfileModel> fetchProfileDetails() async {
+  Future<ProfileModel> fetchProfileDetails({ required BuildContext context,}) async {
     String url = AppUrls.profileUrl;
     final response = await _apiService.getApiCall(
       endPoint: url,
+      context: context
     );
     final data = response as Map<String, dynamic>;
 

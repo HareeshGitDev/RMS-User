@@ -33,9 +33,9 @@ class PropertyDetailsViewModel extends ChangeNotifier {
     ),
   );
 
-  Future<void> getPropertyDetails({required String propId}) async {
+  Future<void> getPropertyDetails({required String propId, required BuildContext context,}) async {
     final response =
-        await _detailsApiService.fetchPropertyDetails(propId: propId);
+        await _detailsApiService.fetchPropertyDetails(propId: propId,context: context);
     propertyDetailsModel = response;
     if (propertyDetailsModel != null &&
         propertyDetailsModel?.data != null &&
@@ -70,10 +70,12 @@ class PropertyDetailsViewModel extends ChangeNotifier {
       required String name,
       required String phoneNumber,
       required String date,
+        required BuildContext context,
       required String visitType}) async {
     return await _detailsApiService.scheduleSiteVisit(
         email: email,
         name: name,
+        context: context,
         propId: propId,
         phoneNumber: phoneNumber,
         date: date,
@@ -82,19 +84,20 @@ class PropertyDetailsViewModel extends ChangeNotifier {
 
   Future<int> addToWishlist({
     required String propertyId,
+    required BuildContext context,
   }) async =>
-      await _detailsApiService.addToWishList(propertyId: propertyId);
+      await _detailsApiService.addToWishList(propertyId: propertyId,context: context);
 
   Future<void> getBookingDetails(
-      {required BookingAmountRequestModel model}) async {
-    final response = await _detailsApiService.fetchBookingAmounts(model: model);
+      {required BookingAmountRequestModel model, required BuildContext context,}) async {
+    final response = await _detailsApiService.fetchBookingAmounts(model: model,context: context);
     bookingAmountsResponseModel = response;
     notifyListeners();
   }
 
   Future<BookingCredentialResponseModel> getBookingCredentials(
-      {required BookingAmountRequestModel model}) async {
-    return await _detailsApiService.fetchBookingCredentials(model: model);
+      {required BookingAmountRequestModel model, required BuildContext context,}) async {
+    return await _detailsApiService.fetchBookingCredentials(model: model,context:context );
   }
 
   void getAmenitiesList(Amenities? amenitiesNew) {

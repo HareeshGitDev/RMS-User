@@ -24,10 +24,10 @@ class FeedbackPage extends StatefulWidget {
 
   const FeedbackPage(
       {Key? key,
-      required this.title,
-      required this.bookingId,
-      required this.email,
-      required this.name})
+        required this.title,
+        required this.bookingId,
+        required this.email,
+        required this.name})
       : super(key: key);
 
   @override
@@ -107,7 +107,7 @@ class _FeedbackState extends State<FeedbackPage> {
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
-    _viewModel.getMyBankDetails(bookingId: widget.bookingId);
+    _viewModel.getMyBankDetails(bookingId: widget.bookingId,context: context);
 
     getLanguageData();
   }
@@ -208,7 +208,7 @@ class _FeedbackState extends State<FeedbackPage> {
                                   fontWeight: FontWeight.w500,
                                   color: Colors.black,
                                   fontSize: 14,
-                               overflow: TextOverflow.ellipsis
+                                  overflow: TextOverflow.ellipsis
                               ),
                             ),
                           ),
@@ -276,35 +276,35 @@ class _FeedbackState extends State<FeedbackPage> {
                                         :'Enter IFSC Code Here',
                                     focusNode: _ifscScope,
                                   ),
-                                 SizedBox(height: 20,),
+                                  SizedBox(height: 20,),
                                   value.myBankDetailsModel.data?.bankdetails !=null? Container(
 
 
-                                   width: double.infinity,
-                                   child: Neumorphic(
-                                     style: const NeumorphicStyle(
-                                       depth: -2,
-                                       color: Colors.white,
-                                     ),
-                                     child: Column(
-                                       crossAxisAlignment: CrossAxisAlignment.start,
-                                       children: [
+                                    width: double.infinity,
+                                    child: Neumorphic(
+                                      style: const NeumorphicStyle(
+                                        depth: -2,
+                                        color: Colors.white,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
 
-                                         Padding(
-                                           padding:  EdgeInsets.only(left: 15, right: 15,top: 15),
-                                           child: const Text("Bank Details",
+                                          Padding(
+                                            padding:  EdgeInsets.only(left: 15, right: 15,top: 15),
+                                            child: const Text("Bank Details",
 
-                                           ),
-                                         ),
-                                         Padding(
-                                           padding:  EdgeInsets.only(left: 15, right: 15,bottom: 15,top: 5),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding:  EdgeInsets.only(left: 15, right: 15,bottom: 15,top: 5),
 
-                                           child: Text("${value.myBankDetailsModel.data?.bankdetails}"),
-                                         )
-                                       ],
-                                     ),
-                                   ),
-                                 ):Container()
+                                            child: Text("${value.myBankDetailsModel.data?.bankdetails}"),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ):Container()
                                 ],
                               ),
                             );
@@ -328,7 +328,7 @@ class _FeedbackState extends State<FeedbackPage> {
                         height: _mainHeight * 0.05,
                         width: _mainWidth,
                         child: RatingBar.builder(
-                         // initialRating: 4,
+                          // initialRating: 4,
                           itemCount: 5,
                           glow: false,
                           maxRating: 10.0,
@@ -469,19 +469,19 @@ class _FeedbackState extends State<FeedbackPage> {
                                           children: [
                                             yesValue
                                                 ? Icon(Icons.thumb_up,
-                                                    size: _mainHeight * 0.03,
-                                                    color: CustomTheme.myFavColor)
+                                                size: _mainHeight * 0.03,
+                                                color: CustomTheme.myFavColor)
                                                 : Icon(
-                                                    Icons.thumb_up_alt_outlined,
-                                                    size: _mainHeight * 0.03,
-                                                    color: CustomTheme.myFavColor),
+                                                Icons.thumb_up_alt_outlined,
+                                                size: _mainHeight * 0.03,
+                                                color: CustomTheme.myFavColor),
                                             SizedBox(width: _mainWidth * 0.02),
                                             Text('YES',
                                                 style: TextStyle(
                                                     fontSize: 18,
                                                     color: CustomTheme.myFavColor,
                                                     fontWeight:
-                                                        FontWeight.w600)),
+                                                    FontWeight.w600)),
                                           ],
                                         ),
                                       ),
@@ -500,11 +500,11 @@ class _FeedbackState extends State<FeedbackPage> {
                                         child: Row(children: [
                                           noValue == false
                                               ? Icon(Icons.thumb_down,
-                                                  size: _mainHeight * 0.03,
-                                                  color: CustomTheme.black)
+                                              size: _mainHeight * 0.03,
+                                              color: CustomTheme.black)
                                               : Icon(Icons.thumb_down_outlined,
-                                                  size: _mainHeight * 0.03,
-                                                  color: CustomTheme.black),
+                                              size: _mainHeight * 0.03,
+                                              color: CustomTheme.black),
                                           SizedBox(width: _mainWidth * 0.02),
                                           Text(
                                             'NO',
@@ -579,6 +579,7 @@ class _FeedbackState extends State<FeedbackPage> {
                 String bankDetails =
                     '${_nameController.text} ${_banknameController.text} ${_banknumberController.text} ${_bankIfscController.text}';
                 int response = await _viewModel.submitFeedbackAndBankDetails(
+                    context: context,
                     bookingId: widget.bookingId,
                     bank_name: _banknameController.text.toString(),
                     account_number: _banknumberController.text.toString(),
@@ -589,7 +590,7 @@ class _FeedbackState extends State<FeedbackPage> {
                     buildingRatings: buildingRating.toString(),
                     suggestions: _suggestionController.text,
                     friendRecommendation:
-                        shouldRecommendFriend.value ? 'Yes' : 'No');
+                    shouldRecommendFriend.value ? 'Yes' : 'No');
                 if (response == 200) {
                   RMSWidgets.showSnackbar(
                       context: context,
@@ -606,17 +607,18 @@ class _FeedbackState extends State<FeedbackPage> {
             } else {
               RMSWidgets.showLoaderDialog(context: context, message: 'Loading');
               int response = await _viewModel.submitFeedbackAndBankDetails(
-                  bookingId: widget.bookingId,
-                  email: widget.email,
-                  ratings: rmsRating.toString(),
-               bank_name: _banknameController.text.toString(),
-                  account_number: _banknumberController.text.toString(),
-                  account_name: _nameController.text.toString(),
-                  ifsc_code: _bankIfscController.text.toString(),
-                  buildingRatings: buildingRating.toString(),
-                  suggestions: _suggestionController.text,
-                  friendRecommendation:
-                      shouldRecommendFriend.value ? 'Yes' : 'No', );
+                context: context,
+                bookingId: widget.bookingId,
+                email: widget.email,
+                ratings: rmsRating.toString(),
+                bank_name: _banknameController.text.toString(),
+                account_number: _banknumberController.text.toString(),
+                account_name: _nameController.text.toString(),
+                ifsc_code: _bankIfscController.text.toString(),
+                buildingRatings: buildingRating.toString(),
+                suggestions: _suggestionController.text,
+                friendRecommendation:
+                shouldRecommendFriend.value ? 'Yes' : 'No', );
               log(response.toString());
               if (response == 200) {
                 RMSWidgets.showSnackbar(

@@ -551,6 +551,7 @@ getLanguageData();
                                         context: context, message: 'Please wait...');
                                     final SignUpResponseModel response =
                                     await _loginViewModel.signUpUser(
+                                      context: context,
                                         signUpRequestModel: SignUpRequestModel(
                                           email: _emailController.text,
                                           password: _passwordController.text,
@@ -570,6 +571,7 @@ getLanguageData();
                                       await messaging.getToken();
                                       if (fcmToken != null) {
                                         await _loginViewModel.updateFCMToken(
+                                          context: context,
                                             fcmToken: fcmToken);
                                       }
                                       RMSWidgets.getToast(

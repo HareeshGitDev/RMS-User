@@ -82,7 +82,7 @@ class _TicketListPageState extends State<TicketListPage> {
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
-    _viewModel.getTicketList();
+    _viewModel.getTicketList(context: context);
     getLanguageData();
   }
   bool nullCheck({required List<LanguageModel> list}) =>
@@ -147,7 +147,7 @@ class _TicketListPageState extends State<TicketListPage> {
                                   return GestureDetector(
                                     onTap: () => Navigator.pushNamed(
                                         context, AppRoutes.ticketDetailsPage,
-                                        arguments: data ?? []).then((value) => _viewModel.getTicketList()),
+                                        arguments: data ?? []).then((value) => _viewModel.getTicketList(context: context)),
                                     child: Card(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:

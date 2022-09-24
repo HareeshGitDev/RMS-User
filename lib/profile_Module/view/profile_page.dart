@@ -82,7 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _profileViewModel = Provider.of<ProfileViewModel>(context, listen: false);
-    _profileViewModel.getProfileDetails();
+    _profileViewModel.getProfileDetails(context: context);
     getLanguageData();
   }
   @override

@@ -230,6 +230,7 @@ class _AddPropertyPageState extends State<AddPropertyPage> {
             } else {
               RMSWidgets.showLoaderDialog(context: context, message: 'Loading');
               String propId = await _viewModel.createProperty(
+                context: context,
                 title: _propertyNameController.text,
                 rent: '0',
                 email: '${await sharedPreferenceUtil.getString(rms_email)}',

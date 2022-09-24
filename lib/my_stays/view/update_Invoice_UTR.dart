@@ -82,7 +82,7 @@ class _UpdateInvoiceUTRPageState extends State<UpdateInvoiceUTRPage> {
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
   }
-
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextStyle get getKeyStyle =>
       TextStyle(color: Colors.grey, fontWeight: FontWeight.w500, fontSize: 14);
 
@@ -213,40 +213,48 @@ class _UpdateInvoiceUTRPageState extends State<UpdateInvoiceUTRPage> {
             ),
             Container(
                 alignment: Alignment.center,
-                child: Text('Update UTR/Transaction ID')),
+                child: Text('Update UTR')),
             SizedBox(
               height: 10,
             ),
             Container(
-              height: 45,
-              child: Neumorphic(
-                style: NeumorphicStyle(
-                  // shadowLightColor: CustomTheme.appTheme.withAlpha(150),
-                  shadowDarkColor: Colors.blueGrey.shade100,
-                  // color: Colors.black26.withAlpha(40),
-                  color: Colors.white,
-                  intensity: 5,
-                  depth: -2,
-                  shape: NeumorphicShape.convex,
-                ),
-                child: TextFormField(
+
+
+                child:Form(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                   key: _formKey,
+                    child:TextFormField(
                   controller: _utrController,
+                  keyboardType: TextInputType.number,
+                  validator: (val){
+                    if(val?.length==12){
+                      return null;
+                    }
+                    else{
+                      return "Please enter proper utr Number";
+                    }
+                  },
+                      maxLength: 12,
                   decoration: InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.only(left: 10),
+                    border: new OutlineInputBorder(
+                      borderRadius: new BorderRadius.circular(25.0),
+                      borderSide: new BorderSide(),
+                    ),
+counterText: "",
+                 //   contentPadding: EdgeInsets.only(left: 10),
                     hintStyle: TextStyle(
                         //fontFamily: fontFamily,
                         fontSize: 16,
                         color: Colors.black54,
                         fontWeight: FontWeight.w500),
                   ),
-                ),
-              ),
+                )),
+
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-                Text('Note: Kindly mention Transaction/Reference ID/UTR No. once the payment is done.')
+                Text('Note: Kindly mention UTR_NO/UPI_ID once the payment is done.')
           ]),
         ),
       ),
@@ -256,24 +264,27 @@ class _UpdateInvoiceUTRPageState extends State<UpdateInvoiceUTRPage> {
         padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
         child: ElevatedButton(
           onPressed: () async {
-            if(_utrController.text.length < 6){
-              RMSWidgets.showSnackbar(context: context, message: 'Please Enter Valid UTR/Transaction Id', color: CustomTheme.errorColor);
-              return;
+            if(_formKey.currentState!.validate()) {
+              RMSWidgets.showLoaderDialog(context: context, message: 'Loading');
+              int response = await _viewModel.updateInvoiceUTRPayment(
+                context: context,
+                  invoiceId: widget.invoiceId,
+                  utrNumber: _utrController.text,
+                  bookingId: widget.bookingId);
+              Navigator.of(context).pop();
+              if (response == 200) {
+                RMSWidgets.showSnackbar(context: context,
+                    message: 'Payment Successful.Please wait for update.',
+                    color: CustomTheme.appTheme);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, AppRoutes.dashboardPage, (route) => false);
+              } else {
+                RMSWidgets.showSnackbar(context: context,
+                    message: 'Something Went Wrong.',
+                    color: CustomTheme.errorColor);
+              }
             }
-            RMSWidgets.showLoaderDialog(context: context, message: 'Loading');
-            int response=await _viewModel.updateInvoiceUTRPayment(
-                invoiceId: widget.invoiceId,
-                utrNumber: _utrController.text,
-                bookingId: widget.bookingId);
-            Navigator.of(context).pop();
-           if(response ==200){
-             RMSWidgets.showSnackbar(context: context, message: 'Payment Successful.Please wait for update.', color: CustomTheme.appTheme);
-             Navigator.pushNamedAndRemoveUntil(context, AppRoutes.dashboardPage, (route) => false);
-           }else{
-             RMSWidgets.showSnackbar(context: context, message: 'Something Went Wrong.', color: CustomTheme.errorColor);
-
-           }
-          },
+            },
           child: Text(
             'Update UTR / Transaction Id',
             style: TextStyle(

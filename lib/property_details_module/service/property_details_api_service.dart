@@ -8,6 +8,7 @@ import 'package:RentMyStay_user/property_module/model/property_list_model.dart';
 import 'package:RentMyStay_user/property_module/model/wish_list_model.dart';
 import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../../utils/constants/api_urls.dart';
 import '../../utils/constants/enum_consts.dart';
@@ -18,11 +19,11 @@ class PropertyDetailsApiService {
   final RMSUserApiService _apiService = RMSUserApiService();
 
   Future<PropertyDetailsModel> fetchPropertyDetails(
-      {required String propId}) async {
+      {required String propId, required BuildContext context,}) async {
     String url = AppUrls.propertyDetailsUrl;
 
     final response = await _apiService
-        .getApiCallWithQueryParams(endPoint: url, queryParams: {
+        .getApiCallWithQueryParams(endPoint: url,context: context, queryParams: {
       'id': propId,
     });
     final data = response as Map<String, dynamic>;
@@ -34,9 +35,9 @@ class PropertyDetailsApiService {
         : PropertyDetailsModel.fromJson(data);
   }
 
-  Future<int> addToWishList({required String propertyId}) async {
+  Future<int> addToWishList({required String propertyId, required BuildContext context,}) async {
     String url = AppUrls.addWishListPropertyUrl;
-    final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
+    final response = await _apiService.postApiCall(endPoint: url,context: context, bodyParams: {
       'prop_id': base64Encode(utf8.encode(propertyId)),
     });
 
@@ -48,12 +49,13 @@ class PropertyDetailsApiService {
   Future<int> scheduleSiteVisit(
       {required String email,
       required String propId,
+        required BuildContext context,
       required String name,
       required String phoneNumber,
       required String date,
       required String visitType}) async {
     String url = AppUrls.scheduleSiteVisitUrl;
-    final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
+    final response = await _apiService.postApiCall(endPoint: url,context: context, bodyParams: {
       'email': email,
       'propid': propId,
       'name': name,
@@ -68,10 +70,10 @@ class PropertyDetailsApiService {
   }
 
   Future<BookingAmountsResponseModel> fetchBookingAmounts(
-      {required BookingAmountRequestModel model}) async {
+      {required BookingAmountRequestModel model, required BuildContext context,}) async {
     String url = AppUrls.bookingDetailsUrl;
     final response = await _apiService
-        .getApiCallWithQueryParams(endPoint: url, queryParams: {
+        .getApiCallWithQueryParams(endPoint: url, context:context,queryParams: {
       'id': model.propId.toString(),
       'travel_from_date': model.fromDate,
       'travel_to_date': model.toDate,
@@ -89,9 +91,9 @@ class PropertyDetailsApiService {
   }
 
   Future<BookingCredentialResponseModel> fetchBookingCredentials(
-      {required BookingAmountRequestModel model}) async {
+      {required BookingAmountRequestModel model, required BuildContext context,}) async {
     String url = AppUrls.bookingCredentialsUrl;
-    final response = await _apiService.postApiCall(endPoint: url, bodyParams: {
+    final response = await _apiService.postApiCall(endPoint: url, context:context,bodyParams: {
       'id': model.propId,
       'travel_from_date': model.fromDate,
       'travel_to_date': model.toDate,

@@ -105,7 +105,7 @@ class _InvoiceState extends State<InvoicePage> {
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _viewModel = Provider.of<MyStayViewModel>(context, listen: false);
-    _viewModel.getInvoiceDetails(bookingId: widget.bookingId);
+    _viewModel.getInvoiceDetails(bookingId: widget.bookingId,context: context);
     getLanguageData();
   }
 
@@ -449,6 +449,7 @@ class _InvoiceState extends State<InvoicePage> {
                                                 String invoiceLink =
                                                     await _viewModel
                                                         .downloadInvoice(
+                                                      context: context,
                                                             bookingId: widget
                                                                 .bookingId,
                                                             invoiceId:
@@ -571,6 +572,7 @@ class _InvoiceState extends State<InvoicePage> {
                           context: context, message: 'Loading');
                       final InvoicePaymentModel response =
                           await _viewModel.fetchInvoicePaymentCredentials(
+                            context: context,
                               model: BookingAmountRequestModel(
                                   propId: widget.propertyId,
                                   depositAmount: model.amount,

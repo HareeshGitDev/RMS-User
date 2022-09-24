@@ -89,7 +89,7 @@ class _WishListPageState extends State<WishListPage> {
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _propertyViewModel = Provider.of<PropertyViewModel>(context, listen: false);
-    _propertyViewModel.getWishList();
+    _propertyViewModel.getWishList(context: context);
     getLanguageData();
   }
 
@@ -651,12 +651,13 @@ class _WishListPageState extends State<WishListPage> {
                                                   int response =
                                                       await _propertyViewModel
                                                           .addToWishlist(
+                                                        context: context,
                                                               propertyId:
                                                                   data.propId ??
                                                                       '');
                                                   if (response == 200) {
                                                     RMSWidgets.showLoaderDialog(context: context, message:'Loading');
-                                                    await _propertyViewModel.getWishList();
+                                                    await _propertyViewModel.getWishList(context: context);
                                                     Navigator.of(context).pop();
                                                     RMSWidgets.showSnackbar(
                                                         context: context,
@@ -672,6 +673,7 @@ class _WishListPageState extends State<WishListPage> {
                                                   int response =
                                                       await _propertyViewModel
                                                           .addToWishlist(
+                                                        context: context,
                                                               propertyId:
                                                                   data.propId ??
                                                                       '');

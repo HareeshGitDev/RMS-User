@@ -374,6 +374,7 @@ class _HostPropertyPageState extends State<HostPropertyPage> {
                   RMSWidgets.showLoaderDialog(
                       context: context, message: 'Loading');
                   int response = await _viewModel.hostProperty(
+                    context: context,
                       ownerName: _nameController.text,
                       email: _emailController.text,
                       phone: _phoneController.text,

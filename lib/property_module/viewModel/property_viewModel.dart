@@ -29,6 +29,7 @@ class PropertyViewModel extends ChangeNotifier {
 
   Future<void> getPropertyDetailsList({
     required String address,
+    required BuildContext context,
     String? propertyType,
     String? fromDate,
     String? toDate,
@@ -37,6 +38,7 @@ class PropertyViewModel extends ChangeNotifier {
     final PropertyListModel data =
         await _propertyApiService.fetchPropertyDetailsList(
             address: address,
+            context: context,
             property: property,
             propertyType: propertyType,
             fromDate: fromDate,
@@ -46,9 +48,9 @@ class PropertyViewModel extends ChangeNotifier {
     log('ALL PROPERTIES :: ${propertyListModel.data?.length}');
     notifyListeners();
   }
-  Future<void> getHomePageData() async {
+  Future<void> getHomePageData({ required BuildContext context,}) async {
     final response =
-    await _propertyApiService.fetchHomePageData();
+    await _propertyApiService.fetchHomePageData(context: context);
     homePageModel = response;
     notifyListeners();
   }
@@ -83,22 +85,23 @@ class PropertyViewModel extends ChangeNotifier {
 
   Future<int> addToWishlist({
     required String propertyId,
+    required BuildContext context,
   }) async =>
-      await _propertyApiService.addToWishList(propertyId: propertyId);
+      await _propertyApiService.addToWishList(propertyId: propertyId,context:context );
 
-  Future<void> getWishList() async {
-    final WishListModel data = await _propertyApiService.fetchWishList();
+  Future<void> getWishList({ required BuildContext context,}) async {
+    final WishListModel data = await _propertyApiService.fetchWishList(context: context);
     wishListModel = data;
     log('ALL WishListed PROPERTIES :: ${wishListModel.data?.length}');
     notifyListeners();
   }
 
-  Future<void> getSearchedPlace(String searchText) async {
+  Future<void> getSearchedPlace(String searchText,{ required BuildContext context,}) async {
     RMSUserApiService apiService = RMSUserApiService();
 
     String url =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$searchText&types=geocode&key=$googleMapKey&components=country:in';
-    final data = await apiService.getApiCallWithURL(endPoint: url)
+    final data = await apiService.getApiCallWithURL(endPoint: url,context: context)
         as Map<String, dynamic>;
 
     if (data['status'] == 'OK' && data['predictions'] != null) {
@@ -117,9 +120,10 @@ class PropertyViewModel extends ChangeNotifier {
 
   Future<void> filterSortPropertyList({
     required FilterSortRequestModel requestModel,
+    required BuildContext context,
   }) async {
     final PropertyListModel data = await _propertyApiService
-        .filterSortPropertyList(requestModel: requestModel);
+        .filterSortPropertyList(requestModel: requestModel,context: context);
 
     propertyListModel = data;
     log('ALL Sorted PROPERTIES ::  ${data.data?.length}');
