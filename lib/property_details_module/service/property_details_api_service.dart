@@ -79,6 +79,7 @@ class PropertyDetailsApiService {
       'travel_to_date': model.toDate,
       'num_guests': model.numOfGuests,
       'coupon_code': model.couponCode,
+      'booking_type':model.bookingType,
     });
     final data = response as Map<String, dynamic>;
 

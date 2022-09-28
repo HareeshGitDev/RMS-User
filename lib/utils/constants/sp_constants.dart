@@ -4,6 +4,7 @@ const String rms_email='email';
 const String rms_profilePicUrl='profilePicUrl';
 const String rms_name='name';
 const String rms_gmapKey='gmapKey';
+const String rms_BookingType='';
 const String rms_userId='userId';
 const String rms_user_longitude='userLongitude';
 const String rms_user_latitude='userLatitude';

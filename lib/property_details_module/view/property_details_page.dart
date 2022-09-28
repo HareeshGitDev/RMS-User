@@ -1495,6 +1495,37 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                             .getString(rms_email) ??
                                         '')
                                     .toString();
+                                var checkInDate=await sharedPreferenceUtil.getString(rms_checkInDate)??DateTimeService.ddMMYYYYformatDate(DateTime.now());
+                                var checkOutDate=await sharedPreferenceUtil.getString(rms_checkOutDate)??DateTimeService.ddMMYYYYformatDate(
+                                    DateTime.now().add(const Duration(days: 1)));
+                            var formatedIn= DateTime.parse(checkInDate);
+                            var formatedOut= DateTime.parse(checkOutDate);
+                              int diff= formatedOut.difference(formatedIn).inDays;
+                              var bookingType= await sharedPreferenceUtil.getString(rms_BookingType);
+
+                              print("Llll  $bookingType");
+                              if(bookingType ==null ){
+print("kkk");
+                                if(diff<=29){
+                                  print(".............1");
+                                  await sharedPreferenceUtil.setString(rms_BookingType, "Daily");
+                                }
+                                else if(diff<=90 && diff>29){
+                                  print("............2");
+                                  await sharedPreferenceUtil.setString(rms_BookingType, "Short Term");
+                                }
+                                else if(diff>90 && diff>29){
+                                  print("..........3");
+                                  await sharedPreferenceUtil.setString(rms_BookingType, "Long Term");
+                                }
+                                else{
+                                  print(".................4");
+                                  await sharedPreferenceUtil.setString(rms_BookingType, " ");
+                                }
+                              }
+else{
+  print("ijggyh");
+                              }
                                 var phone = (await sharedPreferenceUtil
                                             .getString(rms_phoneNumber) ??
                                         '')
@@ -1504,6 +1535,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                 rms_registeredUserToken) ??
                                             '')
                                         .toString();
+
                                 Navigator.of(context).pop();
                                 List<int> guestList=[];
                                 for(int i=1;i <= int.parse(_viewModel
@@ -1521,7 +1553,10 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                   email: email,
                                   mobile: phone,
                                   token: token,
+                                  flexiRent: _viewModel.propertyDetailsModel?.data?.details?.monthlyRent,
+                                  longTermRent: _viewModel.propertyDetailsModel?.data?.details?.rmsRent,
                                   guestList: guestList,
+                                  bookingType: await preferenceUtil.getString(rms_BookingType),
                                   propId: int.parse((_viewModel
                                           .propertyDetailsModel
                                           ?.data

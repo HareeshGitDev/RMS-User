@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:ui';
+
 
 import 'package:RentMyStay_user/utils/view/webView_page.dart';
 import 'package:RentMyStay_user/property_details_module/model/booking_amount_request_model.dart';
@@ -35,6 +35,7 @@ import '../../utils/view/calander_page.dart';
 class BookingPage extends StatefulWidget {
   final PropertyDetailsUtilModel propertyDetailsUtilModel;
 
+
   BookingPage({Key? key, required this.propertyDetailsUtilModel})
       : super(key: key);
 
@@ -49,7 +50,9 @@ class _BookingPageState extends State<BookingPage> {
   var _mainWidth;
   int _currentStep = 0;
   int maxGuest=0;
-
+List bookingTypeData=[];
+var bookingType;
+var bookingTypeDisplay;
   DateTime selectedDate = DateTime.now();
   String showDate = 'Select Date For Visit';
   String checkInDate = DateTimeService.ddMMYYYYformatDate(DateTime.now());
@@ -139,7 +142,15 @@ class _BookingPageState extends State<BookingPage> {
     checkOutDate = await preferenceUtil.getString(rms_checkOutDate) ??
         DateTimeService.ddMMYYYYformatDate(
             DateTime.now().add(const Duration(days: 1)));
-    _viewModel.getBookingDetails(
+    log("OYE HOYE");
+    var fromDate= DateTime.parse(checkInDate);
+    var toDate=    DateTime.parse(checkOutDate);
+  int difference= toDate.difference(fromDate).inDays;
+
+    log(">>>>> $difference");
+   // int difference= ;
+
+   await _viewModel.getBookingDetails(
       context: context,
         model: BookingAmountRequestModel(
       propId: (widget.propertyDetailsUtilModel.propId).toString(),
@@ -148,7 +159,11 @@ class _BookingPageState extends State<BookingPage> {
       couponCode: '',
       fromDate: checkInDate,
       toDate: checkOutDate,
+     bookingType: widget.propertyDetailsUtilModel.bookingType !=null?widget.propertyDetailsUtilModel.bookingType:""
+
     ));
+   bookingTypeData.add("Flexi Rent ${widget.propertyDetailsUtilModel.flexiRent}");
+   bookingTypeData.add("Regular Rent ${widget.propertyDetailsUtilModel.longTermRent}");
   }
 
   @override
@@ -338,6 +353,73 @@ class _BookingPageState extends State<BookingPage> {
                                         BookingAmountsResponseModel(),
                                     value: value),
                               ),
+//                             Step(
+//
+//                                   isActive: false,
+//                                   state: StepState.complete,
+//                                   title: const Text("Booking Type" ,style: TextStyle(
+//                                       fontSize: 16,
+//                                       fontWeight: FontWeight.w500,
+//
+//                                       color: Colors.grey),),
+//                                   content: Container(
+//                                     width: double.infinity,
+//                                     decoration: BoxDecoration(
+//                                       borderRadius:
+//                                       BorderRadius.all(Radius.circular(20)),
+//                                     ),
+//                                     child: Neumorphic(
+//                                       padding: EdgeInsets.only(left: 10),
+//
+//                                       style: NeumorphicStyle(
+//                                         depth: -3,
+//                                         color: Colors.white,
+//                                       ),
+//                                       child: DropdownButtonHideUnderline(
+//                                         child: DropdownButton(
+//                                           hint: Text("SELECT BOOKING TYPE"),
+//                                             value: bookingTypeDisplay,
+//                                             onChanged: (val) {
+// if(val=="Flexi Rent ${value.bookingAmountsResponseModel?.data?.rent}"){
+//   setState((){
+//     bookingType="Short Term";
+//     bookingTypeDisplay=val;
+//   });
+// }
+// else{
+//   setState((){
+//     bookingType="Long Term";
+//     bookingTypeDisplay=val;
+//
+//   });
+// }
+// print(">>>>  ${bookingType}");
+//                                         }, items:
+//                                           bookingTypeData.map((e) {return  DropdownMenuItem(child: Text(e.toString(),),
+//
+//                                           value: e.toString(),
+//                                           );}
+//
+//         ).toList()
+//
+//                                  ),
+//                                       ),
+//                                     ),
+//                                   )
+//                                   //:Container(
+//                                     // width: double.infinity,
+//                                     // decoration: BoxDecoration(
+//                                     //   borderRadius:
+//                                     //   BorderRadius.all(Radius.circular(20)),
+//                                     // ),
+//                                     // child: Neumorphic(
+//                                     //   padding: EdgeInsets.only(left: 10,right: 20,top: 10,bottom: 10),
+//                                     //
+//                                     //   style: NeumorphicStyle(
+//                                     //     depth: -3,
+//                                     //     color: Colors.white,
+//                                     //   ),child: Text("Flexi Rent")),),
+//                             ),
                               Step(subtitle: Text(_nameController.text),
                                 isActive: true,
                                 state: StepState.complete,
@@ -458,6 +540,7 @@ class _BookingPageState extends State<BookingPage> {
                                   ),
                                 ),
                               ),
+
                               Step(
                                 isActive: true,
                                 title: Text(
@@ -553,7 +636,9 @@ class _BookingPageState extends State<BookingPage> {
                                         RMSWidgets.showLoaderDialog(
                                             context: context,
                                             message: 'Loading...');
-
+                                        var fromDate= DateTime.parse(checkInDate);
+                                        var toDate=    DateTime.parse(checkOutDate);
+                                        int difference= toDate.difference(fromDate).inDays;
                                         await _viewModel.getBookingDetails(
                                           context: context,
                                             model: BookingAmountRequestModel(
@@ -569,7 +654,9 @@ class _BookingPageState extends State<BookingPage> {
                                           couponCode: _coupanController.text,
                                           fromDate: checkInDate,
                                           toDate: checkOutDate,
-                                        ));
+                                          bookingType:widget.propertyDetailsUtilModel.bookingType
+
+                                            ));
                                         FocusScope.of(context)
                                             .requestFocus(FocusNode());
                                         Navigator.of(context).pop();
@@ -883,7 +970,6 @@ class _BookingPageState extends State<BookingPage> {
           )),
         ));
         if (dateRange != null) {
-          RMSWidgets.showLoaderDialog(context: context, message: 'Loading...');
 
           checkInDate = DateTimeService.ddMMYYYYformatDate(
               dateRange.startDate ?? DateTime.now());
@@ -892,18 +978,57 @@ class _BookingPageState extends State<BookingPage> {
 
           await preferenceUtil.setString(rms_checkInDate, checkInDate);
           await preferenceUtil.setString(rms_checkOutDate, checkOutDate);
+          var fromDate= DateTime.parse(checkInDate);
+          var toDate=    DateTime.parse(checkOutDate);
+          int difference= toDate.difference(fromDate).inDays;
+          if(difference>90){
+await showModalBottomSheet(
+    isScrollControlled: true,
+    context: context, builder: (context){
+  return BookingTypeDropDown(bookingTypeData: bookingTypeData, regularRent: widget.propertyDetailsUtilModel.longTermRent, flexiRent: widget.propertyDetailsUtilModel.flexiRent,
+  );
+});
+RMSWidgets.showLoaderDialog(context: context, message: 'Loading...');
 
-          await _viewModel.getBookingDetails(
-            context: context,
-              model: BookingAmountRequestModel(
-            propId: (widget.propertyDetailsUtilModel.propId).toString(),
-            token: (widget.propertyDetailsUtilModel.token).toString(),
-            numOfGuests: (widget.propertyDetailsUtilModel.maxGuest).toString(),
-            couponCode: '',
-            fromDate: checkInDate,
-            toDate: checkOutDate,
-          ));
-          Navigator.of(context).pop();
+var bookingType=await preferenceUtil.getString(rms_BookingType);
+            await _viewModel.getBookingDetails(
+                context: context,
+                model: BookingAmountRequestModel(
+                    propId: (widget.propertyDetailsUtilModel.propId).toString(),
+                    token: (widget.propertyDetailsUtilModel.token).toString(),
+                    numOfGuests: (widget.propertyDetailsUtilModel.maxGuest).toString(),
+                    couponCode: '',
+                    fromDate: checkInDate,
+                    toDate: checkOutDate,
+                    bookingType: bookingType,
+
+                ));
+
+        Navigator.pop(context);
+          }
+          else {
+            RMSWidgets.showLoaderDialog(context: context, message: 'Loading...');
+
+
+await preferenceUtil.setString(rms_BookingType, difference>29?"Short Term":"Daily");
+            await _viewModel.getBookingDetails(
+                context: context,
+                model: BookingAmountRequestModel(
+                    propId: (widget.propertyDetailsUtilModel.propId).toString(),
+                    token: (widget.propertyDetailsUtilModel.token).toString(),
+                    numOfGuests: (widget.propertyDetailsUtilModel.maxGuest)
+                        .toString(),
+                    couponCode: '',
+                    fromDate: checkInDate,
+                    toDate: checkOutDate,
+                    bookingType: difference > 90 ? "Long Term" : difference > 29
+                        ? "Short Term"
+                        : "Daily"
+
+                ));
+            Navigator.of(context).pop();
+          }
+        //  Navigator.of(context).pop();
         }
         else {
           RMSWidgets.showLoaderDialog(context: context, message: 'Loading...');
@@ -915,18 +1040,55 @@ class _BookingPageState extends State<BookingPage> {
 
           await preferenceUtil.setString(rms_checkInDate, checkInDate);
           await preferenceUtil.setString(rms_checkOutDate, checkOutDate);
+          var fromDate= DateTime.parse(checkInDate);
+          var toDate=    DateTime.parse(checkOutDate);
+          int difference= toDate.difference(fromDate).inDays;
+          if(difference>90){
+            await showModalBottomSheet(
 
-          await _viewModel.getBookingDetails(
-            context: context,
-              model: BookingAmountRequestModel(
-                propId: (widget.propertyDetailsUtilModel.propId).toString(),
-                token: (widget.propertyDetailsUtilModel.token).toString(),
-                numOfGuests: (widget.propertyDetailsUtilModel.maxGuest).toString(),
-                couponCode: '',
-                fromDate: checkInDate,
-                toDate: checkOutDate,
-              ));
-          Navigator.of(context).pop();
+                context: context, builder: (context){
+              return BookingTypeDropDown(bookingTypeData: bookingTypeData, regularRent: widget.propertyDetailsUtilModel.longTermRent, flexiRent: widget.propertyDetailsUtilModel.flexiRent,
+              );
+            });
+            RMSWidgets.showLoaderDialog(context: context, message: 'Loading...');
+
+            var bookingType=await preferenceUtil.getString(rms_BookingType);
+            await _viewModel.getBookingDetails(
+                context: context,
+                model: BookingAmountRequestModel(
+                  propId: (widget.propertyDetailsUtilModel.propId).toString(),
+                  token: (widget.propertyDetailsUtilModel.token).toString(),
+                  numOfGuests: (widget.propertyDetailsUtilModel.maxGuest).toString(),
+                  couponCode: '',
+                  fromDate: checkInDate,
+                  toDate: checkOutDate,
+                  bookingType: bookingType,
+
+                ));
+
+            Navigator.pop(context);
+          }
+          else {
+            RMSWidgets.showLoaderDialog(context: context, message: 'Loading...');
+
+            await preferenceUtil.setString(rms_BookingType, difference>29?"Short Term":"Daily");
+            await _viewModel.getBookingDetails(
+                context: context,
+                model: BookingAmountRequestModel(
+                    propId: (widget.propertyDetailsUtilModel.propId).toString(),
+                    token: (widget.propertyDetailsUtilModel.token).toString(),
+                    numOfGuests: (widget.propertyDetailsUtilModel.maxGuest)
+                        .toString(),
+                    couponCode: '',
+                    fromDate: checkInDate,
+                    toDate: checkOutDate,
+                    bookingType: difference > 90 ? "Long Term" : difference > 29
+                        ? "Short Term"
+                        : "Daily"
+
+                ));
+            Navigator.of(context).pop();
+          }
         }
       },
       child: model.msg == null
@@ -1092,8 +1254,8 @@ class _BookingPageState extends State<BookingPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                      '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[15].name : "Unit Rent"}'),
+                                  Text("${model.data!.nights!< 29?"Daily Rent":model.data!.nights!>90?"Regular Rent":"Flexi Rent"}"
+                                      ),
                                   Text('${model.data?.rent}'),
                                 ],
                               ),
@@ -1171,5 +1333,107 @@ class _BookingPageState extends State<BookingPage> {
             ),
           );
         });
+  }
+}
+class BookingTypeDropDown extends StatefulWidget {
+  var flexiRent;
+  List bookingTypeData;
+  var regularRent;
+
+ BookingTypeDropDown({
+ required this.flexiRent,required this.bookingTypeData, required this.regularRent,
+});
+
+  @override
+  State<BookingTypeDropDown> createState() => _BookingTypeDropDownState();
+}
+
+class _BookingTypeDropDownState extends State<BookingTypeDropDown> {
+  var bookingType;
+  var bookingTypeDisplay;
+  SharedPreferenceUtil util=SharedPreferenceUtil();
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(left: 20,top: 20,bottom: 20,right: 20),
+  height: MediaQuery.of(context).size.height/3,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius:
+        BorderRadius.all(Radius.circular(20)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Booking Type" ,style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+
+                  color: Colors.grey),),
+              Neumorphic(
+                padding: EdgeInsets.only(left: 10),
+
+                style: NeumorphicStyle(
+                  depth: -3,
+                  color: Colors.white,
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton(
+                      hint: Text("SELECT BOOKING TYPE"),
+                      value: bookingTypeDisplay,
+                      onChanged: (val) {
+                        if(val=="Flexi Rent ${widget.flexiRent}"){
+                          setState((){
+                            bookingType="Short Term";
+                            bookingTypeDisplay=val;
+                          });
+                        }
+                        else{
+                          setState((){
+                            bookingType="Long Term";
+                            bookingTypeDisplay=val;
+
+                          });
+                        }
+                        print(">>>>  ${bookingType}");
+                      }, items:
+                widget.bookingTypeData.map((e) {return  DropdownMenuItem(child: Text(e.toString(),),
+
+                    value: e.toString(),
+                  );}
+
+                  ).toList()
+
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          Container(
+            width: double.infinity,
+            //    color: CustomTheme.appThemeContrast,
+            decoration: BoxDecoration(
+              borderRadius:
+              BorderRadius.all(Radius.circular(20)),
+              color: CustomTheme.appThemeContrast,
+            ),
+            child: TextButton(onPressed: ()async{
+await util.setString(rms_BookingType, bookingType);
+Navigator.pop(context);
+            },
+                child: Text("Done",style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),)),
+          )
+        ],
+      ),
+    );
   }
 }

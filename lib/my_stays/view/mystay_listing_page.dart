@@ -184,7 +184,7 @@ class _MyStayListPageState extends State<MyStayListPage> {
                       children: [
                         Container(
                           height: _mainHeight * 0.11,
-                          width: _mainWidth * 0.40,
+                          width: _mainWidth * 0.30,
                           padding: EdgeInsets.only(
                               right: _mainWidth * 0.02,
                               bottom: _mainHeight * 0.005,

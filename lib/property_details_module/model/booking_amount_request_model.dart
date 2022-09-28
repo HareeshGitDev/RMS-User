@@ -14,10 +14,11 @@ class BookingAmountRequestModel {
   String? depositAmount;
   String? invoiceId;
   String? bookingId;
-
+String? bookingType;
   BookingAmountRequestModel(
       {this.propId,
       this.token,
+        this.bookingType,
       this.couponCode,
       this.fromDate,
       this.numOfGuests,
