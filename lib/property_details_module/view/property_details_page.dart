@@ -565,33 +565,59 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                             height: _mainHeight * 0.02,
                                           ),
                                           Container(
-                                            padding: getHeadingPadding,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[13].name :'Available Amenities'}',
-                                                  style: getHeadingStyle,
-                                                ),
-                                                /*Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: Colors.black54,
-                                          size: 20,
-                                        )*/
-                                              ],
-                                            ),
+                                              padding: getHeadingPadding,
+                                              height: _mainHeight * 0.15,
+                                              child:                                           AmmentitiesTab(amenities: value.amenitiesList, noAmenities: value.noAmenitiesList),
+
                                           ),
-                                          SizedBox(
-                                            height: _mainHeight * 0.015,
-                                          ),
-                                          Container(
-                                            padding: getHeadingPadding,
-                                            height: _mainHeight * 0.07,
-                                            child: getAvailableAmenities(
-                                                list: value.amenitiesList),
-                                          ),
+
+                                        //   Container(
+                                        //     padding: getHeadingPadding,
+                                        //     child: Row(
+                                        //       mainAxisAlignment:
+                                        //           MainAxisAlignment
+                                        //               .spaceBetween,
+                                        //       children: [
+                                        //         Text(
+                                        //           '${nullCheck(list: value.propertyDetailsLang) ? value.propertyDetailsLang[13].name :'Available Amenities'}',
+                                        //           style: getHeadingStyle,
+                                        //         ),
+                                        //         /*Icon(
+                                        //   Icons.arrow_forward_ios,
+                                        //   color: Colors.black54,
+                                        //   size: 20,
+                                        // )*/
+                                        //       ],
+                                        //     ),
+                                        //   ),
+                                        //   SizedBox(
+                                        //     height: _mainHeight * 0.015,
+                                        //   ),
+                                        //   Container(
+                                        //     padding: getHeadingPadding,
+                                        //     height: _mainHeight * 0.07,
+                                        //     child: getAvailableAmenities(
+                                        //         list: value.amenitiesList),
+                                        //   ),
+                                        //   SizedBox(
+                                        //     height: _mainHeight * 0.015,
+                                        //   ),
+                                        //   Container(
+                                        //     padding: getHeadingPadding,
+                                        //     child: Text(
+                                        //       "Amenities not available",
+                                        //       style: getHeadingStyle,
+                                        //     ),
+                                        //   ),
+                                        //   SizedBox(
+                                        //     height: _mainHeight * 0.015,
+                                        //   ),
+                                        //   Container(
+                                        //     padding: getHeadingPadding,
+                                        //     height: _mainHeight * 0.07,
+                                        //     child: getAvailableNotAmenities(
+                                        //         list: value.noAmenitiesList),
+                                        //   ),
                                           ExpansionTile(
                                               tilePadding: getHeadingPadding,
                                               childrenPadding: EdgeInsets.only(
@@ -786,6 +812,32 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                     width: _mainWidth * 0.04,
                                                   ),
                                                   InkWell(
+                                                      onTap: () async{
+                                                        SharedPreferenceUtil prefs=SharedPreferenceUtil();
+                                                        var token= await preferenceUtil.getString(rms_registeredUserToken);
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder: (context) => Web_View_Container(requestUrl+token.toString(), 'Request a Call Back')));
+
+                                                      },
+                                                      child: Material(
+                                                        elevation: 2,
+                                                        child: Container(
+                                                          decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.all(Radius.circular(40)),
+                                                          ),
+                                                          child: Icon(
+                                                            Icons.add_call,
+                                                           color: CustomTheme.appThemeContrast2,
+                                                          ),
+                                                        ),
+                                                      )
+                                                  ),
+                                                  SizedBox(
+                                                    width: _mainWidth * 0.04,
+                                                  ),
+                                                  InkWell(
                                                       onTap: () {
                                                         if (value.propertyDetailsModel != null &&
                                                             value
@@ -809,7 +861,8 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                             _mainWidth * 0.09,
                                                         height:
                                                             _mainHeight * 0.06,
-                                                      )),
+                                                      )
+                                                  ),
                                                 ]),
                                           ),
                                           SizedBox(
@@ -1877,6 +1930,74 @@ else{
     );
   }
 
+
+
+
+
+
+  Widget getAvailableNotAmenities({required List<NoAmenitiesModel> list}) {
+    return ListView.separated(
+      scrollDirection: Axis.horizontal,
+      // physics: AlwaysScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return Column(
+          children: [
+            Container(
+              height: _mainHeight * 0.03,
+              width: _mainWidth * 0.08,
+              //  padding: EdgeInsets.only(right: _mainWidth * 0.02),
+              child: CachedNetworkImage(
+                imageUrl: list[index].imageUrl,
+                imageBuilder: (context, imageProvider) => Container(
+                  decoration: BoxDecoration(
+                    //borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                placeholder: (context, url) => Shimmer.fromColors(
+                    child: Container(
+                      height: _mainHeight * 0.03,
+                      width: _mainWidth * 0.08,
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        // borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    baseColor: Colors.grey[200] as Color,
+                    highlightColor: Colors.grey[350] as Color),
+                errorWidget: (context, url, error) => const Icon(
+                  Icons.error,
+                  color: Colors.red,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: _mainHeight * 0.01,
+            ),
+            Text(
+              list[index].name.toString(),
+              style: TextStyle(
+                  color: CustomTheme.appThemeContrast,
+                  fontWeight: FontWeight.w500,
+                  fontSize: getHeight(context: context, height: 14)),
+            ),
+          ],
+        );
+      },
+      itemCount: list.length,
+      separatorBuilder: (_, __) => SizedBox(
+        width: 10,
+      ),
+    );
+  }
+
+
+
+
+
   void _showDialog(
       {required String propId,
       required String name,
@@ -2487,5 +2608,186 @@ class _NearbyFacilitiesState extends State<NearbyFacilities> {
       )));
     }
     return tabList;
+  }
+}
+
+
+class AmmentitiesTab extends StatefulWidget {
+  List<AmenitiesModel> amenities;
+  List<NoAmenitiesModel> noAmenities;
+ AmmentitiesTab({required this.amenities,required this.noAmenities});
+
+  @override
+  State<AmmentitiesTab> createState() => _AmmentitiesTabState();
+}
+
+class _AmmentitiesTabState extends State<AmmentitiesTab> {
+  var _mainHeight;
+  var _mainWidth;
+  @override
+  Widget build(BuildContext context) {
+    _mainWidth = MediaQuery.of(context).size.width;
+    _mainHeight = MediaQuery.of(context).size.height;
+    return DefaultTabController(
+      length: 2,
+      initialIndex: 0,
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          toolbarHeight: 00,
+          backgroundColor: Colors.white,
+          bottom: TabBar(
+            isScrollable: true,
+            unselectedLabelColor: Colors.grey.shade600,
+            indicatorColor: CustomTheme.appThemeContrast,
+            labelColor: CustomTheme.appThemeContrast,
+            tabs:const [
+              Text("Available Amenities"),
+              Text("Non-Available Amenities"),
+            ]
+
+          ),
+        ),
+        body: TabBarView(
+          physics: NeverScrollableScrollPhysics(),
+          children: [
+
+getAvailableAmenities(list: widget.amenities),
+            getAvailableNotAmenities(list: widget.noAmenities)
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getAvailableAmenities({required List<AmenitiesModel> list}) {
+    return ListView.separated(
+      scrollDirection: Axis.horizontal,
+      // physics: AlwaysScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return Container(
+          padding: EdgeInsets.only(top: 10),
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.only(top: 10),
+                height: _mainHeight * 0.03,
+                width: _mainWidth * 0.08,
+                //  padding: EdgeInsets.only(right: _mainWidth * 0.02),
+                child: CachedNetworkImage(
+                  imageUrl: list[index].imageUrl,
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      //borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  placeholder: (context, url) => Shimmer.fromColors(
+                      child: Container(
+                        height: _mainHeight * 0.03,
+                        width: _mainWidth * 0.08,
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          // borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      baseColor: Colors.grey[200] as Color,
+                      highlightColor: Colors.grey[350] as Color),
+                  errorWidget: (context, url, error) => const Icon(
+                    Icons.error,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: _mainHeight * 0.01,
+              ),
+              Text(
+                list[index].name.toString(),
+                style: TextStyle(
+                    color: CustomTheme.appThemeContrast,
+                    fontWeight: FontWeight.w500,
+                    fontSize: getHeight(context: context, height: 14)),
+              ),
+            ],
+          ),
+        );
+      },
+      itemCount: list.length,
+      separatorBuilder: (_, __) => SizedBox(
+        width: 10,
+      ),
+    );
+  }
+
+
+
+
+
+
+  Widget getAvailableNotAmenities({required List<NoAmenitiesModel> list}) {
+    return ListView.separated(
+      scrollDirection: Axis.horizontal,
+      // physics: AlwaysScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return Container(
+          padding: EdgeInsets.only(top: 10),
+          child: Column(
+            children: [
+              Container(
+
+                height: _mainHeight * 0.03,
+                width: _mainWidth * 0.08,
+                //  padding: EdgeInsets.only(right: _mainWidth * 0.02),
+                child: CachedNetworkImage(
+                  imageUrl: list[index].imageUrl,
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      //borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  placeholder: (context, url) => Shimmer.fromColors(
+                      child: Container(
+                        height: _mainHeight * 0.03,
+                        width: _mainWidth * 0.08,
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          // borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      baseColor: Colors.grey[200] as Color,
+                      highlightColor: Colors.grey[350] as Color),
+                  errorWidget: (context, url, error) => const Icon(
+                    Icons.error,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: _mainHeight * 0.01,
+              ),
+              Text(
+                list[index].name.toString(),
+                style: TextStyle(
+                    color: CustomTheme.appThemeContrast,
+                    fontWeight: FontWeight.w500,
+                    fontSize: getHeight(context: context, height: 14)),
+              ),
+            ],
+          ),
+        );
+      },
+      itemCount: list.length,
+      separatorBuilder: (_, __) => SizedBox(
+        width: 10,
+      ),
+    );
   }
 }
