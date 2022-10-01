@@ -379,7 +379,7 @@ getLanguageData();
 
                                 child:
                                 DropdownButton(
-
+                                  dropdownColor: Colors.black,
                                   items: getTypeList
                                       .map((type) => DropdownMenuItem(
 
@@ -420,6 +420,7 @@ getLanguageData();
                               ),
                               child: DropdownButtonHideUnderline(
                                 child: DropdownButton(
+                                  dropdownColor: Colors.black,
                                   items: getCityList
                                       .map((type) => DropdownMenuItem(
                                     child: Padding(
@@ -459,6 +460,8 @@ getLanguageData();
                               ),
                               child: DropdownButtonHideUnderline(
                                 child: DropdownButton(
+                                  hint:Text("How do you know RMS"),
+                                  dropdownColor: Colors.black,
                                   items: getRMSList
                                       .map((type) => DropdownMenuItem(
                                     child: Padding(
