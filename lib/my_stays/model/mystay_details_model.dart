@@ -62,14 +62,18 @@ class Data {
   String? addressDisplay;
   String? glat;
   String? glng;
+  String? edit_agmt;
   dynamic agreementStatus;
   String? agreementLink;
+  String? approve;
   String? service_agreement_link;
 
   String? pendingAmount;
 
   Data(
       {this.bookingId,
+        this.approve,
+        this.edit_agmt,
         this.service_agreement_link,
         this.userId,
         this.propId,
@@ -120,7 +124,9 @@ class Data {
     bookingId = json['booking_id'];
     userId = json['user_id'];
     propId = json['prop_id'];
+    approve = json['approve'];
     unit = json['unit'];
+    edit_agmt = json['edit_agmt'];
     bookingStatus = json['booking_status'];
     travelFromDate = json['travel_from_date'];
     travelToDate = json['travel_to_date'];
@@ -171,6 +177,8 @@ class Data {
     data['user_id'] = this.userId;
     data['prop_id'] = this.propId;
     data['unit'] = this.unit;
+    data['approve'] = this.approve;
+    data['edit_agmt'] = this.edit_agmt;
     data['booking_status'] = this.bookingStatus;
     data['travel_from_date'] = this.travelFromDate;
     data['travel_to_date'] = this.travelToDate;

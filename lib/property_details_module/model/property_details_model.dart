@@ -85,6 +85,7 @@ class Details {
   String? area;
   String? buildingId;
   String? city;
+  String? floor;
   String? pdarea;
   String? propId;
   String? propertyName;
@@ -150,6 +151,7 @@ class Details {
   String? rmsProp;
   String? bname;
   String? sales;
+ // String? approve;
   List<Pic>? pic;
   int? wishlist;
   String? salesNumber;
@@ -160,6 +162,7 @@ class Details {
         this.buildingId,
         this.city,
         this.pdarea,
+        this.floor,
         this.propId,
         this.propertyName,
         this.bedrooms,
@@ -169,6 +172,7 @@ class Details {
         this.extraPerGuest,
         this.unitArea,
         this.propFloor,
+        //this.approve,
         this.propTypeId,
         this.roomTypeId,
         this.deposit,
@@ -231,6 +235,8 @@ class Details {
 
   Details.fromJson(Map<String, dynamic> json) {
     area = json['area'];
+    floor= json['floor'];
+   // approve= json['approve'];
     buildingId = json['building_id'];
     city = json['city'];
     pdarea = json['pdarea'];
@@ -312,8 +318,10 @@ class Details {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['area'] = this.area;
+    data['floor'] = this.floor;
     data['building_id'] = this.buildingId;
     data['city'] = this.city;
+    // data['approve'] = this.approve;
     data['pdarea'] = this.pdarea;
     data['prop_id'] = this.propId;
     data['property_name'] = this.propertyName;

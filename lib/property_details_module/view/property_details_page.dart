@@ -452,7 +452,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                                       ?.details
                                                       ?.title !=
                                                       null
-                                                  ? '${(value.propertyDetailsModel?.data?.details?.bname).toString().trim()} (Prop Id :  ${value.propertyDetailsModel?.data?.details?.propId ?? ''})'
+                                                  ? '${(value.propertyDetailsModel?.data?.details?.bname).toString().trim()} ${value.propertyDetailsModel?.data?.details?.floor} (Prop Id :  ${value.propertyDetailsModel?.data?.details?.propId ?? ''})'
                                                   : '',
                                               style: TextStyle(
                                                   color: Colors.grey,
@@ -1617,7 +1617,7 @@ else{
                                           ?.propId)
                                       .toString()),
                                   buildingName: (_viewModel.propertyDetailsModel
-                                          ?.data?.details?.bname)
+                                          ?.data?.details?.bname )
                                       .toString(),
                                   title: (_viewModel.propertyDetailsModel?.data
                                           ?.details?.title)

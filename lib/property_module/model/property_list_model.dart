@@ -33,6 +33,7 @@ class Data {
   String? areas;
   String? title;
   String? city;
+  String? floor;
   String? neighbor;
   String? uiAddress;
   String? unitType;
@@ -80,6 +81,7 @@ class Data {
         this.area,
         this.buildingName,
         this.areas,
+        this.floor,
         this.title,
         this.city,
         this.neighbor,
@@ -131,6 +133,7 @@ class Data {
     areas = json['areas'];
     title = json['title'];
     city = json['city'];
+    floor = json['floor'];
     neighbor = json['neighbor'];
     uiAddress = json['ui_address'];
     unitType = json['unit_type'];
@@ -183,6 +186,7 @@ class Data {
     data['rms_prop'] = this.rmsProp;
     data['offer_price'] = this.offerPrice;
     data['area'] = this.area;
+    data['floor'] = this.floor;
     data['building_name'] = this.buildingName;
     data['areas'] = this.areas;
     data['title'] = this.title;

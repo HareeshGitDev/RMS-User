@@ -1250,29 +1250,65 @@ await preferenceUtil.setString(rms_BookingType, difference>29?"Short Term":"Dail
                           padding: EdgeInsets.all(10),
                           child: Column(
                             children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("${model.data!.nights!< 29?"Daily Rent":model.data!.nights!>90?"Regular Rent":"Flexi Rent"}"
-                                      ),
-                                  Text('${model.data?.rent}'),
-                                ],
+                              Visibility(
+                                visible: model.data!.nights!<29?true:false,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("${model.data!.nights!< 29?"Daily Rent":model.data!.nights!>90?"Regular Rent":"Flexi Rent"}"
+                                        ),
+                                    Text('${model.data?.rent}'),
+                                  ],
+                                ),
                               ),
                               SizedBox(
                                 height: 10,
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                      '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[16].name : "Deposit (Fully Refunded)"}'),
-                                  Text('${model.data?.deposit}'),
-                                ],
+                              Visibility(
+                                visible: model.data!.nights!>29?true:false,
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("House Rent Per month"
+                                    ),
+                                    Text('${model.data?.om_rent}'),
+                                  ],
+                                ),
                               ),
                               SizedBox(
                                 height: 10,
+                              ),
+                              Visibility(
+                                visible: model.data!.nights!>29?true:false,
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("PM(Property Management Fee)"
+                                    ),
+                                    Text('${model.data?.sa_rent}'),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Visibility(
+                                visible:  model.data!.nights!>29?true:false,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                        '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[16].name : "Deposit (Fully Refunded)"}'),
+                                    Text('${model.data?.deposit}'),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: model.data!.nights!>29?10:0,
                               ),
                               Visibility(
                                 visible: model.data?.refferalDiscount != 0,
@@ -1290,6 +1326,24 @@ await preferenceUtil.setString(rms_BookingType, difference>29?"Short Term":"Dail
                                 height: 10,
                               ),
                               Visibility(
+                                visible: model.data!.nights!>29?true:false,
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      width:250,
+                                      child: const Text(
+                                          'On-Boarding Charge(One Time Payable)'),
+                                    ),
+                                    Text('${model.data!.nights!>29?1000:0}'),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: model.data!.nights!>29?10:0,
+                              ),
+                              Visibility(
                                 visible: model.data?.couponDiscount != 0,
                                 child: Row(
                                   mainAxisAlignment:
@@ -1301,14 +1355,14 @@ await preferenceUtil.setString(rms_BookingType, difference>29?"Short Term":"Dail
                                   ],
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
                             ],
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Align(
@@ -1317,7 +1371,7 @@ await preferenceUtil.setString(rms_BookingType, difference>29?"Short Term":"Dail
                           'Pay ${model.data?.advanceAmount ?? 0} to Book the Property',
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Align(

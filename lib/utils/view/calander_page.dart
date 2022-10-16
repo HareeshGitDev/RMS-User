@@ -38,16 +38,34 @@ class CalenderPage extends StatelessWidget {
         confirmText: 'SELECT',
         onCancel: () => Navigator.pop(context),
         onSubmit: (dynamic data) {
-          if (data is PickerDateRange &&
-              data.startDate != null &&
-              data.endDate != null) {
-            Navigator.pop(context, data);
-          } else {
-            RMSWidgets.showSnackbar(
-                context: context,
-                message: 'Please Select Valid Date Range',
-                color: Colors.red);
-          }
+if(data.startDate!.difference(DateTime.now()).inDays<10){
+  if (data is PickerDateRange &&
+      data.startDate != null &&
+      data.endDate != null) {
+    Navigator.pop(context, data);
+  } else {
+    RMSWidgets.showSnackbar(
+        context: context,
+        message: 'Please Select Valid Date Range',
+        color: Colors.red);
+  }
+}
+else{
+  RMSWidgets.showSnackbar(
+      context: context,
+      message: 'Please Select Date within 10 days',
+      color: Colors.red);
+}
+          // if (data is PickerDateRange &&
+          //     data.startDate != null &&
+          //     data.endDate != null) {
+          //   Navigator.pop(context, data);
+          // } else {
+          //   RMSWidgets.showSnackbar(
+          //       context: context,
+          //       message: 'Please Select Valid Date Range',
+          //       color: Colors.red);
+          // }
         },
         initialSelectedRange: initialDatesRange,
         todayHighlightColor: CustomTheme.myFavColor,

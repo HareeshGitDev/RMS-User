@@ -327,12 +327,13 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                               data.rmsProp ==
                                                                   "RMS Prop",
                                                           child: Container(
+
                                                             child: Text(
                                                               "${data.unitType ?? ''}",
                                                               overflow:
                                                                   TextOverflow
                                                                       .ellipsis,
-                                                              maxLines: 1,
+                                                              maxLines: 2,
                                                               style: TextStyle(
                                                                   fontSize: getHeight(
                                                                       context:
@@ -398,7 +399,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                                         0.02),
                                                             //width: _mainWidth*0.28,
                                                             child: Text(
-                                                              data.buildingName ??
+                                                              "${data.buildingName} ${data.floor}" ??
                                                                   '',
                                                               overflow:
                                                                   TextOverflow
@@ -548,6 +549,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                     child: Row(
                                                       children: [
                                                         getRents(
+                                                          rentTypeD: "",
                                                             rentType:
                                                                 'Rent Per Day',
                                                             rent: data.rent ??
@@ -559,8 +561,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                             width: _mainWidth *
                                                                 0.005),
                                                         getRents(
+                                                            rentTypeD: "(Stay < 3 months)",
                                                             rentType:
-                                                                'Stay < 3 Month',
+                                                                'Flexi Rent',
                                                             rent:
                                                                 data.monthlyRent ??
                                                                     '0',
@@ -571,8 +574,9 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                             width: _mainWidth *
                                                                 0.005),
                                                         getRents(
+                                                            rentTypeD: "(Stay > 3 months)",
                                                             rentType:
-                                                                'Stay > 3 Month',
+                                                                'Regular Rent',
                                                             rent:
                                                                 data.rmsRent ??
                                                                     '0',
@@ -1843,6 +1847,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
     required String rentType,
     required String rent,
     required String orgRent,
+    required String rentTypeD,
   }) {
     return Visibility(
       visible: rent != '0',
@@ -1867,6 +1872,12 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                 children: [
                   Text(
                     rentType,
+                    style: TextStyle(
+                        fontSize: getHeight(context: context, height: 10)),
+                  ),
+                  SizedBox(height: _mainHeight * 0.005),
+                  Text(
+                    rentTypeD,
                     style: TextStyle(
                         fontSize: getHeight(context: context, height: 10)),
                   ),

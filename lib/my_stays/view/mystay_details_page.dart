@@ -1101,7 +1101,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
             value.myStayDetailsModel?.data
                 ?.agreementStatus != null &&
                 value.myStayDetailsModel?.data?.agreementStatus ==
-                    '1'?Row(
+                    '1' && value.myStayDetailsModel?.data?.edit_agmt=="1"?Row(
               children: [
                 Expanded(
                   flex: value.myStayDetailsModel?.data
@@ -1113,20 +1113,30 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                     color: CustomTheme.appThemeContrast,
                     child: TextButton.icon(onPressed: ()
                     async{
+if(value
+    .myStayDetailsModel
+    ?.data
+    ?.approve !=null && value
+    .myStayDetailsModel
+    ?.data
+    ?.approve =="0" ) {
 
-                      String agreementLink = value
-                          .myStayDetailsModel
-                          ?.data
-                          ?.service_agreement_link ??
-                          '';
-                      await
-                      launch(agreementLink)
-                          .catchError((error) async {
-                        log(error.toString());
+  RMSWidgets.showSnackbar(context: context, message: "Please wait for agreement approval", color: Colors.red);
 
-                      });
-
-
+}
+else{
+  String agreementLink = value
+      .myStayDetailsModel
+      ?.data
+      ?.service_agreement_link ??
+      '';
+  await
+  launch(agreementLink)
+      .catchError((error) async {
+    log(error.toString());
+  });
+  // RMSWidgets.showSnackbar(context: context, message: "Please wait for agreement approval", color: Colors.red);
+}
 
                     },
                         icon: Icon(Icons.download_outlined, color: Colors.white),
@@ -1140,27 +1150,45 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                   child: Container(
                     color: CustomTheme.appThemeContrast2,
                     child: TextButton.icon(onPressed: ()async{
-
-                      String agreementLink = value
+                      log("oyye hoye ${value
                           .myStayDetailsModel
                           ?.data
-                          ?.agreementLink ??
-                          '';
-                      await
-                      launch(agreementLink)
-                          .catchError((error) async {
-                        log(error.toString());
+                          ?.approve}");
+                      if(
+                      value
+                          .myStayDetailsModel
+                          ?.data
+                          ?.approve !=null &&
+                          value
+                          .myStayDetailsModel
+                          ?.data
+                          ?.approve =="0") {
+                        RMSWidgets.showSnackbar(context: context, message: "Please wait for agreement approval", color: Colors.red);
 
-                      });
+                      }
+                      else
+                      {
+                        String agreementLink = value
+                            .myStayDetailsModel
+                            ?.data
+                            ?.agreementLink ??
+                            '';
+                        await
+                        launch(agreementLink)
+                            .catchError((error) async {
+                          log(error.toString());
+                        });
+                        // RMSWidgets.showSnackbar(context: context, message: "Please wait for agreement approval", color: Colors.red);
 
-
+                      }
                     }, icon: Icon(Icons.download_outlined,color: Colors.white), label: const Text("Tentant Agreement",
                       style: TextStyle(color: Colors.white),
                     )),
                   ),
                 ),
               ],
-            ):Container(
+            ):
+            Container(
               color: CustomTheme.appThemeContrast2,
               child: TextButton.icon(onPressed: (){
                 _handleURLButtonPress(

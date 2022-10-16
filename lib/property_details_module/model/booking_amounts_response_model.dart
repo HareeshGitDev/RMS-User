@@ -30,10 +30,14 @@ class Data {
   dynamic advanceAmount;
   dynamic pendingAmount;
   String? userMsg;
+  dynamic om_rent;
+  dynamic sa_rent;
   int? nights;
 
   Data(
       {this.cartId,
+        this.om_rent,
+        this.sa_rent,
         this.rent,
         this.deposit,
         this.couponDiscount,
@@ -48,6 +52,9 @@ class Data {
   Data.fromJson(Map<String, dynamic> json) {
     cartId = json['cart_id'];
     rent = json['rent'];
+    sa_rent = json['sa_rent'];
+    om_rent = json['om_rent'];
+
     deposit = json['deposit'];
     couponDiscount = json['coupon_discount'];
     refferalCode = json['refferal_code'];
@@ -63,6 +70,8 @@ class Data {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['cart_id'] = this.cartId;
     data['rent'] = this.rent;
+    data['om_rent'] = this.om_rent;
+    data['sa_rent'] = this.sa_rent;
     data['deposit'] = this.deposit;
     data['coupon_discount'] = this.couponDiscount;
     data['refferal_code'] = this.refferalCode;
