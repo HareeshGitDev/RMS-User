@@ -1,11 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
-import 'package:RentMyStay_user/my_stays/model/amenities_check_model.dart';
-import 'package:RentMyStay_user/my_stays/model/invoice_payment_model.dart';
-import 'package:RentMyStay_user/my_stays/model/my_bank_details_model.dart';
-import 'package:RentMyStay_user/my_stays/model/ticket_response_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -16,9 +11,13 @@ import '../../utils/constants/sp_constants.dart';
 import '../../utils/service/rms_user_api_service.dart';
 import '../../utils/service/shared_prefrences_util.dart';
 import '../model/Invoice_Details_Model.dart';
+import '../model/amenities_check_model.dart';
+import '../model/invoice_payment_model.dart';
+import '../model/my_bank_details_model.dart';
 import '../model/mystay_details_model.dart';
 import '../model/mystay_list_model.dart';
 import '../model/refund_splitup_model.dart';
+import '../model/ticket_response_model.dart';
 
 class MyStayApiService {
   final RMSUserApiService _apiService = RMSUserApiService();
