@@ -110,6 +110,7 @@ class _FeedbackState extends State<FeedbackPage> {
     _viewModel.getMyBankDetails(bookingId: widget.bookingId,context: context);
 
     getLanguageData();
+    dataAdd();
   }
 
   getLanguageData() async {
@@ -117,7 +118,12 @@ class _FeedbackState extends State<FeedbackPage> {
         language: await preferenceUtil.getString(rms_language) ?? 'english',
         pageName: 'FeedbackForm');
   }
-
+dataAdd(){
+  _bankIfscController.text=(_viewModel.myBankDetailsModel.data?.ifscCode ?? "");
+  _banknumberController.text=(_viewModel.myBankDetailsModel.data?.accNo ?? "");
+  _banknameController.text=(_viewModel.myBankDetailsModel.data?.bankName ?? "");
+  _nameController.text=(_viewModel.myBankDetailsModel.data?.accHolder ?? "");
+}
   bool nullCheck({required List<LanguageModel> list}) =>
       list.isNotEmpty ? true : false;
 
@@ -125,10 +131,7 @@ class _FeedbackState extends State<FeedbackPage> {
   Widget build(BuildContext context) {
     _mainHeight = MediaQuery.of(context).size.height;
     _mainWidth = MediaQuery.of(context).size.width;
-    _bankIfscController.text=(_viewModel.myBankDetailsModel.data?.ifscCode ?? "");
-    _banknumberController.text=(_viewModel.myBankDetailsModel.data?.accNo ?? "");
-    _banknameController.text=(_viewModel.myBankDetailsModel.data?.bankName ?? "");
-    _nameController.text=(_viewModel.myBankDetailsModel.data?.accHolder ?? "");
+
     return _connectionStatus?Scaffold(
       appBar: AppBar(
         title: Text(
@@ -368,7 +371,7 @@ class _FeedbackState extends State<FeedbackPage> {
                             }
                           },
                           onRatingUpdate: (double rating) {
-                            rmsRating = rating * 2;
+                            rmsRating = rating*1;
                           },
                         ),
                       ),
@@ -431,7 +434,7 @@ class _FeedbackState extends State<FeedbackPage> {
                             }
                           },
                           onRatingUpdate: (double rating) {
-                            buildingRating = rating * 2;
+                            buildingRating = rating * 1;
                           },
                         ),
                       ),

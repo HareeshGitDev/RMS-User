@@ -355,6 +355,23 @@ class _ProfilePageState extends State<ProfilePage> {
               height: 0.6,
               color: Colors.black87,
             ),
+            ListTile(
+              onTap: () {
+Navigator.pushNamed(context, AppRoutes.deleteAccount);
+              },
+              leading: const Icon(
+                Icons.delete_outline,
+                color: Colors.redAccent,
+              ),
+              title: const Text(
+               "Account Deletion/Deactivation",
+                style: TextStyle(fontSize: 14),
+              ),
+            ),
+            Divider(
+              height: 0.6,
+              color: Colors.black87,
+            ),
             GestureDetector(
               onTap: () => _handleURLButtonPress(
                   context, updateKYCUrl, 'Update Your kyc'),

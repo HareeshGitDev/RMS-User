@@ -26,6 +26,7 @@ class Data {
   String? isAdmin;
   String? contactNum;
   String? name;
+  String? active;
   int? flag;
   String? verifiedPhoneFlag;
   String? team;
@@ -41,6 +42,7 @@ class Data {
         this.contactNum,
         this.name,
         this.flag,
+        this.active,
         this.verifiedPhoneFlag,
         this.team,
         this.id,
@@ -55,6 +57,7 @@ class Data {
     contactNum = json['contact_num'];
     name = json['name'];
     flag = json['flag'];
+    active = json['active'];
     verifiedPhoneFlag = json['verified_phone_flag'];
     team = json['team'];
     id = json['id'];
@@ -73,6 +76,7 @@ class Data {
     data['flag'] = this.flag;
     data['verified_phone_flag'] = this.verifiedPhoneFlag;
     data['team'] = this.team;
+    data['active'] = this.active;
     data['id'] = this.id;
     data['pic'] = this.pic;
     data['gmap_key'] = this.gmapKey;

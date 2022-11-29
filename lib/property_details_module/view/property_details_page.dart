@@ -1525,119 +1525,239 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                             ),
                             InkWell(
                               onTap: () async {
-                                if (_viewModel.propertyDetailsModel == null ||
-                                    _viewModel.propertyDetailsModel?.data
-                                            ?.details ==
-                                        null) {
-                                  RMSWidgets.showSnackbar(
-                                      context: context,
-                                      message:
-                                          'Something went wrong. Property Details not Found.',
-                                      color: CustomTheme.errorColor);
-                                  return;
-                                }
-                                RMSWidgets.showLoaderDialog(
-                                    context: context, message: 'Loading...');
-                                SharedPreferenceUtil sharedPreferenceUtil =
-                                    SharedPreferenceUtil();
-                                var name = (await sharedPreferenceUtil
-                                            .getString(rms_name) ??
-                                        '')
-                                    .toString();
-                                var email = (await sharedPreferenceUtil
-                                            .getString(rms_email) ??
-                                        '')
-                                    .toString();
-                                var checkInDate=await sharedPreferenceUtil.getString(rms_checkInDate)??DateTimeService.ddMMYYYYformatDate(DateTime.now());
-                                var checkOutDate=await sharedPreferenceUtil.getString(rms_checkOutDate)??DateTimeService.ddMMYYYYformatDate(
-                                    DateTime.now().add(const Duration(days: 1)));
-                            var formatedIn= DateTime.parse(checkInDate);
-                            var formatedOut= DateTime.parse(checkOutDate);
-                              int diff= formatedOut.difference(formatedIn).inDays;
-                              var bookingType= await sharedPreferenceUtil.getString(rms_BookingType);
-
-                              print("Llll  $bookingType");
-                              if(bookingType ==null ){
-print("kkk");
-                                if(diff<=29){
-                                  print(".............1");
-                                  await sharedPreferenceUtil.setString(rms_BookingType, "Daily");
-                                }
-                                else if(diff<=90 && diff>29){
-                                  print("............2");
-                                  await sharedPreferenceUtil.setString(rms_BookingType, "Short Term");
-                                }
-                                else if(diff>90 && diff>29){
-                                  print("..........3");
-                                  await sharedPreferenceUtil.setString(rms_BookingType, "Long Term");
+                                if(_viewModel.propertyDetailsModel == null ||
+                                    _viewModel.propertyDetailsModel?.data?.details?.bookable=="0")
+                                {
+                                  RMSWidgets.showSnackbar(context: context, message: "Sorry!!! This property is already booked", color: Colors.red);
                                 }
                                 else{
-                                  print(".................4");
-                                  await sharedPreferenceUtil.setString(rms_BookingType, " ");
-                                }
-                              }
-else{
-  print("ijggyh");
-                              }
-                                var phone = (await sharedPreferenceUtil
-                                            .getString(rms_phoneNumber) ??
-                                        '')
-                                    .toString();
-                                var token =
-                                    (await sharedPreferenceUtil.getString(
-                                                rms_registeredUserToken) ??
-                                            '')
-                                        .toString();
+                                  if (_viewModel.propertyDetailsModel == null ||
+                                      _viewModel.propertyDetailsModel?.data
+                                          ?.details ==
+                                          null) {
+                                    RMSWidgets.showSnackbar(
+                                        context: context,
+                                        message:
+                                        'Something went wrong. Property Details not Found.',
+                                        color: CustomTheme.errorColor);
+                                    return;
+                                  }
+                                  RMSWidgets.showLoaderDialog(
+                                      context: context, message: 'Loading...');
+                                  SharedPreferenceUtil sharedPreferenceUtil =
+                                  SharedPreferenceUtil();
+                                  var name = (await sharedPreferenceUtil
+                                      .getString(rms_name) ??
+                                      '')
+                                      .toString();
+                                  var email = (await sharedPreferenceUtil
+                                      .getString(rms_email) ??
+                                      '')
+                                      .toString();
+                                  var checkInDate=await sharedPreferenceUtil.getString(rms_checkInDate)??DateTimeService.ddMMYYYYformatDate(DateTime.now());
+                                  var checkOutDate=await sharedPreferenceUtil.getString(rms_checkOutDate)??DateTimeService.ddMMYYYYformatDate(
+                                      DateTime.now().add(const Duration(days: 1)));
+                                  var formatedIn= DateTime.parse(checkInDate);
+                                  var formatedOut= DateTime.parse(checkOutDate);
+                                  int diff= formatedOut.difference(formatedIn).inDays;
+                                  var bookingType= await sharedPreferenceUtil.getString(rms_BookingType);
 
-                                Navigator.of(context).pop();
-                                List<int> guestList=[];
-                                for(int i=1;i <= int.parse(_viewModel
-                                    .propertyDetailsModel
-                                    ?.data
-                                    ?.details
-                                    ?.maxGuests ??
-                                    '0');i++){
-                                  guestList.add(i);
+                                  print("Llll  $bookingType");
+                                  if(bookingType ==null ){
+                                    print("kkk");
+                                    if(diff<=29){
+                                      print(".............1");
+                                      await sharedPreferenceUtil.setString(rms_BookingType, "Daily");
+                                    }
+                                    else if(diff<=90 && diff>29){
+                                      print("............2");
+                                      await sharedPreferenceUtil.setString(rms_BookingType, "Short Term");
+                                    }
+                                    else if(diff>90 && diff>29){
+                                      print("..........3");
+                                      await sharedPreferenceUtil.setString(rms_BookingType, "Long Term");
+                                    }
+                                    else{
+                                      print(".................4");
+                                      await sharedPreferenceUtil.setString(rms_BookingType, " ");
+                                    }
+                                  }
+                                  else{
+                                    print("ijggyh");
+                                  }
+                                  var phone = (await sharedPreferenceUtil
+                                      .getString(rms_phoneNumber) ??
+                                      '')
+                                      .toString();
+                                  var token =
+                                  (await sharedPreferenceUtil.getString(
+                                      rms_registeredUserToken) ??
+                                      '')
+                                      .toString();
+
+                                  Navigator.of(context).pop();
+                                  List<int> guestList=[];
+                                  for(int i=1;i <= int.parse(_viewModel
+                                      .propertyDetailsModel
+                                      ?.data
+                                      ?.details
+                                      ?.maxGuests ??
+                                      '0');i++){
+                                    guestList.add(i);
+                                  }
+                                  guestList.forEach(print);
+                                  PropertyDetailsUtilModel model =
+                                  PropertyDetailsUtilModel(
+                                    name: name,
+                                    email: email,
+                                    mobile: phone,
+                                    token: token,
+                                    flexiRent: _viewModel.propertyDetailsModel?.data?.details?.monthlyRent,
+                                    longTermRent: _viewModel.propertyDetailsModel?.data?.details?.rmsRent,
+                                    guestList: guestList,
+                                    bookingType: await preferenceUtil.getString(rms_BookingType),
+                                    propId: int.parse((_viewModel
+                                        .propertyDetailsModel
+                                        ?.data
+                                        ?.details
+                                        ?.propId)
+                                        .toString()),
+                                    buildingName: (_viewModel.propertyDetailsModel
+                                        ?.data?.details?.bname )
+                                        .toString(),
+                                    title: (_viewModel.propertyDetailsModel?.data
+                                        ?.details?.title)
+                                        .toString(),
+                                    freeGuest: int.parse((_viewModel
+                                        .propertyDetailsModel
+                                        ?.data
+                                        ?.details
+                                        ?.freeGuests)
+                                        .toString()),
+                                    maxGuest: int.parse(_viewModel
+                                        .propertyDetailsModel
+                                        ?.data
+                                        ?.details
+                                        ?.maxGuests ??
+                                        '0'),
+                                  );
+                                  Navigator.pushNamed(
+                                      context, AppRoutes.bookingPage,
+                                      arguments: model);
                                 }
-                                guestList.forEach(print);
-                                PropertyDetailsUtilModel model =
-                                    PropertyDetailsUtilModel(
-                                  name: name,
-                                  email: email,
-                                  mobile: phone,
-                                  token: token,
-                                  flexiRent: _viewModel.propertyDetailsModel?.data?.details?.monthlyRent,
-                                  longTermRent: _viewModel.propertyDetailsModel?.data?.details?.rmsRent,
-                                  guestList: guestList,
-                                  bookingType: await preferenceUtil.getString(rms_BookingType),
-                                  propId: int.parse((_viewModel
-                                          .propertyDetailsModel
-                                          ?.data
-                                          ?.details
-                                          ?.propId)
-                                      .toString()),
-                                  buildingName: (_viewModel.propertyDetailsModel
-                                          ?.data?.details?.bname )
-                                      .toString(),
-                                  title: (_viewModel.propertyDetailsModel?.data
-                                          ?.details?.title)
-                                      .toString(),
-                                  freeGuest: int.parse((_viewModel
-                                          .propertyDetailsModel
-                                          ?.data
-                                          ?.details
-                                          ?.freeGuests)
-                                      .toString()),
-                                  maxGuest: int.parse(_viewModel
-                                          .propertyDetailsModel
-                                          ?.data
-                                          ?.details
-                                          ?.maxGuests ??
-                                      '0'),
-                                );
-                                Navigator.pushNamed(
-                                    context, AppRoutes.bookingPage,
-                                    arguments: model);
+//                                 if (_viewModel.propertyDetailsModel == null ||
+//                                     _viewModel.propertyDetailsModel?.data
+//                                             ?.details ==
+//                                         null) {
+//                                   RMSWidgets.showSnackbar(
+//                                       context: context,
+//                                       message:
+//                                           'Something went wrong. Property Details not Found.',
+//                                       color: CustomTheme.errorColor);
+//                                   return;
+//                                 }
+//                                 RMSWidgets.showLoaderDialog(
+//                                     context: context, message: 'Loading...');
+//                                 SharedPreferenceUtil sharedPreferenceUtil =
+//                                     SharedPreferenceUtil();
+//                                 var name = (await sharedPreferenceUtil
+//                                             .getString(rms_name) ??
+//                                         '')
+//                                     .toString();
+//                                 var email = (await sharedPreferenceUtil
+//                                             .getString(rms_email) ??
+//                                         '')
+//                                     .toString();
+//                                 var checkInDate=await sharedPreferenceUtil.getString(rms_checkInDate)??DateTimeService.ddMMYYYYformatDate(DateTime.now());
+//                                 var checkOutDate=await sharedPreferenceUtil.getString(rms_checkOutDate)??DateTimeService.ddMMYYYYformatDate(
+//                                     DateTime.now().add(const Duration(days: 1)));
+//                             var formatedIn= DateTime.parse(checkInDate);
+//                             var formatedOut= DateTime.parse(checkOutDate);
+//                               int diff= formatedOut.difference(formatedIn).inDays;
+//                               var bookingType= await sharedPreferenceUtil.getString(rms_BookingType);
+//
+//                               print("Llll  $bookingType");
+//                               if(bookingType ==null ){
+// print("kkk");
+//                                 if(diff<=29){
+//                                   print(".............1");
+//                                   await sharedPreferenceUtil.setString(rms_BookingType, "Daily");
+//                                 }
+//                                 else if(diff<=90 && diff>29){
+//                                   print("............2");
+//                                   await sharedPreferenceUtil.setString(rms_BookingType, "Short Term");
+//                                 }
+//                                 else if(diff>90 && diff>29){
+//                                   print("..........3");
+//                                   await sharedPreferenceUtil.setString(rms_BookingType, "Long Term");
+//                                 }
+//                                 else{
+//                                   print(".................4");
+//                                   await sharedPreferenceUtil.setString(rms_BookingType, " ");
+//                                 }
+//                               }
+// else{
+//   print("ijggyh");
+//                               }
+//                                 var phone = (await sharedPreferenceUtil
+//                                             .getString(rms_phoneNumber) ??
+//                                         '')
+//                                     .toString();
+//                                 var token =
+//                                     (await sharedPreferenceUtil.getString(
+//                                                 rms_registeredUserToken) ??
+//                                             '')
+//                                         .toString();
+//
+//                                 Navigator.of(context).pop();
+//                                 List<int> guestList=[];
+//                                 for(int i=1;i <= int.parse(_viewModel
+//                                     .propertyDetailsModel
+//                                     ?.data
+//                                     ?.details
+//                                     ?.maxGuests ??
+//                                     '0');i++){
+//                                   guestList.add(i);
+//                                 }
+//                                 guestList.forEach(print);
+//                                 PropertyDetailsUtilModel model =
+//                                     PropertyDetailsUtilModel(
+//                                   name: name,
+//                                   email: email,
+//                                   mobile: phone,
+//                                   token: token,
+//                                   flexiRent: _viewModel.propertyDetailsModel?.data?.details?.monthlyRent,
+//                                   longTermRent: _viewModel.propertyDetailsModel?.data?.details?.rmsRent,
+//                                   guestList: guestList,
+//                                   bookingType: await preferenceUtil.getString(rms_BookingType),
+//                                   propId: int.parse((_viewModel
+//                                           .propertyDetailsModel
+//                                           ?.data
+//                                           ?.details
+//                                           ?.propId)
+//                                       .toString()),
+//                                   buildingName: (_viewModel.propertyDetailsModel
+//                                           ?.data?.details?.bname )
+//                                       .toString(),
+//                                   title: (_viewModel.propertyDetailsModel?.data
+//                                           ?.details?.title)
+//                                       .toString(),
+//                                   freeGuest: int.parse((_viewModel
+//                                           .propertyDetailsModel
+//                                           ?.data
+//                                           ?.details
+//                                           ?.freeGuests)
+//                                       .toString()),
+//                                   maxGuest: int.parse(_viewModel
+//                                           .propertyDetailsModel
+//                                           ?.data
+//                                           ?.details
+//                                           ?.maxGuests ??
+//                                       '0'),
+//                                 );
+//                                 Navigator.pushNamed(
+//                                     context, AppRoutes.bookingPage,
+//                                     arguments: model);
                               },
                               child: Container(
                                   width: _mainWidth * 0.5,

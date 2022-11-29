@@ -37,5 +37,8 @@ class AppUrls {
   static const String fcmTokenUrl = '/v2/androidToken';
   static const String homePageUrl = '/v2/home';
   static const String tenantLeadsUrl = '/v2/myLeads';
+  static const String checkinStatusInfo = '/v2/checkFeeback';
+  static const String checkinFeedbackPost = '/v2/checkInFeedback';
   static const String checkInFeedback = '/v2/checkInFeedback';
+  static const String deleteAccount = '/v2/deleteAccount';
 }

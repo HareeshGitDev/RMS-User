@@ -8,6 +8,7 @@ import 'package:RentMyStay_user/utils/service/location_service.dart';
 import 'package:RentMyStay_user/utils/service/locator_service.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:RentMyStay_user/utils/service/navigator_key_service.dart';
+import 'package:RentMyStay_user/utils/view/rate_app_init_widget.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -115,17 +116,19 @@ class _MyAppState extends State<MyApp> {
           create: (_) => BottomNavigationProvider(),
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'RentMyStay ',
-        navigatorKey: lazySingletonInstance<NavigatorKeyService>().navigatorKey,
-        theme: ThemeData(
-          primarySwatch: customColor,
-          fontFamily: getThemeFont,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
+      child: RateAppInitWidget(
+        builder:(rateMyApp)=> MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'RentMyStay ',
+          navigatorKey: lazySingletonInstance<NavigatorKeyService>().navigatorKey,
+          theme: ThemeData(
+            primarySwatch: customColor,
+            fontFamily: getThemeFont,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          home: SplashPage( rateMyApp: rateMyApp),
+          onGenerateRoute: NavigationService.generateRoute,
         ),
-        home: SplashPage(),
-        onGenerateRoute: NavigationService.generateRoute,
       ),
     );
   }

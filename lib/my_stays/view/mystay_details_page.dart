@@ -123,237 +123,383 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
               height: _mainHeight,
               color: Colors.white,
               width: _mainWidth,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                          width: _mainWidth * 0.8,
-                          padding: EdgeInsets.only(
-                              left: _mainWidth * 0.04,
-                              top: _mainHeight * 0.01,
-                              right: _mainWidth * 0.04),
-                          child: Text(
-                            '${value.myStayDetailsModel?.data?.addressDisplay}',
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                          )),
-                      GestureDetector(
-                        onTap: () async {
-                          if ((value.myStayDetailsModel != null &&
-                              value.myStayDetailsModel?.data !=
-                                  null &&
-                              value.myStayDetailsModel?.data
-                                  ?.glat !=
-                                  null) &&
-                              (value.myStayDetailsModel != null &&
-                                  value.myStayDetailsModel?.data !=
-                                      null &&
-                                  value.myStayDetailsModel?.data
-                                      ?.glng !=
-                                      null)) {
-                            var latitude =
-                            (value.myStayDetailsModel?.data?.glat)
-                                .toString();
-                            var longitude =
-                            (value.myStayDetailsModel?.data?.glng)
-                                .toString();
-                            await SystemService.launchGoogleMaps(
-                                latitude: latitude,
-                                longitude: longitude);
-                          }
-                        },
-                        child: SizedBox(
-                          height: _mainHeight * 0.04,
-                          width: _mainWidth * 0.17,
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.location_on_outlined,
-                                color: CustomTheme.appTheme,
-                              ),
-                              Text(
-                                nullCheck(
-                                    list:
-                                    value.bookingDetailsLang)
-                                    ? ' ${value.bookingDetailsLang[1].name} '
-                                    : ' Map ',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14),
-                              )
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  Divider(
-                    height: _mainHeight * 0.02,
-                    thickness: 1,
-                  ),
-                  Container(
-                    //color: Colors.amber,
-                    width: _mainWidth,
-                    padding: EdgeInsets.only(
-                        left: _mainWidth * 0.04,
-                        bottom: _mainHeight * 0.01),
-
-                    child: Row(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          height: _mainHeight * 0.1,
-                          width: _mainWidth * 0.25,
-                          child: CachedNetworkImage(
-                            imageUrl: value.myStayDetailsModel?.data
-                                ?.picThumbnail ??
-                                '',
-                            imageBuilder: (context, imageProvider) =>
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                    BorderRadius.circular(10),
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
+                            width: _mainWidth * 0.8,
+                            padding: EdgeInsets.only(
+                                left: _mainWidth * 0.04,
+                                top: _mainHeight * 0.01,
+                                right: _mainWidth * 0.04),
+                            child: Text(
+                              '${value.myStayDetailsModel?.data?.addressDisplay}',
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                            )),
+                        GestureDetector(
+                          onTap: () async {
+                            if ((value.myStayDetailsModel != null &&
+                                value.myStayDetailsModel?.data !=
+                                    null &&
+                                value.myStayDetailsModel?.data
+                                    ?.glat !=
+                                    null) &&
+                                (value.myStayDetailsModel != null &&
+                                    value.myStayDetailsModel?.data !=
+                                        null &&
+                                    value.myStayDetailsModel?.data
+                                        ?.glng !=
+                                        null)) {
+                              var latitude =
+                              (value.myStayDetailsModel?.data?.glat)
+                                  .toString();
+                              var longitude =
+                              (value.myStayDetailsModel?.data?.glng)
+                                  .toString();
+                              await SystemService.launchGoogleMaps(
+                                  latitude: latitude,
+                                  longitude: longitude);
+                            }
+                          },
+                          child: SizedBox(
+                            height: _mainHeight * 0.04,
+                            width: _mainWidth * 0.17,
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.location_on_outlined,
+                                  color: CustomTheme.appTheme,
                                 ),
-                            placeholder: (context, url) =>
-                                Shimmer.fromColors(
-                                    child: Container(
-                                      height: _mainHeight * 0.1,
-                                      width: _mainWidth * 0.25,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey,
-                                        borderRadius:
-                                        BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                    baseColor:
-                                    Colors.grey[200] as Color,
-                                    highlightColor:
-                                    Colors.grey[350] as Color),
-                            errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                                Text(
+                                  nullCheck(
+                                      list:
+                                      value.bookingDetailsLang)
+                                      ? ' ${value.bookingDetailsLang[1].name} '
+                                      : ' Map ',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                        Container(
-                          width: _mainWidth * 0.7,
-                          height: _mainHeight * 0.11,
-                          child: Column(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                  margin: EdgeInsets.only(
-                                      left: 10, right: 10),
-                                  child: Text(
-                                    '${value.myStayDetailsModel?.data?.title} ${value.myStayDetailsModel?.data?.unit}',
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black),
-                                    textAlign: TextAlign.start,
-                                  )),
-                              SizedBox(
-                                height: 1,
-                              ),
-                              Container(
-                                  width: _mainWidth * 0.6,
-                                  margin: EdgeInsets.only(
-                                      left: 10, right: 10),
-                                  child: Text(
-                                    '${value.myStayDetailsModel?.data
-                                        ?.furnishedType}',
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.grey),
-                                    textAlign: TextAlign.start,
-                                  )),
-                              Container(
-                                height: _mainHeight * 0.035,
-                                child: Row(
-                                  textDirection: TextDirection.rtl,
-                                  children: [
-                                    IconButton(
-                                      padding: EdgeInsets.only(
-                                          right: _mainWidth * 0.02),
-                                      icon: Icon(
-                                        Icons.call,
-                                        color: CustomTheme.appTheme,
-                                        size: _mainWidth * 0.06,
-                                      ),
-                                      onPressed: () {
-                                        launch('tel:917204315482');
-                                      },
-                                    ),
-                                    SizedBox(
-                                      width: _mainWidth * 0.02,
-                                    ),
-                                    IconButton(
-                                      padding: EdgeInsets.only(
-                                          right: _mainWidth * 0.02),
-                                      icon: const Image(
-                                        image: NetworkImage(
-                                          'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/whatsapplogo.png?alt=media&token=41df11ff-b9e7-4f5b-a4fc-30b47cfe1435',
-                                        ),
-                                        fit: BoxFit.cover,
-                                      ),
-                                      onPressed: () {
-                                        launch(
-                                            'https://wa.me/917204315482?text=Hi, I wanted to contact with you regarding my booking ID ( ${value
-                                                .myStayDetailsModel?.data
-                                                ?.bookingId})');
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
+                        )
                       ],
                     ),
-                  ),
-                  Container(
+                    Divider(
+                      height: _mainHeight * 0.02,
+                      thickness: 1,
+                    ),
+                    Container(
+                      //color: Colors.amber,
+                      width: _mainWidth,
+                      padding: EdgeInsets.only(
+                          left: _mainWidth * 0.04,
+                          bottom: _mainHeight * 0.01),
+
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: _mainHeight * 0.1,
+                            width: _mainWidth * 0.25,
+                            child: CachedNetworkImage(
+                              imageUrl: value.myStayDetailsModel?.data
+                                  ?.picThumbnail ??
+                                  '',
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                      BorderRadius.circular(10),
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                              placeholder: (context, url) =>
+                                  Shimmer.fromColors(
+                                      child: Container(
+                                        height: _mainHeight * 0.1,
+                                        width: _mainWidth * 0.25,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey,
+                                          borderRadius:
+                                          BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      baseColor:
+                                      Colors.grey[200] as Color,
+                                      highlightColor:
+                                      Colors.grey[350] as Color),
+                              errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                            ),
+                          ),
+                          Container(
+                            width: _mainWidth * 0.7,
+                            height: _mainHeight * 0.11,
+                            child: Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                    margin: EdgeInsets.only(
+                                        left: 10, right: 10),
+                                    child: Text(
+                                      '${value.myStayDetailsModel?.data?.title} ${value.myStayDetailsModel?.data?.unit}',
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black),
+                                      textAlign: TextAlign.start,
+                                    )),
+                                SizedBox(
+                                  height: 1,
+                                ),
+                                Container(
+                                    width: _mainWidth * 0.6,
+                                    margin: EdgeInsets.only(
+                                        left: 10, right: 10),
+                                    child: Text(
+                                      '${value.myStayDetailsModel?.data
+                                          ?.furnishedType}',
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.grey),
+                                      textAlign: TextAlign.start,
+                                    )),
+                                Container(
+                                  height: _mainHeight * 0.035,
+                                  child: Row(
+                                    textDirection: TextDirection.rtl,
+                                    children: [
+                                      IconButton(
+                                        padding: EdgeInsets.only(
+                                            right: _mainWidth * 0.02),
+                                        icon: Icon(
+                                          Icons.call,
+                                          color: CustomTheme.appTheme,
+                                          size: _mainWidth * 0.06,
+                                        ),
+                                        onPressed: () {
+                                          launch('tel:917204315482');
+                                        },
+                                      ),
+                                      SizedBox(
+                                        width: _mainWidth * 0.02,
+                                      ),
+                                      IconButton(
+                                        padding: EdgeInsets.only(
+                                            right: _mainWidth * 0.02),
+                                        icon: const Image(
+                                          image: NetworkImage(
+                                            'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/whatsapplogo.png?alt=media&token=41df11ff-b9e7-4f5b-a4fc-30b47cfe1435',
+                                          ),
+                                          fit: BoxFit.cover,
+                                        ),
+                                        onPressed: () {
+                                          launch(
+                                              'https://wa.me/917204315482?text=Hi, I wanted to contact with you regarding my booking ID ( ${value
+                                                  .myStayDetailsModel?.data
+                                                  ?.bookingId})');
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                        width: _mainWidth,
+                        color: CustomTheme.appThemeContrast,
+                        height: _mainHeight * 0.03,
+                        padding:
+                        EdgeInsets.only(left: _mainWidth * 0.04),
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          children: [
+                            Text(
+                              value.myStayDetailsModel?.data
+                                  ?.checkOutStatus ==
+                                  '1'
+                                  ? 'Completed Booking' : 'Active Booking' /*nullCheck(
+                                                      list: value.bookingDetailsLang)
+                                                  ? ' ${value.bookingDetailsLang[17].name} '
+                                                  : 'Completed Booking'
+                                              : nullCheck(
+                                                      list: value.bookingDetailsLang)
+                                                  ? ' ${value.bookingDetailsLang[18].name} '
+                                                  : 'Active Booking'*/,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            Spacer(),
+                            Container(
+                              margin: EdgeInsets.only(right: _mainWidth * 0.03),
+                              child: Text.rich(
+                                TextSpan(
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  children: [
+                                    WidgetSpan(
+                                      child: Icon(
+                                          Icons.people_alt_outlined,
+                                          size: 20,
+                                          color: Colors.white),
+                                    ),
+                                    TextSpan(
+                                      text:
+                                      '  ${value.myStayDetailsModel?.data
+                                          ?.numGuests ?? ''} ${nullCheck(
+                                          list: value.bookingDetailsLang)
+                                          ? '${value.bookingDetailsLang[2].name}'
+                                          : 'Guests'}',
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        )),
+                    SizedBox(
+                      height: 10,
+                    ),
+
+                    Container(
+                      width: _mainWidth,
+                      padding: EdgeInsets.only(
+                          left: _mainWidth * 0.04,
+                          top: _mainHeight * 0.01,
+                          right: _mainWidth * 0.04),
+                      child: Row(
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "${nullCheck(list: value.bookingDetailsLang)
+                                  ? ' ${value.bookingDetailsLang[5].name} '
+                                  : 'Name'} : ${value.myStayDetailsModel?.data
+                                  ?.travellerName ?? ''}",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black),
+                            ),
+                            /* GestureDetector(
+                                    onTap: () => _updateKyc(
+                                        context,
+                                        updateKYCLink,
+                                        'Update Your kyc',
+                                        value.myStayDetailsModel?.data?.userId ??
+                                            ''),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(5),
+                                          color: CustomTheme.appTheme),
+                                      padding: EdgeInsets.only(
+                                          left: 5, right: 5, top: 1, bottom: 1),
+                                      child: Text(
+                                        nullCheck(list: value.bookingDetailsLang)
+                                            ? ' ${value.bookingDetailsLang[4].name} '
+                                            : "Update Your Kyc",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ),  */
+                          ]),
+                    ),
+                    Container(
+                        padding: EdgeInsets.only(
+                            left: _mainWidth * 0.04,
+                            top: _mainHeight * 0.01,
+                            right: _mainWidth * 0.04),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                            "${nullCheck(list: value.bookingDetailsLang)
+                                ? ' ${value.bookingDetailsLang[6].name} '
+                                : 'Phone No'} : ${value.myStayDetailsModel?.data
+                                ?.travellerContactNum ?? ''}",
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black))),
+                    Container(
+                        padding: EdgeInsets.only(
+                            left: _mainWidth * 0.04,
+                            top: _mainHeight * 0.01,
+                            right: _mainWidth * 0.04),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                            "${nullCheck(list: value.bookingDetailsLang)
+                                ? ' ${value.bookingDetailsLang[7].name} '
+                                : 'Email'} : ${value.myStayDetailsModel?.data
+                                ?.contactEmail ?? ''}",
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black))),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
                       width: _mainWidth,
                       color: CustomTheme.appThemeContrast,
                       height: _mainHeight * 0.03,
-                      padding:
-                      EdgeInsets.only(left: _mainWidth * 0.04),
-                      alignment: Alignment.centerLeft,
                       child: Row(
-                        children: [
-                          Text(
-                            value.myStayDetailsModel?.data
-                                ?.checkOutStatus ==
-                                '1'
-                                ? 'Completed Booking' : 'Active Booking' /*nullCheck(
-                                                    list: value.bookingDetailsLang)
-                                                ? ' ${value.bookingDetailsLang[17].name} '
-                                                : 'Completed Booking'
-                                            : nullCheck(
-                                                    list: value.bookingDetailsLang)
-                                                ? ' ${value.bookingDetailsLang[18].name} '
-                                                : 'Active Booking'*/,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          Spacer(),
-                          Container(
-                            margin: EdgeInsets.only(right: _mainWidth * 0.03),
-                            child: Text.rich(
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text.rich(
+                              TextSpan(
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                children: [
+                                  WidgetSpan(
+                                    child: Icon(Icons.outbond_outlined,
+                                        size: 20, color: Colors.white),
+                                  ),
+                                  TextSpan(
+                                    text:
+                                    '  ${DateTimeService.checkDateFormat(value
+                                        .myStayDetailsModel
+                                        ?.data
+                                        ?.travelFromDate) ?? ''}',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontWeight:
+                                        FontWeight.w500),
+                                  )
+                                ],
+                              ),
+                            ),
+
+
+                            Text.rich(
                               TextSpan(
                                 style: TextStyle(
                                   fontSize: 14,
@@ -363,329 +509,49 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                 children: [
                                   WidgetSpan(
                                     child: Icon(
-                                        Icons.people_alt_outlined,
+                                        Icons.calendar_today_outlined,
                                         size: 20,
                                         color: Colors.white),
                                   ),
                                   TextSpan(
                                     text:
-                                    '  ${value.myStayDetailsModel?.data
-                                        ?.numGuests ?? ''} ${nullCheck(
+                                    '  ${value.myStayDetailsModel?.data?.nights ??
+                                        ''} ${nullCheck(
                                         list: value.bookingDetailsLang)
-                                        ? '${value.bookingDetailsLang[2].name}'
-                                        : 'Guests'}',
+                                        ? '${value.bookingDetailsLang[3].name}'
+                                        : 'Nights'}',
                                   )
                                 ],
                               ),
                             ),
-                          ),
-                        ],
-                      )),
-                  SizedBox(
-                    height: 10,
-                  ),
-
-                  Container(
-                    width: _mainWidth,
-                    padding: EdgeInsets.only(
-                        left: _mainWidth * 0.04,
-                        top: _mainHeight * 0.01,
-                        right: _mainWidth * 0.04),
-                    child: Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "${nullCheck(list: value.bookingDetailsLang)
-                                ? ' ${value.bookingDetailsLang[5].name} '
-                                : 'Name'} : ${value.myStayDetailsModel?.data
-                                ?.travellerName ?? ''}",
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black),
-                          ),
-                          /* GestureDetector(
-                                  onTap: () => _updateKyc(
-                                      context,
-                                      updateKYCLink,
-                                      'Update Your kyc',
-                                      value.myStayDetailsModel?.data?.userId ??
-                                          ''),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: CustomTheme.appTheme),
-                                    padding: EdgeInsets.only(
-                                        left: 5, right: 5, top: 1, bottom: 1),
-                                    child: Text(
-                                      nullCheck(list: value.bookingDetailsLang)
-                                          ? ' ${value.bookingDetailsLang[4].name} '
-                                          : "Update Your Kyc",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                ),  */
-                        ]),
-                  ),
-                  Container(
-                      padding: EdgeInsets.only(
-                          left: _mainWidth * 0.04,
-                          top: _mainHeight * 0.01,
-                          right: _mainWidth * 0.04),
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                          "${nullCheck(list: value.bookingDetailsLang)
-                              ? ' ${value.bookingDetailsLang[6].name} '
-                              : 'Phone No'} : ${value.myStayDetailsModel?.data
-                              ?.travellerContactNum ?? ''}",
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black))),
-                  Container(
-                      padding: EdgeInsets.only(
-                          left: _mainWidth * 0.04,
-                          top: _mainHeight * 0.01,
-                          right: _mainWidth * 0.04),
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                          "${nullCheck(list: value.bookingDetailsLang)
-                              ? ' ${value.bookingDetailsLang[7].name} '
-                              : 'Email'} : ${value.myStayDetailsModel?.data
-                              ?.contactEmail ?? ''}",
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black))),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    width: _mainWidth,
-                    color: CustomTheme.appThemeContrast,
-                    height: _mainHeight * 0.03,
-                    child: Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text.rich(
-                            TextSpan(
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              children: [
-                                WidgetSpan(
-                                  child: Icon(Icons.outbond_outlined,
-                                      size: 20, color: Colors.white),
+                            Text.rich(
+                              TextSpan(
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                TextSpan(
-                                  text:
-                                  '  ${DateTimeService.checkDateFormat(value
-                                      .myStayDetailsModel
-                                      ?.data
-                                      ?.travelFromDate) ?? ''}',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                      fontWeight:
-                                      FontWeight.w500),
-                                )
-                              ],
-                            ),
-                          ),
-
-
-                          Text.rich(
-                            TextSpan(
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              children: [
-                                WidgetSpan(
-                                  child: Icon(
-                                      Icons.calendar_today_outlined,
-                                      size: 20,
-                                      color: Colors.white),
-                                ),
-                                TextSpan(
-                                  text:
-                                  '  ${value.myStayDetailsModel?.data?.nights ??
-                                      ''} ${nullCheck(
-                                      list: value.bookingDetailsLang)
-                                      ? '${value.bookingDetailsLang[3].name}'
-                                      : 'Nights'}',
-                                )
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              children: [
-                                WidgetSpan(
-                                  child: Icon(Icons.outbond_outlined,
-                                      size: 20, color: Colors.white),
-                                ),
-                                TextSpan(
-                                  text:
-                                  '  ${getDate(
-                                      value.myStayDetailsModel?.data)}',
-                                )
-                              ],
-                            ),
-                          ),
-                        ]),
-                  ),
-                  Stack(
-                    children: [
-                      IgnorePointer(
-                        ignoring: showBookingFromDateExpand(
-                            value.myStayDetailsModel?.data),
-                        child: ExpansionTile(
-                          title: Container(
-                              width: _mainWidth,
-                              child: Row(
                                 children: [
-                                  Text(
-                                    nullCheck(
-                                        list: value
-                                            .bookingDetailsLang)
-                                        ? ' ${value.bookingDetailsLang[8]
-                                        .name} '
-                                        : "Booking From",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.blueGrey,
-                                        fontWeight: FontWeight.w500),
+                                  WidgetSpan(
+                                    child: Icon(Icons.outbond_outlined,
+                                        size: 20, color: Colors.white),
                                   ),
-                                  Spacer(),
-                                  showBookingFromDate(value
-                                      .myStayDetailsModel?.data)
-                                      ? Text(
-                                    DateTimeService.checkDateFormat(value
-                                        .myStayDetailsModel
-                                        ?.data
-                                        ?.travelFromDate) ??
-                                        '',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.black,
-                                        fontWeight:
-                                        FontWeight.w500),
+                                  TextSpan(
+                                    text:
+                                    '  ${getDate(
+                                        value.myStayDetailsModel?.data)}',
                                   )
-                                      : Container(),
                                 ],
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                              )),
-                          children: [
-                            Container(
-                                padding: EdgeInsets.only(
-                                  left: _mainWidth * 0.04,
-                                  right: _mainWidth * 0.04,
-                                  bottom: _mainHeight * 0.002,
-                                ),
-                                width: _mainWidth,
-                                child: Row(
-                                  children: [
-                                    Text("Check In Date",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight:
-                                            FontWeight.w600)),
-                                    Text(
-                                      getCheckInDate(value
-                                          .myStayDetailsModel
-                                          ?.data) ??
-                                          '',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight:
-                                          FontWeight.w600),
-                                    ),
-                                  ],
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                )),
-                            Container(
-                              padding: EdgeInsets.only(
-                                  left: _mainWidth * 0.04,
-                                  right: _mainWidth * 0.04),
-                              width: _mainWidth,
-                              child: Row(
-                                children: [
-                                  Text("Check In By",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight:
-                                          FontWeight.w600)),
-                                  Text(
-                                    getCheckInBy(value
-                                        .myStayDetailsModel
-                                        ?.data) ??
-                                        '',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ],
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
                               ),
                             ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Positioned(
-                        left: _mainWidth * 0.7,
-                        top: _mainHeight * 0.025,
-                        child: Visibility(
-                          visible: showCheckIn(
+                          ]),
+                    ),
+                    Stack(
+                      children: [
+                        IgnorePointer(
+                          ignoring: showBookingFromDateExpand(
                               value.myStayDetailsModel?.data),
-                          child: GestureDetector(
-                            onTap: () async {
-                              await showMyStayDialog(
-                                context: context,
-                                checkIn: true,);
-                            },
-                            child: Material(
-                              borderRadius: BorderRadius.circular(5),
-                              color: CustomTheme.appThemeContrast,
-                              child: Container(
-                                  alignment: Alignment.center,
-                                  height: _mainHeight * 0.03,
-                                  padding: EdgeInsets.only(
-                                      left: _mainWidth * 0.01,
-                                      right: _mainWidth * 0.01),
-                                  child: Text(
-                                    " Check In ",
-                                    style: TextStyle(
-                                        color: Colors.white),
-                                  )),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Stack(
-                    children: [
-                      IgnorePointer(
-                        ignoring: showBookingExpand(
-                            value.myStayDetailsModel?.data),
-                        child: ExpansionTile(
+                          child: ExpansionTile(
                             title: Container(
                                 width: _mainWidth,
                                 child: Row(
@@ -694,23 +560,22 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                       nullCheck(
                                           list: value
                                               .bookingDetailsLang)
-                                          ? ' ${value.bookingDetailsLang[9]
+                                          ? ' ${value.bookingDetailsLang[8]
                                           .name} '
-                                          : "Booking To",
+                                          : "Booking From",
                                       style: TextStyle(
                                           fontSize: 16,
                                           color: Colors.blueGrey,
-                                          fontWeight:
-                                          FontWeight.w500),
+                                          fontWeight: FontWeight.w500),
                                     ),
                                     Spacer(),
-                                    showBookingToDate(value
+                                    showBookingFromDate(value
                                         .myStayDetailsModel?.data)
                                         ? Text(
                                       DateTimeService.checkDateFormat(value
                                           .myStayDetailsModel
                                           ?.data
-                                          ?.travelToDate) ??
+                                          ?.travelFromDate) ??
                                           '',
                                       style: TextStyle(
                                           fontSize: 16,
@@ -733,13 +598,13 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                   width: _mainWidth,
                                   child: Row(
                                     children: [
-                                      Text("Check Out Date",
+                                      Text("Check In Date",
                                           style: TextStyle(
                                               fontSize: 12,
                                               fontWeight:
                                               FontWeight.w600)),
                                       Text(
-                                        getCheckOutDate(value
+                                        getCheckInDate(value
                                             .myStayDetailsModel
                                             ?.data) ??
                                             '',
@@ -750,339 +615,514 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                       ),
                                     ],
                                     mainAxisAlignment:
-                                    MainAxisAlignment
-                                        .spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                   )),
                               Container(
-                                  padding: EdgeInsets.only(
-                                      left: _mainWidth * 0.04,
-                                      right: _mainWidth * 0.04),
-                                  width: _mainWidth,
-                                  child: Row(
-                                    children: [
-                                      Text("Check Out By",
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight:
-                                              FontWeight.w600)),
-                                      Text(
-                                        getCheckOutBy(value
-                                            .myStayDetailsModel
-                                            ?.data) ??
-                                            '',
+                                padding: EdgeInsets.only(
+                                    left: _mainWidth * 0.04,
+                                    right: _mainWidth * 0.04),
+                                width: _mainWidth,
+                                child: Row(
+                                  children: [
+                                    Text("Check In By",
                                         style: TextStyle(
                                             fontSize: 12,
                                             fontWeight:
-                                            FontWeight.w600),
-                                      ),
-                                    ],
-                                    mainAxisAlignment:
-                                    MainAxisAlignment
-                                        .spaceBetween,
-                                  )),
+                                            FontWeight.w600)),
+                                    Text(
+                                      getCheckInBy(value
+                                          .myStayDetailsModel
+                                          ?.data) ??
+                                          '',
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                ),
+                              ),
                               SizedBox(
                                 height: 10,
                               ),
-                            ]),
-                      ),
-                      Positioned(
-                        left: _mainWidth * 0.7,
-                        top: _mainHeight * 0.025,
-                        child: Visibility(
-                          visible: showCheckOut(
-                              value.myStayDetailsModel?.data),
-                          child: GestureDetector(
-                            onTap: () async {
-                              await showMyStayDialog(
-                                context: context,
-                                checkIn: false,
-                              );
-                            },
-                            child: Material(
-                              borderRadius: BorderRadius.circular(5),
-                              color: CustomTheme.appThemeContrast,
-                              child: Container(
-                                  alignment: Alignment.center,
-                                  height: _mainHeight * 0.03,
-                                  padding: EdgeInsets.only(
-                                      left: _mainWidth * 0.01,
-                                      right: _mainWidth * 0.01),
-                                  child: Text(
-                                    " Check Out ",
-                                    style: TextStyle(
-                                        color: Colors.white),
-                                  )),
+                            ],
+                          ),
+                        ),
+                        Positioned(
+                          left: _mainWidth * 0.7,
+                          top: _mainHeight * 0.025,
+                          child: Visibility(
+                            visible: showCheckIn(
+                                value.myStayDetailsModel?.data),
+                            child: GestureDetector(
+                              onTap: () async {
+                                await showMyStayDialog(
+                                  context: context,
+                                  checkIn: true,);
+                              },
+                              child: Material(
+                                borderRadius: BorderRadius.circular(5),
+                                color: CustomTheme.appThemeContrast,
+                                child: Container(
+                                    alignment: Alignment.center,
+                                    height: _mainHeight * 0.03,
+                                    padding: EdgeInsets.only(
+                                        left: _mainWidth * 0.01,
+                                        right: _mainWidth * 0.01),
+                                    child: Text(
+                                      " Check In ",
+                                      style: TextStyle(
+                                          color: Colors.white),
+                                    )),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                      padding: EdgeInsets.only(
-                          left: _mainWidth * 0.04,
-                          right: _mainWidth * 0.04),
-                      width: _mainWidth,
-                      color: CustomTheme.appThemeContrast,
-                      height: _mainHeight * 0.03,
-                      child: Row(
-                        children: [
-                          Text(
-                            nullCheck(list: value.bookingDetailsLang)
-                                ? ' ${value.bookingDetailsLang[10].name} '
-                                : "Pending Details ",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          Text(
-                            '$rupee ${value.myStayDetailsModel?.data
-                                ?.pendingAmount ?? '0'}',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ],
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                      )),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _gridInput(
-                          hint: nullCheck(
-                              list: value.bookingDetailsLang)
-                              ? ' ${value.bookingDetailsLang[11].name} '
-                              : "Monthly Invoice(s)",
-                          icon: Icon(
-                            Icons.line_weight_outlined,
-                            size: _mainHeight * 0.032,
-                            color: CustomTheme.appTheme,
-                          ),
-                          callBack: () =>
-                              Navigator.pushNamed(
-                                  context, AppRoutes.invoicePage,
-                                  arguments: {
-                                    'address': value
-                                        .myStayDetailsModel
-                                        ?.data
-                                        ?.addressDisplay ??
-                                        '',
-                                    'bookingId': widget.bookingId,
-                                    'propertyId': value
-                                        .myStayDetailsModel
-                                        ?.data
-                                        ?.propId ??
-                                        '0',
-                                    'name': value.myStayDetailsModel
-                                        ?.data?.travellerName ??
-                                        '',
-                                    'mobile': value
-                                        .myStayDetailsModel
-                                        ?.data
-                                        ?.travellerContactNum ??
-                                        '',
-                                    'email': value.myStayDetailsModel
-                                        ?.data?.contactEmail ??
-                                        '',
-                                  })),
-                      // _gridInput(
-                      //     hint: value.myStayDetailsModel?.data
-                      //         ?.agreementStatus != null &&
-                      //         value.myStayDetailsModel?.data?.agreementStatus ==
-                      //             '1'
-                      //         ? 'Download Agreement '
-                      //         : nullCheck(
-                      //         list: value.bookingDetailsLang)
-                      //         ? ' ${value.bookingDetailsLang[12].name} '
-                      //         : 'Agreement Sign',
-                      //     icon:
-                      //     value.myStayDetailsModel?.data?.agreementStatus !=
-                      //         null &&
-                      //         value.myStayDetailsModel?.data
-                      //             ?.agreementStatus ==
-                      //             '1'
-                      //         ? Icon(
-                      //       Icons.assignment_turned_in,
-                      //       size: _mainHeight * 0.032,
-                      //       color: CustomTheme.myFavColor,
-                      //     )
-                      //         : Icon(
-                      //       Icons.assignment_late_outlined,
-                      //       size: _mainHeight * 0.032,
-                      //       color: CustomTheme.appTheme,
-                      //     ),
-                      //     callBack: value.myStayDetailsModel?.data
-                      //         ?.agreementStatus != null &&
-                      //         value.myStayDetailsModel?.data
-                      //             ?.agreementStatus ==
-                      //             '1'
-                      //         ? () async {
-                      //       String agreementLink = value
-                      //           .myStayDetailsModel
-                      //           ?.data
-                      //           ?.agreementLink ??
-                      //           '';
-                      //       if (await canLaunch(
-                      //           agreementLink)) {
-                      //         launch(agreementLink)
-                      //             .catchError((error) async {
-                      //           log(error.toString());
-                      //           return true;
-                      //         });
-                      //       }
-                      //     }
-                      //         : () =>
-                      //         _handleURLButtonPress(
-                      //             context,
-                      //             agreementUrl,
-                      //             nullCheck(list: value.bookingDetailsLang)
-                      //                 ? ' ${value.bookingDetailsLang[12].name} '
-                      //                 : 'Agreement Sign',
-                      //             base64Encode(utf8.encode(widget.bookingId)) +
-                      //                 '/' +
-                      //                 token)),
-                      _gridInput(
-                        hint: nullCheck(
-                            list: value.bookingDetailsLang)
-                            ? ' ${value.bookingDetailsLang[13].name} '
-                            : "Refund SplitUp",
-                        icon: Icon(
-                          Icons.sticky_note_2_outlined,
-                          size: _mainHeight * 0.032,
-                          color: CustomTheme.appTheme,
+                      ],
+                    ),
+                    Stack(
+                      children: [
+                        IgnorePointer(
+                          ignoring: showBookingExpand(
+                              value.myStayDetailsModel?.data),
+                          child: ExpansionTile(
+                              title: Container(
+                                  width: _mainWidth,
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        nullCheck(
+                                            list: value
+                                                .bookingDetailsLang)
+                                            ? ' ${value.bookingDetailsLang[9]
+                                            .name} '
+                                            : "Booking To",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.blueGrey,
+                                            fontWeight:
+                                            FontWeight.w500),
+                                      ),
+                                      Spacer(),
+                                      showBookingToDate(value
+                                          .myStayDetailsModel?.data)
+                                          ? Text(
+                                        DateTimeService.checkDateFormat(value
+                                            .myStayDetailsModel
+                                            ?.data
+                                            ?.travelToDate) ??
+                                            '',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.black,
+                                            fontWeight:
+                                            FontWeight.w500),
+                                      )
+                                          : Container(),
+                                    ],
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                  )),
+                              children: [
+                                Container(
+                                    padding: EdgeInsets.only(
+                                      left: _mainWidth * 0.04,
+                                      right: _mainWidth * 0.04,
+                                      bottom: _mainHeight * 0.002,
+                                    ),
+                                    width: _mainWidth,
+                                    child: Row(
+                                      children: [
+                                        Text("Check Out Date",
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight:
+                                                FontWeight.w600)),
+                                        Text(
+                                          getCheckOutDate(value
+                                              .myStayDetailsModel
+                                              ?.data) ??
+                                              '',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight:
+                                              FontWeight.w600),
+                                        ),
+                                      ],
+                                      mainAxisAlignment:
+                                      MainAxisAlignment
+                                          .spaceBetween,
+                                    )),
+                                Container(
+                                    padding: EdgeInsets.only(
+                                        left: _mainWidth * 0.04,
+                                        right: _mainWidth * 0.04),
+                                    width: _mainWidth,
+                                    child: Row(
+                                      children: [
+                                        Text("Check Out By",
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight:
+                                                FontWeight.w600)),
+                                        Text(
+                                          getCheckOutBy(value
+                                              .myStayDetailsModel
+                                              ?.data) ??
+                                              '',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight:
+                                              FontWeight.w600),
+                                        ),
+                                      ],
+                                      mainAxisAlignment:
+                                      MainAxisAlignment
+                                          .spaceBetween,
+                                    )),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                              ]),
                         ),
-                        callBack: () =>
-                            Navigator.of(context)
-                                .pushNamed(AppRoutes.refundSplitPage,
-                                arguments: widget.bookingId),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: _mainHeight * 0.01,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      GestureDetector(
-                        child: _gridInput(
+                        Positioned(
+                          left: _mainWidth * 0.7,
+                          top: _mainHeight * 0.025,
+                          child: Visibility(
+                            visible: showCheckOut(
+                                value.myStayDetailsModel?.data),
+                            child: GestureDetector(
+                              onTap: () async {
+                                await showMyStayDialog(
+                                  context: context,
+                                  checkIn: false,
+                                );
+                              },
+                              child: Material(
+                                borderRadius: BorderRadius.circular(5),
+                                color: CustomTheme.appThemeContrast,
+                                child: Container(
+                                    alignment: Alignment.center,
+                                    height: _mainHeight * 0.03,
+                                    padding: EdgeInsets.only(
+                                        left: _mainWidth * 0.01,
+                                        right: _mainWidth * 0.01),
+                                    child: Text(
+                                      " Check Out ",
+                                      style: TextStyle(
+                                          color: Colors.white),
+                                    )),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                        padding: EdgeInsets.only(
+                            left: _mainWidth * 0.04,
+                            right: _mainWidth * 0.04),
+                        width: _mainWidth,
+                        color: CustomTheme.appThemeContrast,
+                        height: _mainHeight * 0.03,
+                        child: Row(
+                          children: [
+                            Text(
+                              nullCheck(list: value.bookingDetailsLang)
+                                  ? ' ${value.bookingDetailsLang[10].name} '
+                                  : "Pending Details ",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            Text(
+                              '$rupee ${value.myStayDetailsModel?.data
+                                  ?.pendingAmount ?? '0'}',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
+                        )),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _gridInput(
                             hint: nullCheck(
                                 list: value.bookingDetailsLang)
-                                ? ' ${value.bookingDetailsLang[14].name} '
-                                : "Raise Ticket",
+                                ? ' ${value.bookingDetailsLang[11].name} '
+                                : "Monthly Invoice(s)",
                             icon: Icon(
-                              Icons.report_problem_outlined,
+                              Icons.line_weight_outlined,
                               size: _mainHeight * 0.032,
-                              color: value.myStayDetailsModel?.data
-                                  ?.checkOutStatus !=
-                                  null &&
-                                  value.myStayDetailsModel?.data
-                                      ?.checkOutStatus ==
-                                      '1'
-                                  ? Colors.grey
-                                  : CustomTheme.appTheme,
+                              color: CustomTheme.appTheme,
                             ),
-                            callBack: value.myStayDetailsModel?.data
-                                ?.checkOutStatus !=
-                                null &&
-                                value.myStayDetailsModel?.data
-                                    ?.checkOutStatus ==
-                                    '1'
-                                ? () {
-                              RMSWidgets.showSnackbar(
-                                  context: context,
-                                  message:
-                                  'This Booking is Completed So You can not raise Ticket',
-                                  color:
-                                  CustomTheme.errorColor);
-                            }
-                                : () =>
-                                Navigator.of(context).pushNamed(
-                                    AppRoutes.generateTicketPage,
+                            callBack: () =>
+                                Navigator.pushNamed(
+                                    context, AppRoutes.invoicePage,
                                     arguments: {
-                                      'bookingId': value
-                                          .myStayDetailsModel
-                                          ?.data
-                                          ?.bookingId ??
-                                          '',
-                                      'propertyId': value
-                                          .myStayDetailsModel
-                                          ?.data
-                                          ?.propId ??
-                                          '',
                                       'address': value
                                           .myStayDetailsModel
                                           ?.data
                                           ?.addressDisplay ??
-                                          ''
+                                          '',
+                                      'bookingId': widget.bookingId,
+                                      'propertyId': value
+                                          .myStayDetailsModel
+                                          ?.data
+                                          ?.propId ??
+                                          '0',
+                                      'name': value.myStayDetailsModel
+                                          ?.data?.travellerName ??
+                                          '',
+                                      'mobile': value
+                                          .myStayDetailsModel
+                                          ?.data
+                                          ?.travellerContactNum ??
+                                          '',
+                                      'email': value.myStayDetailsModel
+                                          ?.data?.contactEmail ??
+                                          '',
                                     })),
-                      ),
-                      _gridInput(
+                        // _gridInput(
+                        //     hint: value.myStayDetailsModel?.data
+                        //         ?.agreementStatus != null &&
+                        //         value.myStayDetailsModel?.data?.agreementStatus ==
+                        //             '1'
+                        //         ? 'Download Agreement '
+                        //         : nullCheck(
+                        //         list: value.bookingDetailsLang)
+                        //         ? ' ${value.bookingDetailsLang[12].name} '
+                        //         : 'Agreement Sign',
+                        //     icon:
+                        //     value.myStayDetailsModel?.data?.agreementStatus !=
+                        //         null &&
+                        //         value.myStayDetailsModel?.data
+                        //             ?.agreementStatus ==
+                        //             '1'
+                        //         ? Icon(
+                        //       Icons.assignment_turned_in,
+                        //       size: _mainHeight * 0.032,
+                        //       color: CustomTheme.myFavColor,
+                        //     )
+                        //         : Icon(
+                        //       Icons.assignment_late_outlined,
+                        //       size: _mainHeight * 0.032,
+                        //       color: CustomTheme.appTheme,
+                        //     ),
+                        //     callBack: value.myStayDetailsModel?.data
+                        //         ?.agreementStatus != null &&
+                        //         value.myStayDetailsModel?.data
+                        //             ?.agreementStatus ==
+                        //             '1'
+                        //         ? () async {
+                        //       String agreementLink = value
+                        //           .myStayDetailsModel
+                        //           ?.data
+                        //           ?.agreementLink ??
+                        //           '';
+                        //       if (await canLaunch(
+                        //           agreementLink)) {
+                        //         launch(agreementLink)
+                        //             .catchError((error) async {
+                        //           log(error.toString());
+                        //           return true;
+                        //         });
+                        //       }
+                        //     }
+                        //         : () =>
+                        //         _handleURLButtonPress(
+                        //             context,
+                        //             agreementUrl,
+                        //             nullCheck(list: value.bookingDetailsLang)
+                        //                 ? ' ${value.bookingDetailsLang[12].name} '
+                        //                 : 'Agreement Sign',
+                        //             base64Encode(utf8.encode(widget.bookingId)) +
+                        //                 '/' +
+                        //                 token)),
+                        _gridInput(
                           hint: nullCheck(
                               list: value.bookingDetailsLang)
-                              ? ' ${value.bookingDetailsLang[15].name} '
-                              : "Refund Form",
+                              ? ' ${value.bookingDetailsLang[13].name} '
+                              : "Refund SplitUp",
                           icon: Icon(
-                            Icons.person_outline,
+                            Icons.sticky_note_2_outlined,
                             size: _mainHeight * 0.032,
                             color: CustomTheme.appTheme,
                           ),
                           callBack: () =>
                               Navigator.of(context)
-                                  .pushNamed(AppRoutes.refundFormPage,
-                                  arguments: {
-                                    'name': value.myStayDetailsModel
-                                        ?.data?.travellerName ??
-                                        '',
-                                    'title': value.myStayDetailsModel
-                                        ?.data?.title ??
-                                        '',
-                                    'email': value.myStayDetailsModel
-                                        ?.data?.contactEmail ??
-                                        '',
-                                    'bookingId': widget.bookingId,
-                                  })),
-                      /*_gridInput(
-                                hint: nullCheck(list: value.bookingDetailsLang)
-                                    ? ' ${value.bookingDetailsLang[16].name} '
-                                    : "Privacy Policies",
-                                icon: Icon(
-                                  Icons.policy_outlined,
-                                  size: _mainHeight * 0.032,
-                                  color: CustomTheme.appTheme,
-                                ),
-                                callBack: () => _handleURLButtonPress(context,
-                                    privacyPolicyLink, nullCheck(list: value.bookingDetailsLang)
-                                        ? ' ${value.bookingDetailsLang[16].name} '
-                                        :'Privacy Policy', '1'),
-                            ), */
-                      _gridInput(
-                        hint: nullCheck(
-                            list: value.bookingDetailsLang)
-                            ? ' ${value.bookingDetailsLang[04].name} '
-                            : "Update KYC",
+                                  .pushNamed(AppRoutes.refundSplitPage,
+                                  arguments: widget.bookingId),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: _mainHeight * 0.01,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          child: _gridInput(
+                              hint: nullCheck(
+                                  list: value.bookingDetailsLang)
+                                  ? ' ${value.bookingDetailsLang[14].name} '
+                                  : "Raise Ticket",
+                              icon: Icon(
+                                Icons.report_problem_outlined,
+                                size: _mainHeight * 0.032,
+                                color: value.myStayDetailsModel?.data
+                                    ?.checkOutStatus !=
+                                    null &&
+                                    value.myStayDetailsModel?.data
+                                        ?.checkOutStatus ==
+                                        '1'
+                                    ? Colors.grey
+                                    : CustomTheme.appTheme,
+                              ),
+                              callBack: value.myStayDetailsModel?.data
+                                  ?.checkOutStatus !=
+                                  null &&
+                                  value.myStayDetailsModel?.data
+                                      ?.checkOutStatus ==
+                                      '1'
+                                  ? () {
+                                RMSWidgets.showSnackbar(
+                                    context: context,
+                                    message:
+                                    'This Booking is Completed So You can not raise Ticket',
+                                    color:
+                                    CustomTheme.errorColor);
+                              }
+                                  : () =>
+                                  Navigator.of(context).pushNamed(
+                                      AppRoutes.generateTicketPage,
+                                      arguments: {
+                                        'bookingId': value
+                                            .myStayDetailsModel
+                                            ?.data
+                                            ?.bookingId ??
+                                            '',
+                                        'propertyId': value
+                                            .myStayDetailsModel
+                                            ?.data
+                                            ?.propId ??
+                                            '',
+                                        'address': value
+                                            .myStayDetailsModel
+                                            ?.data
+                                            ?.addressDisplay ??
+                                            ''
+                                      })),
+                        ),
+                    value.myStayDetailsModel?.data?.check_in_feedback =="0"?      _gridInput(
+                        hint:  "Check-in Feedback form",
                         icon: Icon(
-                          Icons.fact_check_outlined,
+                          Icons.person_outline,
                           size: _mainHeight * 0.032,
                           color: CustomTheme.appTheme,
                         ),
                         callBack: () =>
-                            _updateKyc(
+                            _handleURLButtonPress(
+
                                 context,
-                                updateKYCUrl,
-                                'Update Your kyc',
-                                value.myStayDetailsModel?.data?.userId ??
-                                    ''),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: _mainHeight * 0.01,
-                  ),
-                ],
+                                checkInfeedbacklink,
+                                'Check-in Feedback Form',
+                                base64Encode(utf8.encode(widget.bookingId)) +
+                                    '/' +
+                                    token)
+                    ):  _gridInput(
+                            hint: nullCheck(
+                                list: value.bookingDetailsLang)
+                                ? ' ${value.bookingDetailsLang[15].name} '
+                                : "Refund Form",
+                            icon: Icon(
+                              Icons.person_outline,
+                              size: _mainHeight * 0.032,
+                              color: CustomTheme.appTheme,
+                            ),
+                            callBack: () =>
+                                Navigator.of(context)
+                                    .pushNamed(AppRoutes.refundFormPage,
+                                    arguments: {
+                                      'name': value.myStayDetailsModel
+                                          ?.data?.travellerName ??
+                                          '',
+                                      'title': value.myStayDetailsModel
+                                          ?.data?.title ??
+                                          '',
+                                      'email': value.myStayDetailsModel
+                                          ?.data?.contactEmail ??
+                                          '',
+                                      'bookingId': widget.bookingId,
+                                    })),
+
+
+                    // Container(
+                    //   color: CustomTheme.appThemeContrast2,
+                    //   child: TextButton.icon(onPressed: (){
+                    //     _handleURLButtonPress(
+                    //
+                    //         context,
+                    //         agreementUrl,
+                    //         nullCheck(list: value.bookingDetailsLang)
+                    //             ? ' ${value.bookingDetailsLang[12].name} '
+                    //             : 'Agreement Sign',
+                    //         base64Encode(utf8.encode(widget.bookingId)) +
+                    //             '/' +
+                    //             token);
+                    //   }, icon: Icon(Icons.download_outlined,color: Colors.white), label: const Text("Agreement Sign",
+                    //     style: TextStyle(color: Colors.white),
+                    //   )
+                    //   ),
+                    // ),
+                        /*_gridInput(
+                                  hint: nullCheck(list: value.bookingDetailsLang)
+                                      ? ' ${value.bookingDetailsLang[16].name} '
+                                      : "Privacy Policies",
+                                  icon: Icon(
+                                    Icons.policy_outlined,
+                                    size: _mainHeight * 0.032,
+                                    color: CustomTheme.appTheme,
+                                  ),
+                                  callBack: () => _handleURLButtonPress(context,
+                                      privacyPolicyLink, nullCheck(list: value.bookingDetailsLang)
+                                          ? ' ${value.bookingDetailsLang[16].name} '
+                                          :'Privacy Policy', '1'),
+                              ), */
+                        _gridInput(
+                          hint: nullCheck(
+                              list: value.bookingDetailsLang)
+                              ? ' ${value.bookingDetailsLang[04].name} '
+                              : "Update KYC",
+                          icon: Icon(
+                            Icons.fact_check_outlined,
+                            size: _mainHeight * 0.032,
+                            color: CustomTheme.appTheme,
+                          ),
+                          callBack: () =>
+                              _updateKyc(
+                                  context,
+                                  updateKYCUrl,
+                                  'Update Your kyc',
+                                  value.myStayDetailsModel?.data?.userId ??
+                                      ''),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: _mainHeight * 0.01,
+                    ),
+
+                   SizedBox(height: 20,)
+                  ],
+                ),
               ),
             )
                 : value.myStayDetailsModel != null &&

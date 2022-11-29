@@ -74,6 +74,15 @@ class _DashboardPageState extends State<DashboardPage> {
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _bottomNavigationProvider =
         Provider.of<BottomNavigationProvider>(context, listen: false);
+    // Future.delayed(Duration(seconds: 2)).then((_) {
+    //   showModalBottomSheet(
+    //       context: context,
+    //       builder: (builder) {
+    //         return Container(
+    //           child: Text("Hell"),
+    //         );
+    //       });
+    // });
   }
   @override
   void dispose() {

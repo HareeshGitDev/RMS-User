@@ -65,6 +65,31 @@ class LoginApiService {
     }
   }
 
+
+
+  Future delete(
+      {required String action,required String userId,
+        required BuildContext context,}) async {
+    String url = AppUrls.deleteAccount;
+    final response = await _apiService.postApiCall(
+        context: context,
+        endPoint: url,
+        bodyParams: {
+          "id": userId,
+          "action": action,
+
+        },
+        fromLogin: false);
+    final data = response as Map<String, dynamic>;
+
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
+      return data.toString();
+    } else {
+      return data['data'].toString();
+    }
+  }
+
+
   Future<int> resetPassword({required String email, required BuildContext context,}) async {
     String url = AppUrls.forgotPasswordUrl;
     final response = await _apiService.postApiCall(

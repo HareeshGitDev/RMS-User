@@ -4,7 +4,10 @@ import 'package:RentMyStay_user/login_module/model/login_response_model.dart';
 import 'package:RentMyStay_user/login_module/model/otp_registration_otp_model.dart';
 import 'package:RentMyStay_user/login_module/model/signup_request_model.dart';
 import 'package:RentMyStay_user/login_module/service/login_api_service.dart';
+import 'package:RentMyStay_user/utils/constants/sp_constants.dart';
+import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../language_module/model/language_model.dart';
 import '../../language_module/service/language_api_service.dart';
@@ -22,7 +25,7 @@ class LoginViewModel extends ChangeNotifier {
     return response;
   }
 
-  Future<SignUpResponseModel> signUpUser(
+  Future signUpUser(
       {required SignUpRequestModel signUpRequestModel, required BuildContext context,}) async {
     final SignUpResponseModel response = await _loginApiService.signUpUser(
       context: context,
@@ -30,6 +33,21 @@ class LoginViewModel extends ChangeNotifier {
     );
     return response;
   }
+
+  Future deleteAccount(
+
+      {required String action, required BuildContext context,}) async {
+    SharedPreferenceUtil sharedPreferences=SharedPreferenceUtil();
+    var userId=await sharedPreferences.getString(rms_userId);
+    final  response = await _loginApiService.delete(
+
+      context: context,
+userId:userId.toString() , action: action,
+    );
+    return response;
+  }
+
+
 
   Future<int> resetPassword({required String email, required BuildContext context,}) async =>
       await _loginApiService.resetPassword(email: email,context: context);

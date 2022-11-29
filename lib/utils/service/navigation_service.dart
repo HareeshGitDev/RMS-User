@@ -6,6 +6,7 @@ import 'package:RentMyStay_user/home_module/view/tenant_leads_page.dart';
 import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
 import 'package:RentMyStay_user/language_module/view/language_screen.dart';
 import 'package:RentMyStay_user/language_module/viewModel/language_viewModel.dart';
+import 'package:RentMyStay_user/login_module/view/account_deletion.dart';
 import 'package:RentMyStay_user/login_module/view/login_page.dart';
 import 'package:RentMyStay_user/login_module/view/firebase_registration_page.dart';
 import 'package:RentMyStay_user/login_module/view/payment_status_page.dart';
@@ -40,6 +41,7 @@ import 'package:RentMyStay_user/utils/service/picture_screen.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../login_module/view/inactive_ui.dart';
 import '../../my_stays/view/update_Invoice_UTR.dart';
 import '../../owner_property_module/view/add_property_page.dart';
 import '../../owner_property_module/view/owner_property_details_page.dart';
@@ -486,6 +488,21 @@ class NavigationService {
           ),
         );
 
+      case AppRoutes.deleteAccount:
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+            create: (_) => HomeViewModel(),
+            child: AccountDeletion(),
+          ),
+        );
+      case AppRoutes.inActiveUi:
+        return MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+            create: (_) => HomeViewModel(),
+            child: InactiveUi(),
+          ),
+        );
+
       default:
         return MaterialPageRoute(
           builder: (context) => const Scaffold(
@@ -540,4 +557,6 @@ class AppRoutes {
   static const String tenantLeadsPage = 'tenantLeadsPage';
   static const String checkinForm = 'checkinPage';
   static const String checkoutForm = 'checkOutPage';
+  static const String deleteAccount = 'deleteAccount';
+  static const String inActiveUi = 'inActiveUi';
 }

@@ -117,6 +117,42 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:172037116875:android:46de4ef45ff18f5834dc4e",
+        "android_client_info": {
+          "package_name": "com.tcp.rentmystaynew"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "172037116875-3bn8tqnn3q79jn30606c1uktckh397gs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCE-KLe5oa_Gcou-WQHiTeqHpw1RV1-Ouo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "172037116875-3bn8tqnn3q79jn30606c1uktckh397gs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "172037116875-q4huk45khcfats0iup9ren2819kc4tv0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rms.rentmystayuserflutter"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
+import 'package:RentMyStay_user/home_module/model/checkin_feedback_model.dart';
 import 'package:RentMyStay_user/home_module/model/home_page_model.dart';
 import 'package:RentMyStay_user/home_module/viewModel/home_viewModel.dart';
 import 'package:RentMyStay_user/login_module/service/google_auth_service.dart';
@@ -33,6 +34,7 @@ import '../../utils/constants/enum_consts.dart';
 import '../../language_module/model/language_model.dart';
 import '../../utils/service/location_service.dart';
 import '../../utils/service/navigation_service.dart';
+import 'checkin_feedback_bottomsheet.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -106,12 +108,43 @@ class _HomePageState extends State<HomePage> {
     _homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
     _homeViewModel.getHomePageData(context: context);
     _homeViewModel.getTenantLeads(context: context);
+
+    bottomSheetCheckInFeedback();
     userDetails = getSharedPreferencesValues();
     preferenceUtil.getToken().then((value) => token = value ?? '');
+
     getExplorePropertiesList();
     getLanguageData();
   }
 
+  bottomSheetCheckInFeedback()async{
+   var data= await   _homeViewModel.getCheckinFeedbackStatus(context: context);
+   CheckInStatusFeedbackModel checkInStatusFeedbackModel=data;
+   if(checkInStatusFeedbackModel.data !=null && checkInStatusFeedbackModel.data!.length>0){
+    Future.delayed(Duration(seconds: 2)).then((_) {
+      showModalBottomSheet<dynamic>(
+isDismissible: false,
+          shape: const RoundedRectangleBorder( // <-- SEE HERE
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(25.0),
+            ),
+          ),
+          context: context,
+          isScrollControlled: true,
+          builder: (builder) {
+            return SingleChildScrollView(
+              child: CheckInFeedbackBottomSheet(
+                     booking_id: checkInStatusFeedbackModel.data![0].bookingId.toString(),
+                    buildingName: checkInStatusFeedbackModel.data![0].name.toString(),
+                   check_in: checkInStatusFeedbackModel.data![0].travelFromDate.toString(),
+                   ),
+            );
+          });
+    });
+  }else{
+     log("No data");
+   }
+  }
   getLanguageData() async {
     await _homeViewModel.getLanguagesData(
         language: await preferenceUtil.getString(rms_language) ?? 'english',

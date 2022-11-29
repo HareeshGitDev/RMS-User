@@ -51,11 +51,11 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.tcp.rentmystay"
+        applicationId "com.tcp.rentmystaynew"
         minSdkVersion 21
         targetSdkVersion 32
         multiDexEnabled true
-        versionCode 148
+        versionCode 100
         versionName flutterVersionName
     }
     lintOptions {

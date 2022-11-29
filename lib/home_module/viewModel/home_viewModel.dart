@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:RentMyStay_user/home_module/model/checkin_feedback_model.dart';
 import 'package:RentMyStay_user/home_module/model/home_page_model.dart';
 import 'package:RentMyStay_user/home_module/model/invite_and_earn_model.dart';
 import 'package:RentMyStay_user/home_module/model/popular_model.dart';
@@ -17,6 +18,7 @@ class HomeViewModel extends ChangeNotifier {
   final HomeApiService _homeApiService = HomeApiService();
   final LanguageApiService _languageApiService = LanguageApiService();
   ReferAndEarnModel? referAndEarnModel ;
+  CheckInStatusFeedbackModel? checkInStatusFeedbackModel;
   List<LanguageModel> languageData = [];
   List<LanguageModel> tenantLeadsLang = [];
   List<LanguageModel> referAndEarnLang = [];
@@ -101,6 +103,29 @@ class HomeViewModel extends ChangeNotifier {
   }) async =>
       await _homeApiService.addToWishList(propertyId: propertyId,context: context);
 
+  Future<int> checkinFeedbackPost({
+    required BuildContext context,
+    required double  booking_rating,
+    required double  check_in_rating,
+    required String check_in_comment,
+    required String   sales_comment,
+    required String comment,
+    required String booking_id,
+
+  }) async {
+    var response= await _homeApiService.addCheckinFeedback(context: context,
+      booking_id: booking_id,
+      check_in_rating: check_in_rating,
+      check_in_comment: check_in_comment,
+      comment: comment,
+      booking_rating: booking_rating,
+      sales_comment: sales_comment,
+
+
+    );
+    return response;
+  }
+
   Future<void> getHomePageData({ required BuildContext context,}) async {
     final response =
     await _homeApiService.fetchHomePageData(context: context);
@@ -112,6 +137,22 @@ class HomeViewModel extends ChangeNotifier {
     await _homeApiService.fetchTenantLeads(context: context);
    tenantLeadsModel = response;
     notifyListeners();
+  }
+
+
+  Future getCheckinFeedbackStatus({ required BuildContext context,}) async {
+    final response =
+    await _homeApiService.fetchCheckinStatus(context: context);
+    if(response !=null) {
+checkInStatusFeedbackModel=response;
+notifyListeners();
+return response;
+    }
+    else{
+      notifyListeners();
+      return 400;
+    }
+
   }
 
   Future<void> getLanguagesData(

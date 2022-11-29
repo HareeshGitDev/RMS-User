@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:RentMyStay_user/home_module/model/checkin_feedback_model.dart';
 import 'package:RentMyStay_user/home_module/model/home_page_model.dart';
 import 'package:RentMyStay_user/home_module/model/invite_and_earn_model.dart';
 import 'package:RentMyStay_user/home_module/model/tenant_leads_model.dart';
@@ -52,6 +53,31 @@ class HomeApiService {
 
     return data['msg'].toString().toLowerCase().contains('failure') ? 404 : 200;
   }
+  Future<int> addCheckinFeedback({
+    required BuildContext context,
+  required double  booking_rating,
+    required double  check_in_rating,
+    required String check_in_comment,
+    required String   sales_comment,
+    required String comment,
+    required String booking_id,
+
+  }) async {
+    String url = AppUrls.checkinFeedbackPost;
+    final response = await _apiService.postApiCall(endPoint: url,context: context, bodyParams: {
+      "booking_rating":booking_rating.toString(),
+      "check_in_rating":check_in_rating.toString(),
+      "check_in_comment":check_in_comment,
+      "sales_comment":sales_comment,
+      "comment":comment,
+      "booking_id":booking_id
+    });
+
+    final data = response as Map<String, dynamic>;
+
+    return data['msg'].toString().toLowerCase().contains('failure') ? 404 : 200;
+  }
+
   Future<HomePageModel> fetchHomePageData({ required BuildContext context,}) async {
     String url = AppUrls.homePageUrl;
     final response = await _apiService.getApiCall(endPoint: url,context: context);
@@ -81,5 +107,32 @@ class HomeApiService {
     }
   }
 
+
+
+
+
+
+
+
+
+
+
+
+  Future<CheckInStatusFeedbackModel?> fetchCheckinStatus({ required BuildContext context,}) async {
+    String url = AppUrls.checkinStatusInfo;
+    final response = await _apiService.getApiCall(endPoint: url,context: context);
+    final data = response as Map<String, dynamic>;
+
+    if (data['msg'].toString().toLowerCase().contains('failure')) {
+      return CheckInStatusFeedbackModel(
+        msg: 'failure',
+      );
+    } else {
+      if (data['data'] != null) {
+        return CheckInStatusFeedbackModel.fromJson(data);
+      }
+      else return null;
+    }
+  }
 
 }

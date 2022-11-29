@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer' as logger;
+
 import 'dart:developer';
 import 'dart:math' as math;
 import 'package:RentMyStay_user/property_module/model/property_list_model.dart'
@@ -8,17 +8,16 @@ import 'package:RentMyStay_user/profile_Module/model/filter_sort_request_model.d
 import 'package:RentMyStay_user/property_module/viewModel/property_viewModel.dart';
 import 'package:RentMyStay_user/utils/constants/enum_consts.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
-import 'package:RentMyStay_user/utils/service/rms_user_api_service.dart';
+
 import 'package:RentMyStay_user/utils/service/shared_prefrences_util.dart';
 import 'package:RentMyStay_user/utils/service/system_service.dart';
 import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/material.dart';
+
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:intl/intl.dart';
-import 'package:permission_handler/permission_handler.dart';
+
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -399,8 +398,7 @@ class _PropertyListingPageState extends State<PropertyListingPage> {
                                                                         0.02),
                                                             //width: _mainWidth*0.28,
                                                             child: Text(
-                                                              "${data.buildingName} ${data.floor}" ??
-                                                                  '',
+                                                              "${data.buildingName} ${data.floor}",
                                                               overflow:
                                                                   TextOverflow
                                                                       .ellipsis,

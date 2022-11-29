@@ -79,6 +79,7 @@ class _WebViewContainerState extends State<Web_View_Container> {
     initConnectionStatus();
     _connectivitySubs =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    log("${widget.url}");
   }
 
   @override

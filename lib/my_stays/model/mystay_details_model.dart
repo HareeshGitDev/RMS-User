@@ -22,6 +22,7 @@ class MyStayDetailsModel {
 class Data {
   String? bookingId;
   String? userId;
+  String? check_in_feedback;
   String? propId;
   String? bookingStatus;
   String? travelFromDate;
@@ -76,6 +77,7 @@ class Data {
         this.edit_agmt,
         this.service_agreement_link,
         this.userId,
+        this.check_in_feedback,
         this.propId,
         this.bookingStatus,
         this.travelFromDate,
@@ -123,6 +125,7 @@ class Data {
   Data.fromJson(Map<String, dynamic> json) {
     bookingId = json['booking_id'];
     userId = json['user_id'];
+    check_in_feedback = json['check_in_feedback'];
     propId = json['prop_id'];
     approve = json['approve'];
     unit = json['unit'];
@@ -175,6 +178,7 @@ class Data {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['booking_id'] = this.bookingId;
     data['user_id'] = this.userId;
+    data['check_in_feedback'] = this.check_in_feedback;
     data['prop_id'] = this.propId;
     data['unit'] = this.unit;
     data['approve'] = this.approve;

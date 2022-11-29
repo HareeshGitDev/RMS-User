@@ -403,11 +403,24 @@ class _LoginPageState extends State<LoginPage> {
                                                   widget.onClick != null) {
                                                 widget.onClick!();
                                               } else {
-                                                Navigator.pushNamedAndRemoveUntil(
-                                                  context,
-                                                  AppRoutes.dashboardPage,
-                                                  (route) => false,
-                                                );
+                                               var value= response.data?.active;
+                                               log("data =  $value");
+                                               if(value=="Inactive"){
+                                                 Navigator.pushNamed(
+                                                   context,
+                                                   AppRoutes.inActiveUi,
+                                                 );
+                                               }
+                                               else  if (value=="Active") {
+                                                 Navigator.pushNamedAndRemoveUntil(
+                                                   context,
+                                                   AppRoutes.dashboardPage,
+                                                   (route) => false,
+                                                 );
+                                               }
+                                               else{
+
+                                               }
                                               }
                                             }
                                           }
@@ -700,9 +713,11 @@ mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
   Future<void> setSPValues({required LoginResponseModel response}) async {
     SharedPreferenceUtil shared = SharedPreferenceUtil();
+    await shared.setString(rms_accountStatus, '${response.data?.active}');
     await shared.setString(
         rms_registeredUserToken, '${response.data?.appToken}');
     await shared.setString(rms_profilePicUrl, '${response.data?.pic}');
+
     await shared.setString(rms_phoneNumber, '${response.data?.contactNum}');
     await shared.setString(rms_name, '${response.data?.name}');
     await shared.setString(rms_email, '${response.data?.email}');

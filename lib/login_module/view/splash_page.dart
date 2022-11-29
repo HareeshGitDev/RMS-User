@@ -5,11 +5,14 @@ import 'package:RentMyStay_user/utils/view/rms_widgets.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:RentMyStay_user/utils/service/navigation_service.dart';
 import 'package:flutter/material.dart';
+import 'package:rate_my_app/rate_my_app.dart';
 
 import '../../theme/custom_theme.dart';
 import '../../utils/constants/sp_constants.dart';
 
 class SplashPage extends StatefulWidget {
+   RateMyApp rateMyApp;
+   SplashPage({required this.rateMyApp});
   @override
   _SplashPageState createState() => _SplashPageState();
 }
@@ -72,7 +75,7 @@ class _SplashPageState extends State<SplashPage> {
     SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
     String? token = await preferenceUtil.getToken();
     String lang=await preferenceUtil.getString(rms_language) ?? 'english';
-
+String? accountStatus=await preferenceUtil.getString(rms_accountStatus);
     if (token == null) {
       WidgetsBinding.instance?.addPostFrameCallback((_) {
         Timer(const Duration(milliseconds: 1000), ()  {
@@ -94,11 +97,19 @@ class _SplashPageState extends State<SplashPage> {
       WidgetsBinding.instance?.addPostFrameCallback((_) {
         Timer(const Duration(milliseconds: 1000), () {
           if (mounted) {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              AppRoutes.dashboardPage,
-              (route) => false,
-            );
+            if (accountStatus == "Inactive") {
+              Navigator.pushNamed(
+                context,
+                AppRoutes.inActiveUi,
+              );
+            }
+            else {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.dashboardPage,
+                    (route) => false,
+              );
+            }
           }
         });
       });
