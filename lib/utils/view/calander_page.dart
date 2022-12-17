@@ -38,7 +38,7 @@ class CalenderPage extends StatelessWidget {
         confirmText: 'SELECT',
         onCancel: () => Navigator.pop(context),
         onSubmit: (dynamic data) {
-if(data.startDate!.difference(DateTime.now()).inDays<8){
+if(data.startDate!.difference(DateTime.now()).inDays<6 ){
   if (data is PickerDateRange &&
       data.startDate != null &&
       data.endDate != null) {

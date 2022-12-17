@@ -31,5 +31,5 @@ String? bookingType;
       this.depositAmount,
       this.invoiceId,
       this.bookingId,
-      this.paymentGateway = 'razorpay'});
+      this.paymentGateway});
 }

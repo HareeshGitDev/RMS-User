@@ -821,6 +821,7 @@ var bookingTypeDisplay;
                                     cartId: value.bookingAmountsResponseModel
                                         ?.data?.cartId
                                         .toString(),
+                                    paymentGateway: 'razorpay',
                                     email: _emailController.text,
                                     name: _nameController.text,
                                     phone: _phoneNumberController.text,
@@ -959,6 +960,7 @@ var bookingTypeDisplay;
                                     email: _emailController.text,
                                     name: _nameController.text,
                                     phone: _phoneNumberController.text,
+                                    paymentGateway: "PayLater",
                                     depositAmount:
                                         value.bookingAmountsResponseModel !=
                                                     null &&
