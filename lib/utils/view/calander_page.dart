@@ -38,7 +38,7 @@ class CalenderPage extends StatelessWidget {
         confirmText: 'SELECT',
         onCancel: () => Navigator.pop(context),
         onSubmit: (dynamic data) {
-if(data.startDate!.difference(DateTime.now()).inDays<10){
+if(data.startDate!.difference(DateTime.now()).inDays<8){
   if (data is PickerDateRange &&
       data.startDate != null &&
       data.endDate != null) {
@@ -53,7 +53,7 @@ if(data.startDate!.difference(DateTime.now()).inDays<10){
 else{
   RMSWidgets.showSnackbar(
       context: context,
-      message: 'Please Select Date within 10 days',
+      message: 'Please Select Date within 7 days',
       color: Colors.red);
 }
           // if (data is PickerDateRange &&

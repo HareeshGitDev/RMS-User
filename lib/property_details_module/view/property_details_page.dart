@@ -567,7 +567,12 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                           Container(
                                               padding: getHeadingPadding,
                                               height: _mainHeight * 0.15,
-                                              child:                                           AmmentitiesTab(amenities: value.amenitiesList, noAmenities: value.noAmenitiesList),
+                                              child:
+                                              AmmentitiesTab(amenities: value.amenitiesList,
+                                                noAmenities: value.noAmenitiesList,
+                                                paidAmenities: value.paidAmenitiesList,
+                                                isRms: value.propertyDetailsModel!.data!.details!.rmsProp.toString(),
+                                              ),
 
                                           ),
 
@@ -1569,11 +1574,11 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                       print(".............1");
                                       await sharedPreferenceUtil.setString(rms_BookingType, "Daily");
                                     }
-                                    else if(diff<=90 && diff>29){
+                                    else if(diff<=100 && diff>29){
                                       print("............2");
                                       await sharedPreferenceUtil.setString(rms_BookingType, "Short Term");
                                     }
-                                    else if(diff>90 && diff>29){
+                                    else if(diff>100 && diff>29){
                                       print("..........3");
                                       await sharedPreferenceUtil.setString(rms_BookingType, "Long Term");
                                     }
@@ -1612,6 +1617,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                     email: email,
                                     mobile: phone,
                                     token: token,
+                                    isRms:_viewModel.propertyDetailsModel?.data?.details?.rmsProp,
                                     flexiRent: _viewModel.propertyDetailsModel?.data?.details?.monthlyRent,
                                     longTermRent: _viewModel.propertyDetailsModel?.data?.details?.rmsRent,
                                     guestList: guestList,
@@ -2734,8 +2740,13 @@ class _NearbyFacilitiesState extends State<NearbyFacilities> {
 
 class AmmentitiesTab extends StatefulWidget {
   List<AmenitiesModel> amenities;
+  String isRms;
   List<NoAmenitiesModel> noAmenities;
- AmmentitiesTab({required this.amenities,required this.noAmenities});
+  List<PaidAmenitiesModel> paidAmenities;
+ AmmentitiesTab({required this.amenities,required this.noAmenities,required this.paidAmenities,
+   required this.isRms
+
+ });
 
   @override
   State<AmmentitiesTab> createState() => _AmmentitiesTabState();
@@ -2749,7 +2760,7 @@ class _AmmentitiesTabState extends State<AmmentitiesTab> {
     _mainWidth = MediaQuery.of(context).size.width;
     _mainHeight = MediaQuery.of(context).size.height;
     return DefaultTabController(
-      length: 2,
+      length: 3,
       initialIndex: 0,
       child: Scaffold(
         appBar: AppBar(
@@ -2764,6 +2775,7 @@ class _AmmentitiesTabState extends State<AmmentitiesTab> {
             tabs:const [
               Text("Available Amenities"),
               Text("Non-Available Amenities"),
+              Text("Paid Amenities"),
             ]
 
           ),
@@ -2773,12 +2785,14 @@ class _AmmentitiesTabState extends State<AmmentitiesTab> {
           children: [
 
 getAvailableAmenities(list: widget.amenities),
-            getAvailableNotAmenities(list: widget.noAmenities)
+            getAvailableNotAmenities(list: widget.noAmenities),
+           widget.isRms=="RMS Prop"? getAvailablePaidAmenities(list: widget.paidAmenities):noRMS()
           ],
         ),
       ),
     );
   }
+
 
   Widget getAvailableAmenities({required List<AmenitiesModel> list}) {
     return ListView.separated(
@@ -2909,5 +2923,86 @@ getAvailableAmenities(list: widget.amenities),
         width: 10,
       ),
     );
+  }
+  Widget getAvailablePaidAmenities({required List<PaidAmenitiesModel> list}) {
+    return ListView.separated(
+      scrollDirection: Axis.horizontal,
+      // physics: AlwaysScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return Container(
+          padding: EdgeInsets.only(top: 10),
+          child: Column(
+            children: [
+              Container(
+
+                height: _mainHeight * 0.03,
+                width: _mainWidth * 0.08,
+                //  padding: EdgeInsets.only(right: _mainWidth * 0.02),
+                child: CachedNetworkImage(
+                  imageUrl: list[index].imageUrl,
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      //borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  placeholder: (context, url) => Shimmer.fromColors(
+                      child: Container(
+                        height: _mainHeight * 0.03,
+                        width: _mainWidth * 0.08,
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          // borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      baseColor: Colors.grey[200] as Color,
+                      highlightColor: Colors.grey[350] as Color),
+                  errorWidget: (context, url, error) => const Icon(
+                    Icons.error,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: _mainHeight * 0.01,
+              ),
+              Container(
+          //   height: MediaQuery.of(context).size.height/2,
+        //   width: MediaQuery.of(context).size.width/5,
+                child: Text(
+                  list[index].name.toString(),
+                  style: TextStyle(
+                      color: CustomTheme.appThemeContrast,
+                      fontWeight: FontWeight.w500,
+                      fontSize: getHeight(context: context, height: 14)),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      itemCount: list.length,
+      separatorBuilder: (_, __) => SizedBox(
+        width: 10,
+      ),
+    );
+  }
+  Widget noRMS() {
+    return Column(
+          children: [
+            Container(
+
+
+
+        padding: EdgeInsets.only(left: 10,right: 10,bottom: 10,top: 30),
+              child: Text("Available only for RMS property"),
+            ),
+
+          ],
+        );
+
   }
 }

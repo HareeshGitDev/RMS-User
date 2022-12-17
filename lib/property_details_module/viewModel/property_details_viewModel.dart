@@ -20,6 +20,7 @@ class PropertyDetailsViewModel extends ChangeNotifier {
   PropertyDetailsModel? propertyDetailsModel;
   List<AmenitiesModel> amenitiesList = [];
   List<NoAmenitiesModel> noAmenitiesList = [];
+  List<PaidAmenitiesModel> paidAmenitiesList = [];
   final LanguageApiService _languageApiService = LanguageApiService();
   List<LanguageModel> propertyDetailsLang = [];
   List<LanguageModel> bookingAmountLang = [];
@@ -102,6 +103,17 @@ class PropertyDetailsViewModel extends ChangeNotifier {
   }
 
   void getAmenitiesList(Amenities? amenitiesNew) {
+    paidAmenitiesList.add(PaidAmenitiesModel(name: "Wifi Paid",  imageUrl:
+        'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/Wifi-01.png?alt=media&token=6269ba23-7e0f-4bbe-9fd7-7469e9c6b083'));
+    paidAmenitiesList.add(PaidAmenitiesModel(name: "Extra Blanket/Cotsheet",  imageUrl:
+    'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/cot_mattress-01.png?alt=media&token=591695d6-6be0-4456-86ef-d1252f89536b'));
+    paidAmenitiesList.add(PaidAmenitiesModel(name: "Deep Cleaning",  imageUrl:   'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/housekeeping-01.png?alt=media&token=d53bd84f-b88c-4162-a06e-9f7c8fef904a'));
+    paidAmenitiesList.add(PaidAmenitiesModel(name: "New Kitchen Utensils",
+        imageUrl:                 'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/kitchen-01.png?alt=media&token=286fb61a-b33b-439b-b527-04b04fe345b3'));
+    paidAmenitiesList.add(PaidAmenitiesModel(name: "AMC",
+        imageUrl:                 'https://firebasestorage.googleapis.com/v0/b/rentmystay-new-1539065190327.appspot.com/o/kitchen-01.png?alt=media&token=286fb61a-b33b-439b-b527-04b04fe345b3'));
+
+
     if (amenitiesNew?.wifi == '1') {
       amenitiesList.add(AmenitiesModel(
           name: 'WiFi',
