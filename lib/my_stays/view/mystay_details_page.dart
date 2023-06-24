@@ -244,7 +244,7 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                           ),
                           Container(
                             width: _mainWidth * 0.7,
-                            height: _mainHeight * 0.11,
+                            height: _mainHeight * 0.15,
                             child: Column(
                               crossAxisAlignment:
                               CrossAxisAlignment.start,
@@ -280,11 +280,98 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
                                           color: Colors.grey),
                                       textAlign: TextAlign.start,
                                     )),
-                                Container(
-                                  height: _mainHeight * 0.035,
-                                  child: Row(
-                                    textDirection: TextDirection.rtl,
+                                InkWell(
+                                  child: Column(
                                     children: [
+                                      Container(
+                                          width: _mainWidth * 0.6,
+                                          margin: EdgeInsets.only(
+                                              left: 10, right: 10),
+                                          child: Text(
+                                            'Superviser Phone:',
+                                            maxLines: 3,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.black),
+                                            textAlign: TextAlign.start,
+                                          )
+                                      ),
+                                      Container(
+                                        width: _mainWidth * 0.6,
+                                        margin: EdgeInsets.only(
+                                            left: 10, right: 10),
+                                          child: Text(
+                                            '  +${value.myStayDetailsModel?.data?.superviserNumber}',
+                                            maxLines: 3,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.black),
+                                            textAlign: TextAlign.start,
+                                          ),
+                                      ),
+                                    ],
+                                  ),
+                                  onTap: ()=> launch('tel:+${value.myStayDetailsModel?.data?.superviserNumber}'),
+                                ),
+                                // Container(
+                                //     width: _mainWidth * 0.5,
+                                //     margin: EdgeInsets.only(
+                                //         left: 10, right: 10),
+                                //     child: Text(
+                                //       'Caretaker: \nSonu(+91 8967530987)',
+                                //       maxLines: 3,
+                                //       overflow: TextOverflow.ellipsis,
+                                //       style: TextStyle(
+                                //           fontSize: 13,
+                                //           fontWeight: FontWeight.w600,
+                                //           color: Colors.green),
+                                //       textAlign: TextAlign.start,
+                                //     )),
+                                Container(
+                                  //padding: const EdgeInsets.all(1),
+                                  height: _mainHeight * 0.039,
+                                  child: Row(
+                                    //mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    textDirection: TextDirection.ltr,
+                                    children: [
+                                      InkWell(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              child: Text(
+                                                '   Caretaker Phone:        ',
+                                                maxLines: 3,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontSize: 13,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.black),
+                                                textAlign: TextAlign.start,
+
+                                              ),
+                                            ),
+                                            Container(
+                                                child: Text(
+                                                  '     +${value.myStayDetailsModel?.data?.caretakerNumber}               ',
+                                                  maxLines: 2,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      fontSize: 13,
+                                                      fontWeight: FontWeight.w500,
+                                                      color: Colors.black),
+                                                  textAlign: TextAlign.start,
+
+                                                ),
+                                            ),
+                                          ],
+                                        ),
+                                        onTap: () {launch('tel:+${value.myStayDetailsModel?.data?.caretakerNumber}');},
+                                      ),
                                       IconButton(
                                         padding: EdgeInsets.only(
                                             right: _mainWidth * 0.02),
@@ -1141,54 +1228,101 @@ class _MyStayDetailsPageState extends State<MyStayDetailsPage> {
             value.myStayDetailsModel?.data
                 ?.agreementStatus != null &&
                 value.myStayDetailsModel?.data?.agreementStatus ==
-                    '1' && value.myStayDetailsModel?.data?.edit_agmt=="1"?Row(
-              children: [
+                    '1' && value.myStayDetailsModel?.data?.edit_agmt=="1"?
+            Row(
+              /*children: [
                 Expanded(
                   flex: value.myStayDetailsModel?.data
                       ?.service_agreement_link != null &&
                       value.myStayDetailsModel!.data!.service_agreement_link!.length>0?1:0 ,
                   child:   value.myStayDetailsModel?.data
                       ?.service_agreement_link != null &&
-                      value.myStayDetailsModel!.data!.service_agreement_link!.length>0?Container(
+                      value.myStayDetailsModel!.data!.service_agreement_link!.length>0?
+                  Container(
                     color: CustomTheme.appThemeContrast,
                     child: TextButton.icon(onPressed: ()
                     async{
-if(value
-    .myStayDetailsModel
-    ?.data
-    ?.approve !=null && value
-    .myStayDetailsModel
-    ?.data
-    ?.approve =="0" ) {
+                      if(value
+                          .myStayDetailsModel
+                          ?.data
+                          ?.approve !=null && value
+                          .myStayDetailsModel
+                          ?.data
+                          ?.approve =="0" ) {
 
-  RMSWidgets.showSnackbar(context: context, message: "Please wait for agreement approval", color: Colors.red);
+                        RMSWidgets.showSnackbar(context: context, message: "Please wait for agreement approval", color: Colors.red);
 
-}
-else{
-  String agreementLink = value
-      .myStayDetailsModel
-      ?.data
-      ?.service_agreement_link ??
-      '';
-  await
-  launch(agreementLink)
-      .catchError((error) async {
-    log(error.toString());
-  });
-  // RMSWidgets.showSnackbar(context: context, message: "Please wait for agreement approval", color: Colors.red);
-}
+                      }
+                      else{
+                        String agreementLink = value
+                            .myStayDetailsModel
+                            ?.data
+                            ?.service_agreement_link ??
+                            '';
+                        await
+                        launch(agreementLink)
+                            .catchError((error) async {
+                          log(error.toString());
+                        });
+                        // RMSWidgets.showSnackbar(context: context, message: "Please wait for agreement approval", color: Colors.red);
+                      }
 
                     },
                         icon: Icon(Icons.download_outlined, color: Colors.white),
                         label: const Text("Service Agreement",
                           style: TextStyle(color: Colors.white),
                         )),
+
+                  ):Container(child:Text("")),
+                ),
+                Expanded(
+                  flex: value.myStayDetailsModel?.data
+                      ?.e_stamp_agreement_link != null &&
+                      value.myStayDetailsModel!.data!.e_stamp_agreement_link!.length>0?1:0 ,
+                  child:   value.myStayDetailsModel?.data
+                      ?.e_stamp_agreement_link != null &&
+                      value.myStayDetailsModel!.data!.e_stamp_agreement_link!.length>0?
+                  Container(
+                    color: CustomTheme.appThemeContrast2,
+                    child: TextButton.icon(onPressed: ()
+                    async{
+                      if(value
+                          .myStayDetailsModel
+                          ?.data
+                          ?.approve !=null && value
+                          .myStayDetailsModel
+                          ?.data
+                          ?.approve =="0" ) {
+
+                        RMSWidgets.showSnackbar(context: context, message: "Please wait for agreement approval", color: Colors.red);
+
+                      }
+                      else{
+                        String agreementLink = value
+                            .myStayDetailsModel
+                            ?.data
+                            ?.e_stamp_agreement_link ??
+                            '';
+                        await
+                        launch(agreementLink)
+                            .catchError((error) async {
+                          log(error.toString());
+                        });
+                        // RMSWidgets.showSnackbar(context: context, message: "Please wait for agreement approval", color: Colors.red);
+                      }
+
+                    },
+                        icon: Icon(Icons.download_outlined, color: Colors.white),
+                        label: const Text("E-Stamp Agreement",
+                          style: TextStyle(color: Colors.white),
+                        )),
+
                   ):Container(child:Text("")),
                 ),
                 Expanded(
                   flex: 1,
                   child: Container(
-                    color: CustomTheme.appThemeContrast2,
+                    color: CustomTheme.appThemeContrast,
                     child: TextButton.icon(onPressed: ()async{
                       log("oyye hoye ${value
                           .myStayDetailsModel
@@ -1226,6 +1360,233 @@ else{
                     )),
                   ),
                 ),
+              ],*/
+              children: [
+                Expanded(
+
+                child: Container(
+                  child: ElevatedButton.icon(
+                    //child: Text('Download Agreement'),
+                    onPressed: (){
+                      showModalBottomSheet(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(25),
+                                topRight: Radius.circular(25),
+                              )
+                          ),
+                         // backgroundColor: Theme.of(context).primaryColor,
+                          context: context,
+                          builder: (context){
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    IconButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        icon: Icon(
+                                          Icons.clear,
+                                          color: CustomTheme.black,
+                                        )),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: value.myStayDetailsModel?.data
+                                          ?.service_agreement_link != null &&
+                                          value.myStayDetailsModel!.data!.service_agreement_link!.length>0?1:0 ,
+                                      child:   value.myStayDetailsModel?.data
+                                          ?.service_agreement_link != null &&
+                                          value.myStayDetailsModel!.data!.service_agreement_link!.length>0?
+                                      Container(
+                                       // color: CustomTheme.appThemeContrast,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(left: 25,right: 25,bottom: 8),
+                                          child: ElevatedButton.icon(onPressed: ()
+                                          async{
+
+                                            if(value
+                                                .myStayDetailsModel
+                                                ?.data
+                                                ?.approve !=null && value
+                                                .myStayDetailsModel
+                                                ?.data
+                                                ?.approve =="0" ) {
+
+                                              RMSWidgets.showSnackbar(context: context, message: "Please wait for agreement approval", color: Colors.red);
+
+                                            }
+                                            else{
+                                              String agreementLink = value
+                                                  .myStayDetailsModel
+                                                  ?.data
+                                                  ?.service_agreement_link ??
+                                                  '';
+                                              await
+                                              launch(agreementLink)
+                                                  .catchError((error) async {
+                                                log(error.toString());
+                                              });
+                                              // RMSWidgets.showSnackbar(context: context, message: "Please wait for agreement approval", color: Colors.red);
+                                            }
+
+                                          },
+                                              style: ButtonStyle(
+                                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(20.0), // Specify the desired border radius
+                                                  ),
+                                                ),
+                                              ),
+                                              icon: Icon(Icons.download_outlined, color: Colors.white),
+                                              label: const Text("Service Agreement",
+                                                style: TextStyle(color: Colors.white),
+                                              )
+                                          ),
+                                        ),
+
+                                      ):Container(child:Text("")),
+                                    ),
+                                  ],
+                                ),
+                                Divider(
+                                  color: CustomTheme.appTheme,
+                                  thickness: 0,
+                                ),
+
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: value.myStayDetailsModel?.data
+                                          ?.e_stamp_agreement_link != null &&
+                                          value.myStayDetailsModel!.data!.e_stamp_agreement_link!.length>0?1:0 ,
+                                      child:   value.myStayDetailsModel?.data
+                                          ?.e_stamp_agreement_link != null &&
+                                          value.myStayDetailsModel!.data!.e_stamp_agreement_link!.length>0?
+                                      Container(
+                                       // color: CustomTheme.appThemeContrast2,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(left: 25,right: 25,bottom: 8),
+                                          child: ElevatedButton.icon(onPressed: ()
+                                          async{
+                                            if(value
+                                                .myStayDetailsModel
+                                                ?.data
+                                                ?.approve !=null && value
+                                                .myStayDetailsModel
+                                                ?.data
+                                                ?.approve =="0" ) {
+
+                                              RMSWidgets.showSnackbar(context: context, message: "Please wait for agreement approval", color: Colors.red);
+
+                                            }
+                                            else{
+                                              String agreementLink = value
+                                                  .myStayDetailsModel
+                                                  ?.data
+                                                  ?.e_stamp_agreement_link ??
+                                                  '';
+                                              await
+                                              launch(agreementLink)
+                                                  .catchError((error) async {
+                                                log(error.toString());
+                                              });
+                                              // RMSWidgets.showSnackbar(context: context, message: "Please wait for agreement approval", color: Colors.red);
+                                            }
+
+                                          },
+                                              style: ButtonStyle(
+                                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(20.0), // Specify the desired border radius
+                                                  ),
+                                                ),
+                                              ),
+                                              icon: Icon(Icons.download_outlined, color: Colors.white),
+                                              label: const Text("E-Stamp Agreement",
+                                                style: TextStyle(color: Colors.white),
+                                              )),
+                                        ),
+
+                                      ):Container(child:Text("")),
+                                    ),
+                                  ],
+                                ),
+                                Divider(
+                                  color: CustomTheme.appTheme,
+                                  thickness: 0,
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        width: 20.0,
+                                       // color: CustomTheme.appThemeContrast,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(left: 25,right: 25,bottom: 8),
+                                          child: ElevatedButton.icon(onPressed: ()async{
+                                            log("oyye hoye ${value
+                                                .myStayDetailsModel
+                                                ?.data
+                                                ?.approve}");
+                                            if(
+                                            value
+                                                .myStayDetailsModel
+                                                ?.data
+                                                ?.approve !=null &&
+                                                value
+                                                    .myStayDetailsModel
+                                                    ?.data
+                                                    ?.approve =="0") {
+                                              RMSWidgets.showSnackbar(context: context, message: "Please wait for agreement approval", color: Colors.red);
+
+                                            }
+                                            else
+                                            {
+                                              String agreementLink = value
+                                                  .myStayDetailsModel
+                                                  ?.data
+                                                  ?.agreementLink ??
+                                                  '';
+                                              await
+                                              launch(agreementLink)
+                                                  .catchError((error) async {
+                                                log(error.toString());
+                                              });
+                                              // RMSWidgets.showSnackbar(context: context, message: "Please wait for agreement approval", color: Colors.red);
+
+                                            }
+                                          },
+                                              style: ButtonStyle(
+                                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(20.0), // Specify the desired border radius
+                                                  ),
+                                                ),
+                                              ),
+                                              icon: Icon(Icons.download_outlined,color: Colors.white), label: const Text("Tentant Agreement",
+                                            style: TextStyle(color: Colors.white),
+                                          )),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            );
+                          }
+                      );
+                    },
+                      icon: Icon(Icons.download_outlined, color: Colors.white),
+                      label: const Text("Download Agreement",
+                        style: TextStyle(color: Colors.white),
+                      )
+                  ),
+                ))
               ],
             ):
             Container(
@@ -1244,7 +1605,8 @@ else{
                 style: TextStyle(color: Colors.white),
               )
               ),
-            ):Container(),
+            ):
+            Container(),
           );
         }
     )
