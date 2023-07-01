@@ -179,17 +179,21 @@ class MyStayApiService {
        required String account_name,
        required String ifsc_code,
        required String bank_name,
-      required String buildingRatings,
+      //required String buildingRatings,
       required String suggestions,
-      required String friendRecommendation}) async {
+      //required String friendRecommendation,
+      required String friendRecommendRatings,
+      required String source}) async {
     String url = AppUrls.feedbackAndBankDetailsUrl;
     final response = await _apiService.postApiCall(endPoint: url,context: context, bodyParams: {
       "booking_id": bookingId,
       "email": email,
 
       "rating": ratings,
-      "building_rating": buildingRatings,
-      "frnd_recomd": friendRecommendation,
+      //"building_rating": buildingRatings,
+      "friend_recommend_ratings": friendRecommendRatings,
+      "source" : source,
+      //"frnd_recomd": friendRecommendation,
       "suggest": suggestions,
       "acc_holder":account_name,
       "acc_no":account_number,

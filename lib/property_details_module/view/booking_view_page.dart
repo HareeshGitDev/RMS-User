@@ -36,6 +36,7 @@ class BookingPage extends StatefulWidget {
   final PropertyDetailsUtilModel propertyDetailsUtilModel;
 
 
+
   BookingPage({Key? key, required this.propertyDetailsUtilModel})
       : super(key: key);
 
@@ -764,9 +765,9 @@ var bookingTypeDisplay;
                           Text(
                               '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[12].name : 'Payable Amount'}'),
                         ],
-                      ),
+                       ),
                     ),
-                    Expanded(
+                  widget.propertyDetailsUtilModel.isRms=="RMS Prop" ? Expanded(
                       child: Container(
                         height: _mainHeight * 0.06,
                         width: MediaQuery.of(context).size.width * 0.68,
@@ -820,6 +821,7 @@ var bookingTypeDisplay;
                                     cartId: value.bookingAmountsResponseModel
                                         ?.data?.cartId
                                         .toString(),
+                                    paymentGateway: 'razorpay',
                                     email: _emailController.text,
                                     name: _nameController.text,
                                     phone: _phoneNumberController.text,
@@ -880,6 +882,117 @@ var bookingTypeDisplay;
                               : () {},
                           child: Text(
                             '${nullCheck(list: value.bookingAmountLang) ? value.bookingAmountLang[13].name : 'Proceed Booking'}',
+                            style: const TextStyle(
+
+                              fontSize: 16,
+                            ),
+                          ),
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  value.bookingAmountsResponseModel != null &&
+                                          value.bookingAmountsResponseModel
+                                                  ?.data !=
+                                              null
+                                      ? CustomTheme.appTheme
+                                      : Colors.grey),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(0)),
+                              )),
+                        ),
+                      ),
+                    )
+                    :Expanded(
+                      child: Container(
+                        height: _mainHeight * 0.06,
+                        width: MediaQuery.of(context).size.width * 0.68,
+                        child: ElevatedButton(
+                          onPressed: value.bookingAmountsResponseModel !=
+                                      null &&
+                                  value.bookingAmountsResponseModel?.data !=
+                                      null
+                              ? () async {
+
+                              String p = "[a-zA-Z0-9\+\.\_\%\-\+]{1,256}" +
+                                  "\\@" +
+                                  "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                                  "(" +
+                                  "\\." +
+                                  "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                                  ")+";
+                              RegExp regExp = RegExp(p);
+
+                              if(_nameController.text.isEmpty){
+                                RMSWidgets.getToast(message: 'Please Enter Valid Name.', color: CustomTheme.errorColor);
+                                return;
+                              }
+                              if(_phoneNumberController.text.length <10 ){
+                                RMSWidgets.getToast(message: 'Please Enter Valid Mobile Number.', color: CustomTheme.errorColor);
+                                return;
+                              }
+                              if(_emailController.text.isEmpty || !regExp.hasMatch(_emailController.text)){
+                                RMSWidgets.getToast(message: 'Please Enter Valid Email.', color: CustomTheme.errorColor);
+                                return;
+                              }
+
+                                  RMSWidgets.showLoaderDialog(
+                                      context: context, message: 'Loading');
+                                  BookingCredentialResponseModel response =
+                                      await _viewModel.getBookingCredentials(
+                                        context: context,
+                                          model: BookingAmountRequestModel(
+                                    propId:
+                                        (widget.propertyDetailsUtilModel.propId)
+                                            .toString(),
+                                    token:
+                                        (widget.propertyDetailsUtilModel.token)
+                                            .toString(),
+                                    numOfGuests: (widget
+                                            .propertyDetailsUtilModel.maxGuest)
+                                        .toString(),
+                                    couponCode: '',
+                                    fromDate: checkInDate,
+                                    toDate: checkOutDate,
+                                    cartId: value.bookingAmountsResponseModel
+                                        ?.data?.cartId
+                                        .toString(),
+                                    email: _emailController.text,
+                                    name: _nameController.text,
+                                    phone: _phoneNumberController.text,
+                                    paymentGateway: "PayLater",
+                                    depositAmount:
+                                        value.bookingAmountsResponseModel !=
+                                                    null &&
+                                                value.bookingAmountsResponseModel
+                                                        ?.data?.advanceAmount !=
+                                                    null
+                                            ? value.bookingAmountsResponseModel
+                                                ?.data?.advanceAmount
+                                                .toString()
+                                            : '',
+                                  ));
+
+                                  Navigator.pop(context);
+
+                              RMSWidgets.showSnackbar(
+                                  context: context,
+                                  message: 'Booking successfull',
+                                  color: CustomTheme.green);
+
+                                Timer(
+                                    const Duration(seconds: 2),
+                                        () => Navigator.pushNamedAndRemoveUntil(
+                                      context,
+                                      AppRoutes.dashboardPage,
+                                          (route) => false,
+                                    ));
+
+
+                                }
+                              : () {},
+                          child: Text(
+                            'Pay Later',
                             style: const TextStyle(
 
                               fontSize: 16,
@@ -981,7 +1094,7 @@ var bookingTypeDisplay;
           var fromDate= DateTime.parse(checkInDate);
           var toDate=    DateTime.parse(checkOutDate);
           int difference= toDate.difference(fromDate).inDays;
-          if(difference>90){
+          if(difference>100){
 await showModalBottomSheet(
     isScrollControlled: true,
     context: context, builder: (context){
@@ -1021,7 +1134,7 @@ await preferenceUtil.setString(rms_BookingType, difference>29?"Short Term":"Dail
                     couponCode: '',
                     fromDate: checkInDate,
                     toDate: checkOutDate,
-                    bookingType: difference > 90 ? "Long Term" : difference > 29
+                    bookingType: difference > 100 ? "Long Term" : difference > 29
                         ? "Short Term"
                         : "Daily"
 
@@ -1043,7 +1156,7 @@ await preferenceUtil.setString(rms_BookingType, difference>29?"Short Term":"Dail
           var fromDate= DateTime.parse(checkInDate);
           var toDate=    DateTime.parse(checkOutDate);
           int difference= toDate.difference(fromDate).inDays;
-          if(difference>90){
+          if(difference>100){
             await showModalBottomSheet(
 
                 context: context, builder: (context){
@@ -1082,7 +1195,7 @@ await preferenceUtil.setString(rms_BookingType, difference>29?"Short Term":"Dail
                     couponCode: '',
                     fromDate: checkInDate,
                     toDate: checkOutDate,
-                    bookingType: difference > 90 ? "Long Term" : difference > 29
+                    bookingType: difference > 100 ? "Long Term" : difference > 29
                         ? "Short Term"
                         : "Daily"
 
@@ -1256,7 +1369,7 @@ await preferenceUtil.setString(rms_BookingType, difference>29?"Short Term":"Dail
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("${model.data!.nights!< 29?"Daily Rent":model.data!.nights!>90?"Regular Rent":"Flexi Rent"}"
+                                    Text("${model.data!.nights!< 29?"Daily Rent":model.data!.nights!>100?"Regular Rent":"Flexi Rent"}"
                                         ),
                                     Text('${model.data?.rent}'),
                                   ],

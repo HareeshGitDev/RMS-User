@@ -12,10 +12,12 @@ class PropertyDetailsUtilModel {
   dynamic flexiRent;
   String? token;
   List<int>? guestList;
+  String? isRms;
 
   PropertyDetailsUtilModel(
       {this.email,
       this.name,
+        this.isRms,
         this.bookingType,
       this.propId,
       this.buildingName,
@@ -37,6 +39,7 @@ this.maxGuest});
     data['longTermRent']=longTermRent;
     data['flexiRent']=flexiRent;
     data['token']=token;
+    data['isRms']=isRms;
     data['bookingType']=bookingType;
     data['mobile']=mobile;
     data['maxGuest']=maxGuest;

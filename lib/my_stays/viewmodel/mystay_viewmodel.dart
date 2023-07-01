@@ -91,19 +91,22 @@ class MyStayViewModel extends ChangeNotifier {
         required String account_name,
         required String ifsc_code,
         required String bank_name,
-        required String buildingRatings,
+        //required String buildingRatings,
         required BuildContext context,
         required String suggestions,
-        required String friendRecommendation}) async {
+        //required String friendRecommendation,
+        required String friendRecommendRatings,
+        required String source}) async {
     final int response = await _myStayApiService.submitFeedbackAndBankDetails(
       context: context,
       bookingId: bookingId,
       email: email,
       ratings: ratings,
 
-      buildingRatings: buildingRatings,
+      //buildingRatings: buildingRatings,
+      friendRecommendRatings: friendRecommendRatings,
       suggestions: suggestions,
-      friendRecommendation: friendRecommendation, bank_name: bank_name, account_number: account_number, account_name: account_name, ifsc_code: ifsc_code,
+      /*friendRecommendation: friendRecommendation,*/ bank_name: bank_name, account_number: account_number, account_name: account_name, ifsc_code: ifsc_code, source:source,
 
 
     );

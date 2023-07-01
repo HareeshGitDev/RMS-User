@@ -68,8 +68,13 @@ class Data {
   String? agreementLink;
   String? approve;
   String? service_agreement_link;
-
   String? pendingAmount;
+
+  String? caretakerNumber;
+  String? superviserNumber;
+  //String? e_stamp_agreement_link;
+
+  List?  e_stamp_link;
 
   Data(
       {this.bookingId,
@@ -120,7 +125,12 @@ class Data {
         this.glng,
         this.agreementStatus,
         this.agreementLink,
-        this.pendingAmount});
+        this.pendingAmount,
+
+        this.caretakerNumber,
+        this.superviserNumber,
+      //this.e_stamp_agreement_link,
+      this.e_stamp_link});
 
   Data.fromJson(Map<String, dynamic> json) {
     bookingId = json['booking_id'];
@@ -172,6 +182,11 @@ class Data {
     agreementLink = json['agreement_link'];
     service_agreement_link = json['service_agreement_link'];
     pendingAmount = json['pending_amount'];
+
+    caretakerNumber = json['caretaker_number'];
+    superviserNumber = json['superviser_number'];
+    //e_stamp_agreement_link = json['e_stamp_agreement_link'];
+    e_stamp_link = json['e_stamp_link'];
   }
 
   Map<String, dynamic> toJson() {
@@ -225,6 +240,11 @@ class Data {
     data['agreement_link'] = this.agreementLink;
     data['service_agreement_link'] = this.service_agreement_link;
     data['pending_amount'] = this.pendingAmount;
+
+    data['caretaker_number'] = this.caretakerNumber;
+    data['superviser_number'] = this.superviserNumber;
+    //data['e_stamp_agreement_link'] = this.e_stamp_agreement_link;
+    data['e_stamp_link'] = this.e_stamp_link;
     return data;
   }
 }

@@ -27,3 +27,18 @@ class NoAmenitiesModel {
     return 'Amenities :: $name -- $imageUrl -- $selected ';
   }
 }
+
+
+
+class PaidAmenitiesModel {
+  String name;
+  String imageUrl;
+  bool selected=false;
+
+  PaidAmenitiesModel({required this.name,required this.imageUrl,this.selected=false});
+
+  @override
+  String toString() {
+    return 'Amenities :: $name -- $imageUrl -- $selected ';
+  }
+}
