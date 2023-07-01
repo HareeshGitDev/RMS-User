@@ -53,7 +53,10 @@ class _FeedbackState extends State<FeedbackPage> {
   ValueNotifier<bool> isChecked = ValueNotifier(false);
 
   double rmsRating = 0.0;
-  double buildingRating = 0.0;
+  //double buildingRating = 0.0;
+  var friendRecommendRating = 0.0;
+
+
   ValueNotifier<bool> shouldRecommendFriend = ValueNotifier(true);
   late SharedPreferenceUtil preferenceUtil = SharedPreferenceUtil();
   late StreamSubscription<ConnectivityResult> _connectivitySubs;
@@ -380,8 +383,8 @@ dataAdd(){
                       ),
                       Text(
                         nullCheck(list: value.feedBackLang)
-                            ? '${value.feedBackLang[8].name} '
-                            :'How do you Rate Building/flat ?',
+                            ? '${value.feedBackLang[13].name} '
+                            :'How likely are you to recommend RentMyStay to your friends ?',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             color: Colors.black,
@@ -434,14 +437,15 @@ dataAdd(){
                             }
                           },
                           onRatingUpdate: (double rating) {
-                            buildingRating = rating * 1;
+                            //buildingRating = rating * 1;
+                            friendRecommendRating = rating * 1;
                           },
                         ),
                       ),
                       SizedBox(
                         height: _mainHeight * 0.01,
                       ),
-                      Text(
+                      /*Text(
                         nullCheck(list: value.feedBackLang)
                             ? '${value.feedBackLang[9].name} '
                             : 'Would You Recommend our service to a friend / Colleague ?',
@@ -521,7 +525,7 @@ dataAdd(){
                                     );
                                   },
                                 ),
-                              ])),
+                              ])),*/
                       Text(nullCheck(list: value.feedBackLang)
                           ? '${value.feedBackLang[10].name} '
                           :'Any Suggestion (Optional) ?'),
@@ -576,6 +580,20 @@ dataAdd(){
                     message: 'Bank IFSC Code is not Valid.',
                     color: Colors.red);
                 return;
+              } else if (rmsRating==0.0) {
+                // FocusScope.of(context).requestFocus(_ifscScope);
+                RMSWidgets.showSnackbar(
+                    context: context,
+                    message: 'Please rate your experience with RentMyStay.',
+                    color: Colors.red);
+                return;
+              } else if (friendRecommendRating==0.0) {
+               // FocusScope.of(context).requestFocus(_ifscScope);
+                RMSWidgets.showSnackbar(
+                    context: context,
+                    message: 'Please rate your recommendation of rentmystay to your friends.',
+                    color: Colors.red);
+                return;
               } else {
                 RMSWidgets.showLoaderDialog(
                     context: context, message: 'Loading');
@@ -590,10 +608,12 @@ dataAdd(){
                     ifsc_code: _bankIfscController.text.toString(),
                     email: widget.email,
                     ratings: rmsRating.toString(),
-                    buildingRatings: buildingRating.toString(),
+                   //buildingRatings: buildingRating.toString(),
+                    friendRecommendRatings: friendRecommendRating.toString(),
                     suggestions: _suggestionController.text,
-                    friendRecommendation:
-                    shouldRecommendFriend.value ? 'Yes' : 'No');
+                    source : "android",
+                    /*friendRecommendation:
+                    shouldRecommendFriend.value ? 'Yes' : 'No'*/);
                 if (response == 200) {
                   RMSWidgets.showSnackbar(
                       context: context,
@@ -618,10 +638,12 @@ dataAdd(){
                 account_number: _banknumberController.text.toString(),
                 account_name: _nameController.text.toString(),
                 ifsc_code: _bankIfscController.text.toString(),
-                buildingRatings: buildingRating.toString(),
+                //buildingRatings: buildingRating.toString(),
+                friendRecommendRatings: friendRecommendRating.toString(),
                 suggestions: _suggestionController.text,
-                friendRecommendation:
-                shouldRecommendFriend.value ? 'Yes' : 'No', );
+                source: 'android',
+                /*friendRecommendation:
+                shouldRecommendFriend.value ? 'Yes' : 'No',*/ );
               log(response.toString());
               if (response == 200) {
                 RMSWidgets.showSnackbar(

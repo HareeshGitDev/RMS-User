@@ -72,7 +72,9 @@ class Data {
 
   String? caretakerNumber;
   String? superviserNumber;
-  String? e_stamp_agreement_link;
+  //String? e_stamp_agreement_link;
+
+  List?  e_stamp_link;
 
   Data(
       {this.bookingId,
@@ -127,7 +129,8 @@ class Data {
 
         this.caretakerNumber,
         this.superviserNumber,
-      this.e_stamp_agreement_link});
+      //this.e_stamp_agreement_link,
+      this.e_stamp_link});
 
   Data.fromJson(Map<String, dynamic> json) {
     bookingId = json['booking_id'];
@@ -182,7 +185,8 @@ class Data {
 
     caretakerNumber = json['caretaker_number'];
     superviserNumber = json['superviser_number'];
-    e_stamp_agreement_link = json['e_stamp_agreement_link'];
+    //e_stamp_agreement_link = json['e_stamp_agreement_link'];
+    e_stamp_link = json['e_stamp_link'];
   }
 
   Map<String, dynamic> toJson() {
@@ -239,7 +243,8 @@ class Data {
 
     data['caretaker_number'] = this.caretakerNumber;
     data['superviser_number'] = this.superviserNumber;
-    data['e_stamp_agreement_link'] = this.e_stamp_agreement_link;
+    //data['e_stamp_agreement_link'] = this.e_stamp_agreement_link;
+    data['e_stamp_link'] = this.e_stamp_link;
     return data;
   }
 }

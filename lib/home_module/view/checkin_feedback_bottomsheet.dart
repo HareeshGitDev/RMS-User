@@ -423,7 +423,7 @@ TextEditingController comment=TextEditingController();
                   child: TextButton(
 
                   onPressed: () async{
-                    RMSWidgets.showLoaderDialog(context: context, message: "Sharing yyour response");
+                    RMSWidgets.showLoaderDialog(context: context, message: "Sharing your response");
                     HomeViewModel _homeViewModel=HomeViewModel();
                  var response=await   _homeViewModel.checkinFeedbackPost(context: context,
                      booking_rating: bookingExperience,
